@@ -1,0 +1,21 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+	<ui:style>
+		.hyperlink {
+			cursor: pointer;
+			text-decoration: underline;
+		}
+		
+		.main-panel {
+			padding-left: 10px;
+		}
+	</ui:style>
+	<g:HorizontalPanel styleName='{style.main-panel}'>
+		<g:HTML>[</g:HTML>
+		<g:Hyperlink styleName='{style.hyperlink}' ui:field="link"/>
+		<g:HTML>]</g:HTML>
+	</g:HorizontalPanel>
+
+</ui:UiBinder>
+
+

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+  
+  <!-- Servlets -->
+  <servlet>
+    <servlet-name>ontologyServlet</servlet-name>
+    <servlet-class>ru.ksu.niimm.ose.ui.server.OntologyServiceImpl</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>downloadServlet</servlet-name>
+    <servlet-class>ru.ksu.niimm.ose.ui.server.DownloadServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ontologyServlet</servlet-name>
+    <url-pattern>/omdoc_search_engine_ui/ontology</url-pattern>
+  </servlet-mapping>
+    <servlet-mapping>
+    <servlet-name>downloadServlet</servlet-name>
+    <url-pattern>/omdoc_search_engine_ui/download</url-pattern>
+  </servlet-mapping>
+  <!-- Default page to serve -->
+  <welcome-file-list>
+    <welcome-file>Omdoc_search_engine_ui.html</welcome-file>
+  </welcome-file-list>
+
+</web-app>
