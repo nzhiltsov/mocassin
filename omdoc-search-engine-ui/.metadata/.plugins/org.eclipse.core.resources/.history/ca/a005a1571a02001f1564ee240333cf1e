@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module rename-to='omdoc_search_engine_ui'>
+  <inherits name='com.google.gwt.user.User'/>
+  <inherits name='com.google.gwt.user.theme.standard.Standard'/>
+  <inherits name="com.google.gwt.uibinder.UiBinder" />
+  <inherits name='com.google.gwt.widgetideas.WidgetIdeas' /> 
+  <entry-point class='ru.ksu.niimm.ose.ui.client.Omdoc_search_engine_ui'/>
+  <source path='client'/>
+  
+</module>
