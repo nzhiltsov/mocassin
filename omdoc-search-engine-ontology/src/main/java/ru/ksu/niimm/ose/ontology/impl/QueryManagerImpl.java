@@ -21,7 +21,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 
 public class QueryManagerImpl implements QueryManager {
 	private static final String RDF_PREFIX_STRING = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>";
-	private static final String SELECT_STATEMENT = "SELECT * WHERE";
+	private static final String SELECT_STATEMENT = "SELECT DISTINCT %s WHERE";
 	private static final String RETRIEVED_CONCEPT_KEY = "?1";
 
 	/*
@@ -64,7 +64,7 @@ public class QueryManagerImpl implements QueryManager {
 		StringBuffer sb = new StringBuffer();
 		sb.append(RDF_PREFIX_STRING);
 		sb.append("\n");
-		sb.append(SELECT_STATEMENT);
+		sb.append(String.format(SELECT_STATEMENT, RETRIEVED_CONCEPT_KEY));
 		sb.append("\n");
 		sb.append("{");
 		sb.append("\n");
