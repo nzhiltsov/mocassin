@@ -1,37 +1,17 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 	xmlns:g='urn:import:com.google.gwt.user.client.ui' xmlns:ose='urn:import:ru.ksu.niimm.ose.ui.client'>
 	<ui:style>
-		.results-header-panel {
-			background-color: #E5ECF9;
-			border-top: 1px solid #36C;
-			border-top-width: 1px;
-			border-top-style: solid;
-			border-top-color: #36C;
-			width: 100%;
-			text-align: left;
-		}
-		
 		.main-panel {
 			width: 100%;
 			padding-top: 30px;
 		}
 		
-		.results-label {
-			font-size: medium;
-			font: bold;
-			padding-left: 10px;
-			padding-right: 5px;
-		}
-		
 		.results-panel {
-			width: 30%;
+			width: 40%;
 		}
 	</ui:style>
 	<g:VerticalPanel styleName='{style.main-panel}'>
-		<g:HorizontalPanel styleName='{style.results-header-panel}'>
-			<g:Label styleName='{style.results-label}'>Результаты:</g:Label>
-			<g:Label ui:field="resultsLabel" />
-		</g:HorizontalPanel>
+		<ose:SearchResultsCountPanel ui:field="searchResultsCountPanel" />
 		<g:VerticalPanel ui:field="resultsPanel" styleName='{style.results-panel}' />
 	</g:VerticalPanel>
 
