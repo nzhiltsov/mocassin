@@ -157,10 +157,10 @@ public class TopPanel extends Composite implements
 
 	private void loadRangeConceptList(OntRelation selectedRelation,
 			final OntologyElementSuggestBox beforeSuggestBox) {
-		AsyncCallback<List<OntElement>> callback = new AsyncCallback<List<OntElement>>() {
+		AsyncCallbackWrapper<List<OntElement>> callback = new AsyncCallbackWrapper<List<OntElement>>() {
 
 			@Override
-			public void onSuccess(List<OntElement> result) {
+			public void handleSuccess(List<OntElement> result) {
 				OntologyElementOracle rangeConceptOracle = new OntologyElementOracle();
 				rangeConceptOracle.setOntologyElements(result);
 				OntologyElementSuggestBox rangeConceptSuggestBox = new OntologyElementSuggestBox(
@@ -182,40 +182,30 @@ public class TopPanel extends Composite implements
 
 				getBottomButton().setVisible(true);
 			}
-
-			@Override
-			public void onFailure(Throwable caught) {
-				Window.alert("error while getting range concept list:"
-						+ caught.getMessage());
-			}
 		};
+		callback.beforeCall();
 		ontologyService.getRelationRangeConceptList(selectedRelation, callback);
 	}
 
 	private void loadConceptNamesList() {
-		AsyncCallback<List<OntConcept>> callback = new AsyncCallback<List<OntConcept>>() {
+		AsyncCallbackWrapper<List<OntConcept>> callback = new AsyncCallbackWrapper<List<OntConcept>>() {
 
 			@Override
-			public void onSuccess(List<OntConcept> result) {
+			public void handleSuccess(List<OntConcept> result) {
 				instanceOracle.setOntologyElements(result);
 				// instanceSuggestBox.showSuggestionList();
 			}
-
-			@Override
-			public void onFailure(Throwable caught) {
-				Window.alert("error while getting concept names list:"
-						+ caught.getMessage());
-			}
 		};
+		callback.beforeCall();
 		ontologyService.getConceptList(callback);
 	}
 
 	private void loadPropertyList(OntElement selectedOntologyElement,
 			final boolean isBottomAdd) {
-		AsyncCallback<List<OntRelation>> callback = new AsyncCallback<List<OntRelation>>() {
+		AsyncCallbackWrapper<List<OntRelation>> callback = new AsyncCallbackWrapper<List<OntRelation>>() {
 
 			@Override
-			public void onSuccess(List<OntRelation> result) {
+			public void handleSuccess(List<OntRelation> result) {
 				OntologyElementOracle propertyOracle = new OntologyElementOracle();
 				propertyOracle.setOntologyElements(result);
 				OntologyElementSuggestBox propertySuggestBox = new OntologyElementSuggestBox(
@@ -231,16 +221,10 @@ public class TopPanel extends Composite implements
 
 				propertySuggestBox.setFocus(true);
 			}
-
-			@Override
-			public void onFailure(Throwable caught) {
-				Window.alert("error while getting relations list:"
-						+ caught.getMessage());
-
-			}
 		};
 		if (selectedOntologyElement instanceof OntConcept) {
 			OntConcept selectedConcept = (OntConcept) selectedOntologyElement;
+			callback.beforeCall();
 			ontologyService.getRelationList(selectedConcept, callback);
 		}
 

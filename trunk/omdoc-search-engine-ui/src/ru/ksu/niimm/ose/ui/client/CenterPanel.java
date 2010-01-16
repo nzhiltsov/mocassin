@@ -8,7 +8,6 @@ import ru.ksu.niimm.ose.ui.client.widget.flextable.SearchableFlexTable;
 import ru.ksu.niimm.ose.ui.client.widget.suggestbox.OntologyElementSuggestBox;
 import ru.ksu.niimm.ose.ui.client.widget.suggestbox.OntologyElementSuggestion;
 
-import com.gargoylesoftware.htmlunit.javascript.host.Popup;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -16,9 +15,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.SuggestOracle.Callback;
@@ -33,40 +30,32 @@ public class CenterPanel extends Composite {
 	private static final Binder binder = GWT.create(Binder.class);
 	private final OntologyServiceAsync ontologyService = GWT
 			.create(OntologyService.class);
-	@UiField
-	Label resultsLabel;
 
+	@UiField
+	SearchResultsCountPanel searchResultsCountPanel;
 	@UiField
 	VerticalPanel resultsPanel;
 
-	LoadingPanel loadingPanel;
-
 	public CenterPanel() {
 		initWidget(binder.createAndBindUi(this));
-		loadingPanel = new LoadingPanel();
 	}
 
 	public void query(OntQueryStatement statement) {
-		AsyncCallback<List<ResultDescription>> callback = new AsyncCallback<List<ResultDescription>>() {
+		AsyncCallbackWrapper<List<ResultDescription>> callback = new AsyncCallbackWrapper<List<ResultDescription>>() {
 
 			@Override
-			public void onSuccess(List<ResultDescription> result) {
+			public void handleSuccess(List<ResultDescription> result) {
 
 				resultsPanel.clear();
 				for (ResultDescription resultDescription : result) {
 					resultsPanel.add(new HitDescription(resultDescription));
 				}
-				CenterPanel.this.loadingPanel.popupHide();
+				searchResultsCountPanel.setSize(result.size());
 			}
 
-			@Override
-			public void onFailure(Throwable caught) {
-				Window.alert("error while handling query:"
-						+ caught.getMessage());
-			}
 		};
+		callback.beforeCall();
 		ontologyService.query(statement, callback);
-		loadingPanel.popupShow();
 	}
 
 	public static class BuildQueryStatementHandler implements ClickHandler {

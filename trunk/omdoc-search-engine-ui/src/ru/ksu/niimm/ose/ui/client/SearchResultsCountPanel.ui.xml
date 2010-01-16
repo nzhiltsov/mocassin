@@ -1,0 +1,29 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:style>
+		.results-header-panel {
+			background-color: #E5ECF9;
+			border-top: 1px solid #36C;
+			border-top-width: 1px;
+			border-top-style: solid;
+			border-top-color: #36C;
+			width: 100%;
+			text-align: left;
+		}
+		
+		.results-label {
+			font-size: medium;
+			font: bold;
+			padding-left: 10px;
+			width: 10%
+		}
+	</ui:style>
+	<g:HorizontalPanel styleName='{style.results-header-panel}'>
+		<g:HorizontalPanel>
+			<g:Label styleName='{style.results-label}'>Результаты:</g:Label>
+			<g:Label styleName='{style.results-label}' ui:field="resultsLabel" />
+		</g:HorizontalPanel>
+	</g:HorizontalPanel>
+
+</ui:UiBinder> 
