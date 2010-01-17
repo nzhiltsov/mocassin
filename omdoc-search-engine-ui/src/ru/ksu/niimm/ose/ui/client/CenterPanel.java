@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import ru.ksu.niimm.ose.ui.client.widget.flextable.SearchableFlexTable;
-import ru.ksu.niimm.ose.ui.client.widget.suggestbox.OntologyElementSuggestBox;
+import ru.ksu.niimm.ose.ui.client.widget.suggestbox.OntologyElementSuggestBox2;
 import ru.ksu.niimm.ose.ui.client.widget.suggestbox.OntologyElementSuggestion;
 
 import com.google.gwt.core.client.GWT;
@@ -97,8 +97,8 @@ public class CenterPanel extends Composite {
 			List<OntElement> ontElements = new ArrayList<OntElement>();
 			for (int j = 0; j < getGrid().getCellCount(i); j++) {
 				Widget cellWidget = getGrid().getWidget(i, j);
-				if (cellWidget instanceof OntologyElementSuggestBox) {
-					OntologyElementSuggestBox suggestBox = (OntologyElementSuggestBox) cellWidget;
+				if (cellWidget instanceof OntologyElementSuggestBox2) {
+					OntologyElementSuggestBox2 suggestBox = (OntologyElementSuggestBox2) cellWidget;
 					OntElement selectedValue = getSelectedValue(suggestBox);
 					ontElements.add(selectedValue);
 				}
@@ -109,11 +109,11 @@ public class CenterPanel extends Composite {
 				triples.add(triple);
 			}
 			Widget mainWidget = getGrid().getWidget(0, 0);
-			OntElement mainConcept = getSelectedValue((OntologyElementSuggestBox) mainWidget);
+			OntElement mainConcept = getSelectedValue((OntologyElementSuggestBox2) mainWidget);
 			for (int m = 1; m < getGrid().getRowCount() - 1; m++) {
-				OntElement predicateValue = getSelectedValue((OntologyElementSuggestBox) getGrid()
+				OntElement predicateValue = getSelectedValue((OntologyElementSuggestBox2) getGrid()
 						.getWidget(m, 1));
-				OntElement objectValue = getSelectedValue((OntologyElementSuggestBox) getGrid()
+				OntElement objectValue = getSelectedValue((OntologyElementSuggestBox2) getGrid()
 						.getWidget(m, 2));
 				OntTriple triple = new OntTriple(mainConcept, predicateValue,
 						objectValue);
@@ -123,7 +123,7 @@ public class CenterPanel extends Composite {
 			getCenterPanel().query(st);
 		}
 
-		private OntElement getSelectedValue(OntologyElementSuggestBox suggestBox) {
+		private OntElement getSelectedValue(OntologyElementSuggestBox2 suggestBox) {
 			final String currentValue = suggestBox.getValue();
 			Request request = new Request();
 			SuggestionCallback callback = new SuggestionCallback(currentValue);

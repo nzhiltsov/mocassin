@@ -38,3 +38,7 @@ h1 {
 .ont-suggestbox-popup {
 	height: 100px;
 }
+
+.gwt-Tree .gwt-TreeItem-query {
+	margin-left: 170px;
+}
