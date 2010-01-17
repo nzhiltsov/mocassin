@@ -16,15 +16,15 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>ontologyServlet</servlet-name>
-    <url-pattern>/omdoc_search_engine_ui/ontology</url-pattern>
+    <url-pattern>/mocassin/ontology</url-pattern>
   </servlet-mapping>
     <servlet-mapping>
     <servlet-name>downloadServlet</servlet-name>
-    <url-pattern>/omdoc_search_engine_ui/download</url-pattern>
+    <url-pattern>/mocassin/download</url-pattern>
   </servlet-mapping>
   <!-- Default page to serve -->
   <welcome-file-list>
-    <welcome-file>Omdoc_search_engine_ui.html</welcome-file>
+    <welcome-file>index.html</welcome-file>
   </welcome-file-list>
 
 </web-app>

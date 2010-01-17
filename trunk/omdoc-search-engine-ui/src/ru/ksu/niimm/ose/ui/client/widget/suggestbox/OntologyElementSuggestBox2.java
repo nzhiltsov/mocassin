@@ -4,10 +4,10 @@ import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.user.client.ui.SuggestBox;
 
-public class OntologyElementSuggestBox extends SuggestBox implements
+public class OntologyElementSuggestBox2 extends SuggestBox implements
 		FocusHandler {
 
-	public OntologyElementSuggestBox(OntologyElementOracle oracle) {
+	public OntologyElementSuggestBox2(OntologyElementOracle oracle) {
 		super(oracle);
 		getTextBox().addFocusHandler(this);
 	}
