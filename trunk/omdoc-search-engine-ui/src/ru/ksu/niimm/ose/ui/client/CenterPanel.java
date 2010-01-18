@@ -99,7 +99,7 @@ public class CenterPanel extends Composite {
 				Widget cellWidget = getGrid().getWidget(i, j);
 				if (cellWidget instanceof OntologyElementSuggestBox) {
 					OntologyElementSuggestBox suggestBox = (OntologyElementSuggestBox) cellWidget;
-					OntElement selectedValue = getSelectedValue(suggestBox);
+					OntElement selectedValue = suggestBox.getSelectedValue();
 					ontElements.add(selectedValue);
 				}
 			}
@@ -109,12 +109,13 @@ public class CenterPanel extends Composite {
 				triples.add(triple);
 			}
 			Widget mainWidget = getGrid().getWidget(0, 0);
-			OntElement mainConcept = getSelectedValue((OntologyElementSuggestBox) mainWidget);
+			OntElement mainConcept = ((OntologyElementSuggestBox) mainWidget)
+					.getSelectedValue();
 			for (int m = 1; m < getGrid().getRowCount() - 1; m++) {
-				OntElement predicateValue = getSelectedValue((OntologyElementSuggestBox) getGrid()
-						.getWidget(m, 1));
-				OntElement objectValue = getSelectedValue((OntologyElementSuggestBox) getGrid()
-						.getWidget(m, 2));
+				OntElement predicateValue = ((OntologyElementSuggestBox) getGrid()
+						.getWidget(m, 1)).getSelectedValue();
+				OntElement objectValue = ((OntologyElementSuggestBox) getGrid()
+						.getWidget(m, 2)).getSelectedValue();
 				OntTriple triple = new OntTriple(mainConcept, predicateValue,
 						objectValue);
 				triples.add(triple);
@@ -122,61 +123,6 @@ public class CenterPanel extends Composite {
 			OntQueryStatement st = new OntQueryStatement(mainConcept, triples);
 			getCenterPanel().query(st);
 		}
-
-		private OntElement getSelectedValue(OntologyElementSuggestBox suggestBox) {
-			final String currentValue = suggestBox.getValue();
-			Request request = new Request();
-			SuggestionCallback callback = new SuggestionCallback(currentValue);
-			suggestBox.getSuggestOracle().requestDefaultSuggestions(request,
-					callback);
-			return callback.getValue();
-		}
 	}
 
-	public static class SuggestionCallback implements Callback {
-		private String suggestionString;
-		private OntElement value;
-
-		public SuggestionCallback(String suggestionString) {
-			this.suggestionString = suggestionString;
-		}
-
-		public OntElement getValue() {
-			return value;
-		}
-
-		public void setValue(OntElement value) {
-			this.value = value;
-		}
-
-		public String getSuggestionString() {
-			return suggestionString;
-		}
-
-		public void setSuggestionString(String suggestionString) {
-			this.suggestionString = suggestionString;
-		}
-
-		@Override
-		public void onSuggestionsReady(Request request, Response response) {
-			Collection<? extends Suggestion> suggestions = response
-					.getSuggestions();
-			boolean elementFound = false;
-			for (Suggestion suggestion : suggestions) {
-				String suggestionString = suggestion.getReplacementString();
-				if (suggestion instanceof OntologyElementSuggestion
-						&& suggestionString.equals(getSuggestionString())) {
-					OntologyElementSuggestion ontSuggestion = (OntologyElementSuggestion) suggestion;
-					setValue(ontSuggestion.getOntologyElement());
-					elementFound = true;
-					break;
-				}
-			}
-			if (!elementFound) { // the value is individual (instance) of
-				// ontology element
-				setValue(new OntIndividual(getSuggestionString(),
-						getSuggestionString()));
-			}
-		}
-	}
 }
