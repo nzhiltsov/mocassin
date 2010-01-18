@@ -8,7 +8,7 @@ import ru.ksu.niimm.ose.ui.client.widget.button.SelectedSuggestionButton;
 import ru.ksu.niimm.ose.ui.client.widget.flextable.CellCoordinate;
 import ru.ksu.niimm.ose.ui.client.widget.flextable.SearchableFlexTable;
 import ru.ksu.niimm.ose.ui.client.widget.suggestbox.OntologyElementOracle;
-import ru.ksu.niimm.ose.ui.client.widget.suggestbox.OntologyElementSuggestBox2;
+import ru.ksu.niimm.ose.ui.client.widget.suggestbox.OntologyElementSuggestBox;
 import ru.ksu.niimm.ose.ui.client.widget.suggestbox.OntologyElementSuggestion;
 
 import com.google.gwt.core.client.GWT;
@@ -47,7 +47,7 @@ public class TopPanel extends Composite implements
 
 	private OntologyElementOracle instanceOracle;
 
-	private OntologyElementSuggestBox2 instanceSuggestBox;
+	private OntologyElementSuggestBox instanceSuggestBox;
 	@UiField
 	HorizontalPanel panel;
 	@UiField
@@ -68,7 +68,7 @@ public class TopPanel extends Composite implements
 		setBottomButton(new SelectedSuggestionButton("+"));
 		getBottomButton().setVisible(false);
 		instanceOracle = new OntologyElementOracle();
-		instanceSuggestBox = new OntologyElementSuggestBox2(instanceOracle);
+		instanceSuggestBox = new OntologyElementSuggestBox(instanceOracle);
 		instanceSuggestBox.addSelectionHandler(this);
 		instanceSuggestBox.addSelectionHandler(getRightButton());
 		instanceSuggestBox.addSelectionHandler(getBottomButton());
@@ -140,8 +140,8 @@ public class TopPanel extends Composite implements
 	@Override
 	public void onSelection(SelectionEvent<Suggestion> event) {
 		Object source = event.getSource();
-		if (source instanceof OntologyElementSuggestBox2) {
-			OntologyElementSuggestBox2 suggestBox = (OntologyElementSuggestBox2) source;
+		if (source instanceof OntologyElementSuggestBox) {
+			OntologyElementSuggestBox suggestBox = (OntologyElementSuggestBox) source;
 			Suggestion selectedItem = event.getSelectedItem();
 			if (selectedItem instanceof OntologyElementSuggestion) {
 				OntologyElementSuggestion ontologyElementSuggestion = (OntologyElementSuggestion) selectedItem;
@@ -156,14 +156,14 @@ public class TopPanel extends Composite implements
 	}
 
 	private void loadRangeConceptList(OntRelation selectedRelation,
-			final OntologyElementSuggestBox2 beforeSuggestBox) {
+			final OntologyElementSuggestBox beforeSuggestBox) {
 		AsyncCallbackWrapper<List<OntElement>> callback = new AsyncCallbackWrapper<List<OntElement>>() {
 
 			@Override
 			public void handleSuccess(List<OntElement> result) {
 				OntologyElementOracle rangeConceptOracle = new OntologyElementOracle();
 				rangeConceptOracle.setOntologyElements(result);
-				OntologyElementSuggestBox2 rangeConceptSuggestBox = new OntologyElementSuggestBox2(
+				OntologyElementSuggestBox rangeConceptSuggestBox = new OntologyElementSuggestBox(
 						rangeConceptOracle);
 				rangeConceptSuggestBox.addSelectionHandler(TopPanel.this);
 
@@ -208,7 +208,7 @@ public class TopPanel extends Composite implements
 			public void handleSuccess(List<OntRelation> result) {
 				OntologyElementOracle propertyOracle = new OntologyElementOracle();
 				propertyOracle.setOntologyElements(result);
-				OntologyElementSuggestBox2 propertySuggestBox = new OntologyElementSuggestBox2(
+				OntologyElementSuggestBox propertySuggestBox = new OntologyElementSuggestBox(
 						propertyOracle);
 				propertySuggestBox.addSelectionHandler(TopPanel.this);
 
