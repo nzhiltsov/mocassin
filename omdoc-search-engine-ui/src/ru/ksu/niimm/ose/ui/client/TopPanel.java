@@ -31,8 +31,7 @@ import com.google.gwt.user.client.ui.SuggestOracle.Request;
 import com.google.gwt.user.client.ui.SuggestOracle.Response;
 import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
 
-public class TopPanel extends Composite implements
-		SelectionHandler<Suggestion>, ClickHandler {
+public class TopPanel extends Composite {
 	interface Binder extends UiBinder<VerticalPanel, TopPanel> {
 	}
 
@@ -59,7 +58,7 @@ public class TopPanel extends Composite implements
 		initWidget(binder.createAndBindUi(this));
 		setGrid(new SearchableFlexTable());
 		panel.add(getGrid());
-		initializeGrid();
+		// initializeGrid();
 	}
 
 	private void initializeGrid() {
@@ -69,15 +68,12 @@ public class TopPanel extends Composite implements
 		getBottomButton().setVisible(false);
 		instanceOracle = new OntologyElementOracle();
 		instanceSuggestBox = new OntologyElementSuggestBox(instanceOracle);
-		instanceSuggestBox.addSelectionHandler(this);
 		instanceSuggestBox.addSelectionHandler(getRightButton());
 		instanceSuggestBox.addSelectionHandler(getBottomButton());
 
 		getGrid().setWidget(0, 0, instanceSuggestBox);
 		getGrid().setWidget(0, 1, rightButton);
 		getGrid().setWidget(1, 1, bottomButton);
-		getRightButton().addClickHandler(this);
-		getBottomButton().addClickHandler(this);
 
 		loadConceptNamesList();
 	}
@@ -112,81 +108,6 @@ public class TopPanel extends Composite implements
 		initializeGrid();
 	}
 
-	@Override
-	public void onClick(ClickEvent event) {
-		Object source = event.getSource();
-		if (source instanceof Button) {
-			Button button = (Button) source;
-			if (button.equals(getBottomButton())) {
-				Suggestion selectedItem = getBottomButton().getSelectedItem();
-				if (selectedItem instanceof OntologyElementSuggestion) {
-					OntologyElementSuggestion selectedSuggestionItem = (OntologyElementSuggestion) selectedItem;
-					loadPropertyList(selectedSuggestionItem
-							.getOntologyElement(), true);
-				}
-
-			} else if (button.equals(getRightButton())) {
-				Suggestion selectedItem = getRightButton().getSelectedItem();
-				if (selectedItem instanceof OntologyElementSuggestion) {
-					OntologyElementSuggestion selectedSuggestionItem = (OntologyElementSuggestion) selectedItem;
-					loadPropertyList(selectedSuggestionItem
-							.getOntologyElement(), false);
-				}
-			}
-		}
-
-	}
-
-	@Override
-	public void onSelection(SelectionEvent<Suggestion> event) {
-		Object source = event.getSource();
-		if (source instanceof OntologyElementSuggestBox) {
-			OntologyElementSuggestBox suggestBox = (OntologyElementSuggestBox) source;
-			Suggestion selectedItem = event.getSelectedItem();
-			if (selectedItem instanceof OntologyElementSuggestion) {
-				OntologyElementSuggestion ontologyElementSuggestion = (OntologyElementSuggestion) selectedItem;
-				OntElement ontologyElement = ontologyElementSuggestion
-						.getOntologyElement();
-				if (ontologyElement instanceof OntRelation) {
-					OntRelation selectedRelation = (OntRelation) ontologyElement;
-					loadRangeConceptList(selectedRelation, suggestBox);
-				}
-			}
-		}
-	}
-
-	private void loadRangeConceptList(OntRelation selectedRelation,
-			final OntologyElementSuggestBox beforeSuggestBox) {
-		AsyncCallbackWrapper<List<OntElement>> callback = new AsyncCallbackWrapper<List<OntElement>>() {
-
-			@Override
-			public void handleSuccess(List<OntElement> result) {
-				OntologyElementOracle rangeConceptOracle = new OntologyElementOracle();
-				rangeConceptOracle.setOntologyElements(result);
-				OntologyElementSuggestBox rangeConceptSuggestBox = new OntologyElementSuggestBox(
-						rangeConceptOracle);
-				rangeConceptSuggestBox.addSelectionHandler(TopPanel.this);
-
-				CellCoordinate addedSuggestBoxCoordinate = addRightGridWidget(
-						beforeSuggestBox, rangeConceptSuggestBox);
-				CellCoordinate rightButtonCoordinate = getGrid().search(
-						getRightButton());
-				boolean isRightButtonNear = addedSuggestBoxCoordinate
-						.getRowNumber() == rightButtonCoordinate.getRowNumber()
-						&& addedSuggestBoxCoordinate.getColumnNumber() + 1 == rightButtonCoordinate
-								.getColumnNumber();
-				if (isRightButtonNear) {
-					rangeConceptSuggestBox
-							.addSelectionHandler(getRightButton());
-				}
-
-				getBottomButton().setVisible(true);
-			}
-		};
-		callback.beforeCall();
-		ontologyService.getRelationRangeConceptList(selectedRelation, callback);
-	}
-
 	private void loadConceptNamesList() {
 		AsyncCallbackWrapper<List<OntConcept>> callback = new AsyncCallbackWrapper<List<OntConcept>>() {
 
@@ -198,36 +119,6 @@ public class TopPanel extends Composite implements
 		};
 		callback.beforeCall();
 		ontologyService.getConceptList(callback);
-	}
-
-	private void loadPropertyList(OntElement selectedOntologyElement,
-			final boolean isBottomAdd) {
-		AsyncCallbackWrapper<List<OntRelation>> callback = new AsyncCallbackWrapper<List<OntRelation>>() {
-
-			@Override
-			public void handleSuccess(List<OntRelation> result) {
-				OntologyElementOracle propertyOracle = new OntologyElementOracle();
-				propertyOracle.setOntologyElements(result);
-				OntologyElementSuggestBox propertySuggestBox = new OntologyElementSuggestBox(
-						propertyOracle);
-				propertySuggestBox.addSelectionHandler(TopPanel.this);
-
-				if (isBottomAdd) {
-					insertBottomGridWidget(getBottomButton(),
-							propertySuggestBox);
-				} else {
-					insertRightGridWidget(getRightButton(), propertySuggestBox);
-				}
-
-				propertySuggestBox.setFocus(true);
-			}
-		};
-		if (selectedOntologyElement instanceof OntConcept) {
-			OntConcept selectedConcept = (OntConcept) selectedOntologyElement;
-			callback.beforeCall();
-			ontologyService.getRelationList(selectedConcept, callback);
-		}
-
 	}
 
 	public void insertRightGridWidget(Widget beforeWidget, Widget addedWidget) {

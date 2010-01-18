@@ -46,8 +46,9 @@ public class ConceptTreeNode extends Composite {
 
 	@UiHandler("addButton")
 	void handleClick(ClickEvent event) {
+		OntElement selectedConcept = suggestBoxPanel.getSelectedValue();
 		TreeItem child = new TreeItem();
-		child.setWidget(new PropertyTreeNode(child));
+		child.setWidget(new PropertyTreeNode(child, selectedConcept));
 		treeItem.addItem(child);
 		child.getTree().setSelectedItem(child);
 		child.getTree().ensureSelectedItemVisible();

@@ -48,4 +48,8 @@ public class OntologyElementSuggestBoxPanel extends Composite {
 		suggestBox.getOracle().setOntologyElements(ontElements);
 	}
 
+	public OntElement getSelectedValue() {
+		return suggestBox.getSelectedValue();
+	}
+
 }
