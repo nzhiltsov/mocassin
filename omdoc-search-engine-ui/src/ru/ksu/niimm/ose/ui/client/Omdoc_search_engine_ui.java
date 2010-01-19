@@ -33,7 +33,7 @@ public class Omdoc_search_engine_ui implements EntryPoint {
 		RootLayoutPanel root = RootLayoutPanel.get();
 		root.add(outer);
 		root.forceLayout();
-		topPanel.sendButton.addClickHandler(new BuildQueryStatementHandler(topPanel, centerPanel));
+		topPanel.sendButton.addClickHandler(new BuildQueryStatementHandler(topPanel.tree, centerPanel));
 	}
 
 }
