@@ -37,4 +37,8 @@ public class QueryTree extends Composite {
 		initializeRoot();
 	}
 
+	public TreeItem getRoot() {
+		return tree.getItem(0);
+	}
+
 }

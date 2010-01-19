@@ -3,6 +3,7 @@ package ru.ksu.niimm.ose.ui.client;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Stack;
 
 import ru.ksu.niimm.ose.ui.client.widget.flextable.SearchableFlexTable;
 import ru.ksu.niimm.ose.ui.client.widget.suggestbox.OntologyElementSuggestBox;
@@ -16,6 +17,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.SuggestOracle.Callback;
@@ -59,12 +61,12 @@ public class CenterPanel extends Composite {
 	}
 
 	public static class BuildQueryStatementHandler implements ClickHandler {
-		private TopPanel module;
 		private CenterPanel centerPanel;
+		private QueryTree tree;
 
-		public BuildQueryStatementHandler(TopPanel module,
+		public BuildQueryStatementHandler(QueryTree tree,
 				CenterPanel centerPanel) {
-			this.module = module;
+			this.tree = tree;
 			this.centerPanel = centerPanel;
 		}
 
@@ -76,53 +78,67 @@ public class CenterPanel extends Composite {
 			this.centerPanel = centerPanel;
 		}
 
-		public SearchableFlexTable getGrid() {
-			// TODO : fix it!!
-			throw new UnsupportedOperationException("not implemented yet");
+		public QueryTree getTree() {
+			return tree;
 		}
 
-		public TopPanel getModule() {
-			return module;
-		}
-
-		public void setModule(TopPanel module) {
-			this.module = module;
+		public void setTree(QueryTree tree) {
+			this.tree = tree;
 		}
 
 		@Override
 		public void onClick(ClickEvent event) {
-			// TODO : this is stub algorithm implementation; need tree traverse
-			// algorithm
+			TreeItem root = tree.getRoot();
+			Widget rootItemWidget = root.getWidget();
+			if (rootItemWidget instanceof ConceptTreeNode) {
+				ConceptTreeNode rootConceptNode = (ConceptTreeNode) rootItemWidget;
+				OntElement conceptNode = rootConceptNode.suggestBoxPanel
+						.getSelectedValue();
+				List<OntTriple> triples = buildQueryTriples(root);
+				OntQueryStatement st = new OntQueryStatement(conceptNode,
+						triples);
+			}
+
+		}
+
+		/**
+		 * tree traversal in depth to build triples
+		 * 
+		 * @param node
+		 * @return
+		 */
+		private List<OntTriple> buildQueryTriples(TreeItem node) {
+			// TODO : complete implementation !!!
 			List<OntTriple> triples = new ArrayList<OntTriple>();
-			int i = 0;
-			List<OntElement> ontElements = new ArrayList<OntElement>();
-			for (int j = 0; j < getGrid().getCellCount(i); j++) {
-				Widget cellWidget = getGrid().getWidget(i, j);
-				if (cellWidget instanceof OntologyElementSuggestBox) {
-					OntologyElementSuggestBox suggestBox = (OntologyElementSuggestBox) cellWidget;
-					OntElement selectedValue = suggestBox.getSelectedValue();
-					ontElements.add(selectedValue);
+			OntTriple firstCurrentTriple = new OntTriple();
+			triples.add(firstCurrentTriple);
+			OntTriple secondCurrentTriple = new OntTriple();
+			triples.add(secondCurrentTriple);
+
+			Stack<TreeItem> stack = new Stack<TreeItem>();
+			stack.push(node);
+			while (!stack.isEmpty()) {
+				TreeItem item = stack.pop();
+				Widget itemWidget = item.getWidget();
+				if (itemWidget instanceof ConceptTreeNode) {
+					OntElement selectedConcept = ((ConceptTreeNode) itemWidget).suggestBoxPanel
+							.getSelectedValue();
+					firstCurrentTriple.setObject(selectedConcept);
+					secondCurrentTriple.setSubject(selectedConcept);
+				} else if (itemWidget instanceof PropertyTreeNode) {
+					OntElement selectedProperty = ((PropertyTreeNode) itemWidget).suggestBoxPanel
+							.getSelectedValue();
+					secondCurrentTriple.setPredicate(selectedProperty);
+				} else
+					throw new RuntimeException(
+							"inconsistent state of query tree");
+
+				for (int k = 0; k < item.getChildCount(); k++) {
+					TreeItem child = item.getChild(k);
+					stack.add(child);
 				}
 			}
-			for (int k = 2; k < ontElements.size(); k += 2) {
-				OntTriple triple = new OntTriple(ontElements.get(k - 2),
-						ontElements.get(k - 1), ontElements.get(k));
-				triples.add(triple);
-			}
-			Widget mainWidget = getGrid().getWidget(0, 0);
-			OntElement mainConcept = ((OntologyElementSuggestBox) mainWidget)
-					.getSelectedValue();
-			for (int m = 1; m < getGrid().getRowCount() - 1; m++) {
-				OntElement predicateValue = ((OntologyElementSuggestBox) getGrid()
-						.getWidget(m, 1)).getSelectedValue();
-				OntElement objectValue = ((OntologyElementSuggestBox) getGrid()
-						.getWidget(m, 2)).getSelectedValue();
-				OntTriple triple = new OntTriple(mainConcept, predicateValue,
-						objectValue);
-				triples.add(triple);
-			}
-			OntQueryStatement st = new OntQueryStatement(mainConcept, triples);
-			getCenterPanel().query(st);
+			return triples;
 		}
 	}
 
