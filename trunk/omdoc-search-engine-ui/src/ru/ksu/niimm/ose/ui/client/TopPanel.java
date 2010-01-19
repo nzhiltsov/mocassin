@@ -15,6 +15,8 @@ public class TopPanel extends Composite {
 
 	private static final Binder binder = GWT.create(Binder.class);
 	@UiField
+	QueryTree tree;
+	@UiField
 	Button sendButton;
 	@UiField
 	Button clearButton;
@@ -25,7 +27,7 @@ public class TopPanel extends Composite {
 
 	@UiHandler("clearButton")
 	void handleClick(ClickEvent event) {
-		// TODO : clear query tree
+		tree.clearTree();
 	}
 
 }
