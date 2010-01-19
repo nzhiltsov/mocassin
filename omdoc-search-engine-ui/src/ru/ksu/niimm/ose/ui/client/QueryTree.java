@@ -24,7 +24,7 @@ public class QueryTree extends Composite {
 	public QueryTree() {
 		initWidget(uiBinder.createAndBindUi(this));
 		TreeItem root = new TreeItem();
-		root.setWidget(new ConceptTreeNode(root));
 		this.tree.addItem(root);
+		root.setWidget(new ConceptTreeNode(root));
 	}
 }

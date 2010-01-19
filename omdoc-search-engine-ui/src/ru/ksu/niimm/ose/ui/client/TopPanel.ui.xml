@@ -5,20 +5,18 @@
 			padding-left: 30px;
 		}
 		
-		.find-label {
-			padding-right: 10px;
-		}
-		
 		.fake-label {
 			padding-left: 10px;
 			padding-right: 10px;
 		}
+		
+		.find-label {
+			font-size: large;
+		}
 	</ui:style>
 	<g:VerticalPanel styleName='{style.main-panel}'>
+		<g:Label styleName='{style.find-label}'>Найти</g:Label>
 		<ose:QueryTree />
-		<g:HorizontalPanel ui:field="panel">
-			<g:Label styleName='{style.find-label}'>Найти</g:Label>
-		</g:HorizontalPanel>
 		<g:HorizontalPanel>
 			<g:Button ui:field="sendButton">Поиск</g:Button>
 			<g:Label styleName='{style.fake-label}' />

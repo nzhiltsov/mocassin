@@ -40,12 +40,11 @@ public class PropertyTreeNode extends Composite {
 
 	@UiHandler("suggestBoxPanel")
 	void handleSelect(SelectionEvent<Suggestion> event) {
-		Suggestion selectedItem = event.getSelectedItem();
-		if (selectedItem instanceof OntologyElementSuggestion) {
-			OntologyElementSuggestion ontSelectedItem = (OntologyElementSuggestion) selectedItem;
-			OntElement selectedRelation = ontSelectedItem.getOntologyElement();
-			loadRangeConceptList(selectedRelation);
-		}
+		TreeItem child = new TreeItem();
+		treeItem.addItem(child);
+		child.setWidget(new ConceptTreeNode(child));
+		child.getTree().setSelectedItem(child);
+		child.getTree().ensureSelectedItemVisible();
 
 	}
 
@@ -65,24 +64,4 @@ public class PropertyTreeNode extends Composite {
 
 	}
 
-	private void loadRangeConceptList(OntElement selectedOntologyElement) {
-		AsyncCallbackWrapper<List<OntElement>> callback = new AsyncCallbackWrapper<List<OntElement>>() {
-
-			@Override
-			public void handleSuccess(List<OntElement> result) {
-				TreeItem child = new TreeItem();
-				child.setWidget(new ConceptTreeNode(child));
-				treeItem.addItem(child);
-				child.getTree().setSelectedItem(child);
-				child.getTree().ensureSelectedItemVisible();
-			}
-		};
-		if (selectedOntologyElement instanceof OntRelation) {
-			OntRelation selectedRelation = (OntRelation) selectedOntologyElement;
-			callback.beforeCall();
-			ontologyService.getRelationRangeConceptList(selectedRelation,
-					callback);
-		}
-
-	}
 }
