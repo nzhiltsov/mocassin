@@ -23,8 +23,18 @@ public class QueryTree extends Composite {
 
 	public QueryTree() {
 		initWidget(uiBinder.createAndBindUi(this));
+		initializeRoot();
+	}
+
+	private void initializeRoot() {
 		TreeItem root = new TreeItem();
 		this.tree.addItem(root);
 		root.setWidget(new ConceptTreeNode(root));
 	}
+
+	public void clearTree() {
+		tree.clear();
+		initializeRoot();
+	}
+
 }

@@ -16,7 +16,7 @@
 	</ui:style>
 	<g:VerticalPanel styleName='{style.main-panel}'>
 		<g:Label styleName='{style.find-label}'>Найти</g:Label>
-		<ose:QueryTree />
+		<ose:QueryTree ui:field="tree"/>
 		<g:HorizontalPanel>
 			<g:Button ui:field="sendButton">Поиск</g:Button>
 			<g:Label styleName='{style.fake-label}' />
