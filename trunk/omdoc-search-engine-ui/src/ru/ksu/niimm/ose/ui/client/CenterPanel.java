@@ -77,7 +77,8 @@ public class CenterPanel extends Composite {
 		}
 
 		public SearchableFlexTable getGrid() {
-			return module.getGrid();
+			// TODO : fix it!!
+			throw new UnsupportedOperationException("not implemented yet");
 		}
 
 		public TopPanel getModule() {

@@ -41,15 +41,27 @@ public class ConceptTreeNode extends Composite {
 		initWidget(uiBinder.createAndBindUi(this));
 		this.treeItem = treeItem;
 		this.addButton.setEnabled(false);
-		loadConceptNamesList();
+		boolean isRoot = this.treeItem.getParentItem() == null;
+		if (isRoot) {
+			loadConceptNamesList();
+		} else {
+			Widget parentItemWidget = this.treeItem.getParentItem().getWidget();
+			if (parentItemWidget instanceof PropertyTreeNode) {
+				PropertyTreeNode parentPropertyNode = (PropertyTreeNode) parentItemWidget;
+				OntElement selectedOntElement = parentPropertyNode.suggestBoxPanel
+						.getSelectedValue();
+				loadRangeConceptList(selectedOntElement);
+			}
+		}
+
 	}
 
 	@UiHandler("addButton")
 	void handleClick(ClickEvent event) {
 		OntElement selectedConcept = suggestBoxPanel.getSelectedValue();
 		TreeItem child = new TreeItem();
-		child.setWidget(new PropertyTreeNode(child, selectedConcept));
 		treeItem.addItem(child);
+		child.setWidget(new PropertyTreeNode(child, selectedConcept));
 		child.getTree().setSelectedItem(child);
 		child.getTree().ensureSelectedItemVisible();
 	}
@@ -69,5 +81,22 @@ public class ConceptTreeNode extends Composite {
 		};
 		callback.beforeCall();
 		ontologyService.getConceptList(callback);
+	}
+
+	private void loadRangeConceptList(OntElement selectedOntologyElement) {
+		AsyncCallbackWrapper<List<OntElement>> callback = new AsyncCallbackWrapper<List<OntElement>>() {
+
+			@Override
+			public void handleSuccess(List<OntElement> result) {
+				suggestBoxPanel.setSuggestions(result);
+			}
+		};
+		if (selectedOntologyElement instanceof OntRelation) {
+			OntRelation selectedRelation = (OntRelation) selectedOntologyElement;
+			callback.beforeCall();
+			ontologyService.getRelationRangeConceptList(selectedRelation,
+					callback);
+		}
+
 	}
 }
