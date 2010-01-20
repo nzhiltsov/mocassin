@@ -138,9 +138,11 @@ public class OntologyServiceImpl extends RemoteServiceServlet implements
 		for (OntTriple ontTriple : ontStatementTriples) {
 			OntologyConcept subject = new OntologyConcept(ontTriple
 					.getSubject().getUri(), ontTriple.getSubject().getLabel());
+			subject.setId(ontTriple.getSubject().getId());
 			OntologyRelation predicate = new OntologyRelation(ontTriple
 					.getPredicate().getUri(), ontTriple.getPredicate()
 					.getLabel());
+			predicate.setId(ontTriple.getPredicate().getId());
 			OntologyElement object;
 			if (ontTriple.getObject() instanceof OntConcept) {
 				object = new OntologyConcept(ontTriple.getObject().getUri(),
@@ -149,6 +151,7 @@ public class OntologyServiceImpl extends RemoteServiceServlet implements
 				object = new OntologyIndividual(ontTriple.getObject().getUri(),
 						ontTriple.getObject().getLabel());
 			}
+			object.setId(ontTriple.getObject().getId());
 			OntologyTriple ontologyTriple = new OntologyTriple(subject,
 					predicate, object);
 			retrievedTriples.add(ontologyTriple);
