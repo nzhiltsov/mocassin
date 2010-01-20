@@ -1,29 +1,18 @@
 package ru.ksu.niimm.ose.ui.client;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Stack;
-
-import ru.ksu.niimm.ose.ui.client.widget.flextable.SearchableFlexTable;
-import ru.ksu.niimm.ose.ui.client.widget.suggestbox.OntologyElementSuggestBox;
-import ru.ksu.niimm.ose.ui.client.widget.suggestbox.OntologyElementSuggestion;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.client.ui.SuggestOracle.Callback;
-import com.google.gwt.user.client.ui.SuggestOracle.Request;
-import com.google.gwt.user.client.ui.SuggestOracle.Response;
-import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
 
 public class CenterPanel extends Composite {
 	interface Binder extends UiBinder<VerticalPanel, CenterPanel> {
@@ -97,6 +86,7 @@ public class CenterPanel extends Composite {
 				List<OntTriple> triples = buildQueryTriples(root);
 				OntQueryStatement st = new OntQueryStatement(conceptNode,
 						triples);
+				getCenterPanel().query(st);
 			}
 
 		}
@@ -108,37 +98,57 @@ public class CenterPanel extends Composite {
 		 * @return
 		 */
 		private List<OntTriple> buildQueryTriples(TreeItem node) {
-			// TODO : complete implementation !!!
 			List<OntTriple> triples = new ArrayList<OntTriple>();
-			OntTriple firstCurrentTriple = new OntTriple();
-			triples.add(firstCurrentTriple);
-			OntTriple secondCurrentTriple = new OntTriple();
-			triples.add(secondCurrentTriple);
 
-			Stack<TreeItem> stack = new Stack<TreeItem>();
-			stack.push(node);
-			while (!stack.isEmpty()) {
-				TreeItem item = stack.pop();
+			Stack<TreeItem> queue = new Stack<TreeItem>();
+			queue.push(node);
+			while (!queue.isEmpty()) {
+				TreeItem item = queue.pop();
 				Widget itemWidget = item.getWidget();
-				if (itemWidget instanceof ConceptTreeNode) {
-					OntElement selectedConcept = ((ConceptTreeNode) itemWidget).suggestBoxPanel
-							.getSelectedValue();
-					firstCurrentTriple.setObject(selectedConcept);
-					secondCurrentTriple.setSubject(selectedConcept);
-				} else if (itemWidget instanceof PropertyTreeNode) {
+				if (itemWidget instanceof PropertyTreeNode) {
 					OntElement selectedProperty = ((PropertyTreeNode) itemWidget).suggestBoxPanel
 							.getSelectedValue();
-					secondCurrentTriple.setPredicate(selectedProperty);
+					OntElement selectedDomainConcept = getSelectedDomain(item);
+					OntElement selectedRangeConcept = getSelectedRangeConcept(item);
+					OntTriple triple = new OntTriple();
+					triple.setPredicate(selectedProperty);
+					triple.setSubject(selectedDomainConcept);
+					triple.setObject(selectedRangeConcept);
+					triples.add(triple);
+				}
+				for (int k = 0; k < item.getChildCount(); k++) {
+					TreeItem child = item.getChild(k);
+					queue.add(child);
+				}
+			}
+			return triples;
+		}
+
+		private OntElement getSelectedDomain(TreeItem item) {
+			TreeItem parentItem = item.getParentItem();
+			Widget parentItemWidget = parentItem.getWidget();
+			if (parentItemWidget instanceof ConceptTreeNode) {
+				OntElement selectedDomain = ((ConceptTreeNode) parentItemWidget).suggestBoxPanel
+						.getSelectedValue();
+				return selectedDomain;
+			} else
+				throw new RuntimeException("inconsistent state of query tree");
+		}
+
+		private OntElement getSelectedRangeConcept(TreeItem item) {
+			if (item.getChildCount() == 1) {
+				TreeItem childItem = item.getChild(0);
+				Widget childItemWidget = childItem.getWidget();
+				if (childItemWidget instanceof ConceptTreeNode) {
+					OntElement selectedRange = ((ConceptTreeNode) childItemWidget).suggestBoxPanel
+							.getSelectedValue();
+					return selectedRange;
 				} else
 					throw new RuntimeException(
 							"inconsistent state of query tree");
 
-				for (int k = 0; k < item.getChildCount(); k++) {
-					TreeItem child = item.getChild(k);
-					stack.add(child);
-				}
-			}
-			return triples;
+			} else
+				throw new RuntimeException("inconsistent state of query tree");
 		}
 	}
 
