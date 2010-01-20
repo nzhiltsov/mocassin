@@ -102,12 +102,18 @@ public class CenterPanel extends Composite {
 
 			Stack<TreeItem> queue = new Stack<TreeItem>();
 			queue.push(node);
+			/**
+			 * Important !!! enumerate should start only with 1; see comment
+			 * with 'id' field of OntElement
+			 */
+			int i = 1;
 			while (!queue.isEmpty()) {
 				TreeItem item = queue.pop();
 				Widget itemWidget = item.getWidget();
 				if (itemWidget instanceof PropertyTreeNode) {
 					OntElement selectedProperty = ((PropertyTreeNode) itemWidget).suggestBoxPanel
 							.getSelectedValue();
+					selectedProperty.setId(i);
 					OntElement selectedDomainConcept = getSelectedDomain(item);
 					OntElement selectedRangeConcept = getSelectedRangeConcept(item);
 					OntTriple triple = new OntTriple();
@@ -115,11 +121,18 @@ public class CenterPanel extends Composite {
 					triple.setSubject(selectedDomainConcept);
 					triple.setObject(selectedRangeConcept);
 					triples.add(triple);
-				}
+				} else if (itemWidget instanceof ConceptTreeNode) {
+					OntElement selectedConcept = ((ConceptTreeNode) itemWidget).suggestBoxPanel
+							.getSelectedValue();
+					selectedConcept.setId(i);
+				} else
+					throw new RuntimeException(
+							"inconsistent state of query tree");
 				for (int k = 0; k < item.getChildCount(); k++) {
 					TreeItem child = item.getChild(k);
 					queue.add(child);
 				}
+				i++;
 			}
 			return triples;
 		}

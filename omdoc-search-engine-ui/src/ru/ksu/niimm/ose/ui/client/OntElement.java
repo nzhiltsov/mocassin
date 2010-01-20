@@ -6,6 +6,11 @@ import java.io.Serializable;
 public class OntElement implements Serializable, Comparable<OntElement> {
 	protected String uri;
 	protected String label;
+	/**
+	 * @see ru.ksu.niimm.ose.ontology#OntologyElement correspond with 'id' field
+	 *      in that class
+	 */
+	protected int id;
 
 	public OntElement() {
 	}
@@ -34,6 +39,14 @@ public class OntElement implements Serializable, Comparable<OntElement> {
 	@Override
 	public String toString() {
 		return "OntElement [label=" + label + ", uri=" + uri + "]";
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	@Override
