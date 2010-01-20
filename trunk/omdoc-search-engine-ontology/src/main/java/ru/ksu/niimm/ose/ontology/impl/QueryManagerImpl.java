@@ -46,6 +46,13 @@ public class QueryManagerImpl implements QueryManager {
 		return resultResources;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * ru.ksu.niimm.ose.ontology.impl.QueryManager#query(com.hp.hpl.jena.ontology
+	 * .OntModel, ru.ksu.niimm.ose.ontology.QueryStatement)
+	 */
 	public List<OntologyResource> query(OntModel model,
 			QueryStatement queryStatement) {
 		List<OntologyResource> ontologyResources = new ArrayList<OntologyResource>();
@@ -60,7 +67,14 @@ public class QueryManagerImpl implements QueryManager {
 		return ontologyResources;
 	}
 
-	private String generateQuery(QueryStatement queryStatement) {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * ru.ksu.niimm.ose.ontology.impl.QueryManager#generateQuery(ru.ksu.niimm
+	 * .ose.ontology.QueryStatement)
+	 */
+	public String generateQuery(QueryStatement queryStatement) {
 		StringBuffer sb = new StringBuffer();
 		sb.append(RDF_PREFIX_STRING);
 		sb.append("\n");
@@ -70,24 +84,35 @@ public class QueryManagerImpl implements QueryManager {
 		sb.append("\n");
 		List<OntologyTriple> retrievedTriples = queryStatement
 				.getRetrievedTriples();
-		int i = 1;
-		// TODO : need to define the main retrieved concept and map each of
-		// generated binding parameters to its retrieved concept
 		for (OntologyTriple triple : retrievedTriples) {
 			OntologyElement tripleObject = triple.getObject();
+			String whereClause = "";
+			String subjectTypeString = String.format("?%d rdf:type <%s>",
+					triple.getSubject().getId(), triple.getSubject().getUri());
 			boolean isIndividual = tripleObject instanceof OntologyIndividual;
-			String tripleObjectString = isIndividual ? String.format("<%s>",
-					tripleObject.getUri()) : String.format("?%d", i + 1);
-			String whereClause = String.format(
-					"?%d rdf:type <%s> . ?%d <%s> %s .", i, triple.getSubject()
-							.getUri(), i, triple.getPredicate().getUri(),
-					tripleObjectString);
+			if (isIndividual) {
+				String individualString = String.format("?%d <%s> <%s>", triple
+						.getSubject().getId(), triple.getPredicate().getUri(),
+						triple.getObject().getUri());
+				whereClause = String.format("%s .\n %s.", subjectTypeString,
+						individualString);
+			} else {
+
+				String objectTypeString = String
+						.format("?%d rdf:type <%s>",
+								triple.getObject().getId(), triple.getObject()
+										.getUri());
+				String predicateString = String.format("?%d <%s> ?%d", triple
+						.getSubject().getId(), triple.getPredicate().getUri(),
+						triple.getObject().getId());
+				whereClause = String.format("%s .\n %s .\n %s.",
+						subjectTypeString, objectTypeString, predicateString);
+			}
+
 			sb.append(whereClause);
 			sb.append("\n");
-			i++;
 		}
 		sb.append("}");
 		return sb.toString();
 	}
-
 }

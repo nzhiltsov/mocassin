@@ -28,6 +28,15 @@ public interface QueryManager {
 	 *            query statement
 	 * @return
 	 */
-	public List<OntologyResource> query(OntModel model, QueryStatement queryStatement);
+	List<OntologyResource> query(OntModel model, QueryStatement queryStatement);
+
+	/**
+	 * generate SPARQL query for given query statement
+	 * 
+	 * @param queryStatement
+	 *            query statement
+	 * @return
+	 */
+	String generateQuery(QueryStatement queryStatement);
 
 }

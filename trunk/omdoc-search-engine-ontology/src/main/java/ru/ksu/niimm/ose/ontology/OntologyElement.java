@@ -4,6 +4,12 @@ public class OntologyElement {
 
 	protected String label;
 	protected String uri;
+	/**
+	 * Important !!!
+	 * 
+	 * 'id' is used when one builds query tree; it starts with 1
+	 */
+	protected int id;
 
 	public OntologyElement(String uri, String label) {
 		this.label = label;
@@ -24,6 +30,19 @@ public class OntologyElement {
 
 	public void setUri(String uri) {
 		this.uri = uri;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	@Override
+	public String toString() {
+		return label;
 	}
 
 }
