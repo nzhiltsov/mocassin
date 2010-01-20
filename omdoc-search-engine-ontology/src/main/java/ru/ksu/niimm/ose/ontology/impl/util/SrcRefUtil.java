@@ -9,9 +9,13 @@ public class SrcRefUtil {
 	}
 
 	public static SourceReference parse(String resourceUri, String srcRefValue) {
-		if (srcRefValue == null || srcRefValue.equals(""))
-			throw new IllegalArgumentException(
-					"source reference value cannot be null or empty");
+		if (srcRefValue == null || srcRefValue.equals("")) {
+			// TODO : correct this case handling
+			SourceReference fakeRef = new SourceReference();
+			fakeRef.setFileName("undefined_this_is_fake_document.tex");
+			return fakeRef;
+		}
+
 		StringTokenizer st = new StringTokenizer(srcRefValue, ";");
 		String fileNameStr = st.nextToken();
 		String coordinateStr = st.nextToken();

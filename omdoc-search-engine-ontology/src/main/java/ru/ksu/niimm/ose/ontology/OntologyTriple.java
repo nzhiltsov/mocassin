@@ -36,4 +36,9 @@ public class OntologyTriple {
 		this.object = object;
 	}
 
+	@Override
+	public String toString() {
+		return String.format("<%s %s %s>", subject, predicate, object);
+	}
+
 }
