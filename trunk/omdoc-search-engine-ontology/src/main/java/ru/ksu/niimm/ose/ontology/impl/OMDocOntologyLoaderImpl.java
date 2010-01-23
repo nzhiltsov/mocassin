@@ -19,6 +19,7 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.util.iterator.ExtendedIterator;
 
 public class OMDocOntologyLoaderImpl implements OMDocOntologyLoader {
+	private static final String RDFS_LABEL_LOCALE = "en";
 	private static final String FILE_PATH = "/omdoc.owl";
 	private static final String OMDOC_NAMESPACE = "http://omdoc.org/ontology#";
 	private OntModel omdocOntology;
@@ -34,7 +35,7 @@ public class OMDocOntologyLoaderImpl implements OMDocOntologyLoader {
 		List<OntologyConcept> classNamesList = new ArrayList<OntologyConcept>();
 		List<OntClass> iteratorAsList = iterator.toList();
 		for (OntClass ontClass : iteratorAsList) {
-			String rdfsLabel = ontClass.getLabel("ru");
+			String rdfsLabel = ontClass.getLabel(RDFS_LABEL_LOCALE);
 			String uri = ontClass.getURI();
 			if (rdfsLabel != null && !rdfsLabel.equals("")) {
 				OntologyConcept concept = new OntologyConcept(uri, rdfsLabel);
@@ -58,7 +59,7 @@ public class OMDocOntologyLoaderImpl implements OMDocOntologyLoader {
 			if (namespace.equals(OMDOC_NAMESPACE)
 					&& !property.isDatatypeProperty()) {
 				String uri = property.getURI();
-				String rdfsLabel = property.getLabel("ru");
+				String rdfsLabel = property.getLabel(RDFS_LABEL_LOCALE);
 				OntologyRelation relation = new OntologyRelation(uri, rdfsLabel);
 				relations.add(relation);
 			}
@@ -93,7 +94,7 @@ public class OMDocOntologyLoaderImpl implements OMDocOntologyLoader {
 							&& !hasSubClassAlready) {
 						rangeClasses.add(rangeClass);
 						OntologyConcept rangeConcept = new OntologyConcept(
-								rangeClass.getURI(), rangeClass.getLabel("ru"));
+								rangeClass.getURI(), rangeClass.getLabel(RDFS_LABEL_LOCALE));
 						rangeConcepts.add(rangeConcept);
 					}
 
