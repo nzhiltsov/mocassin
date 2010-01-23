@@ -39,6 +39,16 @@ h1 {
 	height: 100px;
 }
 
+.concept-SuggestBox {
+	border-color: #cc9f2a;
+}
+
+.property-SuggestBox {
+	border-color: #2977a7;
+}
+/**
 .gwt-Tree .gwt-TreeItem-query {
 	margin-left: 170px;
+	border-color: rgb(204, 159 ,42);
 }
+**/

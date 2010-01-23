@@ -7,6 +7,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class TopPanel extends Composite {
@@ -14,6 +15,10 @@ public class TopPanel extends Composite {
 	}
 
 	private static final Binder binder = GWT.create(Binder.class);
+
+	private MocassinConstants constants = GWT.create(MocassinConstants.class);
+	@UiField
+	Label findLabel;
 	@UiField
 	QueryTree tree;
 	@UiField
@@ -23,6 +28,9 @@ public class TopPanel extends Composite {
 
 	public TopPanel() {
 		initWidget(binder.createAndBindUi(this));
+		findLabel.setText(constants.findLabel());
+		sendButton.setText(constants.sendButtonLabel());
+		clearButton.setText(constants.clearButtonLabel());
 	}
 
 	@UiHandler("clearButton")

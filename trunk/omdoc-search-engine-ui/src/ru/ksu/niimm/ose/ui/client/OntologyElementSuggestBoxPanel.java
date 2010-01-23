@@ -52,4 +52,8 @@ public class OntologyElementSuggestBoxPanel extends Composite {
 		return suggestBox.getSelectedValue();
 	}
 
+	public void addSuggestBoxStyleName(String style) {
+		suggestBox.addStyleName(style);
+	}
+
 }

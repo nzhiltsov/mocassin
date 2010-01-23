@@ -8,7 +8,7 @@
 	</ui:style>
 	<g:HorizontalPanel>
 		<g:PopupPanel ui:field="popup">
-			<g:Label>Загрузка...</g:Label>
+			<g:Label ui:field="title"/>
 		</g:PopupPanel>
 	</g:HorizontalPanel>
 </ui:UiBinder>
