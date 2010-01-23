@@ -59,7 +59,8 @@ public class OMDocResourceLoaderImpl implements OMDocResourceLoader {
 		String elementId = st.nextToken();
 		Document doc = parseDocument(omdocFileName);
 		String srcRefValue = retrieveSrcRefValue(doc, elementId);
-		SourceReference sourceReference = SrcRefUtil.parse(resourceUri, srcRefValue);
+		SourceReference sourceReference = SrcRefUtil.parse(resourceUri,
+				srcRefValue);
 		String pdfFileName = getPdfFileName(sourceReference.getFileName());
 		ArticleMetadata articleMetadata = retriveArticleMetadata(doc);
 		OMDocElement omdocElement = new OMDocElement(resourceUri, elementId,
@@ -70,10 +71,16 @@ public class OMDocResourceLoaderImpl implements OMDocResourceLoader {
 	}
 
 	private ArticleMetadata retriveArticleMetadata(Document doc) {
-			// TODO: need more accurate search
-			String title = doc.getElementsByTagName("dc:title").item(0).getTextContent();
-			String author = doc.getElementsByTagName("dc:creator").item(0).getTextContent();
-			return new ArticleMetadata(title, author);
+		// TODO: need more accurate search
+		NodeList titleElement = doc.getElementsByTagName("dc:title");
+		String title = titleElement != null && titleElement.item(0) != null ? titleElement
+				.item(0).getTextContent()
+				: null;
+		NodeList creatorElement = doc.getElementsByTagName("dc:creator");
+		String author = creatorElement != null
+				&& creatorElement.item(0) != null ? creatorElement.item(0)
+				.getTextContent() : null;
+		return new ArticleMetadata(title, author);
 	}
 
 	private static String getPdfFileName(String omdocFileName) {

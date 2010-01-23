@@ -24,6 +24,8 @@ public class OMDocResourceLoaderTest {
 
 	@Test
 	public void testLoadLemmaResource() {
+		// TODO : correct file path to make relative it and include files into
+		// project
 		OntologyResource resource = new OntologyResource(
 				"file:/home/nzhiltsov/projects/thirdparty/stex2/example/paper/main.omdoc#existlemma");
 		OMDocElement omdocElement = getOmdocResourceLoader().load(resource);
