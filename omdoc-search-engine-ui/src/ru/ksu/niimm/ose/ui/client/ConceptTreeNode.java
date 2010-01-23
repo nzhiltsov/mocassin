@@ -41,6 +41,8 @@ public class ConceptTreeNode extends Composite {
 		initWidget(uiBinder.createAndBindUi(this));
 		this.treeItem = treeItem;
 		this.addButton.setEnabled(false);
+		this.suggestBoxPanel.addSuggestBoxStyleName("concept-SuggestBox");
+
 		boolean isRoot = this.treeItem.getParentItem() == null;
 		if (isRoot) {
 			loadConceptNamesList();

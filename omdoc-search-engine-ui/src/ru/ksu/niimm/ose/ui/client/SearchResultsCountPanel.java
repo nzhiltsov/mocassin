@@ -16,15 +16,24 @@ public class SearchResultsCountPanel extends Composite {
 			UiBinder<HorizontalPanel, SearchResultsCountPanel> {
 	}
 
+	private MocassinConstants constants = GWT.create(MocassinConstants.class);
+
 	@UiField
-	Label resultsLabel;
+	Label resultTitleLabel;
+	@UiField
+	Label countLabel;
 
 	public SearchResultsCountPanel() {
 		initWidget(uiBinder.createAndBindUi(this));
+		resultTitleLabel.setText(constants.resultsTitleLabel());
 	}
 
 	public void setSize(int size) {
-		resultsLabel.setText(String.valueOf(size));
+		countLabel.setText(String.valueOf(size));
+	}
+
+	public Label getResultTitleLabel() {
+		return resultTitleLabel;
 	}
 
 }

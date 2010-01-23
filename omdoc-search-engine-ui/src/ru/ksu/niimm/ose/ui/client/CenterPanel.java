@@ -29,6 +29,7 @@ public class CenterPanel extends Composite {
 
 	public CenterPanel() {
 		initWidget(binder.createAndBindUi(this));
+		searchResultsCountPanel.getResultTitleLabel().setVisible(false);
 	}
 
 	public void query(OntQueryStatement statement) {
@@ -41,6 +42,7 @@ public class CenterPanel extends Composite {
 				for (ResultDescription resultDescription : result) {
 					resultsPanel.add(new HitDescription(resultDescription));
 				}
+				searchResultsCountPanel.getResultTitleLabel().setVisible(true);
 				searchResultsCountPanel.setSize(result.size());
 			}
 

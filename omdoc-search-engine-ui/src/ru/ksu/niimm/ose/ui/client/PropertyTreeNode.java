@@ -35,6 +35,7 @@ public class PropertyTreeNode extends Composite {
 	public PropertyTreeNode(TreeItem treeItem, OntElement domainConcept) {
 		initWidget(uiBinder.createAndBindUi(this));
 		this.treeItem = treeItem;
+		this.suggestBoxPanel.addSuggestBoxStyleName("property-SuggestBox");
 		loadPropertyList(domainConcept);
 	}
 

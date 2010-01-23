@@ -21,8 +21,8 @@
 	</ui:style>
 	<g:HorizontalPanel styleName='{style.results-header-panel}'>
 		<g:HorizontalPanel>
-			<g:Label styleName='{style.results-label}'>Результаты:</g:Label>
-			<g:Label styleName='{style.results-label}' ui:field="resultsLabel" />
+			<g:Label styleName='{style.results-label}' ui:field="resultTitleLabel"/>
+			<g:Label styleName='{style.results-label}' ui:field="countLabel" />
 		</g:HorizontalPanel>
 	</g:HorizontalPanel>
 

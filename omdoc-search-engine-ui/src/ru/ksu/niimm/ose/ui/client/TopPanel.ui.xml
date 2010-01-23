@@ -13,14 +13,20 @@
 		.find-label {
 			font-size: large;
 		}
+		
+		.button-panel {
+			padding-top: 10px;
+		}
 	</ui:style>
 	<g:VerticalPanel styleName='{style.main-panel}'>
-		<g:Label styleName='{style.find-label}'>Найти</g:Label>
-		<ose:QueryTree ui:field="tree"/>
 		<g:HorizontalPanel>
-			<g:Button ui:field="sendButton">Поиск</g:Button>
+			<g:Label styleName='{style.find-label}' ui:field="findLabel" />
+			<ose:QueryTree ui:field="tree" />
+		</g:HorizontalPanel>
+		<g:HorizontalPanel styleName='{style.button-panel}'>
+			<g:Button ui:field="sendButton" />
 			<g:Label styleName='{style.fake-label}' />
-			<g:Button ui:field="clearButton">Очистить</g:Button>
+			<g:Button ui:field="clearButton" />
 		</g:HorizontalPanel>
 
 	</g:VerticalPanel>
