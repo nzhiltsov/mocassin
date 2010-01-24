@@ -2,7 +2,7 @@ package ru.ksu.niimm.ose.ontology;
 
 import java.util.List;
 
-public interface OMDocOntologyLoader {
+public interface OMDocOntologyFacade {
 	/**
 	 * receive list of all ontology concepts
 	 * 

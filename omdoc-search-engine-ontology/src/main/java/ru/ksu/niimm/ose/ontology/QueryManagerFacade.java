@@ -5,7 +5,7 @@ import java.util.List;
 import com.hp.hpl.jena.ontology.OntModel;
 import com.hp.hpl.jena.rdf.model.Resource;
 
-public interface QueryManager {
+public interface QueryManagerFacade {
 	/**
 	 * query given model with given query string
 	 * 
