@@ -1,9 +1,10 @@
 package ru.ksu.niimm.ose.ui.client;
 
 import java.io.Serializable;
+import java.util.Comparator;
 
 @SuppressWarnings("serial")
-public class OntElement implements Serializable, Comparable<OntElement> {
+public class OntElement implements Serializable {
 	protected String uri;
 	protected String label;
 	/**
@@ -49,12 +50,19 @@ public class OntElement implements Serializable, Comparable<OntElement> {
 		this.id = id;
 	}
 
-	@Override
-	public int compareTo(OntElement o) {
-		if (getLabel() != null && o.getLabel() != null) {
-			getLabel().compareTo(o.getLabel());
+	public static class OntElementComparator<T extends OntElement> implements
+			Comparator<T> {
+
+		@Override
+		public int compare(T firstElement, T secondElement) {
+			if (firstElement == null || secondElement == null
+					|| firstElement.getLabel() == null
+					|| secondElement.getLabel() == null) {
+				return 0;
+			}
+			return firstElement.getLabel().compareTo(secondElement.getLabel());
 		}
-		return 0;
+
 	}
 
 }

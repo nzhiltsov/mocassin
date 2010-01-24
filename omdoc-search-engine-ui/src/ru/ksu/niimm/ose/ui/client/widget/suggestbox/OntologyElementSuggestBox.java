@@ -30,13 +30,14 @@ public class OntologyElementSuggestBox extends SuggestBox implements
 		return (OntologyElementOracle) getSuggestOracle();
 	}
 
-	public OntElement getSelectedValue() {
+	/*
+	 public OntElement getSelectedValue() {
 		final String currentValue = getValue();
 		Request request = new Request();
 		SuggestionCallback callback = new SuggestionCallback(currentValue);
-		getSuggestOracle().requestDefaultSuggestions(request, callback);
+		getSuggestOracle().requestSuggestions(request, callback);
 		return callback.getValue();
-	}
+	}*/
 
 	public static class SuggestionCallback implements Callback {
 		private String suggestionString;
