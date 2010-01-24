@@ -5,20 +5,20 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ru.ksu.niimm.ose.ontology.OMDocElement;
-import ru.ksu.niimm.ose.ontology.OMDocResourceLoader;
+import ru.ksu.niimm.ose.ontology.OMDocResourceFacade;
 import ru.ksu.niimm.ose.ontology.OntologyResource;
 import ru.ksu.niimm.ose.ontology.SourceReference;
-import ru.ksu.niimm.ose.ontology.impl.OMDocResourceLoaderImpl;
+import ru.ksu.niimm.ose.ontology.impl.OMDocResourceFacadeImpl;
 
 public class OMDocResourceLoaderTest {
-	private OMDocResourceLoader omdocResourceLoader;
+	private OMDocResourceFacade omdocResourceLoader;
 
 	@Before
 	public void setup() {
-		omdocResourceLoader = new OMDocResourceLoaderImpl();
+		omdocResourceLoader = new OMDocResourceFacadeImpl();
 	}
 
-	public OMDocResourceLoader getOmdocResourceLoader() {
+	public OMDocResourceFacade getOmdocResourceLoader() {
 		return omdocResourceLoader;
 	}
 

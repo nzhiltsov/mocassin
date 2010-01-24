@@ -7,9 +7,12 @@ import ru.ksu.niimm.ose.ontology.OntologyElement;
 import ru.ksu.niimm.ose.ontology.OntologyIndividual;
 import ru.ksu.niimm.ose.ontology.OntologyResource;
 import ru.ksu.niimm.ose.ontology.OntologyTriple;
-import ru.ksu.niimm.ose.ontology.QueryManager;
+import ru.ksu.niimm.ose.ontology.QueryManagerFacade;
 import ru.ksu.niimm.ose.ontology.QueryStatement;
+import ru.ksu.niimm.ose.ontology.loader.OMDocOntologyLoader;
+import ru.ksu.niimm.ose.ontology.loader.impl.OMDocOntologyLoaderImpl;
 
+import com.clarkparsia.pellet.sparqldl.jena.SparqlDLExecutionFactory;
 import com.hp.hpl.jena.ontology.OntModel;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
@@ -19,10 +22,16 @@ import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Resource;
 
-public class QueryManagerImpl implements QueryManager {
+public class QueryManagerFacadeImpl implements QueryManagerFacade {
 	private static final String RDF_PREFIX_STRING = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>";
 	private static final String SELECT_STATEMENT = "SELECT DISTINCT %s WHERE";
 	private static final String RETRIEVED_CONCEPT_KEY = "?1";
+
+	private OntModel ontology;
+	private OMDocOntologyLoader ontologyLoader = new OMDocOntologyLoaderImpl();
+
+	public QueryManagerFacadeImpl() {
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -33,8 +42,9 @@ public class QueryManagerImpl implements QueryManager {
 	 */
 	public List<Resource> query(OntModel model, String queryString,
 			String retrievedResourceKey) {
+		model.loadImports();
 		Query query = QueryFactory.create(queryString);
-		QueryExecution queryExecution = QueryExecutionFactory.create(query,
+		QueryExecution queryExecution = SparqlDLExecutionFactory.create(query,
 				model);
 		ResultSet results = queryExecution.execSelect();
 		List<Resource> resultResources = new ArrayList<Resource>();
@@ -115,4 +125,16 @@ public class QueryManagerImpl implements QueryManager {
 		sb.append("}");
 		return sb.toString();
 	}
+
+	public OntModel getOntology() {
+		if (ontology == null) {
+			this.ontology = getOntologyLoader().getOntology();
+		}
+		return ontology;
+	}
+
+	public OMDocOntologyLoader getOntologyLoader() {
+		return ontologyLoader;
+	}
+
 }

@@ -24,12 +24,12 @@ import org.xml.sax.SAXException;
 
 import ru.ksu.niimm.ose.ontology.ArticleMetadata;
 import ru.ksu.niimm.ose.ontology.OMDocElement;
-import ru.ksu.niimm.ose.ontology.OMDocResourceLoader;
+import ru.ksu.niimm.ose.ontology.OMDocResourceFacade;
 import ru.ksu.niimm.ose.ontology.OntologyResource;
 import ru.ksu.niimm.ose.ontology.SourceReference;
 import ru.ksu.niimm.ose.ontology.impl.util.SrcRefUtil;
 
-public class OMDocResourceLoaderImpl implements OMDocResourceLoader {
+public class OMDocResourceFacadeImpl implements OMDocResourceFacade {
 	private static final String FILE_URI_PREFIX = "file:/";
 	private static final String XPATH_GET_ELEMENT_BY_ID_PATTERN = "//*[@id='%s']";
 	private static final String STEX_SRCREF_ATTRIBUTE_NAME = "stex:srcref";

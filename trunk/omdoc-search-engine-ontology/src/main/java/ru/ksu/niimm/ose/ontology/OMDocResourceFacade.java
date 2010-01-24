@@ -1,7 +1,7 @@
 package ru.ksu.niimm.ose.ontology;
 
 
-public interface OMDocResourceLoader {
+public interface OMDocResourceFacade {
 	/**
 	 * load OMDoc element info for given resource
 	 * 

@@ -8,17 +8,17 @@ import org.junit.Test;
 
 import com.hp.hpl.jena.ontology.OntProperty;
 
-import ru.ksu.niimm.ose.ontology.OMDocOntologyLoader;
+import ru.ksu.niimm.ose.ontology.OMDocOntologyFacade;
 import ru.ksu.niimm.ose.ontology.OntologyConcept;
 import ru.ksu.niimm.ose.ontology.OntologyRelation;
-import ru.ksu.niimm.ose.ontology.impl.OMDocOntologyLoaderImpl;
+import ru.ksu.niimm.ose.ontology.impl.OMDocOntologyFacadeImpl;
 
 public class OMDocOntologyLoaderTest {
-	private OMDocOntologyLoader loader;
+	private OMDocOntologyFacade loader;
 
 	@Before
 	public void setup() {
-		loader = new OMDocOntologyLoaderImpl();
+		loader = new OMDocOntologyFacadeImpl();
 	}
 
 	@Test
@@ -81,7 +81,7 @@ public class OMDocOntologyLoaderTest {
 		Assert.assertTrue(containsAssertion && containsAssumption);
 	}
 
-	public OMDocOntologyLoader getLoader() {
+	public OMDocOntologyFacade getLoader() {
 		return loader;
 	}
 

@@ -6,10 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-import ru.ksu.niimm.ose.ontology.OMDocOntologyLoader;
+import org.mindswap.pellet.jena.PelletReasonerFactory;
+
+import ru.ksu.niimm.ose.ontology.OMDocOntologyFacade;
 import ru.ksu.niimm.ose.ontology.OntologyConcept;
 import ru.ksu.niimm.ose.ontology.OntologyIndividual;
 import ru.ksu.niimm.ose.ontology.OntologyRelation;
+import ru.ksu.niimm.ose.ontology.loader.OMDocOntologyLoader;
+import ru.ksu.niimm.ose.ontology.loader.impl.OMDocOntologyLoaderImpl;
 
 import com.hp.hpl.jena.ontology.OntClass;
 import com.hp.hpl.jena.ontology.OntModel;
@@ -19,11 +23,12 @@ import com.hp.hpl.jena.ontology.OntResource;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.util.iterator.ExtendedIterator;
 
-public class OMDocOntologyLoaderImpl implements OMDocOntologyLoader {
+public class OMDocOntologyFacadeImpl implements OMDocOntologyFacade {
 	private static final String RDFS_LABEL_LOCALE = "ru";
-	private static final String FILE_PATH = "/omdoc.owl";
+
 	private static final String OMDOC_NAMESPACE = "http://omdoc.org/ontology#";
 	private OntModel omdocOntology;
+	private OMDocOntologyLoader ontologyLoader = new OMDocOntologyLoaderImpl();
 
 	/*
 	 * (non-Javadoc)
@@ -138,8 +143,6 @@ public class OMDocOntologyLoaderImpl implements OMDocOntologyLoader {
 					"[*,*]"));
 			individuals.add(new OntologyIndividual(
 					"http://www.openmath.org/cd/latexml#divide", "/"));
-			individuals.add(new OntologyIndividual(
-					"http://www.openmath.org/cd/set1#inset", "×"));
 		}
 		return individuals;
 	}
@@ -151,29 +154,9 @@ public class OMDocOntologyLoaderImpl implements OMDocOntologyLoader {
 
 	private OntModel getOmdocOntology() {
 		if (omdocOntology == null) {
-			try {
-				omdocOntology = load();
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
+			omdocOntology = this.ontologyLoader.getOntology();
 		}
 		return omdocOntology;
-	}
-
-	private OntModel load() throws IOException {
-		OntModel omdocOntology = ModelFactory
-				.createOntologyModel(OntModelSpec.OWL_DL_MEM_RULE_INF);
-		InputStream inputStream = null;
-		try {
-			inputStream = this.getClass().getResourceAsStream(FILE_PATH);
-			omdocOntology.read(inputStream, null, "RDF/XML-ABBREV");
-			return omdocOntology;
-		} catch (Exception e) {
-			if (inputStream != null)
-				inputStream.close();
-			throw new IOException("cannot read ontology");
-		}
-
 	}
 
 }
