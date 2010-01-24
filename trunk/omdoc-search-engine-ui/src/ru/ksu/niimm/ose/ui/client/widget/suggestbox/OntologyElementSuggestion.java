@@ -4,7 +4,8 @@ import ru.ksu.niimm.ose.ui.client.OntElement;
 
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle.MultiWordSuggestion;
 
-public class OntologyElementSuggestion extends MultiWordSuggestion {
+public class OntologyElementSuggestion extends MultiWordSuggestion implements
+		Comparable<OntologyElementSuggestion> {
 	private OntElement ontologyElement;
 
 	public OntologyElementSuggestion(OntElement ontologyElement) {
@@ -35,4 +36,13 @@ public class OntologyElementSuggestion extends MultiWordSuggestion {
 		return ontologyElement.getLabel() == null
 				|| ontologyElement.getLabel().equals("");
 	}
+
+	@Override
+	public int compareTo(OntologyElementSuggestion suggestion) {
+		if (suggestion == null)
+			return 0;
+		return this.ontologyElement.getLabel().compareTo(
+				suggestion.getOntologyElement().getLabel());
+	}
+
 }

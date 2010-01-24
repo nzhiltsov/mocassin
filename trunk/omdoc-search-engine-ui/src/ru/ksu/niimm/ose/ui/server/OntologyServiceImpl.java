@@ -60,7 +60,8 @@ public class OntologyServiceImpl extends RemoteServiceServlet implements
 			targetOntConcept.setLabel(concept.getLabel());
 			targetConceptList.add(targetOntConcept);
 		}
-		Collections.sort(targetConceptList);
+		Collections.sort(targetConceptList,
+				new OntElement.OntElementComparator<OntConcept>());
 		return targetConceptList;
 	}
 
@@ -76,7 +77,8 @@ public class OntologyServiceImpl extends RemoteServiceServlet implements
 			targetRelation.setLabel(relation.getLabel());
 			targetRelationList.add(targetRelation);
 		}
-		Collections.sort(targetRelationList);
+		Collections.sort(targetRelationList,
+				new OntElement.OntElementComparator<OntRelation>());
 		return targetRelationList;
 	}
 
@@ -99,7 +101,8 @@ public class OntologyServiceImpl extends RemoteServiceServlet implements
 			}
 		}
 
-		Collections.sort(targetConceptList);
+		Collections.sort(targetConceptList,
+				new OntElement.OntElementComparator<OntElement>());
 		return targetConceptList;
 	}
 
