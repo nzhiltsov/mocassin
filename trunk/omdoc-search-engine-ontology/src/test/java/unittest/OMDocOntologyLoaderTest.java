@@ -37,6 +37,17 @@ public class OMDocOntologyLoaderTest {
 	}
 
 	@Test
+	public void testGetPropertiesForConcreteDomain() {
+		OntologyConcept concept = new OntologyConcept(
+				"http://omdoc.org/ontology#Property", "property");
+		List<OntologyRelation> properties = getLoader().getOntPropertyList(
+				concept);
+		OntologyRelation relation = new OntologyRelation(
+				"http://omdoc.org/ontology#usesSymbol", "uses symbol");
+		Assert.assertTrue(properties.contains(relation));
+	}
+
+	@Test
 	public void testGetOntPropertyRangeList() {
 		List<OntologyConcept> ontClassList = getLoader().getOntClassList();
 		for (OntologyConcept concept : ontClassList) {
@@ -52,12 +63,22 @@ public class OMDocOntologyLoaderTest {
 	@Test
 	public void testGetRangeOfConcreteProperty() {
 		OntologyRelation relation = new OntologyRelation(
-				"http://omdoc.org/ontology#hasProperty", "has property");
+				"http://omdoc.org/ontology#proves", "proves");
 		List<OntologyConcept> ontPropertyRangeList = getLoader()
 				.getOntPropertyRangeList(relation);
-		Assert.assertTrue(ontPropertyRangeList.size() == 1);
-		Assert.assertEquals(ontPropertyRangeList.get(0).getUri(),
-				"http://omdoc.org/ontology#Property");
+		boolean containsAssertion = false;
+		boolean containsAssumption = false;
+		for (OntologyConcept rangeConcept : ontPropertyRangeList) {
+			if (rangeConcept.getUri().equals(
+					"http://omdoc.org/ontology#Assertion")) {
+				containsAssertion = true;
+			} else if (rangeConcept.getUri().equals(
+					"http://omdoc.org/ontology#Assumption")) {
+				containsAssumption = true;
+			}
+		}
+
+		Assert.assertTrue(containsAssertion && containsAssumption);
 	}
 
 	public OMDocOntologyLoader getLoader() {

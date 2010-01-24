@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import ru.ksu.niimm.ose.ontology.OMDocOntologyLoader;
 import ru.ksu.niimm.ose.ontology.OntologyConcept;
@@ -71,39 +72,55 @@ public class OMDocOntologyLoaderImpl implements OMDocOntologyLoader {
 	@Override
 	public List<OntologyConcept> getOntPropertyRangeList(
 			OntologyRelation relation) {
+		List<OntologyConcept> rangeConcepts = new ArrayList<OntologyConcept>();
+		Stack<OntClass> stack = new Stack<OntClass>();
+
+		List<? extends OntResource> rangeList = getRangeClassesList(relation);
+		for (OntResource ontResource : rangeList) {
+			if (ontResource instanceof OntClass
+					&& ontResource.getNameSpace() != null
+					&& ontResource.getNameSpace().equals(OMDOC_NAMESPACE)) {
+				OntClass resourceAsOntClass = ontResource.asClass();
+				List<OntClass> resourceSubClasses = resourceAsOntClass
+						.listSubClasses().toList();
+				boolean found = false;
+				for (OntClass subClass : resourceSubClasses) {
+					if (stack.contains(subClass)) {
+						found = true;
+					}
+				}
+				if (!found) {
+					stack.push(resourceAsOntClass);
+				}
+
+			}
+		}
+
+		while (!stack.isEmpty()) {
+			OntClass currentClass = stack.pop();
+			OntologyConcept rangeConcept = new OntologyConcept(currentClass
+					.getURI(), currentClass.getLabel(RDFS_LABEL_LOCALE));
+			if (!rangeConcepts.contains(rangeConcept)) {
+				rangeConcepts.add(rangeConcept);
+			}
+
+			List<OntClass> subClasses = currentClass.listSubClasses().toList();
+			for (OntClass subClass : subClasses) {
+				stack.push(subClass);
+			}
+		}
+
+		return rangeConcepts;
+	}
+
+	private List<? extends OntResource> getRangeClassesList(
+			OntologyRelation relation) {
 		String uri = relation.getUri();
 		OntProperty ontProperty = getOmdocOntology().getOntProperty(uri);
 		ExtendedIterator<? extends OntResource> rangeIterator = ontProperty
 				.listRange();
 		List<? extends OntResource> rangeList = rangeIterator.toList();
-		List<OntologyConcept> rangeConcepts = new ArrayList<OntologyConcept>();
-		List<OntClass> rangeClasses = new ArrayList<OntClass>();
-		for (OntResource rangeResource : rangeList) {
-			if (rangeResource instanceof OntClass) {
-				OntClass rangeClass = (OntClass) rangeResource;
-				if (hasOmdocNamespace(rangeClass)) {
-					List<OntClass> subClasses = rangeClass.listSubClasses()
-							.toList();
-					boolean hasSubClassAlready = false;
-					for (OntClass subClass : subClasses) {
-						hasSubClassAlready = rangeClasses.contains(subClass);
-						if (hasSubClassAlready)
-							break;
-					}
-					if (!rangeClasses.contains(rangeClass)
-							&& !hasSubClassAlready) {
-						rangeClasses.add(rangeClass);
-						OntologyConcept rangeConcept = new OntologyConcept(
-								rangeClass.getURI(), rangeClass.getLabel(RDFS_LABEL_LOCALE));
-						rangeConcepts.add(rangeConcept);
-					}
-
-				}
-
-			}
-
-		}
-		return rangeConcepts;
+		return rangeList;
 	}
 
 	@Override
@@ -121,6 +138,8 @@ public class OMDocOntologyLoaderImpl implements OMDocOntologyLoader {
 					"[*,*]"));
 			individuals.add(new OntologyIndividual(
 					"http://www.openmath.org/cd/latexml#divide", "/"));
+			individuals.add(new OntologyIndividual(
+					"http://www.openmath.org/cd/set1#inset", "×"));
 		}
 		return individuals;
 	}
