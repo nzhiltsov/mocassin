@@ -19,7 +19,7 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.util.iterator.ExtendedIterator;
 
 public class OMDocOntologyLoaderImpl implements OMDocOntologyLoader {
-	private static final String RDFS_LABEL_LOCALE = "en";
+	private static final String RDFS_LABEL_LOCALE = "ru";
 	private static final String FILE_PATH = "/omdoc.owl";
 	private static final String OMDOC_NAMESPACE = "http://omdoc.org/ontology#";
 	private OntModel omdocOntology;
