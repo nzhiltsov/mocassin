@@ -5,21 +5,23 @@ import java.util.Collections;
 import java.util.List;
 
 import ru.ksu.niimm.ose.ontology.OMDocElement;
-import ru.ksu.niimm.ose.ontology.OMDocOntologyLoader;
-import ru.ksu.niimm.ose.ontology.OMDocResourceLoader;
+import ru.ksu.niimm.ose.ontology.OMDocOntologyFacade;
+import ru.ksu.niimm.ose.ontology.OMDocResourceFacade;
 import ru.ksu.niimm.ose.ontology.OntologyConcept;
 import ru.ksu.niimm.ose.ontology.OntologyElement;
 import ru.ksu.niimm.ose.ontology.OntologyIndividual;
 import ru.ksu.niimm.ose.ontology.OntologyRelation;
 import ru.ksu.niimm.ose.ontology.OntologyResource;
 import ru.ksu.niimm.ose.ontology.OntologyTriple;
-import ru.ksu.niimm.ose.ontology.QueryManager;
+import ru.ksu.niimm.ose.ontology.QueryManagerFacade;
 import ru.ksu.niimm.ose.ontology.QueryStatement;
-import ru.ksu.niimm.ose.ontology.RDFStorageLoader;
-import ru.ksu.niimm.ose.ontology.impl.OMDocOntologyLoaderImpl;
-import ru.ksu.niimm.ose.ontology.impl.OMDocResourceLoaderImpl;
-import ru.ksu.niimm.ose.ontology.impl.QueryManagerImpl;
-import ru.ksu.niimm.ose.ontology.impl.RDFStorageLoaderImpl;
+import ru.ksu.niimm.ose.ontology.impl.OMDocOntologyFacadeImpl;
+import ru.ksu.niimm.ose.ontology.impl.OMDocResourceFacadeImpl;
+import ru.ksu.niimm.ose.ontology.impl.QueryManagerFacadeImpl;
+import ru.ksu.niimm.ose.ontology.loader.OMDocOntologyLoader;
+import ru.ksu.niimm.ose.ontology.loader.RDFStorageLoader;
+import ru.ksu.niimm.ose.ontology.loader.impl.OMDocOntologyLoaderImpl;
+import ru.ksu.niimm.ose.ontology.loader.impl.RDFStorageLoaderImpl;
 import ru.ksu.niimm.ose.ui.client.OntConcept;
 import ru.ksu.niimm.ose.ui.client.OntElement;
 import ru.ksu.niimm.ose.ui.client.OntIndividual;
@@ -37,10 +39,10 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 @SuppressWarnings("serial")
 public class OntologyServiceImpl extends RemoteServiceServlet implements
 		OntologyService {
-	private OMDocOntologyLoader omdocOntologyLoader = new OMDocOntologyLoaderImpl();
-	private QueryManager queryManager = new QueryManagerImpl();
+	private OMDocOntologyFacade omdocOntologyLoader = new OMDocOntologyFacadeImpl();
+	private QueryManagerFacade queryManager = new QueryManagerFacadeImpl();
 	private RDFStorageLoader storageLoader = new RDFStorageLoaderImpl();
-	private OMDocResourceLoader omdocResourceLoader = new OMDocResourceLoaderImpl();
+	private OMDocResourceFacade omdocResourceLoader = new OMDocResourceFacadeImpl();
 
 	public String greetServer(String input) {
 		String serverInfo = getServletContext().getServerInfo();
@@ -179,19 +181,19 @@ public class OntologyServiceImpl extends RemoteServiceServlet implements
 		return elements;
 	}
 
-	public OMDocOntologyLoader getOmdocOntologyLoader() {
+	public OMDocOntologyFacade getOmdocOntologyLoader() {
 		return omdocOntologyLoader;
 	}
 
-	public void setOmdocOntologyLoader(OMDocOntologyLoader loader) {
+	public void setOmdocOntologyLoader(OMDocOntologyFacade loader) {
 		this.omdocOntologyLoader = loader;
 	}
 
-	public QueryManager getQueryManager() {
+	public QueryManagerFacade getQueryManager() {
 		return queryManager;
 	}
 
-	public void setQueryManager(QueryManager queryManager) {
+	public void setQueryManager(QueryManagerFacade queryManager) {
 		this.queryManager = queryManager;
 	}
 
@@ -203,11 +205,11 @@ public class OntologyServiceImpl extends RemoteServiceServlet implements
 		this.storageLoader = storageLoader;
 	}
 
-	public OMDocResourceLoader getOmdocResourceLoader() {
+	public OMDocResourceFacade getOmdocResourceLoader() {
 		return omdocResourceLoader;
 	}
 
-	public void setOmdocResourceLoader(OMDocResourceLoader omdocResourceLoader) {
+	public void setOmdocResourceLoader(OMDocResourceFacade omdocResourceLoader) {
 		this.omdocResourceLoader = omdocResourceLoader;
 	}
 
