@@ -1,3 +1,3 @@
 #labels Featured
 =Information about release dates=
-Planned date for 1.0.0.1 version milestone: 25.01.2010
+Planned date for 1.0.0.1 version milestone: 25.01.2010. This milestone is without application build.
