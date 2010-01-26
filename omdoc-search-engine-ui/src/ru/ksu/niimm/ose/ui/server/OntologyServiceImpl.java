@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+
 import ru.ksu.niimm.ose.ontology.OMDocElement;
 import ru.ksu.niimm.ose.ontology.OMDocOntologyFacade;
 import ru.ksu.niimm.ose.ontology.OMDocResourceFacade;
@@ -18,9 +21,7 @@ import ru.ksu.niimm.ose.ontology.QueryStatement;
 import ru.ksu.niimm.ose.ontology.impl.OMDocOntologyFacadeImpl;
 import ru.ksu.niimm.ose.ontology.impl.OMDocResourceFacadeImpl;
 import ru.ksu.niimm.ose.ontology.impl.QueryManagerFacadeImpl;
-import ru.ksu.niimm.ose.ontology.loader.OMDocOntologyLoader;
 import ru.ksu.niimm.ose.ontology.loader.RDFStorageLoader;
-import ru.ksu.niimm.ose.ontology.loader.impl.OMDocOntologyLoaderImpl;
 import ru.ksu.niimm.ose.ontology.loader.impl.RDFStorageLoaderImpl;
 import ru.ksu.niimm.ose.ui.client.OntConcept;
 import ru.ksu.niimm.ose.ui.client.OntElement;
@@ -31,29 +32,24 @@ import ru.ksu.niimm.ose.ui.client.OntTriple;
 import ru.ksu.niimm.ose.ui.client.OntologyService;
 import ru.ksu.niimm.ose.ui.client.ResultDescription;
 
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-
 /**
  * The server side implementation of the RPC service.
  */
-@SuppressWarnings("serial")
-public class OntologyServiceImpl extends RemoteServiceServlet implements
-		OntologyService {
-	private OMDocOntologyFacade omdocOntologyLoader = new OMDocOntologyFacadeImpl();
+public class OntologyServiceImpl implements OntologyService {
+
+	private OMDocOntologyFacade omdocOntologyFacade;
 	private QueryManagerFacade queryManager = new QueryManagerFacadeImpl();
 	private RDFStorageLoader storageLoader = new RDFStorageLoaderImpl();
 	private OMDocResourceFacade omdocResourceLoader = new OMDocResourceFacadeImpl();
 
-	public String greetServer(String input) {
-		String serverInfo = getServletContext().getServerInfo();
-		String userAgent = getThreadLocalRequest().getHeader("User-Agent");
-		return "Hello, " + input + "!<br><br>I am running " + serverInfo
-				+ ".<br><br>It looks like you are using:<br>" + userAgent;
+	@Inject
+	public OntologyServiceImpl(OMDocOntologyFacade omdocOntologyFacade) {
+		this.omdocOntologyFacade = omdocOntologyFacade;
 	}
 
 	@Override
 	public List<OntConcept> getConceptList() {
-		List<OntologyConcept> ontClassList = getOmdocOntologyLoader()
+		List<OntologyConcept> ontClassList = getOmdocOntologyFacade()
 				.getOntClassList();
 		List<OntConcept> targetConceptList = new ArrayList<OntConcept>();
 		for (OntologyConcept concept : ontClassList) {
@@ -70,7 +66,7 @@ public class OntologyServiceImpl extends RemoteServiceServlet implements
 	public List<OntRelation> getRelationList(OntConcept concept) {
 		OntologyConcept ontologyConcept = new OntologyConcept(concept.getUri(),
 				concept.getLabel());
-		List<OntologyRelation> ontologyPropertyList = getOmdocOntologyLoader()
+		List<OntologyRelation> ontologyPropertyList = getOmdocOntologyFacade()
 				.getOntPropertyList(ontologyConcept);
 		List<OntRelation> targetRelationList = new ArrayList<OntRelation>();
 		for (OntologyRelation relation : ontologyPropertyList) {
@@ -87,7 +83,7 @@ public class OntologyServiceImpl extends RemoteServiceServlet implements
 	public List<OntElement> getRelationRangeConceptList(OntRelation relation) {
 		OntologyRelation ontologyRelation = new OntologyRelation(relation
 				.getUri(), relation.getLabel());
-		List<OntologyConcept> ontologyRangeList = getOmdocOntologyLoader()
+		List<OntologyConcept> ontologyRangeList = getOmdocOntologyFacade()
 				.getOntPropertyRangeList(ontologyRelation);
 		List<OntElement> targetConceptList = new ArrayList<OntElement>();
 		for (OntologyConcept rangeConcept : ontologyRangeList) {
@@ -95,7 +91,7 @@ public class OntologyServiceImpl extends RemoteServiceServlet implements
 			targetConcept.setUri(rangeConcept.getUri());
 			targetConcept.setLabel(rangeConcept.getLabel());
 			targetConceptList.add(targetConcept);
-			List<OntologyIndividual> individuals = getOmdocOntologyLoader()
+			List<OntologyIndividual> individuals = getOmdocOntologyFacade()
 					.getIndividuals(rangeConcept);
 			for (OntologyIndividual individual : individuals) {
 				targetConceptList.add(new OntIndividual(individual.getUri(),
@@ -181,12 +177,8 @@ public class OntologyServiceImpl extends RemoteServiceServlet implements
 		return elements;
 	}
 
-	public OMDocOntologyFacade getOmdocOntologyLoader() {
-		return omdocOntologyLoader;
-	}
-
-	public void setOmdocOntologyLoader(OMDocOntologyFacade loader) {
-		this.omdocOntologyLoader = loader;
+	public OMDocOntologyFacade getOmdocOntologyFacade() {
+		return omdocOntologyFacade;
 	}
 
 	public QueryManagerFacade getQueryManager() {

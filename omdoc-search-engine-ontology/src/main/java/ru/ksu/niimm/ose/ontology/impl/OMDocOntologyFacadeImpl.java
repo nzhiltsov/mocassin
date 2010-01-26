@@ -1,12 +1,8 @@
 package ru.ksu.niimm.ose.ontology.impl;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
-
-import org.mindswap.pellet.jena.PelletReasonerFactory;
 
 import ru.ksu.niimm.ose.ontology.OMDocOntologyFacade;
 import ru.ksu.niimm.ose.ontology.OntologyConcept;
@@ -17,14 +13,12 @@ import ru.ksu.niimm.ose.ontology.loader.impl.OMDocOntologyLoaderImpl;
 
 import com.hp.hpl.jena.ontology.OntClass;
 import com.hp.hpl.jena.ontology.OntModel;
-import com.hp.hpl.jena.ontology.OntModelSpec;
 import com.hp.hpl.jena.ontology.OntProperty;
 import com.hp.hpl.jena.ontology.OntResource;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.util.iterator.ExtendedIterator;
 
 public class OMDocOntologyFacadeImpl implements OMDocOntologyFacade {
-	private static final String RDFS_LABEL_LOCALE = "ru";
+	private static final String RDFS_LABEL_LOCALE = "en";
 
 	private static final String OMDOC_NAMESPACE = "http://omdoc.org/ontology#";
 	private OntModel omdocOntology;
