@@ -8,9 +8,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.inject.Singleton;
+
 import ru.ksu.niimm.ose.ui.server.util.FileUtil;
 
 @SuppressWarnings("serial")
+@Singleton
 public class DownloadServlet extends HttpServlet {
 	private static final String FILE_URI_PREFIX = "file:/";
 

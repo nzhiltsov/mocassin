@@ -8,9 +8,8 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 /**
  * The client side stub for the RPC service.
  */
-@RemoteServiceRelativePath("ontology")
+@RemoteServiceRelativePath("GWT.rpc")
 public interface OntologyService extends RemoteService {
-	String greetServer(String name);
 	List<OntConcept> getConceptList();
 	public List<OntRelation> getRelationList(OntConcept concept);
 	public List<OntElement> getRelationRangeConceptList(OntRelation relation);
