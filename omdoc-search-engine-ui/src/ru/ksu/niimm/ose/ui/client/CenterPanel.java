@@ -19,8 +19,8 @@ public class CenterPanel extends Composite {
 	}
 
 	private static final Binder binder = GWT.create(Binder.class);
-	private final OntologyServiceAsync ontologyService = GWT
-			.create(OntologyService.class);
+	private final QueryServiceAsync queryService = GWT
+			.create(QueryService.class);
 
 	@UiField
 	SearchResultsCountPanel searchResultsCountPanel;
@@ -48,7 +48,7 @@ public class CenterPanel extends Composite {
 
 		};
 		callback.beforeCall();
-		ontologyService.query(statement, callback);
+		queryService.query(statement, callback);
 	}
 
 	public static class BuildQueryStatementHandler implements ClickHandler {

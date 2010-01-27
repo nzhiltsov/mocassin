@@ -5,39 +5,33 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import ru.ksu.niimm.ose.ontology.OntologyConcept;
 import ru.ksu.niimm.ose.ontology.OntologyIndividual;
+import ru.ksu.niimm.ose.ontology.OntologyModule;
 import ru.ksu.niimm.ose.ontology.OntologyRelation;
 import ru.ksu.niimm.ose.ontology.OntologyResource;
 import ru.ksu.niimm.ose.ontology.OntologyTriple;
 import ru.ksu.niimm.ose.ontology.QueryManagerFacade;
 import ru.ksu.niimm.ose.ontology.QueryStatement;
-import ru.ksu.niimm.ose.ontology.impl.QueryManagerFacadeImpl;
-import ru.ksu.niimm.ose.ontology.loader.RDFStorageLoader;
-import ru.ksu.niimm.ose.ontology.loader.impl.RDFStorageLoaderImpl;
 
-import com.hp.hpl.jena.ontology.OntModel;
+import com.google.inject.Inject;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.mycila.testing.junit.MycilaJunitRunner;
+import com.mycila.testing.plugin.guice.GuiceContext;
 
-public class QueryManagerTest {
-	private QueryManagerFacade queryManager;
-	private RDFStorageLoader rdfStorageLoader;
-
-	@Before
-	public void setup() {
-		queryManager = new QueryManagerFacadeImpl();
-		rdfStorageLoader = new RDFStorageLoaderImpl();
-	}
+@RunWith(MycilaJunitRunner.class)
+@GuiceContext(OntologyModule.class)
+public class QueryManagerFacadeTest {
+	@Inject
+	private QueryManagerFacade queryManagerFacade;
 
 	@Test
 	public void testQuery() {
-		OntModel rdfStorage = rdfStorageLoader.getRdfStorage();
-		List<Resource> resources = queryManager
+		List<Resource> resources = getQueryManagerFacade()
 				.query(
-						rdfStorage,
 						"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> "
 								+ "SELECT * WHERE "
 								+ "{ "
@@ -49,10 +43,8 @@ public class QueryManagerTest {
 
 	@Test
 	public void testSubclassofInferenceForQuery() {
-		OntModel rdfStorage = rdfStorageLoader.getRdfStorage();
-		List<Resource> resources = queryManager
+		List<Resource> resources = getQueryManagerFacade()
 				.query(
-						rdfStorage,
 						"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> "
 								+ "SELECT * WHERE "
 								+ "{ "
@@ -65,9 +57,8 @@ public class QueryManagerTest {
 	@Test
 	public void testQueryStatement() {
 		QueryStatement queryStatement = makeExampleStatement();
-		OntModel rdfStorage = rdfStorageLoader.getRdfStorage();
-		List<OntologyResource> resources = queryManager.query(rdfStorage,
-				queryStatement);
+		List<OntologyResource> resources = getQueryManagerFacade()
+				.query(queryStatement);
 		// TODO : add more non-trivial test case
 		resources.size();
 	}
@@ -75,7 +66,9 @@ public class QueryManagerTest {
 	@Test
 	public void testGenerateQuery() {
 		QueryStatement queryStatement = makeExampleStatement();
-		String queryString = queryManager.generateQuery(queryStatement);
+		String queryString = getQueryManagerFacade().generateQuery(queryStatement);
+		// TODO : add more check of equals to correct string
+		Assert.assertTrue(queryString != null && !queryString.equals(""));
 	}
 
 	private QueryStatement makeExampleStatement() {
@@ -124,4 +117,9 @@ public class QueryManagerTest {
 		QueryStatement queryStatement = new QueryStatement(retrievedTriples);
 		return queryStatement;
 	}
+
+	public QueryManagerFacade getQueryManagerFacade() {
+		return queryManagerFacade;
+	}
+	
 }

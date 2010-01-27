@@ -141,11 +141,6 @@ public class OMDocOntologyFacadeImpl implements OMDocOntologyFacade {
 		return individuals;
 	}
 
-	private boolean hasOmdocNamespace(OntClass ontClass) {
-		String namespace = ontClass.getNameSpace();
-		return namespace != null && namespace.equals(OMDOC_NAMESPACE);
-	}
-
 	private OntModel getOmdocOntology() {
 		if (omdocOntology == null) {
 			omdocOntology = this.ontologyLoader.getOntology();

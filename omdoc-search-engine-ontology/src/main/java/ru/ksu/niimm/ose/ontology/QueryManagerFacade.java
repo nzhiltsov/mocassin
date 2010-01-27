@@ -16,19 +16,16 @@ public interface QueryManagerFacade {
 	 * @param retrievedResourceKey
 	 *            retrieved resource key
 	 */
-	List<Resource> query(OntModel model, String queryString,
-			String retrievedResourceKey);
+	List<Resource> query(String queryString, String retrievedResourceKey);
 
 	/**
 	 * query given model with given query statement
 	 * 
-	 * @param model
-	 *            ontology model
 	 * @param queryStatement
 	 *            query statement
 	 * @return
 	 */
-	List<OntologyResource> query(OntModel model, QueryStatement queryStatement);
+	List<OntologyResource> query(QueryStatement queryStatement);
 
 	/**
 	 * generate SPARQL query for given query statement

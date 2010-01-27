@@ -4,33 +4,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
-
-import ru.ksu.niimm.ose.ontology.OMDocElement;
 import ru.ksu.niimm.ose.ontology.OMDocOntologyFacade;
-import ru.ksu.niimm.ose.ontology.OMDocResourceFacade;
 import ru.ksu.niimm.ose.ontology.OntologyConcept;
-import ru.ksu.niimm.ose.ontology.OntologyElement;
 import ru.ksu.niimm.ose.ontology.OntologyIndividual;
 import ru.ksu.niimm.ose.ontology.OntologyRelation;
-import ru.ksu.niimm.ose.ontology.OntologyResource;
-import ru.ksu.niimm.ose.ontology.OntologyTriple;
-import ru.ksu.niimm.ose.ontology.QueryManagerFacade;
-import ru.ksu.niimm.ose.ontology.QueryStatement;
-import ru.ksu.niimm.ose.ontology.impl.OMDocOntologyFacadeImpl;
-import ru.ksu.niimm.ose.ontology.impl.OMDocResourceFacadeImpl;
-import ru.ksu.niimm.ose.ontology.impl.QueryManagerFacadeImpl;
-import ru.ksu.niimm.ose.ontology.loader.RDFStorageLoader;
-import ru.ksu.niimm.ose.ontology.loader.impl.RDFStorageLoaderImpl;
 import ru.ksu.niimm.ose.ui.client.OntConcept;
 import ru.ksu.niimm.ose.ui.client.OntElement;
 import ru.ksu.niimm.ose.ui.client.OntIndividual;
-import ru.ksu.niimm.ose.ui.client.OntQueryStatement;
 import ru.ksu.niimm.ose.ui.client.OntRelation;
-import ru.ksu.niimm.ose.ui.client.OntTriple;
 import ru.ksu.niimm.ose.ui.client.OntologyService;
-import ru.ksu.niimm.ose.ui.client.ResultDescription;
+
+import com.google.inject.Inject;
 
 /**
  * The server side implementation of the RPC service.
@@ -38,9 +22,6 @@ import ru.ksu.niimm.ose.ui.client.ResultDescription;
 public class OntologyServiceImpl implements OntologyService {
 
 	private OMDocOntologyFacade omdocOntologyFacade;
-	private QueryManagerFacade queryManager = new QueryManagerFacadeImpl();
-	private RDFStorageLoader storageLoader = new RDFStorageLoaderImpl();
-	private OMDocResourceFacade omdocResourceLoader = new OMDocResourceFacadeImpl();
 
 	@Inject
 	public OntologyServiceImpl(OMDocOntologyFacade omdocOntologyFacade) {
@@ -104,105 +85,8 @@ public class OntologyServiceImpl implements OntologyService {
 		return targetConceptList;
 	}
 
-	public List<ResultDescription> query(OntQueryStatement statement) {
-
-		QueryStatement queryStatement = convertStatement(statement);
-		List<OntologyResource> resources = getQueryManager().query(
-				getStorageLoader().getRdfStorage(), queryStatement);
-		List<OMDocElement> omdocElements = retriveOmdocElements(resources);
-		List<ResultDescription> resultDescriptions = new ArrayList<ResultDescription>();
-		for (OMDocElement omDocElement : omdocElements) {
-			ResultDescription rd = new ResultDescription();
-			rd.setLatexUri(omDocElement.getSrcRef().getFileName());
-			rd.setPdfUri(omDocElement.getPdfFileName());
-			rd.setAuthor(omDocElement.getArticleMetadata().getAuthor());
-			rd.setTitle(omDocElement.getArticleMetadata().getTitle());
-			rd.setRelevantContextString(String.format("line: %d, column: %d",
-					omDocElement.getSrcRef().getLine(), omDocElement
-							.getSrcRef().getColumn()));
-			resultDescriptions.add(rd);
-		}
-		return resultDescriptions;
-	}
-
-	/**
-	 * convert query statement representation by DTO to query statement
-	 * representation by 'ontology' module classes
-	 * 
-	 * @param statement
-	 *            query statement representation by DTO
-	 * @return
-	 */
-	private QueryStatement convertStatement(OntQueryStatement statement) {
-		List<OntologyTriple> retrievedTriples = new ArrayList<OntologyTriple>();
-		List<OntTriple> ontStatementTriples = statement.getTriples();
-		for (OntTriple ontTriple : ontStatementTriples) {
-			OntologyConcept subject = new OntologyConcept(ontTriple
-					.getSubject().getUri(), ontTriple.getSubject().getLabel());
-			subject.setId(ontTriple.getSubject().getId());
-			OntologyRelation predicate = new OntologyRelation(ontTriple
-					.getPredicate().getUri(), ontTriple.getPredicate()
-					.getLabel());
-			predicate.setId(ontTriple.getPredicate().getId());
-			OntologyElement object;
-			if (ontTriple.getObject() instanceof OntConcept) {
-				object = new OntologyConcept(ontTriple.getObject().getUri(),
-						ontTriple.getObject().getLabel());
-			} else {
-				object = new OntologyIndividual(ontTriple.getObject().getUri(),
-						ontTriple.getObject().getLabel());
-			}
-			object.setId(ontTriple.getObject().getId());
-			OntologyTriple ontologyTriple = new OntologyTriple(subject,
-					predicate, object);
-			retrievedTriples.add(ontologyTriple);
-		}
-		QueryStatement queryStatement = new QueryStatement(retrievedTriples);
-		return queryStatement;
-	}
-
-	/**
-	 * retrieve the list of omdoc elements for given list of resources
-	 * 
-	 * @param resources
-	 * @return
-	 */
-	private List<OMDocElement> retriveOmdocElements(
-			List<OntologyResource> resources) {
-		List<OMDocElement> elements = new ArrayList<OMDocElement>();
-		for (OntologyResource resource : resources) {
-			OMDocElement omdocElement = getOmdocResourceLoader().load(resource);
-			elements.add(omdocElement);
-		}
-		return elements;
-	}
-
 	public OMDocOntologyFacade getOmdocOntologyFacade() {
 		return omdocOntologyFacade;
-	}
-
-	public QueryManagerFacade getQueryManager() {
-		return queryManager;
-	}
-
-	public void setQueryManager(QueryManagerFacade queryManager) {
-		this.queryManager = queryManager;
-	}
-
-	public RDFStorageLoader getStorageLoader() {
-		return storageLoader;
-	}
-
-	public void setStorageLoader(RDFStorageLoader storageLoader) {
-		this.storageLoader = storageLoader;
-	}
-
-	public OMDocResourceFacade getOmdocResourceLoader() {
-		return omdocResourceLoader;
-	}
-
-	public void setOmdocResourceLoader(OMDocResourceFacade omdocResourceLoader) {
-		this.omdocResourceLoader = omdocResourceLoader;
 	}
 
 }
