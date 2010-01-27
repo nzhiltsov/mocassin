@@ -11,6 +11,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
@@ -21,7 +22,7 @@ public class DocumentFormat extends Composite {
 
 	private static final Binder binder = GWT.create(Binder.class);
 	@UiField
-	Hyperlink link;
+	Anchor link;
 
 	private String uri;
 

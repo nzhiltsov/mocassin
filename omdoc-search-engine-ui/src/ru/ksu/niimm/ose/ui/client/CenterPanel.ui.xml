@@ -3,7 +3,7 @@
 	<ui:style>
 		.main-panel {
 			width: 100%;
-			padding-top: 30px;
+			padding-top: 10px;
 		}
 		
 		.results-panel {
@@ -13,6 +13,7 @@
 	<g:VerticalPanel styleName='{style.main-panel}'>
 		<ose:SearchResultsCountPanel ui:field="searchResultsCountPanel" />
 		<g:VerticalPanel ui:field="resultsPanel" styleName='{style.results-panel}' />
+		<ose:PaginationPanel />
 	</g:VerticalPanel>
 
 </ui:UiBinder>

@@ -11,7 +11,8 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 @RemoteServiceRelativePath("GWT.rpc")
 public interface OntologyService extends RemoteService {
 	List<OntConcept> getConceptList();
-	public List<OntRelation> getRelationList(OntConcept concept);
-	public List<OntElement> getRelationRangeConceptList(OntRelation relation);
 
+	public List<OntRelation> getRelationList(OntConcept concept);
+
+	public List<OntElement> getRelationRangeConceptList(OntRelation relation);
 }

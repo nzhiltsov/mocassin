@@ -4,6 +4,7 @@
 		.main-panel {
 			padding-top: 20px;
 			padding-left: 30px;
+			width: 100%;
 		}
 		
 		.title-label {
@@ -12,15 +13,15 @@
 	</ui:style>
 	<g:VerticalPanel styleName='{style.main-panel}'>
 		<g:HorizontalPanel ui:field="titlePanel">
-			<g:Hyperlink ui:field="titleLink" styleName='{style.title-label}'/>
+			<g:Hyperlink ui:field="titleLink" styleName='{style.title-label}' />
 		</g:HorizontalPanel>
 		<g:HorizontalPanel>
-		<g:Label ui:field="relevantContextLabel"/>
+			<g:Label ui:field="relevantContextLabel" />
 		</g:HorizontalPanel>
 		<g:HorizontalPanel>
-			<g:Label ui:field="authorLabel"/>
-			<ose:DocumentFormat ui:field="latexDocumentFormat"/>
-			<ose:DocumentFormat ui:field="pdfDocumentFormat"/>
+			<g:Label ui:field="authorLabel" />
+			<ose:DocumentFormat ui:field="latexDocumentFormat" />
+			<ose:DocumentFormat ui:field="pdfDocumentFormat" />
 		</g:HorizontalPanel>
 	</g:VerticalPanel>
 
