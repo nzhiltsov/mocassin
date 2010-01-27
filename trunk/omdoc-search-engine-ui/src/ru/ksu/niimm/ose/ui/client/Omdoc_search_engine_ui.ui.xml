@@ -10,6 +10,7 @@
 		}
 		
 		.main-panel {
+			table-layout: auto;
 			width: 100%;
 		}
 		
@@ -17,13 +18,13 @@
 			width: 100%;
 		}
 	</ui:style>
-	<g:VerticalPanel styleName='{style.main-panel}'>
-
-		<g:HorizontalPanel styleName='{style.ose-label-panel}'>
-			<g:Label styleName='{style.title-label}'>Mocassin</g:Label>
-		</g:HorizontalPanel>
-		<ose:TopPanel ui:field='topPanel' />
-		<ose:CenterPanel ui:field="centerPanel" />
-	</g:VerticalPanel>
-
+	<g:ScrollPanel>
+		<g:VerticalPanel styleName='{style.main-panel}'>
+			<g:HorizontalPanel styleName='{style.ose-label-panel}'>
+				<g:Label styleName='{style.title-label}'>Mocassin</g:Label>
+			</g:HorizontalPanel>
+			<ose:TopPanel ui:field='topPanel' />
+			<ose:CenterPanel ui:field="centerPanel" />
+		</g:VerticalPanel>
+	</g:ScrollPanel>
 </ui:UiBinder>

@@ -31,51 +31,49 @@ public class OMDocResourceFacadeTest {
 		// TODO : correct file path to make relative it and include files into
 		// project
 		OntologyResource resource = new OntologyResource(
-				"file:/home/nzhiltsov/projects/thirdparty/stex2/example/paper/main.omdoc#existlemma");
+				"/home/nzhiltsov/projects/thirdparty/small_stex_collection/logic/en/all.omdoc#reasonable-incons-refutable");
 		OMDocElement omdocElement = getOmdocResourceFacade().load(resource);
-		Assert.assertEquals("existlemma", omdocElement.getId());
+		Assert
+				.assertEquals("reasonable-incons-refutable", omdocElement
+						.getId());
 		SourceReference testSrcRef = new SourceReference();
 		testSrcRef
-				.setFileName("file:/home/nzhiltsov/projects/thirdparty/stex2/example/paper/main.tex");
-		testSrcRef.setLine(93);
-		testSrcRef.setColumn(43);
+				.setFileName("/home/nzhiltsov/projects/thirdparty/small_stex_collection/logic/en/reasonable-calculus.tex");
+		testSrcRef.setLine(20);
+		testSrcRef.setColumn(64);
 		Assert.assertEquals(testSrcRef, omdocElement.getSrcRef());
 		Assert
 				.assertEquals(
-						"file:/home/nzhiltsov/projects/thirdparty/stex2/example/paper/main.omdoc#existlemma",
+						"/home/nzhiltsov/projects/thirdparty/small_stex_collection/logic/en/all.omdoc#reasonable-incons-refutable",
 						omdocElement.getResourceUri());
 		Assert
 				.assertEquals(
-						"file:/home/nzhiltsov/projects/thirdparty/stex2/example/paper/main.pdf",
+						"/home/nzhiltsov/projects/thirdparty/small_stex_collection/logic/en/reasonable-calculus.pdf",
 						omdocElement.getPdfFileName());
-		Assert
-				.assertEquals(
-						"Описание конечных нильпотентных групп ступени 2 простого нечетного периода",
-						omdocElement.getArticleMetadata().getTitle());
-		/*Assert.assertEquals("А.И. Долгарев", omdocElement.getArticleMetadata()
-				.getAuthor());*/
+		Assert.assertEquals("What is Logic?", omdocElement.getArticleMetadata()
+				.getTitle());
 	}
 
 	@Test
 	public void testLoadLemmaProofStepResource() {
 		OntologyResource resource = new OntologyResource(
-				"file:/home/nzhiltsov/projects/thirdparty/stex2/example/paper/main.omdoc#element-existence-lemma-proof.p1");
+				"/home/nzhiltsov/projects/thirdparty/small_stex_collection/logic/en/all.omdoc#reasonable-incons-refutable-pf");
 		OMDocElement omdocElement = getOmdocResourceFacade().load(resource);
-		Assert.assertEquals("element-existence-lemma-proof.p1", omdocElement
+		Assert.assertEquals("reasonable-incons-refutable-pf", omdocElement
 				.getId());
 		SourceReference testSrcRef = new SourceReference();
 		testSrcRef
-				.setFileName("file:/home/nzhiltsov/projects/thirdparty/stex2/example/paper/main.tex");
-		testSrcRef.setLine(101);
-		testSrcRef.setColumn(33);
+				.setFileName("/home/nzhiltsov/projects/thirdparty/small_stex_collection/logic/en/reasonable-calculus.tex");
+		testSrcRef.setLine(25);
+		testSrcRef.setColumn(87);
 		Assert.assertEquals(testSrcRef, omdocElement.getSrcRef());
 		Assert
 				.assertEquals(
-						"file:/home/nzhiltsov/projects/thirdparty/stex2/example/paper/main.omdoc#element-existence-lemma-proof.p1",
+						"/home/nzhiltsov/projects/thirdparty/small_stex_collection/logic/en/all.omdoc#reasonable-incons-refutable-pf",
 						omdocElement.getResourceUri());
 		Assert
 				.assertEquals(
-						"file:/home/nzhiltsov/projects/thirdparty/stex2/example/paper/main.pdf",
+						"/home/nzhiltsov/projects/thirdparty/small_stex_collection/logic/en/reasonable-calculus.pdf",
 						omdocElement.getPdfFileName());
 	}
 }
