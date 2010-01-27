@@ -16,7 +16,4 @@ public interface OntologyServiceAsync {
 
 	void getRelationRangeConceptList(OntRelation relation,
 			AsyncCallback<List<OntElement>> callback);
-
-	void query(OntQueryStatement statement,
-			AsyncCallback<List<ResultDescription>> callback);
 }

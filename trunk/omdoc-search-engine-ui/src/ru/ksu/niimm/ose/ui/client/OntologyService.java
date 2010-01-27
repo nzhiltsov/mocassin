@@ -13,5 +13,5 @@ public interface OntologyService extends RemoteService {
 	List<OntConcept> getConceptList();
 	public List<OntRelation> getRelationList(OntConcept concept);
 	public List<OntElement> getRelationRangeConceptList(OntRelation relation);
-	public List<ResultDescription> query(OntQueryStatement statement);
+
 }

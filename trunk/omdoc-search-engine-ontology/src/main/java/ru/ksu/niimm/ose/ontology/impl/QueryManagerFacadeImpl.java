@@ -10,9 +10,11 @@ import ru.ksu.niimm.ose.ontology.OntologyTriple;
 import ru.ksu.niimm.ose.ontology.QueryManagerFacade;
 import ru.ksu.niimm.ose.ontology.QueryStatement;
 import ru.ksu.niimm.ose.ontology.loader.OMDocOntologyLoader;
+import ru.ksu.niimm.ose.ontology.loader.RDFStorageLoader;
 import ru.ksu.niimm.ose.ontology.loader.impl.OMDocOntologyLoaderImpl;
 
 import com.clarkparsia.pellet.sparqldl.jena.SparqlDLExecutionFactory;
+import com.google.inject.Inject;
 import com.hp.hpl.jena.ontology.OntModel;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
@@ -26,10 +28,14 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 	private static final String SELECT_STATEMENT = "SELECT DISTINCT %s WHERE";
 	private static final String RETRIEVED_CONCEPT_KEY = "?1";
 
-	private OntModel ontology;
-	private OMDocOntologyLoader ontologyLoader = new OMDocOntologyLoaderImpl();
+	private OMDocOntologyLoader ontologyLoader;
+	private RDFStorageLoader rdfStorageLoader;
 
-	public QueryManagerFacadeImpl() {
+	@Inject
+	public QueryManagerFacadeImpl(OMDocOntologyLoader ontologyLoader,
+			RDFStorageLoader rdfStorageLoader) {
+		this.ontologyLoader = ontologyLoader;
+		this.rdfStorageLoader = rdfStorageLoader;
 	}
 
 	/*
@@ -39,12 +45,11 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 	 * ru.ksu.niimm.ose.ontology.impl.QueryManager#query(com.hp.hpl.jena.ontology
 	 * .OntModel, java.lang.String)
 	 */
-	public List<Resource> query(OntModel model, String queryString,
-			String retrievedResourceKey) {
-		model.loadImports();
+	public List<Resource> query(String queryString, String retrievedResourceKey) {
+		getRdfStorageLoader().getRdfStorage().loadImports();
 		Query query = QueryFactory.create(queryString);
 		QueryExecution queryExecution = SparqlDLExecutionFactory.create(query,
-				model);
+				getRdfStorageLoader().getRdfStorage());
 		ResultSet results = queryExecution.execSelect();
 		List<Resource> resultResources = new ArrayList<Resource>();
 		while (results.hasNext()) {
@@ -59,15 +64,13 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * ru.ksu.niimm.ose.ontology.impl.QueryManager#query(com.hp.hpl.jena.ontology
-	 * .OntModel, ru.ksu.niimm.ose.ontology.QueryStatement)
+	 * ru.ksu.niimm.ose.ontology.impl.QueryManager#query(ru.ksu.niimm.ose.ontology
+	 * .QueryStatement)
 	 */
-	public List<OntologyResource> query(OntModel model,
-			QueryStatement queryStatement) {
+	public List<OntologyResource> query(QueryStatement queryStatement) {
 		List<OntologyResource> ontologyResources = new ArrayList<OntologyResource>();
 		String queryString = generateQuery(queryStatement);
-		List<Resource> resources = query(model, queryString,
-				RETRIEVED_CONCEPT_KEY);
+		List<Resource> resources = query(queryString, RETRIEVED_CONCEPT_KEY);
 		for (Resource resource : resources) {
 			OntologyResource ontologyResource = new OntologyResource(resource
 					.getURI());
@@ -125,15 +128,12 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 		return sb.toString();
 	}
 
-	public OntModel getOntology() {
-		if (ontology == null) {
-			this.ontology = getOntologyLoader().getOntology();
-		}
-		return ontology;
-	}
-
 	public OMDocOntologyLoader getOntologyLoader() {
 		return ontologyLoader;
+	}
+
+	public RDFStorageLoader getRdfStorageLoader() {
+		return rdfStorageLoader;
 	}
 
 }

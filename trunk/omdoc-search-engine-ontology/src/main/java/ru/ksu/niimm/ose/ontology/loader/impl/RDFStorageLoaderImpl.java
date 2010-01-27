@@ -3,8 +3,6 @@ package ru.ksu.niimm.ose.ontology.loader.impl;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.mindswap.pellet.jena.PelletReasonerFactory;
-
 import ru.ksu.niimm.ose.ontology.loader.RDFStorageLoader;
 
 import com.hp.hpl.jena.ontology.OntModel;
@@ -33,7 +31,7 @@ public class RDFStorageLoaderImpl implements RDFStorageLoader {
 
 	private OntModel load() throws IOException {
 		OntModel rdfStorage = ModelFactory
-				.createOntologyModel(PelletReasonerFactory.THE_SPEC);
+				.createOntologyModel(OntModelSpec.OWL_DL_MEM_RULE_INF);
 		InputStream inputStream = null;
 		try {
 			inputStream = this.getClass().getResourceAsStream(FILE_PATH);

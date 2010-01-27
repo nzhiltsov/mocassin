@@ -3,9 +3,8 @@ package ru.ksu.niimm.ose.ontology.loader.impl;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.mindswap.pellet.jena.PelletReasonerFactory;
-
 import com.hp.hpl.jena.ontology.OntModel;
+import com.hp.hpl.jena.ontology.OntModelSpec;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 import ru.ksu.niimm.ose.ontology.loader.OMDocOntologyLoader;
@@ -28,7 +27,7 @@ public class OMDocOntologyLoaderImpl implements OMDocOntologyLoader {
 
 	private OntModel load() throws IOException {
 		OntModel omdocOntology = ModelFactory
-				.createOntologyModel(PelletReasonerFactory.THE_SPEC);
+				.createOntologyModel(OntModelSpec.OWL_DL_MEM_RULE_INF);
 		InputStream inputStream = null;
 		try {
 			inputStream = this.getClass().getResourceAsStream(FILE_PATH);
