@@ -13,7 +13,7 @@
 	<g:VerticalPanel styleName='{style.main-panel}'>
 		<ose:SearchResultsCountPanel ui:field="searchResultsCountPanel" />
 		<g:VerticalPanel ui:field="resultsPanel" styleName='{style.results-panel}' />
-		<ose:PaginationPanel />
+		<ose:PaginationPanel ui:field="paginationPanel"/>
 	</g:VerticalPanel>
 
 </ui:UiBinder>
