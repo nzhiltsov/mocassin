@@ -23,11 +23,16 @@ public class PaginationPanel extends Composite {
 	public PaginationPanel() {
 		HorizontalPanel panel = uiBinder.createAndBindUi(this);
 		initWidget(panel);
-		
+
 		table.setWidget(0, 0, new Anchor("<<"));
 		table.setWidget(0, 1, new Anchor("1"));
 		table.setWidget(0, 2, new Anchor("2"));
 		table.setWidget(0, 3, new Anchor("3"));
 		table.setWidget(0, 4, new Anchor(">>"));
 	}
+
+	public void refresh(PagingLoadConfig pagingLoadConfig) {
+		// TODO : need to refresh panel
+	}
+
 }

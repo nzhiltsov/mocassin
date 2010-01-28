@@ -1,6 +1,7 @@
 package ru.ksu.niimm.ose.ui.server;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import ru.ksu.niimm.ose.ontology.OMDocElement;
@@ -16,6 +17,7 @@ import ru.ksu.niimm.ose.ontology.QueryStatement;
 import ru.ksu.niimm.ose.ui.client.OntConcept;
 import ru.ksu.niimm.ose.ui.client.OntQueryStatement;
 import ru.ksu.niimm.ose.ui.client.OntTriple;
+import ru.ksu.niimm.ose.ui.client.PagingLoadConfig;
 import ru.ksu.niimm.ose.ui.client.QueryService;
 import ru.ksu.niimm.ose.ui.client.ResultDescription;
 
@@ -32,12 +34,40 @@ public class QueryServiceImpl implements QueryService {
 		this.omdocResourceFacade = omdocResourceFacade;
 	}
 
-	public List<ResultDescription> query(OntQueryStatement statement) {
+	public List<ResultDescription> query(OntQueryStatement statement,
+			PagingLoadConfig pagingLoadConfig) {
 
 		QueryStatement queryStatement = convertStatement(statement);
 		List<OntologyResource> resources = getQueryManager().query(
 				queryStatement);
-		List<OMDocElement> omdocElements = retriveOmdocElements(resources);
+		List<OntologyResource> filteredResources = filterResources(resources,
+				pagingLoadConfig);
+		List<OMDocElement> omdocElements = retriveOmdocElements(filteredResources);
+		List<ResultDescription> resultDescriptions = convertToResultDescriptions(omdocElements);
+		return resultDescriptions;
+	}
+
+	/**
+	 * filter resources according to given paging load config
+	 * 
+	 * @param resources
+	 * @param pagingLoadConfig
+	 * @return
+	 */
+	private List<OntologyResource> filterResources(
+			List<OntologyResource> resources, PagingLoadConfig pagingLoadConfig) {
+		if (!PagingLoadConfig.isValid(pagingLoadConfig, resources.size()))
+			throw new IllegalArgumentException(String
+					.format("given paging load config is invalid: %s",
+							pagingLoadConfig));
+		List<OntologyResource> filteredResources = resources.subList(
+				pagingLoadConfig.getOffset(), pagingLoadConfig.getOffset()
+						+ pagingLoadConfig.getLimit() - 1);
+		return filteredResources;
+	}
+
+	private List<ResultDescription> convertToResultDescriptions(
+			List<OMDocElement> omdocElements) {
 		List<ResultDescription> resultDescriptions = new ArrayList<ResultDescription>();
 		for (OMDocElement omDocElement : omdocElements) {
 			ResultDescription rd = new ResultDescription();

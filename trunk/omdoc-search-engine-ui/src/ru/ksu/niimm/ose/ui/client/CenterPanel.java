@@ -19,6 +19,9 @@ public class CenterPanel extends Composite {
 	}
 
 	private static final Binder binder = GWT.create(Binder.class);
+	private static final PagingLoadConfig INITIAL_PAGING_LOAD_CONFIG = new PagingLoadConfig(
+			0, 3);
+
 	private final QueryServiceAsync queryService = GWT
 			.create(QueryService.class);
 
@@ -26,6 +29,8 @@ public class CenterPanel extends Composite {
 	SearchResultsCountPanel searchResultsCountPanel;
 	@UiField
 	VerticalPanel resultsPanel;
+	@UiField
+	PaginationPanel paginationPanel;
 
 	public CenterPanel() {
 		initWidget(binder.createAndBindUi(this));
@@ -48,7 +53,7 @@ public class CenterPanel extends Composite {
 
 		};
 		callback.beforeCall();
-		queryService.query(statement, callback);
+		queryService.query(statement, INITIAL_PAGING_LOAD_CONFIG, callback);
 	}
 
 	public static class BuildQueryStatementHandler implements ClickHandler {

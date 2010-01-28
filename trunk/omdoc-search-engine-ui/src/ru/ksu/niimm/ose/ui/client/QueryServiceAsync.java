@@ -6,7 +6,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface QueryServiceAsync {
 
-	void query(OntQueryStatement statement,
+	void query(OntQueryStatement statement, PagingLoadConfig pagingLoadConfig,
 			AsyncCallback<List<ResultDescription>> callback);
 
 }
