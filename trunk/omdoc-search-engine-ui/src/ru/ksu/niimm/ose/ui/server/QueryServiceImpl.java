@@ -18,6 +18,7 @@ import ru.ksu.niimm.ose.ui.client.OntConcept;
 import ru.ksu.niimm.ose.ui.client.OntQueryStatement;
 import ru.ksu.niimm.ose.ui.client.OntTriple;
 import ru.ksu.niimm.ose.ui.client.PagingLoadConfig;
+import ru.ksu.niimm.ose.ui.client.PagingLoadInfo;
 import ru.ksu.niimm.ose.ui.client.QueryService;
 import ru.ksu.niimm.ose.ui.client.ResultDescription;
 
@@ -34,7 +35,7 @@ public class QueryServiceImpl implements QueryService {
 		this.omdocResourceFacade = omdocResourceFacade;
 	}
 
-	public List<ResultDescription> query(OntQueryStatement statement,
+	public PagingLoadInfo<ResultDescription> query(OntQueryStatement statement,
 			PagingLoadConfig pagingLoadConfig) {
 
 		QueryStatement queryStatement = convertStatement(statement);
@@ -44,7 +45,10 @@ public class QueryServiceImpl implements QueryService {
 				pagingLoadConfig);
 		List<OMDocElement> omdocElements = retriveOmdocElements(filteredResources);
 		List<ResultDescription> resultDescriptions = convertToResultDescriptions(omdocElements);
-		return resultDescriptions;
+		PagingLoadInfo<ResultDescription> pagingLoadInfo = new PagingLoadInfo<ResultDescription>();
+		pagingLoadInfo.setPagingLoadConfig(pagingLoadConfig);
+		pagingLoadInfo.setData(resultDescriptions);
+		return pagingLoadInfo;
 	}
 
 	/**
@@ -56,13 +60,15 @@ public class QueryServiceImpl implements QueryService {
 	 */
 	private List<OntologyResource> filterResources(
 			List<OntologyResource> resources, PagingLoadConfig pagingLoadConfig) {
-		if (!PagingLoadConfig.isValid(pagingLoadConfig, resources.size()))
-			throw new IllegalArgumentException(String
-					.format("given paging load config is invalid: %s",
-							pagingLoadConfig));
+		if (resources.isEmpty()) {
+			return resources;
+		}
+		PagingLoadConfig adjustedPagingLoadConfig = PagingLoadConfig
+				.adjustPagingLoadConfig(pagingLoadConfig, resources.size());
 		List<OntologyResource> filteredResources = resources.subList(
-				pagingLoadConfig.getOffset(), pagingLoadConfig.getOffset()
-						+ pagingLoadConfig.getLimit() - 1);
+				adjustedPagingLoadConfig.getOffset(), adjustedPagingLoadConfig
+						.getOffset()
+						+ adjustedPagingLoadConfig.getLimit() - 1);
 		return filteredResources;
 	}
 

@@ -1,12 +1,10 @@
 package ru.ksu.niimm.ose.ui.client;
 
-import java.util.List;
-
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface QueryServiceAsync {
 
 	void query(OntQueryStatement statement, PagingLoadConfig pagingLoadConfig,
-			AsyncCallback<List<ResultDescription>> callback);
+			AsyncCallback<PagingLoadInfo<ResultDescription>> callback);
 
 }
