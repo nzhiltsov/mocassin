@@ -13,9 +13,8 @@ public class PagingLoadConfig implements Serializable {
 	 */
 	private int offset;
 
-	public PagingLoadConfig(int offset, int limit) {
-		this.offset = offset;
-		this.limit = limit;
+	public PagingLoadConfig() {
+
 	}
 
 	public int getLimit() {
@@ -34,23 +33,32 @@ public class PagingLoadConfig implements Serializable {
 		this.offset = offset;
 	}
 
-	public static boolean isValid(PagingLoadConfig pagingLoadConfig,
-			int collectionSize) {
+	public static PagingLoadConfig adjustPagingLoadConfig(
+			PagingLoadConfig pagingLoadConfig, int collectionSize) {
 		int givenOffset = pagingLoadConfig.getOffset();
 		int givenLimit = pagingLoadConfig.getLimit();
-		if (pagingLoadConfig != null && givenOffset >= 0
-				&& givenOffset < collectionSize && givenLimit >= 0
-				&& givenLimit <= collectionSize) {
-			return true;
-		}
-		return false;
 
+		if (givenOffset < 0) {
+			givenOffset = 0;
+		}
+		if (givenOffset >= collectionSize) {
+			givenOffset = collectionSize - 1;
+		}
+		if (givenLimit < 0) {
+			givenLimit = 0;
+		}
+		if (givenOffset + givenLimit > collectionSize) {
+			givenLimit = collectionSize - givenOffset;
+		}
+		PagingLoadConfig adjustedPagingLoadConfig = new PagingLoadConfig();
+		adjustedPagingLoadConfig.setOffset(givenOffset);
+		adjustedPagingLoadConfig.setLimit(givenLimit);
+		return adjustedPagingLoadConfig;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("PagingLoadConfig [limit=%d, offset=%d]", limit,
-				offset);
+		return "PagingLoadConfig [limit=" + limit + ", offset=" + offset + "]";
 	}
 
 }

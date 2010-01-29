@@ -19,8 +19,11 @@ public class CenterPanel extends Composite {
 	}
 
 	private static final Binder binder = GWT.create(Binder.class);
-	private static final PagingLoadConfig INITIAL_PAGING_LOAD_CONFIG = new PagingLoadConfig(
-			0, 3);
+	private static final PagingLoadConfig INITIAL_PAGING_LOAD_CONFIG = new PagingLoadConfig();
+	{
+		INITIAL_PAGING_LOAD_CONFIG.setLimit(3);
+		INITIAL_PAGING_LOAD_CONFIG.setOffset(0);
+	}
 
 	private final QueryServiceAsync queryService = GWT
 			.create(QueryService.class);
@@ -38,17 +41,18 @@ public class CenterPanel extends Composite {
 	}
 
 	public void query(OntQueryStatement statement) {
-		AsyncCallbackWrapper<List<ResultDescription>> callback = new AsyncCallbackWrapper<List<ResultDescription>>() {
+		AsyncCallbackWrapper<PagingLoadInfo<ResultDescription>> callback = new AsyncCallbackWrapper<PagingLoadInfo<ResultDescription>>() {
 
 			@Override
-			public void handleSuccess(List<ResultDescription> result) {
+			public void handleSuccess(PagingLoadInfo<ResultDescription> result) {
 
 				resultsPanel.clear();
-				for (ResultDescription resultDescription : result) {
+				for (ResultDescription resultDescription : result.getData()) {
 					resultsPanel.add(new HitDescription(resultDescription));
 				}
 				searchResultsCountPanel.getResultTitleLabel().setVisible(true);
-				searchResultsCountPanel.setSize(result.size());
+				searchResultsCountPanel.setSize(result.getData().size());
+				paginationPanel.refresh(result);
 			}
 
 		};
