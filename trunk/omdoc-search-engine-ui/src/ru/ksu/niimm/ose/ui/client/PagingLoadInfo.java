@@ -7,7 +7,7 @@ import java.util.Collection;
 public class PagingLoadInfo<T extends Serializable> implements Serializable {
 	private PagingLoadConfig pagingLoadConfig;
 	private Collection<T> data;
-
+	private int fullCollectionSize;
 	public PagingLoadConfig getPagingLoadConfig() {
 		return pagingLoadConfig;
 	}
@@ -22,6 +22,14 @@ public class PagingLoadInfo<T extends Serializable> implements Serializable {
 
 	public void setData(Collection<T> data) {
 		this.data = data;
+	}
+
+	public int getFullCollectionSize() {
+		return fullCollectionSize;
+	}
+
+	public void setFullCollectionSize(int fullCollectionSize) {
+		this.fullCollectionSize = fullCollectionSize;
 	}
 
 }

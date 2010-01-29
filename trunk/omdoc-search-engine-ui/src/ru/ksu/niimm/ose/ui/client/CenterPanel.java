@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+import ru.ksu.niimm.ose.ui.client.widget.event.PageLinkEvent;
+import ru.ksu.niimm.ose.ui.client.widget.event.PageLinkEventHandler;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -14,14 +17,14 @@ import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class CenterPanel extends Composite {
+public class CenterPanel extends Composite implements PageLinkEventHandler {
 	interface Binder extends UiBinder<VerticalPanel, CenterPanel> {
 	}
 
 	private static final Binder binder = GWT.create(Binder.class);
 	private static final PagingLoadConfig INITIAL_PAGING_LOAD_CONFIG = new PagingLoadConfig();
 	{
-		INITIAL_PAGING_LOAD_CONFIG.setLimit(3);
+		INITIAL_PAGING_LOAD_CONFIG.setLimit(6);
 		INITIAL_PAGING_LOAD_CONFIG.setOffset(0);
 	}
 
@@ -35,12 +38,30 @@ public class CenterPanel extends Composite {
 	@UiField
 	PaginationPanel paginationPanel;
 
+	private OntQueryStatement statement;
+
 	public CenterPanel() {
 		initWidget(binder.createAndBindUi(this));
 		searchResultsCountPanel.getResultTitleLabel().setVisible(false);
+		paginationPanel.addPageLinkEventHandler(this);
 	}
 
-	public void query(OntQueryStatement statement) {
+	@Override
+	public void handlePageLinkEvent(PageLinkEvent event) {
+		query(event.getPagingLoadConfig());
+	}
+
+	private void query() {
+		query(INITIAL_PAGING_LOAD_CONFIG);
+	}
+
+	/**
+	 * Important!! To query new statement need to call {@see
+	 * CenterPanel#setStatement(OntQueryStatement)} before
+	 * 
+	 * query using pre-set statement {@see CenterPanel#statement}
+	 */
+	private void query(PagingLoadConfig pagingLoadConfig) {
 		AsyncCallbackWrapper<PagingLoadInfo<ResultDescription>> callback = new AsyncCallbackWrapper<PagingLoadInfo<ResultDescription>>() {
 
 			@Override
@@ -51,13 +72,22 @@ public class CenterPanel extends Composite {
 					resultsPanel.add(new HitDescription(resultDescription));
 				}
 				searchResultsCountPanel.getResultTitleLabel().setVisible(true);
-				searchResultsCountPanel.setSize(result.getData().size());
+				searchResultsCountPanel.setSize(result.getFullCollectionSize());
 				paginationPanel.refresh(result);
 			}
 
 		};
 		callback.beforeCall();
-		queryService.query(statement, INITIAL_PAGING_LOAD_CONFIG, callback);
+		queryService.query(statement, pagingLoadConfig, callback);
+
+	}
+
+	public OntQueryStatement getStatement() {
+		return statement;
+	}
+
+	public void setStatement(OntQueryStatement statement) {
+		this.statement = statement;
 	}
 
 	public static class BuildQueryStatementHandler implements ClickHandler {
@@ -97,7 +127,8 @@ public class CenterPanel extends Composite {
 				List<OntTriple> triples = buildQueryTriples(root);
 				OntQueryStatement st = new OntQueryStatement(conceptNode,
 						triples);
-				getCenterPanel().query(st);
+				getCenterPanel().setStatement(st);
+				getCenterPanel().query();
 			}
 
 		}

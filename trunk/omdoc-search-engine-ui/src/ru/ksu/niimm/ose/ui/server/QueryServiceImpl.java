@@ -48,6 +48,7 @@ public class QueryServiceImpl implements QueryService {
 		PagingLoadInfo<ResultDescription> pagingLoadInfo = new PagingLoadInfo<ResultDescription>();
 		pagingLoadInfo.setPagingLoadConfig(pagingLoadConfig);
 		pagingLoadInfo.setData(resultDescriptions);
+		pagingLoadInfo.setFullCollectionSize(resources.size());
 		return pagingLoadInfo;
 	}
 
@@ -68,7 +69,7 @@ public class QueryServiceImpl implements QueryService {
 		List<OntologyResource> filteredResources = resources.subList(
 				adjustedPagingLoadConfig.getOffset(), adjustedPagingLoadConfig
 						.getOffset()
-						+ adjustedPagingLoadConfig.getLimit() - 1);
+						+ adjustedPagingLoadConfig.getLimit());
 		return filteredResources;
 	}
 
