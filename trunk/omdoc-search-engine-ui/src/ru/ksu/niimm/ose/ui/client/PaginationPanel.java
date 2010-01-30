@@ -20,6 +20,10 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class PaginationPanel extends Composite implements ClickHandler {
 
+	private static final String FORWARD_LINK_STRING = ">>";
+
+	private static final String BACK_LINK_STRING = "<<";
+
 	private static PaginationPanelUiBinder uiBinder = GWT
 			.create(PaginationPanelUiBinder.class);
 
@@ -33,6 +37,12 @@ public class PaginationPanel extends Composite implements ClickHandler {
 	private List<PageLinkEventHandler> pageLinkHandlers = new ArrayList<PageLinkEventHandler>();
 
 	private int limit;
+	/**
+	 * current page number
+	 * 
+	 * starts with 1
+	 */
+	private int currentPageNumber;
 
 	public PaginationPanel() {
 		HorizontalPanel panel = uiBinder.createAndBindUi(this);
@@ -49,10 +59,14 @@ public class PaginationPanel extends Composite implements ClickHandler {
 		int pagesNumber = collectionSize % limit > 0 ? collectionSize / limit
 				+ 1 : collectionSize / limit;
 		int currentPageNumber = offset / limit + 1;
+		setCurrentPageNumber(currentPageNumber);
 		if (pagesNumber > 1) {
 			table.setVisible(true);
 			table.clear();
-			table.setWidget(0, 0, new Anchor("<<"));
+			Anchor backLink = new Anchor(BACK_LINK_STRING);
+			backLink.addClickHandler(this);
+			backLink.setVisible(getCurrentPageNumber() != 1);
+			table.setWidget(0, 0, backLink);
 			int i = 1;
 			while (i <= pagesNumber) {
 				Widget widget;
@@ -66,7 +80,10 @@ public class PaginationPanel extends Composite implements ClickHandler {
 				i++;
 
 			}
-			table.setWidget(0, i, new Anchor(">>"));
+			Anchor forwardLink = new Anchor(FORWARD_LINK_STRING);
+			forwardLink.addClickHandler(this);
+			forwardLink.setVisible(getCurrentPageNumber() != pagesNumber);
+			table.setWidget(0, i, forwardLink);
 		} else {
 			table.setVisible(false);
 		}
@@ -78,13 +95,21 @@ public class PaginationPanel extends Composite implements ClickHandler {
 
 	@Override
 	public void onClick(ClickEvent event) {
-		// TODO : create paging load config
 		if (event.getSource() instanceof Anchor) {
 			Anchor anchor = (Anchor) event.getSource();
-			int chosenNumber = Integer.parseInt(anchor.getText());
-			PageLinkEvent pageLinkEvent = new PageLinkEvent();
+			String anchorText = anchor.getText();
+
 			PagingLoadConfig pagingLoadConfig = new PagingLoadConfig();
-			int offset = (chosenNumber - 1) * getLimit();
+			int offset;
+			if (anchor.getText().equals(BACK_LINK_STRING)) {
+				offset = (getCurrentPageNumber() - 2) * getLimit();
+			} else if (anchor.getText().equals(FORWARD_LINK_STRING)) {
+				offset = (getCurrentPageNumber()) * getLimit();
+			} else {
+				int chosenNumber = Integer.parseInt(anchorText);
+				offset = (chosenNumber - 1) * getLimit();
+			}
+			PageLinkEvent pageLinkEvent = new PageLinkEvent();
 			pagingLoadConfig.setLimit(getLimit());
 			pagingLoadConfig.setOffset(offset);
 			pageLinkEvent.setPagingLoadConfig(pagingLoadConfig);
@@ -110,6 +135,14 @@ public class PaginationPanel extends Composite implements ClickHandler {
 
 	public void setLimit(int limit) {
 		this.limit = limit;
+	}
+
+	public int getCurrentPageNumber() {
+		return currentPageNumber;
+	}
+
+	public void setCurrentPageNumber(int currentPageNumber) {
+		this.currentPageNumber = currentPageNumber;
 	}
 
 }
