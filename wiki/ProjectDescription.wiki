@@ -1,0 +1,7 @@
+#labels Featured
+Goals:
+
+* To extend search capabilities of current math search engines with resolving sophisticated semantic queries
+* To make mathematical knowledge source items (articles, reports, slides etc.) semantically enriched
+* To describe some parts of mathematics with ontological formalisms
+* To make the world better:-)
