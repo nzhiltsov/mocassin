@@ -25,6 +25,7 @@
 			</g:HorizontalPanel>
 			<ose:TopPanel ui:field='topPanel' />
 			<ose:CenterPanel ui:field="centerPanel" />
+			<ose:CopyrightWidget />
 		</g:VerticalPanel>
 	</g:ScrollPanel>
 </ui:UiBinder>
