@@ -12,4 +12,8 @@ public interface MocassinConstants extends Constants {
 	String resultsTitleLabel();
 
 	String loadingTitleLabel();
+
+	String version();
+
+	String authorName();
 }
