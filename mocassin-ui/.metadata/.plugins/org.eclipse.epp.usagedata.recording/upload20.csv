@@ -1,0 +1,26 @@
+what,kind,bundleId,bundleVersion,description,time
+started,bundle,org.eclipse.ui.forms,3.4.1.v20090714_35x,"org.eclipse.ui.forms",1263591318695
+started,bundle,org.eclipse.ui.ide,3.5.1.M20090826-0800,"org.eclipse.ui.ide",1263591318697
+started,bundle,org.eclipse.ui.net,1.2.1.r35x_20090812-1200,"org.eclipse.ui.net",1263591318699
+started,bundle,org.eclipse.ui.views,3.4.1.M20090826-0800,"org.eclipse.ui.views",1263591318699
+started,bundle,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"org.eclipse.ui.workbench",1263591318778
+started,bundle,com.google.appengine.eclipse.core,1.2.0.v200912062003,"com.google.appengine.eclipse.core",1263591318786
+started,bundle,com.google.gdt.eclipse.core,1.2.0.v200912062003,"com.google.gdt.eclipse.core",1263591318786
+started,bundle,com.google.gdt.eclipse.platform.shared,1.2.0.v200912062003,"com.google.gdt.eclipse.platform.shared",1263591318787
+started,bundle,com.google.gdt.eclipse.suite,1.2.0.v200912062003,"com.google.gdt.eclipse.suite",1263591318787
+started,bundle,com.google.gwt.eclipse.core,1.2.0.v200912062003,"com.google.gwt.eclipse.core",1263591318787
+started,bundle,com.google.gwt.eclipse.oophm,1.2.0.v200912062003,"com.google.gwt.eclipse.oophm",1263591318788
+started,bundle,org.eclipse.wst.html.core,1.1.300.v200903120608,"org.eclipse.wst.html.core",1263591318812
+os,sysinfo,,,"linux",1263591318818
+arch,sysinfo,,,"x86_64",1263591318818
+ws,sysinfo,,,"gtk",1263591318818
+locale,sysinfo,,,"ru_RU",1263591318818
+processors,sysinfo,,,"1",1263591318818
+java.runtime.name,sysinfo,,,"OpenJDK Runtime Environment",1263591318818
+java.runtime.version,sysinfo,,,"1.6.0_0-b14",1263591318818
+java.specification.name,sysinfo,,,"Java Platform API Specification",1263591318818
+java.specification.vendor,sysinfo,,,"Sun Microsystems Inc.",1263591318818
+java.specification.version,sysinfo,,,"1.6",1263591318819
+java.vendor,sysinfo,,,"Sun Microsystems Inc.",1263591318819
+java.version,sysinfo,,,"1.6.0_0",1263591318819
+java.vm.info,sysinfo,,,"mixed mode",1263591318819
