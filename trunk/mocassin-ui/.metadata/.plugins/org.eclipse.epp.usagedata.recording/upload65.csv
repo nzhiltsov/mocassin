@@ -1,0 +1,26 @@
+what,kind,bundleId,bundleVersion,description,time
+started,bundle,org.eclipse.equinox.p2.ui,1.0.101.R35x_v20090819,"org.eclipse.equinox.p2.ui",1263595151726
+started,bundle,org.eclipse.equinox.p2.ui.sdk,1.0.100.v20090520-1905,"org.eclipse.equinox.p2.ui.sdk",1263595151825
+started,bundle,org.eclipse.equinox.p2.metadata,1.0.100.v20090525,"org.eclipse.equinox.p2.metadata",1263595151984
+deactivated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1263595158531
+started,bundle,org.eclipse.equinox.p2.extensionlocation,1.0.100.v20090520-1905,"org.eclipse.equinox.p2.extensionlocation",1263595159543
+started,bundle,org.eclipse.equinox.p2.updatesite,1.0.100.v20090525,"org.eclipse.equinox.p2.updatesite",1263595159557
+started,bundle,org.eclipse.equinox.p2.publisher,1.0.0.v20090527-1812,"org.eclipse.equinox.p2.publisher",1263595159577
+error,log,,,"Invalid preference page path: CSS Files",1263595187716
+executed,command,org.eclipse.equinox.p2.ui.sdk,1.0.100.v20090520-1905,"org.eclipse.equinox.p2.ui.sdk.install",1263595204080
+activated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1263595204285
+activated,view,org.eclipse.jdt.ui,3.5.1.r351_v20090821-0800,"org.eclipse.jdt.ui.PackageExplorer",1263595205694
+executed,command,org.eclipse.ui,3.5.1.M20090902-1000,"org.eclipse.ui.file.refresh",1263595219716
+deactivated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1263595221799
+activated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1263595223254
+deactivated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1263595224702
+activated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1263595310094
+started,bundle,org.eclipse.jdt.junit,3.5.1.r351_v20090708-0800,"org.eclipse.jdt.junit",1263595315042
+deactivated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1263595316737
+activated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1263595391895
+deactivated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1263595437706
+executed,command,org.eclipse.ui.ide,3.5.1.M20090826-0800,"org.eclipse.ui.project.cleanAction",1263595442896
+activated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1263595443181
+deactivated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1263595445633
+activated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1263595455503
+deactivated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1263595457864
