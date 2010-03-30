@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+	<parent>
+		<groupId>ru.ksu.niimm.cll.mocassin</groupId>
+		<artifactId>mocassin-pom</artifactId>
+		<version>1.0.0.3-SNAPSHOT</version>
+		<relativePath>../mocassin-pom</relativePath>
+	</parent>
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>ru.ksu.niimm.cll.mocassin</groupId>
+	<artifactId>mocassin-ontology</artifactId>
+	<name>Mocassin Ontology</name>
+	<version>1.0.0.3-SNAPSHOT</version>
+	<dependencies>
+		<dependency>
+			<groupId>com.google.inject</groupId>
+			<artifactId>guice</artifactId>
+			<version>2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.hp.hpl.jena</groupId>
+			<artifactId>jena</artifactId>
+			<version>2.6.2</version>
+		</dependency>
+	</dependencies>
+</project>
