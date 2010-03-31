@@ -8,7 +8,7 @@
   
   <extend-property name="locale" values="ru"/>
   
-  <entry-point class='ru.ksu.niimm.cll.mocassin.ui.client.Mocassin'/>
+  <entry-point class='ru.ksu.niimm.ose.ui.client.Omdoc_search_engine_ui'/>
   <source path='client'/>
   
 </module>
