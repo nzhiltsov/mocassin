@@ -1,6 +1,5 @@
 package ru.ksu.niimm.ose.ui.client;
 
-import arq.load;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;

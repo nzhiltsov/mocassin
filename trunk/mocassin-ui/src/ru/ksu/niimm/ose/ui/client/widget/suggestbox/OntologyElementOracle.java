@@ -4,15 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.catalina.startup.SetDocBaseRule;
-
 import ru.ksu.niimm.ose.ui.client.OntElement;
 
-import arq.query;
-
 import com.google.gwt.user.client.ui.SuggestOracle;
-import com.google.gwt.user.client.ui.SuggestOracle.Callback;
-import com.google.gwt.user.client.ui.SuggestOracle.Request;
 
 public class OntologyElementOracle extends SuggestOracle {
 
