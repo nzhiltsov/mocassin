@@ -14,8 +14,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class Omdoc_search_engine_ui implements EntryPoint {
-	interface Binder extends UiBinder<ScrollPanel, Omdoc_search_engine_ui> {
+public class Mocassin implements EntryPoint {
+	interface Binder extends UiBinder<ScrollPanel, Mocassin> {
 	}
 
 	private static final Binder binder = GWT.create(Binder.class);
