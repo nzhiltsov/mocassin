@@ -20,7 +20,10 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext(VirtuosoModule.class)
 public class VirtuosoDAOTest {
-	private static final String MOCASSIN_TEST_GRAPH_URI = "http://mocassin-test";
+	private static final String MOCASSIN_TEST_URL = "jdbc:virtuoso://localhost:1111";
+	private static final String MOCASSIN_TEST_PASSWORD = "mocassintest";
+	private static final String MOCASSIN_TEST_USERNAME = "mocassinuser";
+	private static final String MOCASSIN_TEST_GRAPH_IRI = "http://cll.niimm.ksu.ru/mocassintest";
 	@Inject
 	private VirtuosoDAO virtuosoDAO;
 
@@ -31,7 +34,15 @@ public class VirtuosoDAOTest {
 				"all.omdoc#Goedels-incompleteness-pfsketch.p7",
 				"http://omdoc.org/ontology#formalityDegree",
 				"http://omdoc.org/ontology#Formal"));
-		RDFGraph graph = new RDFGraphImpl(MOCASSIN_TEST_GRAPH_URI);
-		virtuosoDAO.insert(triples, graph);
+		RDFGraph graph = new RDFGraphImpl.Builder(MOCASSIN_TEST_GRAPH_IRI)
+				.username(MOCASSIN_TEST_USERNAME).password(
+						MOCASSIN_TEST_PASSWORD).url(MOCASSIN_TEST_URL).build();
+
+		getVirtuosoDAO().insert(triples, graph);
 	}
+
+	public VirtuosoDAO getVirtuosoDAO() {
+		return virtuosoDAO;
+	}
+
 }
