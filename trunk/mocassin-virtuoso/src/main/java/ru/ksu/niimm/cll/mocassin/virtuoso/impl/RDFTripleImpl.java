@@ -1,41 +1,41 @@
 package ru.ksu.niimm.cll.mocassin.virtuoso.impl;
 
+import ru.ksu.niimm.cll.mocassin.virtuoso.RDFNode;
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFTriple;
 
 public class RDFTripleImpl implements RDFTriple {
-	private String subjectUri;
-	private String predicateUri;
-	private String objectUri;
+	private RDFNode subject;
+	private RDFNode predicate;
+	private RDFNode object;
 
-	public RDFTripleImpl(String subjectUri, String predicateUri,
-			String objectUri) {
-		this.subjectUri = subjectUri;
-		this.predicateUri = predicateUri;
-		this.objectUri = objectUri;
+	public RDFTripleImpl(RDFNode subject, RDFNode predicate, RDFNode object) {
+		this.subject = subject;
+		this.predicate = predicate;
+		this.object = object;
 	}
 
-	public String getSubjectUri() {
-		return subjectUri;
+	public RDFNode getSubject() {
+		return subject;
 	}
 
-	public void setSubjectUri(String subjectUri) {
-		this.subjectUri = subjectUri;
+	public void setSubject(RDFNode subject) {
+		this.subject = subject;
 	}
 
-	public String getPredicateUri() {
-		return predicateUri;
+	public RDFNode getPredicate() {
+		return predicate;
 	}
 
-	public void setPredicateUri(String predicateUri) {
-		this.predicateUri = predicateUri;
+	public void setPredicate(RDFNode predicate) {
+		this.predicate = predicate;
 	}
 
-	public String getObjectUri() {
-		return objectUri;
+	public RDFNode getObject() {
+		return object;
 	}
 
-	public void setObjectUri(String objectUri) {
-		this.objectUri = objectUri;
+	public void setObject(RDFNode object) {
+		this.object = object;
 	}
 
 }

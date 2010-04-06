@@ -1,9 +1,9 @@
 package ru.ksu.niimm.cll.mocassin.virtuoso;
 
 public interface RDFTriple {
-	String getSubjectUri();
+	RDFNode getSubject();
 
-	String getPredicateUri();
+	RDFNode getPredicate();
 
-	String getObjectUri();
+	RDFNode getObject();
 }
