@@ -8,6 +8,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
 import ru.ksu.niimm.ose.ontology.OntologyConcept;
 import ru.ksu.niimm.ose.ontology.OntologyIndividual;
 import ru.ksu.niimm.ose.ontology.OntologyModule;
@@ -23,7 +24,7 @@ import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext(OntologyModule.class)
+@GuiceContext( { OntologyModule.class, VirtuosoModule.class })
 public class QueryManagerFacadeTest {
 	@Inject
 	private QueryManagerFacade queryManagerFacade;
@@ -57,8 +58,8 @@ public class QueryManagerFacadeTest {
 	@Test
 	public void testQueryStatement() {
 		QueryStatement queryStatement = makeExampleStatement();
-		List<OntologyResource> resources = getQueryManagerFacade()
-				.query(queryStatement);
+		List<OntologyResource> resources = getQueryManagerFacade().query(
+				queryStatement);
 		// TODO : add more non-trivial test case
 		resources.size();
 	}
@@ -66,7 +67,8 @@ public class QueryManagerFacadeTest {
 	@Test
 	public void testGenerateQuery() {
 		QueryStatement queryStatement = makeExampleStatement();
-		String queryString = getQueryManagerFacade().generateQuery(queryStatement);
+		String queryString = getQueryManagerFacade().generateQuery(
+				queryStatement);
 		// TODO : add more check of equals to correct string
 		Assert.assertTrue(queryString != null && !queryString.equals(""));
 	}
@@ -121,5 +123,5 @@ public class QueryManagerFacadeTest {
 	public QueryManagerFacade getQueryManagerFacade() {
 		return queryManagerFacade;
 	}
-	
+
 }
