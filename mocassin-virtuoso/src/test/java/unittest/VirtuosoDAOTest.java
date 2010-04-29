@@ -17,6 +17,10 @@ import ru.ksu.niimm.cll.mocassin.virtuoso.impl.RDFTripleImpl;
 import unittest.util.LoadPropertiesUtil;
 
 import com.google.inject.Inject;
+import com.hp.hpl.jena.query.Query;
+import com.hp.hpl.jena.query.QueryFactory;
+import com.hp.hpl.jena.query.QuerySolution;
+import com.hp.hpl.jena.rdf.model.Resource;
 import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
@@ -31,22 +35,14 @@ public class VirtuosoDAOTest extends AbstractTest {
 		RDFTriple triple = new RDFTripleImpl(
 				"<all1.omdoc#whatislogic> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://omdoc.org/ontology#Theory>");
 		triples.add(triple);
-		RDFGraph graph = new RDFGraphImpl.Builder(getProperties().getProperty(
-				"graph.iri")).username(
-				getProperties().getProperty("connection.user.name")).password(
-				getProperties().getProperty("connection.user.password")).url(
-				getProperties().getProperty("connection.url")).build();
+		RDFGraph graph = getConfiguredGraph();
 
 		getVirtuosoDAO().insert(triples, graph);
 	}
 
 	@Test
 	public void testDelete() {
-		RDFGraph graph = new RDFGraphImpl.Builder(getProperties().getProperty(
-				"graph.iri")).username(
-				getProperties().getProperty("connection.user.name")).password(
-				getProperties().getProperty("connection.user.password")).url(
-				getProperties().getProperty("connection.url")).build();
+		RDFGraph graph = getConfiguredGraph();
 		getVirtuosoDAO().delete("all1.omdoc", graph);
 	}
 
@@ -56,18 +52,32 @@ public class VirtuosoDAOTest extends AbstractTest {
 		RDFTriple triple = new RDFTripleImpl(
 				"<all.omdoc#whatislogic> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://omdoc.org/ontology#Theory>");
 		triples.add(triple);
-		RDFGraph graph = new RDFGraphImpl.Builder(getProperties().getProperty(
-				"graph.iri")).username(
-				getProperties().getProperty("connection.user.name")).password(
-				getProperties().getProperty("connection.user.password")).url(
-				getProperties().getProperty("connection.url")).build();
+		RDFGraph graph = getConfiguredGraph();
 
 		getVirtuosoDAO().update("all.omdoc", triples, graph);
 
+	}
+
+	@Test
+	public void testGet() {
+		RDFGraph graph = getConfiguredGraph();
+		Query query = QueryFactory.create("SELECT * {?s ?p ?o}");
+		List<QuerySolution> solutions = getVirtuosoDAO().get(query, graph);
+		for (QuerySolution solution : solutions) {
+			Resource resource = solution.getResource("?s");
+		}
 	}
 
 	public VirtuosoDAO getVirtuosoDAO() {
 		return virtuosoDAO;
 	}
 
+	private RDFGraph getConfiguredGraph() {
+		RDFGraph graph = new RDFGraphImpl.Builder(getProperties().getProperty(
+				"graph.iri")).username(
+				getProperties().getProperty("connection.user.name")).password(
+				getProperties().getProperty("connection.user.password")).url(
+				getProperties().getProperty("connection.url")).build();
+		return graph;
+	}
 }

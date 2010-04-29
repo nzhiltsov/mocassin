@@ -1,8 +1,13 @@
 package ru.ksu.niimm.cll.mocassin.virtuoso.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.inject.Inject;
+import com.hp.hpl.jena.query.Query;
+import com.hp.hpl.jena.query.QuerySolution;
+import com.hp.hpl.jena.query.ResultSet;
+import com.hp.hpl.jena.rdf.model.Resource;
 
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFGraph;
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFTriple;
@@ -11,6 +16,8 @@ import ru.ksu.niimm.cll.mocassin.virtuoso.generator.DeleteQueryGenerator;
 import ru.ksu.niimm.cll.mocassin.virtuoso.generator.InsertQueryGenerator;
 import ru.ksu.niimm.cll.mocassin.virtuoso.validation.ValidateGraph;
 import virtuoso.jena.driver.VirtGraph;
+import virtuoso.jena.driver.VirtuosoQueryExecution;
+import virtuoso.jena.driver.VirtuosoQueryExecutionFactory;
 import virtuoso.jena.driver.VirtuosoUpdateFactory;
 import virtuoso.jena.driver.VirtuosoUpdateRequest;
 
@@ -46,6 +53,23 @@ public class VirtuosoDAOImpl implements VirtuosoDAO {
 			RDFGraph graph) {
 		delete(documentUri, graph);
 		insert(triples, graph);
+	}
+
+	@Override
+	@ValidateGraph
+	public List<QuerySolution> get(Query query, RDFGraph graph) {
+		List<QuerySolution> solutions = new ArrayList<QuerySolution>();
+
+		VirtGraph virtGraph = new VirtGraph(graph.getUrl(),
+				graph.getUsername(), graph.getPassword());
+		VirtuosoQueryExecution vqe = VirtuosoQueryExecutionFactory.create(
+				query, virtGraph);
+		ResultSet results = vqe.execSelect();
+		while (results.hasNext()) {
+			QuerySolution solution = results.nextSolution();
+			solutions.add(solution);
+		}
+		return solutions;
 	}
 
 	public InsertQueryGenerator getInsertQueryGenerator() {
