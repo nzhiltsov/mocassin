@@ -20,25 +20,16 @@ import com.google.inject.Inject;
 import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
-@RunWith(MycilaJunitRunner.class)
-@GuiceContext(VirtuosoModule.class)
-public class VirtuosoDAOTest {
+public class VirtuosoDAOTest extends AbstractTest {
 
 	@Inject
 	private VirtuosoDAO virtuosoDAO;
-
-	private static Properties properties;
-
-	@BeforeClass
-	public static void init() throws Exception {
-		properties = LoadPropertiesUtil.loadProperties();
-	}
 
 	@Test
 	public void testInsert() {
 		List<RDFTriple> triples = new ArrayList<RDFTriple>();
 		RDFTriple triple = new RDFTripleImpl(
-				"<all.omdoc#whatislogic> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://omdoc.org/ontology#Theory>");
+				"<all1.omdoc#whatislogic> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://omdoc.org/ontology#Theory>");
 		triples.add(triple);
 		RDFGraph graph = new RDFGraphImpl.Builder(getProperties().getProperty(
 				"graph.iri")).username(
@@ -49,12 +40,34 @@ public class VirtuosoDAOTest {
 		getVirtuosoDAO().insert(triples, graph);
 	}
 
-	public VirtuosoDAO getVirtuosoDAO() {
-		return virtuosoDAO;
+	@Test
+	public void testDelete() {
+		RDFGraph graph = new RDFGraphImpl.Builder(getProperties().getProperty(
+				"graph.iri")).username(
+				getProperties().getProperty("connection.user.name")).password(
+				getProperties().getProperty("connection.user.password")).url(
+				getProperties().getProperty("connection.url")).build();
+		getVirtuosoDAO().delete("all1.omdoc", graph);
 	}
 
-	public Properties getProperties() {
-		return properties;
+	@Test
+	public void testUpdate() {
+		List<RDFTriple> triples = new ArrayList<RDFTriple>();
+		RDFTriple triple = new RDFTripleImpl(
+				"<all.omdoc#whatislogic> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://omdoc.org/ontology#Theory>");
+		triples.add(triple);
+		RDFGraph graph = new RDFGraphImpl.Builder(getProperties().getProperty(
+				"graph.iri")).username(
+				getProperties().getProperty("connection.user.name")).password(
+				getProperties().getProperty("connection.user.password")).url(
+				getProperties().getProperty("connection.url")).build();
+
+		getVirtuosoDAO().update("all.omdoc", triples, graph);
+
+	}
+
+	public VirtuosoDAO getVirtuosoDAO() {
+		return virtuosoDAO;
 	}
 
 }

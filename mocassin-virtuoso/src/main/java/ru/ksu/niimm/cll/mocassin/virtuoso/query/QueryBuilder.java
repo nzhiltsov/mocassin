@@ -15,12 +15,14 @@ import ru.ksu.niimm.cll.mocassin.virtuoso.RDFTriple;
  */
 public class QueryBuilder {
 	private static final String INSERT_EXPRESSION = "INSERT INTO GRAPH %s {%s}";
+	private static final String DELETE_EXPRESSION = "DELETE FROM %s {?s ?p ?o} WHERE {%s}";
 	private final QueryType type;
 	private String graphUri;
+	private String documentUri;
 	private List<RDFTriple> triples = new LinkedList<RDFTriple>();
 
 	public enum QueryType {
-		INSERT
+		INSERT, DELETE
 	}
 
 	public QueryBuilder(QueryType type) {
@@ -51,6 +53,17 @@ public class QueryBuilder {
 	}
 
 	/**
+	 * add document URI
+	 * 
+	 * @param documentUri
+	 * @return
+	 */
+	public QueryBuilder addDocumentUri(String documentUri) {
+		this.documentUri = documentUri;
+		return this;
+	}
+
+	/**
 	 * add RDF triples
 	 * 
 	 * @param triples
@@ -70,11 +83,21 @@ public class QueryBuilder {
 		case INSERT:
 			query = buildInsertQuery();
 			break;
+		case DELETE:
+			query = buildDeleteQuery();
+			break;
 		default:
 			new UnsupportedOperationException(String.format(
-					"this operation isn't supported: %s", this.type));
+					"this operation isn't supported: %s", getType()));
 		}
 		return query;
+	}
+
+	private String buildDeleteQuery() {
+		String whereClause = String.format(
+				"?s ?p ?o. FILTER (regex(?s, \"^%s\") || regex(?o, \"^%s\"))",
+				getDocumentUri(), getDocumentUri());
+		return String.format(DELETE_EXPRESSION, getGraphUri(), whereClause);
 	}
 
 	private String buildInsertQuery() {
@@ -91,10 +114,24 @@ public class QueryBuilder {
 		switch (this.type) {
 		case INSERT:
 			return validateInsert();
+		case DELETE:
+			return validateDelete();
 		default:
 			throw new UnsupportedOperationException(String.format(
 					"this operation isn't supported: %s", this.type));
 		}
+	}
+
+	private boolean validateDelete() {
+		if (!validateGraphUri())
+			return false;
+		if (!validateDocumentUri())
+			return false;
+		return true;
+	}
+
+	private boolean validateDocumentUri() {
+		return !isEmpty(getDocumentUri());
 	}
 
 	private boolean validateGraphUri() {
@@ -130,6 +167,10 @@ public class QueryBuilder {
 
 	private List<RDFTriple> getTriples() {
 		return triples;
+	}
+
+	private String getDocumentUri() {
+		return documentUri;
 	}
 
 }

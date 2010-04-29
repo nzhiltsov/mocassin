@@ -1,6 +1,8 @@
 package ru.ksu.niimm.cll.mocassin.virtuoso;
 
+import ru.ksu.niimm.cll.mocassin.virtuoso.generator.DeleteQueryGenerator;
 import ru.ksu.niimm.cll.mocassin.virtuoso.generator.InsertQueryGenerator;
+import ru.ksu.niimm.cll.mocassin.virtuoso.generator.impl.DeleteQueryGeneratorImpl;
 import ru.ksu.niimm.cll.mocassin.virtuoso.generator.impl.InsertQueryGeneratorImpl;
 import ru.ksu.niimm.cll.mocassin.virtuoso.impl.VirtuosoDAOImpl;
 import ru.ksu.niimm.cll.mocassin.virtuoso.validation.ValidateGraph;
@@ -15,6 +17,7 @@ public class VirtuosoModule extends AbstractModule {
 	protected void configure() {
 		bind(VirtuosoDAO.class).to(VirtuosoDAOImpl.class);
 		bind(InsertQueryGenerator.class).to(InsertQueryGeneratorImpl.class);
+		bind(DeleteQueryGenerator.class).to(DeleteQueryGeneratorImpl.class);
 
 		ValidateGraphInterceptor validateGraphInterceptor = new ValidateGraphInterceptor();
 		bindInterceptor(Matchers.any(), Matchers
