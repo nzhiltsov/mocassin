@@ -3,6 +3,8 @@ package ru.ksu.niimm.ose.ontology.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.ksu.niimm.cll.mocassin.virtuoso.RDFGraph;
+import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoDAO;
 import ru.ksu.niimm.ose.ontology.OntologyElement;
 import ru.ksu.niimm.ose.ontology.OntologyIndividual;
 import ru.ksu.niimm.ose.ontology.OntologyResource;
@@ -10,33 +12,23 @@ import ru.ksu.niimm.ose.ontology.OntologyTriple;
 import ru.ksu.niimm.ose.ontology.QueryManagerFacade;
 import ru.ksu.niimm.ose.ontology.QueryStatement;
 import ru.ksu.niimm.ose.ontology.loader.OMDocOntologyLoader;
-import ru.ksu.niimm.ose.ontology.loader.RDFStorageLoader;
-import ru.ksu.niimm.ose.ontology.loader.impl.OMDocOntologyLoaderImpl;
 
-import com.clarkparsia.pellet.sparqldl.jena.SparqlDLExecutionFactory;
 import com.google.inject.Inject;
-import com.hp.hpl.jena.ontology.OntModel;
 import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.QuerySolution;
-import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Resource;
 
 public class QueryManagerFacadeImpl implements QueryManagerFacade {
 	private static final String RDF_PREFIX_STRING = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>";
 	private static final String SELECT_STATEMENT = "SELECT DISTINCT %s WHERE";
 	private static final String RETRIEVED_CONCEPT_KEY = "?1";
-
-	private OMDocOntologyLoader ontologyLoader;
-	private RDFStorageLoader rdfStorageLoader;
-
 	@Inject
-	public QueryManagerFacadeImpl(OMDocOntologyLoader ontologyLoader,
-			RDFStorageLoader rdfStorageLoader) {
-		this.ontologyLoader = ontologyLoader;
-		this.rdfStorageLoader = rdfStorageLoader;
-	}
+	private OMDocOntologyLoader ontologyLoader;
+	@Inject
+	private VirtuosoDAO virtuosoDAO;
+
+	private RDFGraph graph;
 
 	/*
 	 * (non-Javadoc)
@@ -46,14 +38,12 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 	 * .OntModel, java.lang.String)
 	 */
 	public List<Resource> query(String queryString, String retrievedResourceKey) {
-		getRdfStorageLoader().getRdfStorage().loadImports();
-		Query query = QueryFactory.create(queryString);
-		QueryExecution queryExecution = SparqlDLExecutionFactory.create(query,
-				getRdfStorageLoader().getRdfStorage());
-		ResultSet results = queryExecution.execSelect();
 		List<Resource> resultResources = new ArrayList<Resource>();
-		while (results.hasNext()) {
-			QuerySolution solution = results.nextSolution();
+
+		Query query = QueryFactory.create(queryString);
+
+		List<QuerySolution> solutions = getVirtuosoDAO().get(query, getGraph());
+		for (QuerySolution solution : solutions) {
 			Resource resource = solution.getResource(retrievedResourceKey);
 			resultResources.add(resource);
 		}
@@ -132,8 +122,12 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 		return ontologyLoader;
 	}
 
-	public RDFStorageLoader getRdfStorageLoader() {
-		return rdfStorageLoader;
+	public VirtuosoDAO getVirtuosoDAO() {
+		return virtuosoDAO;
+	}
+
+	public RDFGraph getGraph() {
+		return graph;
 	}
 
 }
