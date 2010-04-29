@@ -9,5 +9,9 @@ import java.util.List;
  * 
  */
 public interface VirtuosoDAO {
+	void delete(String documentUri, RDFGraph graph);
+
 	void insert(List<RDFTriple> triples, RDFGraph graph);
+
+	void update(String documentUri, List<RDFTriple> triples, RDFGraph graph);
 }
