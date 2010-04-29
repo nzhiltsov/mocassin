@@ -19,6 +19,13 @@
 	</organization>
 	<dependencies>
 		<dependency>
+			<groupId>ru.ksu.niimm.cll.mocassin</groupId>
+			<artifactId>mocassin-virtuoso</artifactId>
+			<version>1.0.0.3-SNAPSHOT</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
 			<groupId>com.google.inject</groupId>
 			<artifactId>guice</artifactId>
 		</dependency>
