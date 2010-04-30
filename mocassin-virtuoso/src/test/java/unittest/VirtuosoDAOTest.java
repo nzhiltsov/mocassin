@@ -48,14 +48,26 @@ public class VirtuosoDAOTest extends AbstractTest {
 
 	@Test
 	public void testUpdate() {
-		List<RDFTriple> triples = new ArrayList<RDFTriple>();
-		RDFTriple triple = new RDFTripleImpl(
-				"<all.omdoc#whatislogic> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://omdoc.org/ontology#Theory>");
-		triples.add(triple);
+		List<RDFTriple> triples = createTriplesForUpdate();
+
 		RDFGraph graph = getConfiguredGraph();
 
 		getVirtuosoDAO().update("all.omdoc", triples, graph);
 
+	}
+
+	private List<RDFTriple> createTriplesForUpdate() {
+		List<RDFTriple> triples = new ArrayList<RDFTriple>();
+		RDFTriple triple = new RDFTripleImpl(
+				"<all.omdoc> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://omdoc.org/ontology#Document>");
+		triples.add(triple);
+		RDFTriple triple2 = new RDFTripleImpl(
+				"<all.omdoc> <http://omdoc.org/ontology#hasPart> <all.omdoc#whatislogic>");
+		triples.add(triple2);
+		RDFTriple triple3 = new RDFTripleImpl(
+				"<all.omdoc#whatislogic> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://omdoc.org/ontology#Theory>");
+		triples.add(triple3);
+		return triples;
 	}
 
 	@Test
