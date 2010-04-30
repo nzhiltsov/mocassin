@@ -12,6 +12,7 @@ import ru.ksu.niimm.ose.ontology.OntologyTriple;
 import ru.ksu.niimm.ose.ontology.QueryManagerFacade;
 import ru.ksu.niimm.ose.ontology.QueryStatement;
 import ru.ksu.niimm.ose.ontology.loader.OMDocOntologyLoader;
+import ru.ksu.niimm.ose.ontology.loader.RDFGraphPropertiesLoader;
 
 import com.google.inject.Inject;
 import com.hp.hpl.jena.query.Query;
@@ -27,8 +28,8 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 	private OMDocOntologyLoader ontologyLoader;
 	@Inject
 	private VirtuosoDAO virtuosoDAO;
-
-	private RDFGraph graph;
+	@Inject
+	private RDFGraphPropertiesLoader graphPropertiesLoader;
 
 	/*
 	 * (non-Javadoc)
@@ -126,8 +127,11 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 		return virtuosoDAO;
 	}
 
-	public RDFGraph getGraph() {
-		return graph;
+	public RDFGraphPropertiesLoader getGraphPropertiesLoader() {
+		return graphPropertiesLoader;
 	}
 
+	public RDFGraph getGraph() {
+		return getGraphPropertiesLoader().getGraph();
+	}
 }

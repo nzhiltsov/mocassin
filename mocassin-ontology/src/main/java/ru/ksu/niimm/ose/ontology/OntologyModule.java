@@ -4,8 +4,10 @@ import ru.ksu.niimm.ose.ontology.impl.OMDocOntologyFacadeImpl;
 import ru.ksu.niimm.ose.ontology.impl.OMDocResourceFacadeImpl;
 import ru.ksu.niimm.ose.ontology.impl.QueryManagerFacadeImpl;
 import ru.ksu.niimm.ose.ontology.loader.OMDocOntologyLoader;
+import ru.ksu.niimm.ose.ontology.loader.RDFGraphPropertiesLoader;
 import ru.ksu.niimm.ose.ontology.loader.RDFStorageLoader;
 import ru.ksu.niimm.ose.ontology.loader.impl.OMDocOntologyLoaderImpl;
+import ru.ksu.niimm.ose.ontology.loader.impl.RDFGraphPropertiesLoaderImpl;
 import ru.ksu.niimm.ose.ontology.loader.impl.RDFStorageLoaderImpl;
 
 import com.google.inject.AbstractModule;
@@ -19,6 +21,8 @@ public class OntologyModule extends AbstractModule {
 		bind(OMDocResourceFacade.class).to(OMDocResourceFacadeImpl.class);
 		bind(RDFStorageLoader.class).to(RDFStorageLoaderImpl.class);
 		bind(OMDocOntologyLoader.class).to(OMDocOntologyLoaderImpl.class);
+		bind(RDFGraphPropertiesLoader.class).to(
+				RDFGraphPropertiesLoaderImpl.class);
 	}
 
 }
