@@ -3,36 +3,36 @@ package unittest;
 import java.util.List;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.google.inject.Inject;
-import com.hp.hpl.jena.ontology.OntProperty;
-import com.mycila.testing.junit.MycilaJunitRunner;
-import com.mycila.testing.plugin.guice.GuiceContext;
-
+import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
 import ru.ksu.niimm.ose.ontology.OMDocOntologyFacade;
 import ru.ksu.niimm.ose.ontology.OntologyConcept;
 import ru.ksu.niimm.ose.ontology.OntologyModule;
 import ru.ksu.niimm.ose.ontology.OntologyRelation;
-import ru.ksu.niimm.ose.ontology.impl.OMDocOntologyFacadeImpl;
+
+import com.google.inject.Inject;
+import com.mycila.testing.junit.MycilaJunitRunner;
+import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext(OntologyModule.class)
+@GuiceContext( { OntologyModule.class, VirtuosoModule.class })
 public class OMDocOntologyFacadeTest {
 	@Inject
 	private OMDocOntologyFacade omdocOntologyFacade;
 
 	@Test
 	public void testGetOntClassList() {
-		List<OntologyConcept> ontClassList = getOmdocOntologyFacade().getOntClassList();
+		List<OntologyConcept> ontClassList = getOmdocOntologyFacade()
+				.getOntClassList();
 		Assert.assertTrue(ontClassList != null && ontClassList.size() > 0);
 	}
 
 	@Test
 	public void testGetOntPropertyList() {
-		List<OntologyConcept> ontClassList = getOmdocOntologyFacade().getOntClassList();
+		List<OntologyConcept> ontClassList = getOmdocOntologyFacade()
+				.getOntClassList();
 		for (OntologyConcept concept : ontClassList) {
 			getOmdocOntologyFacade().getOntPropertyList(concept);
 		}
@@ -43,8 +43,8 @@ public class OMDocOntologyFacadeTest {
 	public void testGetPropertiesForConcreteDomain() {
 		OntologyConcept concept = new OntologyConcept(
 				"http://omdoc.org/ontology#Property", "property");
-		List<OntologyRelation> properties = getOmdocOntologyFacade().getOntPropertyList(
-				concept);
+		List<OntologyRelation> properties = getOmdocOntologyFacade()
+				.getOntPropertyList(concept);
 		OntologyRelation relation = new OntologyRelation(
 				"http://omdoc.org/ontology#usesSymbol", "uses symbol");
 		Assert.assertTrue(properties.contains(relation));
@@ -52,7 +52,8 @@ public class OMDocOntologyFacadeTest {
 
 	@Test
 	public void testGetOntPropertyRangeList() {
-		List<OntologyConcept> ontClassList = getOmdocOntologyFacade().getOntClassList();
+		List<OntologyConcept> ontClassList = getOmdocOntologyFacade()
+				.getOntClassList();
 		for (OntologyConcept concept : ontClassList) {
 			List<OntologyRelation> ontPropertyList = getOmdocOntologyFacade()
 					.getOntPropertyList(concept);
