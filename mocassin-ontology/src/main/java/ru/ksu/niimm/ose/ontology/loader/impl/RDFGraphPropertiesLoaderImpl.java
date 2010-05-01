@@ -7,7 +7,6 @@ import java.util.Properties;
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFGraph;
 import ru.ksu.niimm.cll.mocassin.virtuoso.impl.RDFGraphImpl;
 import ru.ksu.niimm.ose.ontology.loader.RDFGraphPropertiesLoader;
-import unittest.util.LoadPropertiesUtil;
 
 public class RDFGraphPropertiesLoaderImpl implements RDFGraphPropertiesLoader {
 	private static final String CONFIG_PROPERTIES_FILENAME = "virtuoso-connect.properties";
