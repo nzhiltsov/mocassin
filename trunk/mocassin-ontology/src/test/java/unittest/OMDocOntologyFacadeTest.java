@@ -77,7 +77,7 @@ public class OMDocOntologyFacadeTest {
 					"http://omdoc.org/ontology#Assertion")) {
 				containsAssertion = true;
 			} else if (rangeConcept.getUri().equals(
-					"http://omdoc.org/ontology#Assumption")) {
+					"http://omdoc.org/ontology#AssumptionAssertion")) {
 				containsAssumption = true;
 			}
 		}
