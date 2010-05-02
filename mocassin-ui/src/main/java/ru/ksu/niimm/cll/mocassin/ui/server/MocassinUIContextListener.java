@@ -1,5 +1,6 @@
 package ru.ksu.niimm.cll.mocassin.ui.server;
 
+import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
 import ru.ksu.niimm.ose.ontology.OntologyModule;
 
 import com.google.inject.Guice;
@@ -11,7 +12,7 @@ public class MocassinUIContextListener extends GuiceServletContextListener {
 	@Override
 	protected Injector getInjector() {
 		return Guice.createInjector(new MocassinUIModule(),
-				new OntologyModule());
+				new OntologyModule(), new VirtuosoModule());
 	}
 
 }
