@@ -10,7 +10,7 @@ public class SrcRefUtil {
 
 	public static SourceReference parse(String resourceUri, String srcRefValue) {
 		if (srcRefValue == null || srcRefValue.equals("")) {
-			// TODO : correct this case handling
+			// TODO : correct the handling in this case
 			SourceReference fakeRef = new SourceReference();
 			fakeRef.setFileName("undefined_this_is_fake_document.tex");
 			return fakeRef;

@@ -9,15 +9,17 @@ import com.google.inject.Inject;
 import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
+import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
+import ru.ksu.niimm.ose.ontology.ArticleMetadata;
 import ru.ksu.niimm.ose.ontology.OMDocElement;
 import ru.ksu.niimm.ose.ontology.OMDocResourceFacade;
 import ru.ksu.niimm.ose.ontology.OntologyModule;
 import ru.ksu.niimm.ose.ontology.OntologyResource;
 import ru.ksu.niimm.ose.ontology.SourceReference;
-import ru.ksu.niimm.ose.ontology.impl.OMDocResourceFacadeImpl;
+import ru.ksu.niimm.ose.ontology.impl.OMDocResourceFacadeOldImpl;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext(OntologyModule.class)
+@GuiceContext( { OntologyModule.class, VirtuosoModule.class })
 public class OMDocResourceFacadeTest {
 	@Inject
 	private OMDocResourceFacade omdocResourceFacade;
@@ -27,53 +29,12 @@ public class OMDocResourceFacadeTest {
 	}
 
 	@Test
-	public void testLoadLemmaResource() {
-		// TODO : correct file path to make relative it and include files into
-		// project
+	public void testLoadArticleMetadataResource() {
 		OntologyResource resource = new OntologyResource(
-				"/home/nzhiltsov/projects/thirdparty/small_stex_collection/logic/en/all.omdoc#reasonable-incons-refutable");
+				"all.omdoc#whatislogic");
 		OMDocElement omdocElement = getOmdocResourceFacade().load(resource);
-		Assert
-				.assertEquals("reasonable-incons-refutable", omdocElement
-						.getId());
-		SourceReference testSrcRef = new SourceReference();
-		testSrcRef
-				.setFileName("/home/nzhiltsov/projects/thirdparty/small_stex_collection/logic/en/reasonable-calculus.tex");
-		testSrcRef.setLine(20);
-		testSrcRef.setColumn(64);
-		Assert.assertEquals(testSrcRef, omdocElement.getSrcRef());
-		Assert
-				.assertEquals(
-						"/home/nzhiltsov/projects/thirdparty/small_stex_collection/logic/en/all.omdoc#reasonable-incons-refutable",
-						omdocElement.getResourceUri());
-		Assert
-				.assertEquals(
-						"/home/nzhiltsov/projects/thirdparty/small_stex_collection/logic/en/reasonable-calculus.pdf",
-						omdocElement.getPdfFileName());
-		Assert.assertEquals("What is Logic?", omdocElement.getArticleMetadata()
-				.getTitle());
-	}
-
-	@Test
-	public void testLoadLemmaProofStepResource() {
-		OntologyResource resource = new OntologyResource(
-				"/home/nzhiltsov/projects/thirdparty/small_stex_collection/logic/en/all.omdoc#reasonable-incons-refutable-pf");
-		OMDocElement omdocElement = getOmdocResourceFacade().load(resource);
-		Assert.assertEquals("reasonable-incons-refutable-pf", omdocElement
-				.getId());
-		SourceReference testSrcRef = new SourceReference();
-		testSrcRef
-				.setFileName("/home/nzhiltsov/projects/thirdparty/small_stex_collection/logic/en/reasonable-calculus.tex");
-		testSrcRef.setLine(25);
-		testSrcRef.setColumn(87);
-		Assert.assertEquals(testSrcRef, omdocElement.getSrcRef());
-		Assert
-				.assertEquals(
-						"/home/nzhiltsov/projects/thirdparty/small_stex_collection/logic/en/all.omdoc#reasonable-incons-refutable-pf",
-						omdocElement.getResourceUri());
-		Assert
-				.assertEquals(
-						"/home/nzhiltsov/projects/thirdparty/small_stex_collection/logic/en/reasonable-calculus.pdf",
-						omdocElement.getPdfFileName());
+		ArticleMetadata articleMetadata = omdocElement.getArticleMetadata();
+		Assert.assertEquals("all.omdoc", articleMetadata.getUri());
+		Assert.assertEquals("Logic", articleMetadata.getTitle());
 	}
 }
