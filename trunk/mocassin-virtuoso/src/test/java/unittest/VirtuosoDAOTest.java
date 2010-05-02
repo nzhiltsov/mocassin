@@ -67,6 +67,24 @@ public class VirtuosoDAOTest extends AbstractTest {
 		RDFTriple triple3 = new RDFTripleImpl(
 				"<all.omdoc#whatislogic> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://omdoc.org/ontology#Theory>");
 		triples.add(triple3);
+		RDFTriple triple4 = new RDFTripleImpl(
+				"<all.omdoc#whatislogic.p1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://omdoc.org/ontology#Proof>");
+		triples.add(triple4);
+		RDFTriple triple5 = new RDFTripleImpl(
+				"<all.omdoc#whatislogic.t1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://omdoc.org/ontology#Theorem>");
+		triples.add(triple5);
+		RDFTriple triple6 = new RDFTripleImpl(
+				"<all.omdoc#whatislogic.p1> <http://omdoc.org/ontology#proves> <all.omdoc#whatislogic.t1>");
+		triples.add(triple6);
+		RDFTriple triple7 = new RDFTripleImpl(
+				"<all.omdoc> <http://purl.org/dc/elements/1.1/title> \"Logic\"");
+		triples.add(triple7);
+		RDFTriple triple8 = new RDFTripleImpl(
+				"<all.omdoc> <http://purl.org/dc/elements/1.1/creator> \"Author1\"");
+		triples.add(triple8);
+		RDFTriple triple9 = new RDFTripleImpl(
+				"<all.omdoc> <http://purl.org/dc/elements/1.1/creator> \"Author2\"");
+		triples.add(triple9);
 		return triples;
 	}
 
