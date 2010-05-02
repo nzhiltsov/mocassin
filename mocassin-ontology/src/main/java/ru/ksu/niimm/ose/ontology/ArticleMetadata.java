@@ -1,12 +1,15 @@
 package ru.ksu.niimm.ose.ontology;
 
 public class ArticleMetadata {
+	/**
+	 * f.e. 'http://example.org/document.omdoc'
+	 */
+	private String uri;
 	private String title;
 	private String author;
 
-	public ArticleMetadata(String title, String author) {
-		this.title = title;
-		this.author = author;
+	public ArticleMetadata(String uri) {
+		this.uri = uri;
 	}
 
 	public String getTitle() {
@@ -23,6 +26,14 @@ public class ArticleMetadata {
 
 	public void setAuthor(String author) {
 		this.author = author;
+	}
+
+	public String getUri() {
+		return uri;
+	}
+
+	public void setUri(String uri) {
+		this.uri = uri;
 	}
 
 }
