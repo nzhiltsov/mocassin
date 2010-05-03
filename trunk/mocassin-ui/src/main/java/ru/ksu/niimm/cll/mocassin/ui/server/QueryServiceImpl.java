@@ -80,7 +80,7 @@ public class QueryServiceImpl implements QueryService {
 			ResultDescription rd = new ResultDescription();
 			rd.setLatexUri(omDocElement.getSrcRef().getFileName());
 			rd.setPdfUri(omDocElement.getPdfFileName());
-			rd.setAuthor(omDocElement.getArticleMetadata().getAuthor());
+			rd.setAuthors(omDocElement.getArticleMetadata().getAuthors());
 			rd.setTitle(omDocElement.getArticleMetadata().getTitle());
 			rd.setRelevantContextString(String.format("line: %d, column: %d",
 					omDocElement.getSrcRef().getLine(), omDocElement

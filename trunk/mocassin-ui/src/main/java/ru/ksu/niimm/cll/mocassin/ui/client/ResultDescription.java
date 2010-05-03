@@ -1,11 +1,12 @@
 package ru.ksu.niimm.cll.mocassin.ui.client;
 
 import java.io.Serializable;
+import java.util.List;
 
 @SuppressWarnings("serial")
 public class ResultDescription implements Serializable {
 	private String title;
-	private String author;
+	private List<String> authors;
 	private String latexUri;
 	private String pdfUri;
 	private String relevantContextString;
@@ -18,12 +19,12 @@ public class ResultDescription implements Serializable {
 		this.title = title;
 	}
 
-	public String getAuthor() {
-		return author;
+	public List<String> getAuthors() {
+		return authors;
 	}
 
-	public void setAuthor(String author) {
-		this.author = author;
+	public void setAuthors(List<String> authors) {
+		this.authors = authors;
 	}
 
 	public String getLatexUri() {
