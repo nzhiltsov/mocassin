@@ -1,12 +1,14 @@
 package ru.ksu.niimm.ose.ontology;
 
+import java.util.List;
+
 public class ArticleMetadata {
 	/**
 	 * f.e. 'http://example.org/document.omdoc'
 	 */
 	private String uri;
 	private String title;
-	private String author;
+	private List<String> authors;
 
 	public ArticleMetadata(String uri) {
 		this.uri = uri;
@@ -20,12 +22,12 @@ public class ArticleMetadata {
 		this.title = title;
 	}
 
-	public String getAuthor() {
-		return author;
+	public List<String> getAuthors() {
+		return authors;
 	}
 
-	public void setAuthor(String author) {
-		this.author = author;
+	public void setAuthors(List<String> authors) {
+		this.authors = authors;
 	}
 
 	public String getUri() {

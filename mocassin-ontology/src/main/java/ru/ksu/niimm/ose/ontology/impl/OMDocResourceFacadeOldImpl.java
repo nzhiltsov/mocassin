@@ -81,7 +81,7 @@ public class OMDocResourceFacadeOldImpl implements OMDocResourceFacade {
 		// TODO : correct initialization with URI
 		ArticleMetadata articleMetadata = new ArticleMetadata(null);
 		articleMetadata.setTitle(title);
-		articleMetadata.setAuthor(author);
+//		articleMetadata.setAuthor(author);
 		return articleMetadata;
 	}
 

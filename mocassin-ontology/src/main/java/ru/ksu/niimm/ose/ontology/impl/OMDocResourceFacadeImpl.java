@@ -1,5 +1,6 @@
 package ru.ksu.niimm.ose.ontology.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFGraph;
@@ -10,6 +11,7 @@ import ru.ksu.niimm.ose.ontology.OMDocResourceFacade;
 import ru.ksu.niimm.ose.ontology.OntologyResource;
 import ru.ksu.niimm.ose.ontology.SourceReference;
 import ru.ksu.niimm.ose.ontology.loader.RDFGraphPropertiesLoader;
+import ru.ksu.niimm.ose.ontology.loader.SparqlQueryLoader;
 
 import com.google.inject.Inject;
 import com.hp.hpl.jena.query.Query;
@@ -19,14 +21,20 @@ import com.hp.hpl.jena.rdf.model.Resource;
 
 public class OMDocResourceFacadeImpl implements OMDocResourceFacade {
 	private static final String RDF_PREFIX_STRING = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>";
-	private static final String DC_TITLE_URI = "<http://purl.org/dc/elements/1.1/title>";
-	private static final String OMDOC_DOCUMENT_URI = "<http://omdoc.org/ontology#Document>";
 	private static final String RETRIEVED_TITLE_ELEMENT_KEY = "?2";
 	private static final String DELIMITER = "#";
+	private static final String RETRIEVED_AUTHOR_ELEMENT_KEY = "?2";
+
+	private static final String DOC_EXPRESSION = "?1 rdf:type <http://omdoc.org/ontology#Document>";
+	private static final String TITLE_EXPRESSION = String.format(
+			"?1 <http://purl.org/dc/elements/1.1/title> %s",
+			RETRIEVED_TITLE_ELEMENT_KEY);
 	@Inject
 	private RDFGraphPropertiesLoader rdfGraphPropertiesLoader;
 	@Inject
 	private VirtuosoDAO virtuosoDAO;
+	@Inject
+	private SparqlQueryLoader sparqlQueryLoader;
 
 	@Override
 	public OMDocElement load(OntologyResource resource) {
@@ -34,13 +42,28 @@ public class OMDocResourceFacadeImpl implements OMDocResourceFacade {
 		String resourceUri = resource.getUri();
 		String documentUri = parseDocumentUri(resourceUri);
 		String title = retrieveTitle(documentUri);
+		List<String> authors = retrieveAuthors(documentUri);
 
 		OMDocElement omdocElement = new OMDocElement(resourceUri, null,
 				new SourceReference());
 		ArticleMetadata articleMetadata = new ArticleMetadata(documentUri);
 		articleMetadata.setTitle(title);
+		articleMetadata.setAuthors(authors);
 		omdocElement.setArticleMetadata(articleMetadata);
 		return omdocElement;
+	}
+
+	private List<String> retrieveAuthors(String documentUri) {
+		List<String> authors = new ArrayList<String>();
+		String authorQueryString = generateAuthorQuery(documentUri);
+		Query query = QueryFactory.create(authorQueryString);
+		List<QuerySolution> solutions = getVirtuosoDAO().get(query, getGraph());
+		for (QuerySolution solution : solutions) {
+			Resource resource = solution
+					.getResource(RETRIEVED_AUTHOR_ELEMENT_KEY);
+			authors.add(resource.toString());
+		}
+		return authors;
 	}
 
 	private String retrieveTitle(String documentUri) {
@@ -65,15 +88,13 @@ public class OMDocResourceFacadeImpl implements OMDocResourceFacade {
 	}
 
 	private String generateTitleQuery(String documentUri) {
-		String docExpression = String.format("?1 rdf:type %s",
-				OMDOC_DOCUMENT_URI);
-		String titleExpression = String.format("?1 %s %s", DC_TITLE_URI,
-				RETRIEVED_TITLE_ELEMENT_KEY);
-		String filterExpression = String.format("FILTER (str(?1) = \"%s\")",
-				documentUri);
-		return String.format("%s SELECT * WHERE {%s . %s . %s .}",
-				RDF_PREFIX_STRING, docExpression, titleExpression,
-				filterExpression);
+		String query = getSparqlQueryLoader().loadQueryByName("GetTitle");
+		return String.format(query, documentUri);
+	}
+
+	private String generateAuthorQuery(String documentUri) {
+		String query = getSparqlQueryLoader().loadQueryByName("GetAuthors");
+		return String.format(query, documentUri);
 	}
 
 	private RDFGraph getGraph() {
@@ -86,6 +107,10 @@ public class OMDocResourceFacadeImpl implements OMDocResourceFacade {
 
 	private VirtuosoDAO getVirtuosoDAO() {
 		return virtuosoDAO;
+	}
+
+	public SparqlQueryLoader getSparqlQueryLoader() {
+		return sparqlQueryLoader;
 	}
 
 }

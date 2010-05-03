@@ -1,0 +1,5 @@
+SELECT * {
+?1 a <http://omdoc.org/ontology#Document> .
+?1 <http://purl.org/dc/elements/1.1/creator> ?2 .
+FILTER (str(?1) = "%s") .
+}

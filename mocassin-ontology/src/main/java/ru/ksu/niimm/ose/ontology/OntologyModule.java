@@ -7,9 +7,11 @@ import ru.ksu.niimm.ose.ontology.impl.QueryManagerFacadeImpl;
 import ru.ksu.niimm.ose.ontology.loader.OMDocOntologyLoader;
 import ru.ksu.niimm.ose.ontology.loader.RDFGraphPropertiesLoader;
 import ru.ksu.niimm.ose.ontology.loader.RDFStorageLoader;
+import ru.ksu.niimm.ose.ontology.loader.SparqlQueryLoader;
 import ru.ksu.niimm.ose.ontology.loader.impl.OMDocOntologyLoaderImpl;
 import ru.ksu.niimm.ose.ontology.loader.impl.RDFGraphPropertiesLoaderImpl;
 import ru.ksu.niimm.ose.ontology.loader.impl.RDFStorageLoaderImpl;
+import ru.ksu.niimm.ose.ontology.loader.impl.SparqlQueryLoaderImpl;
 
 import com.google.inject.AbstractModule;
 
@@ -25,6 +27,7 @@ public class OntologyModule extends AbstractModule {
 		bind(OMDocOntologyLoader.class).to(OMDocOntologyLoaderImpl.class);
 		bind(RDFGraphPropertiesLoader.class).to(
 				RDFGraphPropertiesLoaderImpl.class);
+		bind(SparqlQueryLoader.class).to(SparqlQueryLoaderImpl.class);
 	}
 
 }
