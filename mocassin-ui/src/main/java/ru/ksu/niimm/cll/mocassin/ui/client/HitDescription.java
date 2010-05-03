@@ -1,5 +1,7 @@
 package ru.ksu.niimm.cll.mocassin.ui.client;
 
+import java.util.List;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiConstructor;
@@ -32,13 +34,22 @@ public class HitDescription extends Composite {
 	public HitDescription(ResultDescription resultDescription) {
 		initWidget(binder.createAndBindUi(this));
 		titleLink.setText(resultDescription.getTitle());
-		authorLabel.setText(resultDescription.getAuthor());
 		latexDocumentFormat.setText("LaTeX");
 		latexDocumentFormat.setUri(resultDescription.getLatexUri());
 		pdfDocumentFormat.setText("PDF");
 		pdfDocumentFormat.setUri(resultDescription.getPdfUri());
 		relevantContextLabel.setText(resultDescription
 				.getRelevantContextString());
+
+		List<String> authors = resultDescription.getAuthors();
+		String authorLabelText = "";
+		for (int i = 0; i < authors.size(); i++) {
+			authorLabelText += authors.get(i);
+			if (i + 1 < authors.size()) {
+				authorLabelText += ", ";
+			}
+		}
+		authorLabel.setText(authorLabelText);
 	}
 
 }
