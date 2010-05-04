@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,10 +17,10 @@ public class SparqlQueryLoaderImpl implements SparqlQueryLoader {
 	private static final String SPARQL_SCRIPTS_DIR_PATH = "sparql";
 	private Map<String, String> name2Query = new HashMap<String, String>();
 
-	public SparqlQueryLoaderImpl() throws IOException {
+	public SparqlQueryLoaderImpl() throws IOException, URISyntaxException {
 		ClassLoader loader = SparqlQueryLoaderImpl.class.getClassLoader();
 		URL url = loader.getResource(SPARQL_SCRIPTS_DIR_PATH);
-		File file = new File(url.getPath());
+		File file = new File(url.toURI());
 		File[] files = file.listFiles();
 		for (File f : files) {
 			String value = readContents(f);
@@ -59,7 +60,4 @@ public class SparqlQueryLoaderImpl implements SparqlQueryLoader {
 		return name2Query;
 	}
 
-	public static void main(String[] args) throws IOException {
-		SparqlQueryLoaderImpl l = new SparqlQueryLoaderImpl();
-	}
 }
