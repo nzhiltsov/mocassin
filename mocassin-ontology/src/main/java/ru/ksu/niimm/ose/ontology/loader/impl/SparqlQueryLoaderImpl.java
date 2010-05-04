@@ -14,25 +14,20 @@ import java.util.Map;
 import ru.ksu.niimm.ose.ontology.loader.SparqlQueryLoader;
 
 public class SparqlQueryLoaderImpl implements SparqlQueryLoader {
-	private static final String SPARQL_SCRIPTS_DIR_PATH = "sparql";
 	private Map<String, String> name2Query = new HashMap<String, String>();
 
-	public SparqlQueryLoaderImpl() throws IOException, URISyntaxException {
-		ClassLoader loader = SparqlQueryLoaderImpl.class.getClassLoader();
-		URL url = loader.getResource(SPARQL_SCRIPTS_DIR_PATH);
-		File file = new File(url.toURI());
-		File[] files = file.listFiles();
-		for (File f : files) {
-			String value = readContents(f);
-			String name = f.getName();
-			String pureName = name.substring(0, name.indexOf("."));
-			getName2Query().put(pureName, value);
-		}
+	public SparqlQueryLoaderImpl() throws IOException {
+
+		String value = readContents("sparql/GetAuthors.sparql");
+		getName2Query().put("GetAuthors", value);
+		String value2 = readContents("sparql/GetTitle.sparql");
+		getName2Query().put("GetTitle", value2);
 	}
 
-	private String readContents(File f) throws IOException {
-
-		InputStream inputStream = new FileInputStream(f);
+	private String readContents(String path) throws IOException {
+		ClassLoader loader = SparqlQueryLoaderImpl.class.getClassLoader();
+		URL url = loader.getResource(path);
+		InputStream inputStream = url.openStream();
 		BufferedReader reader = new BufferedReader(new InputStreamReader(
 				inputStream));
 		StringBuffer contentsBuffer = new StringBuffer();
@@ -42,7 +37,6 @@ public class SparqlQueryLoaderImpl implements SparqlQueryLoader {
 		}
 		reader.close();
 		inputStream.close();
-
 		return contentsBuffer.toString();
 
 	}
