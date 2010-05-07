@@ -77,7 +77,7 @@ public class VirtuosoDAOTest extends AbstractTest {
 				"<all.omdoc#whatislogic.p1> <http://omdoc.org/ontology#proves> <all.omdoc#whatislogic.t1>");
 		triples.add(triple6);
 		RDFTriple triple7 = new RDFTripleImpl(
-				"<all.omdoc> <http://purl.org/dc/elements/1.1/title> \"Logic\"");
+				"<all.omdoc> <http://purl.org/dc/elements/1.1/title> \"Logic and something else\"");
 		triples.add(triple7);
 		RDFTriple triple8 = new RDFTripleImpl(
 				"<all.omdoc> <http://purl.org/dc/elements/1.1/creator> \"Author1\"");
@@ -91,7 +91,7 @@ public class VirtuosoDAOTest extends AbstractTest {
 	@Test
 	public void testGet() {
 		RDFGraph graph = getConfiguredGraph();
-		Query query = QueryFactory.create("SELECT * {?s ?p ?o}");
+		Query query = QueryFactory.create("SELECT * {?s ?p ?o} limit 100");
 		List<QuerySolution> solutions = getVirtuosoDAO().get(query, graph);
 		for (QuerySolution solution : solutions) {
 			Resource resource = solution.getResource("?s");
