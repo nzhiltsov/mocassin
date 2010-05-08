@@ -2,27 +2,20 @@ package unittest;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFGraph;
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFTriple;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoDAO;
-import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
 import ru.ksu.niimm.cll.mocassin.virtuoso.impl.RDFGraphImpl;
 import ru.ksu.niimm.cll.mocassin.virtuoso.impl.RDFTripleImpl;
-import unittest.util.LoadPropertiesUtil;
 
 import com.google.inject.Inject;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.rdf.model.Resource;
-import com.mycila.testing.junit.MycilaJunitRunner;
-import com.mycila.testing.plugin.guice.GuiceContext;
 
 public class VirtuosoDAOTest extends AbstractTest {
 
@@ -50,10 +43,26 @@ public class VirtuosoDAOTest extends AbstractTest {
 	public void testUpdate() {
 		List<RDFTriple> triples = createTriplesForUpdate();
 
+		triples.addAll(createTheoremTextTriples());
+
 		RDFGraph graph = getConfiguredGraph();
 
 		getVirtuosoDAO().update("all.omdoc", triples, graph);
 
+	}
+
+	private List<RDFTriple> createTheoremTextTriples() {
+		List<RDFTriple> triples = new ArrayList<RDFTriple>();
+		RDFTriple triple1 = new RDFTripleImpl(
+				"<all.omdoc#whatislogic.t1.pr1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://omdoc.org/ontology#Property>");
+		triples.add(triple1);
+		RDFTriple triple2 = new RDFTripleImpl(
+				"<all.omdoc#whatislogic.t1> <http://omdoc.org/ontology#hasProperty> <all.omdoc#whatislogic.t1.pr1>");
+		triples.add(triple2);
+		RDFTriple triple3 = new RDFTripleImpl(
+				"<all.omdoc#whatislogic.t1.pr1> <http://omdoc.org/ontology#hasText> \"Any effectively generated theory capable of expressing elementary arithmetic cannot be both consistent complete.\"");
+		triples.add(triple3);
+		return triples;
 	}
 
 	private List<RDFTriple> createTriplesForUpdate() {
