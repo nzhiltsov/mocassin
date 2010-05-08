@@ -56,8 +56,7 @@ public class OMDocOntologyFacadeImpl implements OMDocOntologyFacade {
 		List<OntologyRelation> relations = new ArrayList<OntologyRelation>();
 		for (OntProperty property : propertiesAsList) {
 			String namespace = property.getNameSpace();
-			if (namespace.equals(OMDOC_NAMESPACE)
-					&& !property.isDatatypeProperty()) {
+			if (namespace.equals(OMDOC_NAMESPACE)) {
 				String uri = property.getURI();
 				String rdfsLabel = property.getLabel(RDFS_LABEL_LOCALE);
 				OntologyRelation relation = new OntologyRelation(uri, rdfsLabel);
@@ -125,19 +124,9 @@ public class OMDocOntologyFacadeImpl implements OMDocOntologyFacade {
 	@Override
 	public List<OntologyIndividual> getIndividuals(
 			OntologyConcept ontologyConcept) {
-		// TODO stub to show some individuals of class Symbol only
+		// TODO : there are no individuals
 		List<OntologyIndividual> individuals = new ArrayList<OntologyIndividual>();
-		if (ontologyConcept.getUri().equals("http://omdoc.org/ontology#Symbol")) {
-			individuals.add(new OntologyIndividual(
-					"http://www.openmath.org/cd/relation1#eq", "="));
-			individuals.add(new OntologyIndividual(
-					"http://www.openmath.org/cd/arith1#plus", "+"));
-			individuals.add(new OntologyIndividual(
-					"http://www.openmath.org/cd/latexml#closed-interval",
-					"[*,*]"));
-			individuals.add(new OntologyIndividual(
-					"http://www.openmath.org/cd/latexml#divide", "/"));
-		}
+
 		return individuals;
 	}
 

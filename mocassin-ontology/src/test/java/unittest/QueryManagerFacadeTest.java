@@ -11,12 +11,14 @@ import org.junit.runner.RunWith;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
 import ru.ksu.niimm.ose.ontology.OntologyConcept;
 import ru.ksu.niimm.ose.ontology.OntologyIndividual;
+import ru.ksu.niimm.ose.ontology.OntologyLiteral;
 import ru.ksu.niimm.ose.ontology.OntologyModule;
 import ru.ksu.niimm.ose.ontology.OntologyRelation;
 import ru.ksu.niimm.ose.ontology.OntologyResource;
 import ru.ksu.niimm.ose.ontology.OntologyTriple;
 import ru.ksu.niimm.ose.ontology.QueryManagerFacade;
 import ru.ksu.niimm.ose.ontology.QueryStatement;
+import ru.ksu.niimm.ose.ontology.loader.SparqlQueryLoader;
 
 import com.google.inject.Inject;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -28,6 +30,8 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 public class QueryManagerFacadeTest {
 	@Inject
 	private QueryManagerFacade queryManagerFacade;
+	@Inject
+	private SparqlQueryLoader sparqlQueryLoader;
 
 	@Test
 	public void testQuery() {
@@ -71,6 +75,40 @@ public class QueryManagerFacadeTest {
 				queryStatement);
 		// TODO : add more check of equals to correct string
 		Assert.assertTrue(queryString != null && !queryString.equals(""));
+	}
+
+	@Test
+	public void testGenerateFullTextQuery() {
+		QueryStatement queryStatement = makeFullTextStatement();
+
+		String queryString = getQueryManagerFacade().generateQuery(
+				queryStatement);
+		queryString.length();
+	}
+
+	private QueryStatement makeFullTextStatement() {
+		List<OntologyTriple> triples = new ArrayList<OntologyTriple>();
+		OntologyConcept subject = new OntologyConcept(
+				"http://omdoc.org/ontology#Theorem", "theorem");
+		subject.setId(1);
+		OntologyRelation predicate = new OntologyRelation(
+				"http://omdoc.org/ontology#hasProperty", "hasProperty");
+		predicate.setId(2);
+		OntologyConcept object = new OntologyConcept(
+				"http://omdoc.org/ontology#Property", "property");
+		object.setId(3);
+		triples.add(new OntologyTriple(subject, predicate, object));
+		OntologyConcept subject2 = new OntologyConcept(
+				"http://omdoc.org/ontology#Property", "property");
+		subject2.setId(3);
+		OntologyRelation predicate2 = new OntologyRelation(
+				"http://omdoc.org/ontology#hasText", "hasText");
+		predicate2.setId(4);
+		OntologyLiteral object2 = new OntologyLiteral(
+				"arithmetic AND consistent");
+		object2.setId(5);
+		triples.add(new OntologyTriple(subject2, predicate2, object2));
+		return new QueryStatement(triples);
 	}
 
 	private QueryStatement makeExampleStatement() {
@@ -122,6 +160,10 @@ public class QueryManagerFacadeTest {
 
 	public QueryManagerFacade getQueryManagerFacade() {
 		return queryManagerFacade;
+	}
+
+	public SparqlQueryLoader getSparqlQueryLoader() {
+		return sparqlQueryLoader;
 	}
 
 }

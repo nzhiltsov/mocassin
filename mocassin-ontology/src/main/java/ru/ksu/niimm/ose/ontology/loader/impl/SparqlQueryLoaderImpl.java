@@ -9,19 +9,37 @@ import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+
+import com.ibm.icu.util.StringTokenizer;
 
 import ru.ksu.niimm.ose.ontology.loader.SparqlQueryLoader;
+import unittest.util.LoadPropertiesUtil;
 
 public class SparqlQueryLoaderImpl implements SparqlQueryLoader {
+	private static final String NAMES_PARAMETER = "scriptNames";
+	private static final String PROPERTIES_FILENAME = "sparql/scripts.properties";
+	private Properties properties = new Properties();
 	private Map<String, String> name2Query = new HashMap<String, String>();
 
 	public SparqlQueryLoaderImpl() throws IOException {
+		ClassLoader loader = SparqlQueryLoaderImpl.class.getClassLoader();
+		URL url = loader.getResource(PROPERTIES_FILENAME);
+		InputStream stream = url.openStream();
+		properties.load(stream);
+		stream.close();
 
-		String value = readContents("sparql/GetAuthors.sparql");
-		getName2Query().put("GetAuthors", value);
-		String value2 = readContents("sparql/GetTitle.sparql");
-		getName2Query().put("GetTitle", value2);
+		String names = getProperties().getProperty(NAMES_PARAMETER);
+
+		StringTokenizer st = new StringTokenizer(names, ",");
+
+		while (st.hasMoreTokens()) {
+			String name = st.nextToken();
+			String value = readContents(String.format("sparql/%s.sparql", name));
+			getName2Query().put(name, value);
+		}
 	}
 
 	private String readContents(String path) throws IOException {
@@ -52,6 +70,10 @@ public class SparqlQueryLoaderImpl implements SparqlQueryLoader {
 
 	public Map<String, String> getName2Query() {
 		return name2Query;
+	}
+
+	public Properties getProperties() {
+		return properties;
 	}
 
 }

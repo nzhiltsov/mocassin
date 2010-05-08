@@ -7,6 +7,7 @@ import ru.ksu.niimm.cll.mocassin.virtuoso.RDFGraph;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoDAO;
 import ru.ksu.niimm.ose.ontology.OntologyElement;
 import ru.ksu.niimm.ose.ontology.OntologyIndividual;
+import ru.ksu.niimm.ose.ontology.OntologyLiteral;
 import ru.ksu.niimm.ose.ontology.OntologyResource;
 import ru.ksu.niimm.ose.ontology.OntologyTriple;
 import ru.ksu.niimm.ose.ontology.QueryManagerFacade;
@@ -93,12 +94,23 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 			String subjectTypeString = String.format("?%d rdf:type <%s>",
 					triple.getSubject().getId(), triple.getSubject().getUri());
 			boolean isIndividual = tripleObject instanceof OntologyIndividual;
+			boolean isLiteral = tripleObject instanceof OntologyLiteral;
 			if (isIndividual) {
 				String individualString = String.format("?%d <%s> <%s>", triple
 						.getSubject().getId(), triple.getPredicate().getUri(),
 						triple.getObject().getUri());
 				whereClause = String.format("%s .\n %s.", subjectTypeString,
 						individualString);
+			} else if (isLiteral) {
+				String containsString = String.format(
+						"?%d <bif:contains> \"%s\"",
+						triple.getObject().getId(), triple.getObject()
+								.getLabel());
+				String predicateString = String.format("?%d <%s> ?%d", triple
+						.getSubject().getId(), triple.getPredicate().getUri(),
+						triple.getObject().getId());
+				whereClause = String.format("%s .\n %s .\n %s.",
+						subjectTypeString, predicateString, containsString);
 			} else {
 
 				String objectTypeString = String
