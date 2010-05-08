@@ -20,15 +20,10 @@ import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.rdf.model.Resource;
 
 public class OMDocResourceFacadeImpl implements OMDocResourceFacade {
-	private static final String RDF_PREFIX_STRING = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>";
 	private static final String RETRIEVED_TITLE_ELEMENT_KEY = "?2";
 	private static final String DELIMITER = "#";
 	private static final String RETRIEVED_AUTHOR_ELEMENT_KEY = "?2";
 
-	private static final String DOC_EXPRESSION = "?1 rdf:type <http://omdoc.org/ontology#Document>";
-	private static final String TITLE_EXPRESSION = String.format(
-			"?1 <http://purl.org/dc/elements/1.1/title> %s",
-			RETRIEVED_TITLE_ELEMENT_KEY);
 	@Inject
 	private RDFGraphPropertiesLoader rdfGraphPropertiesLoader;
 	@Inject
