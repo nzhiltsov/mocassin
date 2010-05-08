@@ -11,7 +11,7 @@ import com.google.gwt.user.client.ui.SuggestOracle;
 public class OntologyElementOracle extends SuggestOracle {
 
 	private static final int MIN_QUERY_STRING_LENGTH = 0;
-	private static final int MAX_SHOWN_SUGGESTIONS_COUNT = 10;
+	private static final int MAX_SHOWN_SUGGESTIONS_COUNT = 20;
 	private List<OntologyElementSuggestion> elementSuggestions;
 
 	public void setOntologyElements(Collection<? extends OntElement> ontElements) {
