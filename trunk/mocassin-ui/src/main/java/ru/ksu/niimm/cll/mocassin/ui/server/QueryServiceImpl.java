@@ -1,10 +1,10 @@
 package ru.ksu.niimm.cll.mocassin.ui.server;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import ru.ksu.niimm.cll.mocassin.ui.client.OntConcept;
+import ru.ksu.niimm.cll.mocassin.ui.client.OntLiteral;
 import ru.ksu.niimm.cll.mocassin.ui.client.OntQueryStatement;
 import ru.ksu.niimm.cll.mocassin.ui.client.OntTriple;
 import ru.ksu.niimm.cll.mocassin.ui.client.PagingLoadConfig;
@@ -16,6 +16,7 @@ import ru.ksu.niimm.ose.ontology.OMDocResourceFacade;
 import ru.ksu.niimm.ose.ontology.OntologyConcept;
 import ru.ksu.niimm.ose.ontology.OntologyElement;
 import ru.ksu.niimm.ose.ontology.OntologyIndividual;
+import ru.ksu.niimm.ose.ontology.OntologyLiteral;
 import ru.ksu.niimm.ose.ontology.OntologyRelation;
 import ru.ksu.niimm.ose.ontology.OntologyResource;
 import ru.ksu.niimm.ose.ontology.OntologyTriple;
@@ -113,6 +114,8 @@ public class QueryServiceImpl implements QueryService {
 			if (ontTriple.getObject() instanceof OntConcept) {
 				object = new OntologyConcept(ontTriple.getObject().getUri(),
 						ontTriple.getObject().getLabel());
+			} else if (ontTriple.getObject() instanceof OntLiteral) {
+				object = new OntologyLiteral(ontTriple.getObject().getLabel());
 			} else {
 				object = new OntologyIndividual(ontTriple.getObject().getUri(),
 						ontTriple.getObject().getLabel());
