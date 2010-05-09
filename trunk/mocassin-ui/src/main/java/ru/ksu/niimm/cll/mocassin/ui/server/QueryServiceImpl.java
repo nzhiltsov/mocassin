@@ -79,13 +79,14 @@ public class QueryServiceImpl implements QueryService {
 		List<ResultDescription> resultDescriptions = new ArrayList<ResultDescription>();
 		for (OMDocElement omDocElement : omdocElements) {
 			ResultDescription rd = new ResultDescription();
+			rd.setDocumentUri(omDocElement.getResourceUri());
 			rd.setLatexUri(omDocElement.getSrcRef().getFileName());
 			rd.setPdfUri(omDocElement.getPdfFileName());
 			rd.setAuthors(omDocElement.getArticleMetadata().getAuthors());
-			rd.setTitle(omDocElement.getArticleMetadata().getTitle());
-			rd.setRelevantContextString(String.format("line: %d, column: %d",
-					omDocElement.getSrcRef().getLine(), omDocElement
-							.getSrcRef().getColumn()));
+			String articleTitle = omDocElement.getArticleMetadata().getTitle();
+			String title = !isEmpty(articleTitle) ? articleTitle : omDocElement
+					.getArticleMetadata().getUri();
+			rd.setTitle(title);
 			resultDescriptions.add(rd);
 		}
 		return resultDescriptions;
@@ -153,4 +154,7 @@ public class QueryServiceImpl implements QueryService {
 		return omdocResourceFacade;
 	}
 
+	private boolean isEmpty(String text) {
+		return text == null || text.equals("");
+	}
 }

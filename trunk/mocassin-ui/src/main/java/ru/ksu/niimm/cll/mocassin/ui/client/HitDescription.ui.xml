@@ -9,6 +9,11 @@
 		
 		.title-label {
 			font-size: medium;
+			cursor: pointer;
+		}
+		
+		.author-label {
+			color: green;
 		}
 	</ui:style>
 	<g:VerticalPanel styleName='{style.main-panel}'>
@@ -19,7 +24,7 @@
 			<g:Label ui:field="relevantContextLabel" />
 		</g:HorizontalPanel>
 		<g:HorizontalPanel>
-			<g:Label ui:field="authorLabel" />
+			<g:Label ui:field="authorLabel" styleName='{style.author-label}' />
 			<ose:DocumentFormat ui:field="latexDocumentFormat" />
 			<ose:DocumentFormat ui:field="pdfDocumentFormat" />
 		</g:HorizontalPanel>

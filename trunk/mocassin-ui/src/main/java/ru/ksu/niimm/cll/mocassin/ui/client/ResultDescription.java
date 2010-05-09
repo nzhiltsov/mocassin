@@ -7,6 +7,7 @@ import java.util.List;
 public class ResultDescription implements Serializable {
 	private String title;
 	private List<String> authors;
+	private String documentUri;
 	private String latexUri;
 	private String pdfUri;
 	private String relevantContextString;
@@ -25,6 +26,14 @@ public class ResultDescription implements Serializable {
 
 	public void setAuthors(List<String> authors) {
 		this.authors = authors;
+	}
+
+	public String getDocumentUri() {
+		return documentUri;
+	}
+
+	public void setDocumentUri(String documentUri) {
+		this.documentUri = documentUri;
 	}
 
 	public String getLatexUri() {

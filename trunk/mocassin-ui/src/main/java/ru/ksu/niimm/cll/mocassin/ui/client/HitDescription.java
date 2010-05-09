@@ -3,9 +3,12 @@ package ru.ksu.niimm.cll.mocassin.ui.client;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
@@ -30,9 +33,12 @@ public class HitDescription extends Composite {
 	@UiField
 	Label relevantContextLabel;
 
+	private String documentUri;
+
 	@UiConstructor
 	public HitDescription(ResultDescription resultDescription) {
 		initWidget(binder.createAndBindUi(this));
+		documentUri = resultDescription.getDocumentUri();
 		titleLink.setText(resultDescription.getTitle());
 		latexDocumentFormat.setText("LaTeX");
 		latexDocumentFormat.setUri(resultDescription.getLatexUri());
@@ -50,6 +56,17 @@ public class HitDescription extends Composite {
 			}
 		}
 		authorLabel.setText(authorLabelText);
+	}
+
+	@UiHandler("titleLink")
+	void handleClick(ClickEvent event) {
+		String url = GWT.getModuleBaseURL() + "download?url="
+				+ getDocumentUri();
+		Window.open(url, "_blank", "");
+	}
+
+	public String getDocumentUri() {
+		return documentUri;
 	}
 
 }
