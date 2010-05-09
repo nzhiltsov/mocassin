@@ -103,7 +103,7 @@ public class QueryBuilder {
 	private String buildInsertQuery() {
 		StringBuffer constructTemplate = new StringBuffer();
 		for (RDFTriple triple : getTriples()) {
-			String tripleStr = String.format("%s .", triple.getValue());
+			String tripleStr = String.format("%s ", triple.getValue());
 			constructTemplate.append(tripleStr);
 		}
 		return String.format(INSERT_EXPRESSION, getGraphUri(),

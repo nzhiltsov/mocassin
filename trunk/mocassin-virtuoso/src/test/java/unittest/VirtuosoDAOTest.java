@@ -26,7 +26,7 @@ public class VirtuosoDAOTest extends AbstractTest {
 	public void testInsert() {
 		List<RDFTriple> triples = new ArrayList<RDFTriple>();
 		RDFTriple triple = new RDFTripleImpl(
-				"<all1.omdoc#whatislogic> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://omdoc.org/ontology#Theory>");
+				"<all1.omdoc#whatislogic> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://omdoc.org/ontology#Theory> .");
 		triples.add(triple);
 		RDFGraph graph = getConfiguredGraph();
 
@@ -54,13 +54,13 @@ public class VirtuosoDAOTest extends AbstractTest {
 	private List<RDFTriple> createTheoremTextTriples() {
 		List<RDFTriple> triples = new ArrayList<RDFTriple>();
 		RDFTriple triple1 = new RDFTripleImpl(
-				"<all.omdoc#whatislogic.t1.pr1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://omdoc.org/ontology#Property>");
+				"<all.omdoc#whatislogic.t1.pr1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://omdoc.org/ontology#Property> .");
 		triples.add(triple1);
 		RDFTriple triple2 = new RDFTripleImpl(
-				"<all.omdoc#whatislogic.t1> <http://omdoc.org/ontology#hasProperty> <all.omdoc#whatislogic.t1.pr1>");
+				"<all.omdoc#whatislogic.t1> <http://omdoc.org/ontology#hasProperty> <all.omdoc#whatislogic.t1.pr1> .");
 		triples.add(triple2);
 		RDFTriple triple3 = new RDFTripleImpl(
-				"<all.omdoc#whatislogic.t1.pr1> <http://omdoc.org/ontology#hasText> \"Any effectively generated theory capable of expressing elementary arithmetic cannot be both consistent complete.\"");
+				"<all.omdoc#whatislogic.t1.pr1> <http://omdoc.org/ontology#hasText> \"Any effectively generated theory capable of expressing elementary arithmetic cannot be both consistent complete.\" .");
 		triples.add(triple3);
 		return triples;
 	}
@@ -68,31 +68,31 @@ public class VirtuosoDAOTest extends AbstractTest {
 	private List<RDFTriple> createTriplesForUpdate() {
 		List<RDFTriple> triples = new ArrayList<RDFTriple>();
 		RDFTriple triple = new RDFTripleImpl(
-				"<all.omdoc> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://omdoc.org/ontology#Document>");
+				"<all.omdoc> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://omdoc.org/ontology#Document> .");
 		triples.add(triple);
 		RDFTriple triple2 = new RDFTripleImpl(
-				"<all.omdoc> <http://omdoc.org/ontology#hasPart> <all.omdoc#whatislogic>");
+				"<all.omdoc> <http://omdoc.org/ontology#hasPart> <all.omdoc#whatislogic> .");
 		triples.add(triple2);
 		RDFTriple triple3 = new RDFTripleImpl(
-				"<all.omdoc#whatislogic> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://omdoc.org/ontology#Theory>");
+				"<all.omdoc#whatislogic> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://omdoc.org/ontology#Theory> .");
 		triples.add(triple3);
 		RDFTriple triple4 = new RDFTripleImpl(
-				"<all.omdoc#whatislogic.p1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://omdoc.org/ontology#Proof>");
+				"<all.omdoc#whatislogic.p1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://omdoc.org/ontology#Proof> .");
 		triples.add(triple4);
 		RDFTriple triple5 = new RDFTripleImpl(
-				"<all.omdoc#whatislogic.t1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://omdoc.org/ontology#Theorem>");
+				"<all.omdoc#whatislogic.t1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://omdoc.org/ontology#Theorem> .");
 		triples.add(triple5);
 		RDFTriple triple6 = new RDFTripleImpl(
-				"<all.omdoc#whatislogic.p1> <http://omdoc.org/ontology#proves> <all.omdoc#whatislogic.t1>");
+				"<all.omdoc#whatislogic.p1> <http://omdoc.org/ontology#proves> <all.omdoc#whatislogic.t1> .");
 		triples.add(triple6);
 		RDFTriple triple7 = new RDFTripleImpl(
-				"<all.omdoc> <http://purl.org/dc/elements/1.1/title> \"Logic and something else\"");
+				"<all.omdoc> <http://purl.org/dc/elements/1.1/title> \"Logic and something else\" .");
 		triples.add(triple7);
 		RDFTriple triple8 = new RDFTripleImpl(
-				"<all.omdoc> <http://purl.org/dc/elements/1.1/creator> \"Author1\"");
+				"<all.omdoc> <http://purl.org/dc/elements/1.1/creator> \"Author1\" .");
 		triples.add(triple8);
 		RDFTriple triple9 = new RDFTripleImpl(
-				"<all.omdoc> <http://purl.org/dc/elements/1.1/creator> \"Author2\"");
+				"<all.omdoc> <http://purl.org/dc/elements/1.1/creator> \"Author2\" .");
 		triples.add(triple9);
 		return triples;
 	}
