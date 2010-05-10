@@ -11,6 +11,7 @@ import ru.ksu.niimm.ose.ontology.OntologyRelation;
 import ru.ksu.niimm.ose.ontology.loader.OMDocOntologyLoader;
 import ru.ksu.niimm.ose.ontology.loader.impl.OMDocOntologyLoaderImpl;
 
+import com.google.inject.Inject;
 import com.hp.hpl.jena.ontology.OntClass;
 import com.hp.hpl.jena.ontology.OntModel;
 import com.hp.hpl.jena.ontology.OntProperty;
@@ -21,8 +22,8 @@ public class OMDocOntologyFacadeImpl implements OMDocOntologyFacade {
 	private static final String RDFS_LABEL_LOCALE = "en";
 
 	private static final String OMDOC_NAMESPACE = "http://omdoc.org/ontology#";
-	private OntModel omdocOntology;
-	private OMDocOntologyLoader ontologyLoader = new OMDocOntologyLoaderImpl();
+	@Inject
+	private OMDocOntologyLoader ontologyLoader;
 
 	/*
 	 * (non-Javadoc)
@@ -121,6 +122,10 @@ public class OMDocOntologyFacadeImpl implements OMDocOntologyFacade {
 		return rangeList;
 	}
 
+	public OntModel getOmdocOntology() {
+		return getOntologyLoader().getOntology();
+	}
+
 	@Override
 	public List<OntologyIndividual> getIndividuals(
 			OntologyConcept ontologyConcept) {
@@ -130,11 +135,8 @@ public class OMDocOntologyFacadeImpl implements OMDocOntologyFacade {
 		return individuals;
 	}
 
-	private OntModel getOmdocOntology() {
-		if (omdocOntology == null) {
-			omdocOntology = this.ontologyLoader.getOntology();
-		}
-		return omdocOntology;
+	public OMDocOntologyLoader getOntologyLoader() {
+		return ontologyLoader;
 	}
 
 }

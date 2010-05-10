@@ -85,6 +85,24 @@ public class OMDocOntologyFacadeTest {
 		Assert.assertTrue(containsAssertion && containsAssumption);
 	}
 
+	@Test
+	public void testGetInferredRangeOfProperty() {
+		OntologyRelation relation = new OntologyRelation(
+				"http://omdoc.org/ontology#exemplifies", "exemplifies");
+		List<OntologyConcept> ontPropertyRangeList = getOmdocOntologyFacade()
+				.getOntPropertyRangeList(relation);
+		boolean containsDefinition = false;
+		for (OntologyConcept rangeConcept : ontPropertyRangeList) {
+			if (rangeConcept.getUri().equals(
+					"http://omdoc.org/ontology#Definition")) {
+				containsDefinition = true;
+				break;
+			}
+		}
+
+		Assert.assertTrue(containsDefinition);
+	}
+
 	public OMDocOntologyFacade getOmdocOntologyFacade() {
 		return omdocOntologyFacade;
 	}
