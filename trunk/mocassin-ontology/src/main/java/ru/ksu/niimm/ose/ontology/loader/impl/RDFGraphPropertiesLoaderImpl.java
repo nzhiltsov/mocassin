@@ -20,6 +20,9 @@ public class RDFGraphPropertiesLoaderImpl implements RDFGraphPropertiesLoader {
 				properties.getProperty("connection.user.password")).url(
 				properties.getProperty("connection.url")).build();
 		this.graph = graph;
+		System.out.println(String.format("VIRTUOSO: %s, %s, %s, %s", graph
+				.getIri(), graph.getUsername(), graph.getPassword(), graph
+				.getUrl())); // TODO: temp!!
 	}
 
 	/*
