@@ -40,7 +40,6 @@ public class DocumentFormat extends Composite {
 
 	@UiHandler("link")
 	void handleClick(ClickEvent event) {
-		String url = GWT.getModuleBaseURL() + "download?url=" + uri;
-		Window.open(url, "_blank", "");
+		Window.open(uri, "_blank", "");
 	}
 }
