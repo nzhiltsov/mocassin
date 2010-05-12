@@ -9,6 +9,7 @@ import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
@@ -26,10 +27,13 @@ public class HitDescription extends Composite {
 	Label authorLabel;
 	@UiField
 	Hyperlink titleLink;
+	/*
+	 * @UiField DocumentFormat latexDocumentFormat;
+	 * 
+	 * @UiField DocumentFormat pdfDocumentFormat;
+	 */
 	@UiField
-	DocumentFormat latexDocumentFormat;
-	@UiField
-	DocumentFormat pdfDocumentFormat;
+	DocumentFormat rdfDocumentFormat;
 	@UiField
 	Label relevantContextLabel;
 
@@ -39,11 +43,15 @@ public class HitDescription extends Composite {
 	public HitDescription(ResultDescription resultDescription) {
 		initWidget(binder.createAndBindUi(this));
 		documentUri = resultDescription.getDocumentUri();
-		titleLink.setText(resultDescription.getTitle());
-		latexDocumentFormat.setText("LaTeX");
-		latexDocumentFormat.setUri(resultDescription.getLatexUri());
-		pdfDocumentFormat.setText("PDF");
-		pdfDocumentFormat.setUri(resultDescription.getPdfUri());
+		titleLink.setHTML(getLinkCode(resultDescription));
+		/*
+		 * latexDocumentFormat.setText("LaTeX");
+		 * latexDocumentFormat.setUri(resultDescription.getLatexUri());
+		 * pdfDocumentFormat.setText("PDF");
+		 * pdfDocumentFormat.setUri(resultDescription.getPdfUri());
+		 */
+		rdfDocumentFormat.setText("RDF");
+		rdfDocumentFormat.setUri(getDocumentUri());
 		relevantContextLabel.setText(resultDescription
 				.getRelevantContextString());
 
@@ -58,15 +66,17 @@ public class HitDescription extends Composite {
 		authorLabel.setText(authorLabelText);
 	}
 
-	@UiHandler("titleLink")
-	void handleClick(ClickEvent event) {
-		String url = GWT.getModuleBaseURL() + "download?url="
-				+ getDocumentUri();
-		Window.open(url, "_blank", "");
+	private String getLinkCode(ResultDescription resultDescription) {
+		return "<a href=\"" + getDocumentUri() + "\">"
+				+ resultDescription.getTitle() + "</a>";
 	}
 
 	public String getDocumentUri() {
 		return documentUri;
 	}
 
+	@UiHandler("titleLink")
+	void handleClick(ClickEvent event) {
+		Window.open(getDocumentUri(), "_blank", "");
+	}
 }
