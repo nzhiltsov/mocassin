@@ -50,19 +50,6 @@ public class OMDocOntologyFacadeTest {
 		Assert.assertTrue(properties.contains(relation));
 	}
 
-	@Test
-	public void testGetOntPropertyRangeList() {
-		List<OntologyConcept> ontClassList = getOmdocOntologyFacade()
-				.getOntClassList();
-		for (OntologyConcept concept : ontClassList) {
-			List<OntologyRelation> ontPropertyList = getOmdocOntologyFacade()
-					.getOntPropertyList(concept);
-			for (OntologyRelation relation : ontPropertyList) {
-				getOmdocOntologyFacade().getOntPropertyRangeList(relation);
-			}
-		}
-
-	}
 
 	@Test
 	public void testGetRangeOfConcreteProperty() {
