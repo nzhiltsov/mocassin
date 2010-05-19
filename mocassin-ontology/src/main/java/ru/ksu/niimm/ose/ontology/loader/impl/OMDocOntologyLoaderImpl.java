@@ -3,14 +3,18 @@ package ru.ksu.niimm.ose.ontology.loader.impl;
 import java.io.IOException;
 import java.io.InputStream;
 
+import ru.ksu.niimm.ose.ontology.loader.ModulePropertiesLoader;
 import ru.ksu.niimm.ose.ontology.loader.OMDocOntologyLoader;
 
+import com.google.inject.Inject;
 import com.hp.hpl.jena.ontology.OntModel;
 import com.hp.hpl.jena.ontology.OntModelSpec;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 public class OMDocOntologyLoaderImpl implements OMDocOntologyLoader {
-	private static final String FILE_PATH = "/omdoc.owl";
+	private static final String OMDOC_URI_PARAMETER_NAME = "omdoc.uri";
+	@Inject
+	private ModulePropertiesLoader modulePropertiesLoader;
 	private OntModel omdocOntology;
 
 	public OMDocOntologyLoaderImpl() throws IOException {
@@ -22,19 +26,19 @@ public class OMDocOntologyLoaderImpl implements OMDocOntologyLoader {
 		return omdocOntology;
 	}
 
-	private OntModel load() throws IOException {
-		OntModel omdocOntology = ModelFactory
+	protected OntModel load() throws IOException {
+		OntModel model = ModelFactory
 				.createOntologyModel(OntModelSpec.OWL_DL_MEM_RDFS_INF);
-		InputStream inputStream = null;
-		try {
-			inputStream = this.getClass().getResourceAsStream(FILE_PATH);
-			omdocOntology.read(inputStream, null, "RDF/XML-ABBREV");
-			return omdocOntology;
-		} catch (Exception e) {
-			if (inputStream != null)
-				inputStream.close();
-			throw new IOException(String.format("cannot read ontology: %s", e));
-		}
-
+		model.read(getOmdocUri());
+		return model;
 	}
+
+	private String getOmdocUri() {
+		return getModulePropertiesLoader().get(OMDOC_URI_PARAMETER_NAME);
+	}
+
+	private ModulePropertiesLoader getModulePropertiesLoader() {
+		return modulePropertiesLoader;
+	}
+
 }
