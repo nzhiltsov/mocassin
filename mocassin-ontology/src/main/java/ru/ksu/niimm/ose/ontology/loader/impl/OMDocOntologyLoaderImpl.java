@@ -13,11 +13,13 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 public class OMDocOntologyLoaderImpl implements OMDocOntologyLoader {
 	private static final String OMDOC_URI_PARAMETER_NAME = "omdoc.uri";
-	@Inject
 	private ModulePropertiesLoader modulePropertiesLoader;
 	private OntModel omdocOntology;
 
-	public OMDocOntologyLoaderImpl() throws IOException {
+	@Inject
+	public OMDocOntologyLoaderImpl(ModulePropertiesLoader modulePropertiesLoader)
+			throws IOException {
+		this.modulePropertiesLoader = modulePropertiesLoader;
 		this.omdocOntology = load();
 	}
 
@@ -33,7 +35,7 @@ public class OMDocOntologyLoaderImpl implements OMDocOntologyLoader {
 		return model;
 	}
 
-	private String getOmdocUri() {
+	protected String getOmdocUri() {
 		return getModulePropertiesLoader().get(OMDOC_URI_PARAMETER_NAME);
 	}
 

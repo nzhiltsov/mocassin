@@ -26,7 +26,7 @@ public class ModulePropertiesLoaderImpl implements ModulePropertiesLoader {
 
 	private Properties loadProperties() throws IOException {
 		Properties properties = new Properties();
-		ClassLoader loader = RDFGraphPropertiesLoaderImpl.class
+		ClassLoader loader = ModulePropertiesLoaderImpl.class
 				.getClassLoader();
 		URL url = loader.getResource(CONFIG_PROPERTIES_FILENAME);
 		InputStream stream = url.openStream();
