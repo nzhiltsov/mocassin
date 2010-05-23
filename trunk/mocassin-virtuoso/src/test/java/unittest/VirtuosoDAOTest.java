@@ -3,6 +3,8 @@ package unittest;
 import java.util.ArrayList;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.junit.Test;
 
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFGraph;
@@ -12,10 +14,14 @@ import ru.ksu.niimm.cll.mocassin.virtuoso.impl.RDFGraphImpl;
 import ru.ksu.niimm.cll.mocassin.virtuoso.impl.RDFTripleImpl;
 
 import com.google.inject.Inject;
+import com.hp.hpl.jena.graph.Graph;
+import com.hp.hpl.jena.graph.Node;
+import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.util.iterator.ExtendedIterator;
 
 public class VirtuosoDAOTest extends AbstractTest {
 
@@ -26,7 +32,7 @@ public class VirtuosoDAOTest extends AbstractTest {
 	public void testInsert() {
 		List<RDFTriple> triples = new ArrayList<RDFTriple>();
 		RDFTriple triple = new RDFTripleImpl(
-				"<all1.omdoc#whatislogic> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://omdoc.org/ontology#Theory> .");
+				"<http://linkeddata.tntbase.org/temp> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://omdoc.org/ontology#Document> .");
 		triples.add(triple);
 		RDFGraph graph = getConfiguredGraph();
 
@@ -49,6 +55,31 @@ public class VirtuosoDAOTest extends AbstractTest {
 
 		getVirtuosoDAO().update("all.omdoc", triples, graph);
 
+	}
+
+	@Test
+	public void testDescribe() {
+		Graph describeGraph = getVirtuosoDAO()
+				.describe(
+						"<http://linkeddata.tntbase.org/slides/dmath/en/sets-introduction#ninset.sym>",
+						getGraph());
+		ExtendedIterator<Triple> foundIt = describeGraph.find(Node.ANY,
+				Node.ANY, Node.ANY);
+		boolean contains = false;
+		Node subject = Node
+				.createURI("http://linkeddata.tntbase.org/slides/dmath/en/sets-introduction#I1.p7");
+		Node predicate = Node.createURI("http://omdoc.org/ontology#defines");
+		Node object = Node
+				.createURI("http://linkeddata.tntbase.org/slides/dmath/en/sets-introduction#ninset.sym");
+		Triple tripleForSearch = new Triple(subject, predicate, object);
+		while (foundIt.hasNext()) {
+			Triple triple = foundIt.next();
+			if (triple.equals(tripleForSearch)) {
+				contains = true;
+				break;
+			}
+		}
+		Assert.assertTrue(contains);
 	}
 
 	private List<RDFTriple> createTheoremTextTriples() {
@@ -112,11 +143,6 @@ public class VirtuosoDAOTest extends AbstractTest {
 	}
 
 	private RDFGraph getConfiguredGraph() {
-		RDFGraph graph = new RDFGraphImpl.Builder(getProperties().getProperty(
-				"graph.iri")).username(
-				getProperties().getProperty("connection.user.name")).password(
-				getProperties().getProperty("connection.user.password")).url(
-				getProperties().getProperty("connection.url")).build();
-		return graph;
+		return getGraph();
 	}
 }

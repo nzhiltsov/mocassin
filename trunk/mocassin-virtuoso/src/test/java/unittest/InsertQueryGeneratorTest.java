@@ -6,19 +6,12 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-import ru.ksu.niimm.cll.mocassin.virtuoso.RDFGraph;
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFTriple;
-import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
 import ru.ksu.niimm.cll.mocassin.virtuoso.generator.InsertQueryGenerator;
-import ru.ksu.niimm.cll.mocassin.virtuoso.impl.RDFGraphImpl;
 import ru.ksu.niimm.cll.mocassin.virtuoso.impl.RDFTripleImpl;
 
 import com.google.inject.Inject;
-import com.mycila.testing.junit.MycilaJunitRunner;
-import com.mycila.testing.plugin.guice.GuiceContext;
-
 
 public class InsertQueryGeneratorTest extends AbstractTest {
 	private static final String TRIPLE_2 = "<all.omdoc#whatislogic> <http://salt.semanticauthoring.org/onto/abstract-document-ontology#hasPart> <all.omdoc#whatislogic.p11> .";
@@ -34,12 +27,8 @@ public class InsertQueryGeneratorTest extends AbstractTest {
 		RDFTriple triple2 = new RDFTripleImpl(TRIPLE_2);
 		triples.add(triple);
 		triples.add(triple2);
-		RDFGraph graph = new RDFGraphImpl.Builder(getProperties().getProperty(
-				"graph.iri")).username(
-				getProperties().getProperty("connection.user.name")).password(
-				getProperties().getProperty("connection.user.password")).url(
-				getProperties().getProperty("connection.url")).build();
-		String expression = getInsertQueryGenerator().generate(triples, graph);
+		String expression = getInsertQueryGenerator().generate(triples,
+				getGraph());
 		Assert.assertTrue(expression.equalsIgnoreCase(String.format(
 				"INSERT INTO GRAPH %s {%s %s }", getProperties().getProperty(
 						"graph.iri"), TRIPLE_1, TRIPLE_2)));

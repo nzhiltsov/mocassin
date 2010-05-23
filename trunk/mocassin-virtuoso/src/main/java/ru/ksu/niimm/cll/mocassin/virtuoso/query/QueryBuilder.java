@@ -14,15 +14,17 @@ import ru.ksu.niimm.cll.mocassin.virtuoso.RDFTriple;
  * 
  */
 public class QueryBuilder {
+	private static final String DESCRIBE_EXPRESSION = "DESCRIBE %s FROM NAMED %s";
 	private static final String INSERT_EXPRESSION = "INSERT INTO GRAPH %s {%s}";
 	private static final String DELETE_EXPRESSION = "DELETE FROM %s {?s ?p ?o} WHERE {%s}";
 	private final QueryType type;
 	private String graphUri;
 	private String documentUri;
+	private String resourceUri;
 	private List<RDFTriple> triples = new LinkedList<RDFTriple>();
 
 	public enum QueryType {
-		INSERT, DELETE
+		INSERT, DELETE, DESCRIBE
 	}
 
 	public QueryBuilder(QueryType type) {
@@ -63,6 +65,11 @@ public class QueryBuilder {
 		return this;
 	}
 
+	public QueryBuilder addResourceUri(String resourceUri) {
+		this.resourceUri = resourceUri;
+		return this;
+	}
+
 	/**
 	 * add RDF triples
 	 * 
@@ -86,11 +93,19 @@ public class QueryBuilder {
 		case DELETE:
 			query = buildDeleteQuery();
 			break;
+		case DESCRIBE:
+			query = buildDescribeQuery();
+			break;
 		default:
 			new UnsupportedOperationException(String.format(
 					"this operation isn't supported: %s", getType()));
 		}
 		return query;
+	}
+
+	private String buildDescribeQuery() {
+		return String.format(DESCRIBE_EXPRESSION, getResourceUri(),
+				getGraphUri());
 	}
 
 	private String buildDeleteQuery() {
@@ -116,10 +131,24 @@ public class QueryBuilder {
 			return validateInsert();
 		case DELETE:
 			return validateDelete();
+		case DESCRIBE:
+			return validateDescribe();
 		default:
 			throw new UnsupportedOperationException(String.format(
 					"this operation isn't supported: %s", this.type));
 		}
+	}
+
+	private boolean validateDescribe() {
+		if (!validateGraphUri())
+			return false;
+		if (!validateResourceUri())
+			return false;
+		return true;
+	}
+
+	private boolean validateResourceUri() {
+		return !isEmpty(getResourceUri());
 	}
 
 	private boolean validateDelete() {
@@ -171,6 +200,10 @@ public class QueryBuilder {
 
 	private String getDocumentUri() {
 		return documentUri;
+	}
+
+	private String getResourceUri() {
+		return resourceUri;
 	}
 
 }
