@@ -28,12 +28,5 @@ public interface OMDocOntologyFacade {
 	 * @return
 	 */
 	List<OntologyConcept> getOntPropertyRangeList(OntologyRelation relation);
-	/**
-	 * load individuals for given ontology concept
-	 * 
-	 * @param ontologyConcept
-	 * @return
-	 */
-	List<OntologyIndividual> getIndividuals(OntologyConcept ontologyConcept);
 
 }

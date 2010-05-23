@@ -145,15 +145,6 @@ public class OMDocOntologyFacadeImpl implements OMDocOntologyFacade {
 		return getOntologyLoader().getOntology();
 	}
 
-	@Override
-	public List<OntologyIndividual> getIndividuals(
-			OntologyConcept ontologyConcept) {
-		// TODO : there are no individuals
-		List<OntologyIndividual> individuals = new ArrayList<OntologyIndividual>();
-
-		return individuals;
-	}
-
 	public OMDocOntologyLoader getOntologyLoader() {
 		return ontologyLoader;
 	}

@@ -72,12 +72,7 @@ public class OntologyServiceImpl implements OntologyService {
 			targetConcept.setUri(rangeConcept.getUri());
 			targetConcept.setLabel(rangeConcept.getLabel());
 			targetConceptList.add(targetConcept);
-			List<OntologyIndividual> individuals = getOmdocOntologyFacade()
-					.getIndividuals(rangeConcept);
-			for (OntologyIndividual individual : individuals) {
-				targetConceptList.add(new OntIndividual(individual.getUri(),
-						individual.getLabel()));
-			}
+
 		}
 
 		Collections.sort(targetConceptList,
