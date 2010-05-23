@@ -13,6 +13,8 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
 
@@ -23,11 +25,17 @@ public class DocumentFormat extends Composite {
 	private static final Binder binder = GWT.create(Binder.class);
 	@UiField
 	Anchor link;
+	@UiField
+	FormPanel form;
+	@UiField
+	Hidden resourceuri;
 
-	private String uri;
+	// private String uri;
 
 	public DocumentFormat() {
 		initWidget(binder.createAndBindUi(this));
+		form.setAction("/mocassin/describe");
+		resourceuri.setName("resourceuri");
 	}
 
 	public void setText(String text) {
@@ -35,11 +43,16 @@ public class DocumentFormat extends Composite {
 	}
 
 	public void setUri(String uri) {
-		this.uri = uri;
+		// this.uri = uri;
+		this.resourceuri.setValue(uri);
 	}
 
 	@UiHandler("link")
 	void handleClick(ClickEvent event) {
-		Window.open(uri, "_blank", "");
+		form.submit();
+		/*
+		 * String url = GWT.getModuleBaseURL() + "describe?resourceuri=" + uri;
+		 * Window.open(url, "_blank", "");
+		 */
 	}
 }
