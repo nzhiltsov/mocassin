@@ -20,6 +20,7 @@ import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.QuerySolution;
+import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.util.iterator.ExtendedIterator;
 
@@ -59,10 +60,11 @@ public class VirtuosoDAOTest extends AbstractTest {
 
 	@Test
 	public void testDescribe() {
-		Graph describeGraph = getVirtuosoDAO()
+		Model model = getVirtuosoDAO()
 				.describe(
 						"<http://linkeddata.tntbase.org/slides/dmath/en/sets-introduction#ninset.sym>",
 						getGraph());
+		Graph describeGraph = model.getGraph();
 		ExtendedIterator<Triple> foundIt = describeGraph.find(Node.ANY,
 				Node.ANY, Node.ANY);
 		boolean contains = false;

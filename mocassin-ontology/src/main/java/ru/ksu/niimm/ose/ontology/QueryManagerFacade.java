@@ -2,7 +2,7 @@ package ru.ksu.niimm.ose.ontology;
 
 import java.util.List;
 
-import com.hp.hpl.jena.ontology.OntModel;
+import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 
 public interface QueryManagerFacade {
@@ -36,4 +36,12 @@ public interface QueryManagerFacade {
 	 */
 	String generateQuery(QueryStatement queryStatement);
 
+	/**
+	 * get RDF description of resource with given URI
+	 * 
+	 * @param resourceUri
+	 *            resource URI, e.g."http://linkeddata.tntbase.org/slides/atp0/en/resolution-complete#resolution-disjunction-lemma"
+	 * @return
+	 */
+	Model describe(String resourceUri);
 }

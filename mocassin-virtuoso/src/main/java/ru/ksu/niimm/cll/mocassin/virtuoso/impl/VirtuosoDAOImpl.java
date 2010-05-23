@@ -3,14 +3,6 @@ package ru.ksu.niimm.cll.mocassin.virtuoso.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.inject.Inject;
-import com.hp.hpl.jena.graph.Graph;
-import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.QuerySolution;
-import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
-
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFGraph;
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFTriple;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoDAO;
@@ -23,6 +15,12 @@ import virtuoso.jena.driver.VirtuosoQueryExecution;
 import virtuoso.jena.driver.VirtuosoQueryExecutionFactory;
 import virtuoso.jena.driver.VirtuosoUpdateFactory;
 import virtuoso.jena.driver.VirtuosoUpdateRequest;
+
+import com.google.inject.Inject;
+import com.hp.hpl.jena.query.Query;
+import com.hp.hpl.jena.query.QuerySolution;
+import com.hp.hpl.jena.query.ResultSet;
+import com.hp.hpl.jena.rdf.model.Model;
 
 public class VirtuosoDAOImpl implements VirtuosoDAO {
 	@Inject
@@ -79,14 +77,14 @@ public class VirtuosoDAOImpl implements VirtuosoDAO {
 
 	@Override
 	@ValidateGraph
-	public Graph describe(String resourceUri, RDFGraph graph) {
+	public Model describe(String resourceUri, RDFGraph graph) {
 		String query = getDescribeQueryGenerator().generate(resourceUri, graph);
 		VirtGraph virtGraph = new VirtGraph(graph.getUrl(),
 				graph.getUsername(), graph.getPassword());
 		VirtuosoQueryExecution vqe = VirtuosoQueryExecutionFactory.create(
 				query, virtGraph);
 		Model model = vqe.execDescribe();
-		return model.getGraph();
+		return model;
 	}
 
 	public InsertQueryGenerator getInsertQueryGenerator() {
