@@ -2,6 +2,7 @@ package ru.ksu.niimm.cll.mocassin.virtuoso;
 
 import java.util.List;
 
+import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QuerySolution;
 
@@ -45,4 +46,14 @@ public interface VirtuosoDAO {
 	 * @return
 	 */
 	List<QuerySolution> get(Query query, RDFGraph graph);
+
+	/**
+	 * get RDF graph that describes the resource with given URI
+	 * 
+	 * @param resourceUri
+	 *            resource URI
+	 * @param graph
+	 * @return
+	 */
+	Graph describe(String resourceUri, RDFGraph graph);
 }

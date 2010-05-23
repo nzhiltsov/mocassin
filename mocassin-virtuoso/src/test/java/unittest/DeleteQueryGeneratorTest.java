@@ -17,19 +17,16 @@ public class DeleteQueryGeneratorTest extends AbstractTest {
 
 	@Test
 	public void testGenerate() {
-		String graphIri = getProperties().getProperty("graph.iri");
-		RDFGraph graph = new RDFGraphImpl.Builder(graphIri).username(
-				getProperties().getProperty("connection.user.name")).password(
-				getProperties().getProperty("connection.user.password")).url(
-				getProperties().getProperty("connection.url")).build();
+
 		String expression = getDeleteQueryGenerator().generate(DOCUMENT_URI,
-				graph);
+				getGraph());
 		Assert
 				.assertTrue(expression
 						.equalsIgnoreCase(String
 								.format(
 										"DELETE FROM %s {?s ?p ?o} WHERE {?s ?p ?o. FILTER (regex(?s, \"^%s\") || regex(?o, \"^%s\"))}",
-										graphIri, DOCUMENT_URI, DOCUMENT_URI)));
+										getGraph().getIri(), DOCUMENT_URI,
+										DOCUMENT_URI)));
 	}
 
 	public DeleteQueryGenerator getDeleteQueryGenerator() {
