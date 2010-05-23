@@ -52,9 +52,9 @@ public class OMDocOntologyFacadeImpl implements OMDocOntologyFacade {
 	public List<OntologyRelation> getOntPropertyList(
 			OntologyConcept ontologyConcept) {
 		String conceptUri = ontologyConcept.getUri();
-		OntClass ontClass = getOmdocOntology()
-				.getOntClass(conceptUri);
-		ExtendedIterator<OntProperty> propertiesIterator = ontClass.listDeclaredProperties();
+		OntClass ontClass = getOmdocOntology().getOntClass(conceptUri);
+		ExtendedIterator<OntProperty> propertiesIterator = ontClass
+				.listDeclaredProperties();
 		List<OntologyRelation> relations = new ArrayList<OntologyRelation>();
 		while (propertiesIterator.hasNext()) {
 			OntProperty property = propertiesIterator.next();
@@ -121,10 +121,13 @@ public class OMDocOntologyFacadeImpl implements OMDocOntologyFacade {
 	private List<OntologyConcept> fillConcepts(Set<OntClass> set) {
 		List<OntologyConcept> concepts = new ArrayList<OntologyConcept>();
 		for (OntClass currentClass : set) {
-			OntologyConcept concept = new OntologyConcept(
-					currentClass.getURI(), currentClass
-							.getLabel(RDFS_LABEL_LOCALE));
-			concepts.add(concept);
+			String uri = currentClass.getURI();
+			if (uri != null) {
+				OntologyConcept concept = new OntologyConcept(uri, currentClass
+						.getLabel(RDFS_LABEL_LOCALE));
+				concepts.add(concept);
+			}
+
 		}
 		return concepts;
 	}
