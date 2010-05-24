@@ -12,12 +12,7 @@
 	</ui:style>
 	<g:HorizontalPanel styleName='{style.main-panel}'>
 		<g:HTML>[</g:HTML>
-		<g:FormPanel ui:field="form">
-			<g:HorizontalPanel>
-				<g:Hidden ui:field="resourceuri" />
-				<g:Anchor styleName='{style.hyperlink}' ui:field="link" />
-			</g:HorizontalPanel>
-		</g:FormPanel>
+		<g:Anchor styleName='{style.hyperlink}' ui:field="link" />
 		<g:HTML>]</g:HTML>
 
 	</g:HorizontalPanel>

@@ -18,7 +18,7 @@ import com.hp.hpl.jena.rdf.model.Model;
 @Singleton
 public class DescriptionServlet extends HttpServlet {
 	private static final String RESOURCE_URI_PARAMETER_NAME = "resourceuri";
-	private static final String CONTENT_TYPE = "application/rdf";
+	private static final String CONTENT_TYPE = "application/rdf+xml; charset=UTF-8";
 	@Inject
 	private QueryManagerFacade queryManagerFacade;
 
