@@ -35,8 +35,9 @@ public class DocumentFormat extends Composite {
 	@UiHandler("link")
 	void handleClick(ClickEvent event) {
 
+		String encodedUri = uri.replaceFirst("#", "%23");
 		String url = GWT.getModuleBaseURL() + "describe?resourceuri="
-				+ uri.replace("#", "%23");
+				+ encodedUri;
 		Window.open(url, "_blank", "");
 
 	}
