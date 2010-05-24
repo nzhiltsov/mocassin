@@ -2,7 +2,6 @@ package ru.ksu.niimm.ose.ontology.loader.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.Properties;
 
 import ru.ksu.niimm.ose.ontology.loader.ModulePropertiesLoader;
@@ -28,8 +27,7 @@ public class ModulePropertiesLoaderImpl implements ModulePropertiesLoader {
 		Properties properties = new Properties();
 		ClassLoader loader = ModulePropertiesLoaderImpl.class
 				.getClassLoader();
-		URL url = loader.getResource(CONFIG_PROPERTIES_FILENAME);
-		InputStream stream = url.openStream();
+		InputStream stream = loader.getResourceAsStream(CONFIG_PROPERTIES_FILENAME);
 		properties.load(stream);
 		stream.close();
 		return properties;
