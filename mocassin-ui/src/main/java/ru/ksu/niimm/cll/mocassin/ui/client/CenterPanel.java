@@ -167,6 +167,18 @@ public class CenterPanel extends Composite implements PageLinkEventHandler {
 					OntElement selectedConcept = ((ConceptTreeNode) itemWidget).suggestBoxPanel
 							.getSelectedValue();
 					selectedConcept.setId(i);
+					/**
+					 * check if a query has only single subject
+					 */
+					if (i == 1 && item.getChildCount() == 0) {
+						OntBlankNode predicate = new OntBlankNode();
+						predicate.setId(2);
+						OntBlankNode object = new OntBlankNode();
+						object.setId(3);
+						OntTriple triple = new OntTriple(selectedConcept,
+								predicate, object);
+						triples.add(triple);
+					}
 				} else
 					throw new RuntimeException(
 							"inconsistent state of query tree");
@@ -176,6 +188,7 @@ public class CenterPanel extends Composite implements PageLinkEventHandler {
 				}
 				i++;
 			}
+
 			return triples;
 		}
 
@@ -202,6 +215,8 @@ public class CenterPanel extends Composite implements PageLinkEventHandler {
 					throw new RuntimeException(
 							"inconsistent state of query tree");
 
+			} else if (item.getChildCount() == 0) {
+				return new OntBlankNode();
 			} else
 				throw new RuntimeException("inconsistent state of query tree");
 		}

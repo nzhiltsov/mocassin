@@ -35,7 +35,7 @@ public class OMDocResourceFacadeTest {
 		OMDocElement omdocElement = getOmdocResourceFacade().load(resource);
 		ArticleMetadata articleMetadata = omdocElement.getArticleMetadata();
 		Assert.assertEquals("all.omdoc", articleMetadata.getUri());
-		Assert.assertEquals("Logic", articleMetadata.getTitle());
+		Assert.assertEquals("Logic and something else", articleMetadata.getTitle());
 		Assert.assertTrue(articleMetadata.getAuthors() != null);
 		Assert.assertTrue(articleMetadata.getAuthors().contains("Author1"));
 		Assert.assertTrue(articleMetadata.getAuthors().contains("Author2"));
