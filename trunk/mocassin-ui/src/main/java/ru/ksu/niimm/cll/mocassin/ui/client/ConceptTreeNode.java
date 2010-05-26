@@ -70,6 +70,7 @@ public class ConceptTreeNode extends Composite {
 
 	@UiHandler("suggestBoxPanel")
 	void handleSelect(SelectionEvent<Suggestion> event) {
+		this.treeItem.removeItems();
 		this.addButton.setEnabled(true);
 	}
 

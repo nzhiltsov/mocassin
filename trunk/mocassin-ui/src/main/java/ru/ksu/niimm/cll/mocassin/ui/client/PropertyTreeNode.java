@@ -41,6 +41,7 @@ public class PropertyTreeNode extends Composite {
 
 	@UiHandler("suggestBoxPanel")
 	void handleSelect(SelectionEvent<Suggestion> event) {
+		treeItem.removeItems();
 		TreeItem child = new TreeItem();
 		treeItem.addItem(child);
 		child.setWidget(new ConceptTreeNode(child));
