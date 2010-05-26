@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
+import ru.ksu.niimm.ose.ontology.OntologyBlankNode;
 import ru.ksu.niimm.ose.ontology.OntologyConcept;
 import ru.ksu.niimm.ose.ontology.OntologyIndividual;
 import ru.ksu.niimm.ose.ontology.OntologyLiteral;
@@ -21,7 +22,12 @@ import ru.ksu.niimm.ose.ontology.QueryStatement;
 import ru.ksu.niimm.ose.ontology.loader.SparqlQueryLoader;
 
 import com.google.inject.Inject;
+import com.hp.hpl.jena.graph.Graph;
+import com.hp.hpl.jena.graph.Node;
+import com.hp.hpl.jena.graph.Triple;
+import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.util.iterator.ExtendedIterator;
 import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
@@ -73,8 +79,42 @@ public class QueryManagerFacadeTest {
 		QueryStatement queryStatement = makeExampleStatement();
 		String queryString = getQueryManagerFacade().generateQuery(
 				queryStatement);
-		// TODO : add more check of equals to correct string
+		// TODO : add more sophisticated check of equals to correct string
 		Assert.assertTrue(queryString != null && !queryString.equals(""));
+	}
+
+	@Test
+	public void testGenerateQueryWithWildcards() {
+		QueryStatement queryStatement = makeWildcardStatement();
+		String generatedQuery = getQueryManagerFacade().generateQuery(
+				queryStatement);
+		String expectedQuery = "SELECT DISTINCT ?1 WHERE {?1 a <http://omdoc.org/ontology#Theorem> .}";
+		// TODO : add checking for equality of queries
+	}
+
+	@Test
+	public void testDescribe() {
+		Model model = getQueryManagerFacade()
+				.describe(
+						"http://linkeddata.tntbase.org/slides/dmath/en/sets-introduction#ninset.sym");
+		Graph describeGraph = model.getGraph();
+		ExtendedIterator<Triple> foundIt = describeGraph.find(Node.ANY,
+				Node.ANY, Node.ANY);
+		boolean contains = false;
+		Node subject = Node
+				.createURI("http://linkeddata.tntbase.org/slides/dmath/en/sets-introduction#I1.p7");
+		Node predicate = Node.createURI("http://omdoc.org/ontology#defines");
+		Node object = Node
+				.createURI("http://linkeddata.tntbase.org/slides/dmath/en/sets-introduction#ninset.sym");
+		Triple tripleForSearch = new Triple(subject, predicate, object);
+		while (foundIt.hasNext()) {
+			Triple triple = foundIt.next();
+			if (triple.equals(tripleForSearch)) {
+				contains = true;
+				break;
+			}
+		}
+		Assert.assertTrue(contains);
 	}
 
 	@Test
@@ -84,6 +124,21 @@ public class QueryManagerFacadeTest {
 		String queryString = getQueryManagerFacade().generateQuery(
 				queryStatement);
 		queryString.length();
+	}
+
+	private QueryStatement makeWildcardStatement() {
+		List<OntologyTriple> triples = new ArrayList<OntologyTriple>();
+		OntologyConcept subject = new OntologyConcept(
+				"http://omdoc.org/ontology#Theorem", "theorem");
+		subject.setId(1);
+		OntologyBlankNode predicate = new OntologyBlankNode();
+		predicate.setId(2);
+		OntologyBlankNode object = new OntologyBlankNode();
+		object.setId(3);
+		OntologyTriple triple = new OntologyTriple(subject, predicate, object);
+		triples.add(triple);
+
+		return new QueryStatement(triples);
 	}
 
 	private QueryStatement makeFullTextStatement() {

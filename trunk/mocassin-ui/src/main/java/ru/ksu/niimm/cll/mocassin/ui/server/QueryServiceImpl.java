@@ -3,9 +3,11 @@ package ru.ksu.niimm.cll.mocassin.ui.server;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.ksu.niimm.cll.mocassin.ui.client.OntBlankNode;
 import ru.ksu.niimm.cll.mocassin.ui.client.OntConcept;
 import ru.ksu.niimm.cll.mocassin.ui.client.OntLiteral;
 import ru.ksu.niimm.cll.mocassin.ui.client.OntQueryStatement;
+import ru.ksu.niimm.cll.mocassin.ui.client.OntRelation;
 import ru.ksu.niimm.cll.mocassin.ui.client.OntTriple;
 import ru.ksu.niimm.cll.mocassin.ui.client.PagingLoadConfig;
 import ru.ksu.niimm.cll.mocassin.ui.client.PagingLoadInfo;
@@ -13,6 +15,7 @@ import ru.ksu.niimm.cll.mocassin.ui.client.QueryService;
 import ru.ksu.niimm.cll.mocassin.ui.client.ResultDescription;
 import ru.ksu.niimm.ose.ontology.OMDocElement;
 import ru.ksu.niimm.ose.ontology.OMDocResourceFacade;
+import ru.ksu.niimm.ose.ontology.OntologyBlankNode;
 import ru.ksu.niimm.ose.ontology.OntologyConcept;
 import ru.ksu.niimm.ose.ontology.OntologyElement;
 import ru.ksu.niimm.ose.ontology.OntologyIndividual;
@@ -104,30 +107,51 @@ public class QueryServiceImpl implements QueryService {
 		List<OntologyTriple> retrievedTriples = new ArrayList<OntologyTriple>();
 		List<OntTriple> ontStatementTriples = statement.getTriples();
 		for (OntTriple ontTriple : ontStatementTriples) {
-			OntologyConcept subject = new OntologyConcept(ontTriple
-					.getSubject().getUri(), ontTriple.getSubject().getLabel());
-			subject.setId(ontTriple.getSubject().getId());
-			OntologyRelation predicate = new OntologyRelation(ontTriple
-					.getPredicate().getUri(), ontTriple.getPredicate()
-					.getLabel());
-			predicate.setId(ontTriple.getPredicate().getId());
-			OntologyElement object;
-			if (ontTriple.getObject() instanceof OntConcept) {
-				object = new OntologyConcept(ontTriple.getObject().getUri(),
-						ontTriple.getObject().getLabel());
-			} else if (ontTriple.getObject() instanceof OntLiteral) {
-				object = new OntologyLiteral(ontTriple.getObject().getLabel());
-			} else {
-				object = new OntologyIndividual(ontTriple.getObject().getUri(),
-						ontTriple.getObject().getLabel());
-			}
-			object.setId(ontTriple.getObject().getId());
+			OntologyConcept subject = convertSubject(ontTriple);
+			OntologyElement predicate = convertPredicate(ontTriple);
+			OntologyElement object = convertObject(ontTriple);
 			OntologyTriple ontologyTriple = new OntologyTriple(subject,
 					predicate, object);
 			retrievedTriples.add(ontologyTriple);
 		}
 		QueryStatement queryStatement = new QueryStatement(retrievedTriples);
 		return queryStatement;
+	}
+
+	private OntologyElement convertObject(OntTriple ontTriple) {
+		OntologyElement object;
+		if (ontTriple.getObject() instanceof OntConcept) {
+			object = new OntologyConcept(ontTriple.getObject().getUri(),
+					ontTriple.getObject().getLabel());
+		} else if (ontTriple.getObject() instanceof OntLiteral) {
+			object = new OntologyLiteral(ontTriple.getObject().getLabel());
+		} else if (ontTriple.getObject() instanceof OntBlankNode) {
+			object = new OntologyBlankNode();
+		} else {
+			object = new OntologyIndividual(ontTriple.getObject().getUri(),
+					ontTriple.getObject().getLabel());
+		}
+		object.setId(ontTriple.getObject().getId());
+		return object;
+	}
+
+	private OntologyElement convertPredicate(OntTriple ontTriple) {
+		OntologyElement predicate;
+		if (ontTriple.getPredicate() instanceof OntRelation) {
+			predicate = new OntologyRelation(ontTriple.getPredicate().getUri(),
+					ontTriple.getPredicate().getLabel());
+		} else {
+			predicate = new OntologyBlankNode();
+		}
+		predicate.setId(ontTriple.getPredicate().getId());
+		return predicate;
+	}
+
+	private OntologyConcept convertSubject(OntTriple ontTriple) {
+		OntologyConcept subject = new OntologyConcept(ontTriple.getSubject()
+				.getUri(), ontTriple.getSubject().getLabel());
+		subject.setId(ontTriple.getSubject().getId());
+		return subject;
 	}
 
 	/**

@@ -47,10 +47,12 @@ public class OntologyElementSuggestBoxPanel extends Composite implements
 	}
 
 	public OntElement getSelectedValue() {
+		String text = suggestBox.getText();
 		if (this.selectedElement == null) {
-			this.selectedElement = new OntLiteral(suggestBox.getText());
+			this.selectedElement = text == null || text.equals("") ? new OntBlankNode()
+					: new OntLiteral(text);
 		} else if (this.selectedElement instanceof OntLiteral) {
-			this.selectedElement.setLabel(suggestBox.getText());
+			this.selectedElement.setLabel(text);
 		}
 		return this.selectedElement;
 	}

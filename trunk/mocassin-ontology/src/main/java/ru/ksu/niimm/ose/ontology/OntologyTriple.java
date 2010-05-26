@@ -2,10 +2,10 @@ package ru.ksu.niimm.ose.ontology;
 
 public class OntologyTriple {
 	private OntologyConcept subject;
-	private OntologyRelation predicate;
+	private OntologyElement predicate;
 	private OntologyElement object;
 
-	public OntologyTriple(OntologyConcept subject, OntologyRelation predicate,
+	public OntologyTriple(OntologyConcept subject, OntologyElement predicate,
 			OntologyElement object) {
 		this.subject = subject;
 		this.predicate = predicate;
@@ -20,11 +20,11 @@ public class OntologyTriple {
 		this.subject = subject;
 	}
 
-	public OntologyRelation getPredicate() {
+	public OntologyElement getPredicate() {
 		return predicate;
 	}
 
-	public void setPredicate(OntologyRelation predicate) {
+	public void setPredicate(OntologyElement predicate) {
 		this.predicate = predicate;
 	}
 
