@@ -1,0 +1,26 @@
+what,kind,bundleId,bundleVersion,description,time
+arch,sysinfo,,,"x86_64",1263595075001
+ws,sysinfo,,,"gtk",1263595075001
+locale,sysinfo,,,"ru_RU",1263595075001
+processors,sysinfo,,,"1",1263595075002
+java.runtime.name,sysinfo,,,"OpenJDK Runtime Environment",1263595075002
+java.runtime.version,sysinfo,,,"1.6.0_0-b14",1263595075002
+java.specification.name,sysinfo,,,"Java Platform API Specification",1263595075002
+java.specification.vendor,sysinfo,,,"Sun Microsystems Inc.",1263595075002
+java.specification.version,sysinfo,,,"1.6",1263595075002
+java.vendor,sysinfo,,,"Sun Microsystems Inc.",1263595075002
+java.version,sysinfo,,,"1.6.0_0",1263595075002
+java.vm.info,sysinfo,,,"mixed mode",1263595075002
+java.vm.name,sysinfo,,,"OpenJDK 64-Bit Server VM",1263595075002
+java.vm.specification.name,sysinfo,,,"Java Virtual Machine Specification",1263595075002
+java.vm.specification.vendor,sysinfo,,,"Sun Microsystems Inc.",1263595075002
+java.vm.specification.version,sysinfo,,,"1.0",1263595075002
+java.vm.vendor,sysinfo,,,"Sun Microsystems Inc.",1263595075002
+java.vm.version,sysinfo,,,"14.0-b08",1263595075002
+started,bundle,org.tigris.subversion.clientadapter.javahl,1.6.6,"org.tigris.subversion.clientadapter.javahl",1263595076021
+started,bundle,org.tigris.subversion.clientadapter.svnkit,1.6.4,"org.tigris.subversion.clientadapter.svnkit",1263595076100
+started,bundle,org.eclipse.jsch.core,1.1.100.I20090430-0408,"org.eclipse.jsch.core",1263595078142
+started,bundle,org.eclipse.team.cvs.core,3.3.200.I20090430-0408,"org.eclipse.team.cvs.core",1263595078144
+started,bundle,org.tmatesoft.svnkit,1.3.1.6109,"org.tmatesoft.svnkit",1263595078233
+started,bundle,org.eclipse.team.cvs.ui,3.3.201.R35x_v20090826-0905,"org.eclipse.team.cvs.ui",1263595079091
+started,bundle,com.sun.jna,3.1.0,"com.sun.jna",1263595079763

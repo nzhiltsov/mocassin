@@ -1,0 +1,16 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:style>
+		.table {
+			width: 100%;
+		}
+		
+		.table td {
+			text-align: center;
+		}
+	</ui:style>
+	<g:HorizontalPanel styleName='{style.table}'>
+		<g:HTML ui:field="message" />
+	</g:HorizontalPanel>
+</ui:UiBinder> 
