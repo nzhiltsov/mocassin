@@ -10,7 +10,6 @@ import org.junit.Test;
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFGraph;
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFTriple;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoDAO;
-import ru.ksu.niimm.cll.mocassin.virtuoso.impl.RDFGraphImpl;
 import ru.ksu.niimm.cll.mocassin.virtuoso.impl.RDFTripleImpl;
 
 import com.google.inject.Inject;
@@ -62,17 +61,17 @@ public class VirtuosoDAOTest extends AbstractTest {
 	public void testDescribe() {
 		Model model = getVirtuosoDAO()
 				.describe(
-						"<http://linkeddata.tntbase.org/slides/dmath/en/sets-introduction#ninset.sym>",
+						"<http://linkeddata.tntbase.org/temp>",
 						getGraph());
 		Graph describeGraph = model.getGraph();
 		ExtendedIterator<Triple> foundIt = describeGraph.find(Node.ANY,
 				Node.ANY, Node.ANY);
 		boolean contains = false;
 		Node subject = Node
-				.createURI("http://linkeddata.tntbase.org/slides/dmath/en/sets-introduction#I1.p7");
-		Node predicate = Node.createURI("http://omdoc.org/ontology#defines");
+				.createURI("http://linkeddata.tntbase.org/temp");
+		Node predicate = Node.createURI("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
 		Node object = Node
-				.createURI("http://linkeddata.tntbase.org/slides/dmath/en/sets-introduction#ninset.sym");
+				.createURI("http://omdoc.org/ontology#Document");
 		Triple tripleForSearch = new Triple(subject, predicate, object);
 		while (foundIt.hasNext()) {
 			Triple triple = foundIt.next();
