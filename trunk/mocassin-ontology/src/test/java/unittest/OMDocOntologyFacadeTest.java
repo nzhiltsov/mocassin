@@ -11,13 +11,14 @@ import ru.ksu.niimm.ose.ontology.OMDocOntologyFacade;
 import ru.ksu.niimm.ose.ontology.OntologyConcept;
 import ru.ksu.niimm.ose.ontology.OntologyModule;
 import ru.ksu.niimm.ose.ontology.OntologyRelation;
+import unittest.util.OntologyTestModule;
 
 import com.google.inject.Inject;
 import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext( { OntologyModule.class, VirtuosoModule.class })
+@GuiceContext( { OntologyTestModule.class, VirtuosoModule.class })
 public class OMDocOntologyFacadeTest {
 	@Inject
 	private OMDocOntologyFacade omdocOntologyFacade;
@@ -49,7 +50,6 @@ public class OMDocOntologyFacadeTest {
 				"http://omdoc.org/ontology#usesSymbol", "uses symbol");
 		Assert.assertTrue(properties.contains(relation));
 	}
-
 
 	@Test
 	public void testGetRangeOfConcreteProperty() {

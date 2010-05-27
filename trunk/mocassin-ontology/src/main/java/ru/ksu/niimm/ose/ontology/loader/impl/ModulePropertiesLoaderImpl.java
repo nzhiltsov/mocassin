@@ -8,7 +8,7 @@ import ru.ksu.niimm.ose.ontology.loader.ModulePropertiesLoader;
 
 public class ModulePropertiesLoaderImpl implements ModulePropertiesLoader {
 	private static final String CONFIG_PROPERTIES_FILENAME = "ontology_config.properties";
-	private Properties properties;
+	protected Properties properties;
 
 	public ModulePropertiesLoaderImpl() throws IOException {
 		properties = loadProperties();
@@ -19,17 +19,21 @@ public class ModulePropertiesLoaderImpl implements ModulePropertiesLoader {
 		return getProperties().getProperty(key);
 	}
 
-	private Properties getProperties() {
+	protected Properties getProperties() {
 		return properties;
 	}
 
-	private Properties loadProperties() throws IOException {
+	protected Properties loadProperties() throws IOException {
 		Properties properties = new Properties();
-		ClassLoader loader = ModulePropertiesLoaderImpl.class
-				.getClassLoader();
-		InputStream stream = loader.getResourceAsStream(CONFIG_PROPERTIES_FILENAME);
+		ClassLoader loader = ModulePropertiesLoaderImpl.class.getClassLoader();
+		InputStream stream = loader
+				.getResourceAsStream(getConfigPropertiesFilename());
 		properties.load(stream);
 		stream.close();
 		return properties;
+	}
+
+	protected String getConfigPropertiesFilename() {
+		return CONFIG_PROPERTIES_FILENAME;
 	}
 }

@@ -20,6 +20,7 @@ import ru.ksu.niimm.ose.ontology.OntologyTriple;
 import ru.ksu.niimm.ose.ontology.QueryManagerFacade;
 import ru.ksu.niimm.ose.ontology.QueryStatement;
 import ru.ksu.niimm.ose.ontology.loader.SparqlQueryLoader;
+import unittest.util.OntologyTestModule;
 
 import com.google.inject.Inject;
 import com.hp.hpl.jena.graph.Graph;
@@ -32,7 +33,7 @@ import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext( { OntologyModule.class, VirtuosoModule.class })
+@GuiceContext( { OntologyTestModule.class, VirtuosoModule.class })
 public class QueryManagerFacadeTest {
 	@Inject
 	private QueryManagerFacade queryManagerFacade;
