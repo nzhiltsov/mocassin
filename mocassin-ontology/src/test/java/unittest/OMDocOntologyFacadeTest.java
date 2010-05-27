@@ -24,23 +24,6 @@ public class OMDocOntologyFacadeTest {
 	private OMDocOntologyFacade omdocOntologyFacade;
 
 	@Test
-	public void testGetOntClassList() {
-		List<OntologyConcept> ontClassList = getOmdocOntologyFacade()
-				.getOntClassList();
-		Assert.assertTrue(ontClassList != null && ontClassList.size() > 0);
-	}
-
-	@Test
-	public void testGetOntPropertyList() {
-		List<OntologyConcept> ontClassList = getOmdocOntologyFacade()
-				.getOntClassList();
-		for (OntologyConcept concept : ontClassList) {
-			getOmdocOntologyFacade().getOntPropertyList(concept);
-		}
-
-	}
-
-	@Test
 	public void testGetPropertiesForConcreteDomain() {
 		OntologyConcept concept = new OntologyConcept(
 				"http://omdoc.org/ontology#Property", "property");
