@@ -61,14 +61,14 @@ public class VirtuosoDAOTest extends AbstractTest {
 	public void testDescribe() {
 		Model model = getVirtuosoDAO()
 				.describe(
-						"<http://linkeddata.tntbase.org/temp>",
+						"<all.omdoc>",
 						getGraph());
 		Graph describeGraph = model.getGraph();
 		ExtendedIterator<Triple> foundIt = describeGraph.find(Node.ANY,
 				Node.ANY, Node.ANY);
 		boolean contains = false;
 		Node subject = Node
-				.createURI("http://linkeddata.tntbase.org/temp");
+				.createURI("all.omdoc");
 		Node predicate = Node.createURI("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
 		Node object = Node
 				.createURI("http://omdoc.org/ontology#Document");

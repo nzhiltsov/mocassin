@@ -97,16 +97,16 @@ public class QueryManagerFacadeTest {
 	public void testDescribe() {
 		Model model = getQueryManagerFacade()
 				.describe(
-						"http://linkeddata.tntbase.org/slides/dmath/en/sets-introduction#ninset.sym");
+						"all.omdoc");
 		Graph describeGraph = model.getGraph();
 		ExtendedIterator<Triple> foundIt = describeGraph.find(Node.ANY,
 				Node.ANY, Node.ANY);
 		boolean contains = false;
 		Node subject = Node
-				.createURI("http://linkeddata.tntbase.org/slides/dmath/en/sets-introduction#I1.p7");
-		Node predicate = Node.createURI("http://omdoc.org/ontology#defines");
+				.createURI("all.omdoc");
+		Node predicate = Node.createURI("http://omdoc.org/ontology#hasPart");
 		Node object = Node
-				.createURI("http://linkeddata.tntbase.org/slides/dmath/en/sets-introduction#ninset.sym");
+				.createURI("all.omdoc#whatislogic");
 		Triple tripleForSearch = new Triple(subject, predicate, object);
 		while (foundIt.hasNext()) {
 			Triple triple = foundIt.next();
