@@ -40,7 +40,7 @@ In OMDoc/XML, this is represented by the omdoc:assertion/@type='false-conjecture
 In OMDoc/XML, this is represented by the omdoc:*/@theory attribute (at least for non-constitutive statements) or by containment within an omdoc:theory element.
 Probably, this relation should be refactored into two ones.  A statement has exactly one home theory, but a theory need not have a home theory, if it's at top level. —Christoph Lange</dc:description>
     <rdfs:label xml:lang="de">Heimattheorie</rdfs:label>
-    <rdfs:label xml:lang="en">Home theory</rdfs:label>
+    <rdfs:label xml:lang="en">has home theory</rdfs:label>
     <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://omdoc.org/ontology#importedBy">
@@ -113,7 +113,7 @@ In OMDoc/XML, this is represented by the omdoc:assertion/@type='postulate' attri
     <rdfs:range rdf:resource="http://omdoc.org/ontology#Property"/>
     <dc:description>Represents relation between nodes and its CMP/FMP children nodes</dc:description>
     <rdfs:label xml:lang="de">hat Eigenschaft</rdfs:label>
-    <rdfs:label xml:lang="en">has Property</rdfs:label>
+    <rdfs:label xml:lang="en">has property</rdfs:label>
     <rdfs:label xml:lang="ru">обладает свойством</rdfs:label>
     <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
   </rdf:Description>
@@ -444,7 +444,7 @@ In OMDoc/XML, this is represented by the omdoc:symbol element.</dc:description>
     <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
     <dc:description>The text of a property (usually an informal one)</dc:description>
     <rdfs:label xml:lang="de">Text</rdfs:label>
-    <rdfs:label xml:lang="en">Text</rdfs:label>
+    <rdfs:label xml:lang="en">has text</rdfs:label>
     <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://omdoc.org/ontology#GeneralProof">
