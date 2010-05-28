@@ -27,6 +27,8 @@
 			<g:Button ui:field="sendButton" />
 			<g:Label styleName='{style.fake-label}' />
 			<g:Button ui:field="clearButton" />
+			<g:Label styleName='{style.fake-label}' />
+			<ose:InferenceCheckbox ui:field="inferenceCheckbox"/>
 		</g:HorizontalPanel>
 
 	</g:VerticalPanel>

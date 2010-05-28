@@ -34,7 +34,7 @@ public class Mocassin implements EntryPoint {
 		root.add(outer);
 		root.forceLayout();
 		topPanel.sendButton.addClickHandler(new BuildQueryStatementHandler(
-				topPanel.tree, centerPanel));
+				topPanel, centerPanel));
 	}
 
 }

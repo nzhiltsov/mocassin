@@ -77,6 +77,23 @@ public class VirtuosoDAOImpl implements VirtuosoDAO {
 
 	@Override
 	@ValidateGraph
+	public List<QuerySolution> get(String query, RDFGraph graph) {
+		List<QuerySolution> solutions = new ArrayList<QuerySolution>();
+		
+		VirtGraph virtGraph = new VirtGraph(graph.getUrl(),
+				graph.getUsername(), graph.getPassword());
+		VirtuosoQueryExecution vqe = VirtuosoQueryExecutionFactory.create(
+				query, virtGraph);
+		ResultSet results = vqe.execSelect();
+		while (results.hasNext()) {
+			QuerySolution solution = results.nextSolution();
+			solutions.add(solution);
+		}
+		return solutions;
+	}
+
+	@Override
+	@ValidateGraph
 	public Model describe(String resourceUri, RDFGraph graph) {
 		String query = getDescribeQueryGenerator().generate(resourceUri, graph);
 		VirtGraph virtGraph = new VirtGraph(graph.getUrl(),

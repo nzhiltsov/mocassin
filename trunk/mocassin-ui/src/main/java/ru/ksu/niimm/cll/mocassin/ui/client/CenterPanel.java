@@ -93,11 +93,13 @@ public class CenterPanel extends Composite implements PageLinkEventHandler {
 	public static class BuildQueryStatementHandler implements ClickHandler {
 		private CenterPanel centerPanel;
 		private QueryTree tree;
+		private InferenceCheckbox inferenceCheckbox;
 
-		public BuildQueryStatementHandler(QueryTree tree,
+		public BuildQueryStatementHandler(TopPanel panel,
 				CenterPanel centerPanel) {
-			this.tree = tree;
+			this.tree = panel.tree;
 			this.centerPanel = centerPanel;
+			this.inferenceCheckbox = panel.inferenceCheckbox;
 		}
 
 		public CenterPanel getCenterPanel() {
@@ -116,6 +118,14 @@ public class CenterPanel extends Composite implements PageLinkEventHandler {
 			this.tree = tree;
 		}
 
+		public InferenceCheckbox getInferenceCheckbox() {
+			return inferenceCheckbox;
+		}
+
+		public void setInferenceCheckbox(InferenceCheckbox inferenceCheckbox) {
+			this.inferenceCheckbox = inferenceCheckbox;
+		}
+
 		@Override
 		public void onClick(ClickEvent event) {
 			TreeItem root = tree.getRoot();
@@ -126,7 +136,7 @@ public class CenterPanel extends Composite implements PageLinkEventHandler {
 						.getSelectedValue();
 				List<OntTriple> triples = buildQueryTriples(root);
 				OntQueryStatement st = new OntQueryStatement(conceptNode,
-						triples);
+						triples, getInferenceCheckbox().isChecked());
 				getCenterPanel().setStatement(st);
 				getCenterPanel().query();
 			}

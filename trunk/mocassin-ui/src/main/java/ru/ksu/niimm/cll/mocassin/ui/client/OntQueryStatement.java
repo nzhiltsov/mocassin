@@ -2,18 +2,21 @@ package ru.ksu.niimm.cll.mocassin.ui.client;
 
 import java.io.Serializable;
 import java.util.List;
+
 @SuppressWarnings("serial")
-public class OntQueryStatement implements Serializable{
+public class OntQueryStatement implements Serializable {
 	private OntElement retrievedConcept;
 	private List<OntTriple> triples;
+	private boolean isInferenceOn;
 
 	public OntQueryStatement() {
 	}
 
 	public OntQueryStatement(OntElement retrievedConcept,
-			List<OntTriple> triples) {
+			List<OntTriple> triples, boolean isInferenceOn) {
 		this.retrievedConcept = retrievedConcept;
 		this.triples = triples;
+		this.isInferenceOn = isInferenceOn;
 	}
 
 	public OntElement getRetrievedConcept() {
@@ -30,6 +33,14 @@ public class OntQueryStatement implements Serializable{
 
 	public void setTriples(List<OntTriple> triples) {
 		this.triples = triples;
+	}
+
+	public boolean isInferenceOn() {
+		return isInferenceOn;
+	}
+
+	public void setInferenceOn(boolean isInferenceOn) {
+		this.isInferenceOn = isInferenceOn;
 	}
 
 }

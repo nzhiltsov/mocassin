@@ -48,6 +48,15 @@ public interface VirtuosoDAO {
 	List<QuerySolution> get(Query query, RDFGraph graph);
 
 	/**
+	 * get resources by given query expression
+	 * 
+	 * @param query
+	 * @param graph
+	 * @return
+	 */
+	List<QuerySolution> get(String query, RDFGraph graph);
+
+	/**
 	 * get RDF model that describes the resource with given URI
 	 * 
 	 * @param resourceUri

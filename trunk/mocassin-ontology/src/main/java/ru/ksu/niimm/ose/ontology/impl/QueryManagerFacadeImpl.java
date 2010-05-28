@@ -13,6 +13,7 @@ import ru.ksu.niimm.ose.ontology.OntologyResource;
 import ru.ksu.niimm.ose.ontology.OntologyTriple;
 import ru.ksu.niimm.ose.ontology.QueryManagerFacade;
 import ru.ksu.niimm.ose.ontology.QueryStatement;
+import ru.ksu.niimm.ose.ontology.loader.ModulePropertiesLoader;
 import ru.ksu.niimm.ose.ontology.loader.OMDocOntologyLoader;
 import ru.ksu.niimm.ose.ontology.loader.RDFGraphPropertiesLoader;
 
@@ -24,6 +25,8 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 
 public class QueryManagerFacadeImpl implements QueryManagerFacade {
+	private static final String OMDOC_RULES_SET_PARAMETER_NAME = "omdoc.rules.set";
+	private static final String RULES_SET_ENTRY = "define input:inference \"%s\"";
 	private static final String RDF_PREFIX_STRING = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>";
 	private static final String SELECT_STATEMENT = "SELECT DISTINCT %s WHERE";
 	private static final String RETRIEVED_CONCEPT_KEY = "?1";
@@ -33,6 +36,8 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 	private VirtuosoDAO virtuosoDAO;
 	@Inject
 	private RDFGraphPropertiesLoader graphPropertiesLoader;
+	@Inject
+	private ModulePropertiesLoader modulePropertiesLoader;
 
 	/*
 	 * (non-Javadoc)
@@ -44,9 +49,8 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 	public List<Resource> query(String queryString, String retrievedResourceKey) {
 		List<Resource> resultResources = new ArrayList<Resource>();
 
-		Query query = QueryFactory.create(queryString);
-
-		List<QuerySolution> solutions = getVirtuosoDAO().get(query, getGraph());
+		List<QuerySolution> solutions = getVirtuosoDAO().get(queryString,
+				getGraph());
 		for (QuerySolution solution : solutions) {
 			Resource resource = solution.getResource(retrievedResourceKey);
 			resultResources.add(resource);
@@ -82,6 +86,10 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 	 */
 	public String generateQuery(QueryStatement queryStatement) {
 		StringBuffer sb = new StringBuffer();
+		if (queryStatement.isInferenceOn()) {
+			sb.append(String.format(RULES_SET_ENTRY, getOmdocRulesSetName()));
+			sb.append("\n");
+		}
 		sb.append(RDF_PREFIX_STRING);
 		sb.append("\n");
 		sb.append(String.format(SELECT_STATEMENT, RETRIEVED_CONCEPT_KEY));
@@ -135,6 +143,10 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 		return sb.toString();
 	}
 
+	private String getOmdocRulesSetName() {
+		return getModulePropertiesLoader().get(OMDOC_RULES_SET_PARAMETER_NAME);
+	}
+
 	private String getPredicateExpression(OntologyTriple triple) {
 		String predicateString = String.format("?%d <%s> ?%d", triple
 				.getSubject().getId(), triple.getPredicate().getUri(), triple
@@ -163,4 +175,9 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 	public RDFGraph getGraph() {
 		return getGraphPropertiesLoader().getGraph();
 	}
+
+	public ModulePropertiesLoader getModulePropertiesLoader() {
+		return modulePropertiesLoader;
+	}
+
 }
