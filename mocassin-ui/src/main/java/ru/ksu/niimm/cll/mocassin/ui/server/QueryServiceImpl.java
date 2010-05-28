@@ -115,6 +115,7 @@ public class QueryServiceImpl implements QueryService {
 			retrievedTriples.add(ontologyTriple);
 		}
 		QueryStatement queryStatement = new QueryStatement(retrievedTriples);
+		queryStatement.setInferenceOn(statement.isInferenceOn());
 		return queryStatement;
 	}
 

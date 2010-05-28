@@ -25,6 +25,8 @@ public class TopPanel extends Composite {
 	Button sendButton;
 	@UiField
 	Button clearButton;
+	@UiField
+	InferenceCheckbox inferenceCheckbox;
 
 	public TopPanel() {
 		initWidget(binder.createAndBindUi(this));

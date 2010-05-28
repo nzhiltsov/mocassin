@@ -95,18 +95,14 @@ public class QueryManagerFacadeTest {
 
 	@Test
 	public void testDescribe() {
-		Model model = getQueryManagerFacade()
-				.describe(
-						"all.omdoc");
+		Model model = getQueryManagerFacade().describe("all.omdoc");
 		Graph describeGraph = model.getGraph();
 		ExtendedIterator<Triple> foundIt = describeGraph.find(Node.ANY,
 				Node.ANY, Node.ANY);
 		boolean contains = false;
-		Node subject = Node
-				.createURI("all.omdoc");
+		Node subject = Node.createURI("all.omdoc");
 		Node predicate = Node.createURI("http://omdoc.org/ontology#hasPart");
-		Node object = Node
-				.createURI("all.omdoc#whatislogic");
+		Node object = Node.createURI("all.omdoc#whatislogic");
 		Triple tripleForSearch = new Triple(subject, predicate, object);
 		while (foundIt.hasNext()) {
 			Triple triple = foundIt.next();
@@ -126,6 +122,39 @@ public class QueryManagerFacadeTest {
 				queryStatement);
 		queryString.length();
 	}
+
+	/*@Test
+	public void testQueryWithInference() {
+		List<OntologyResource> resources = getQueryManagerFacade().query(
+				makeQueryWithInferenceStatement());
+		String lemmaUri = "http://linkeddata.tntbase.org/slides/pl0/en/compact-acc#compact-acc.thm";
+		boolean contains = false;
+		for (OntologyResource resource : resources) {
+			if (lemmaUri.equals(resource.getUri())) {
+				contains = true;
+				break;
+			}
+		}
+		Assert.assertTrue(contains);
+	}
+
+	private QueryStatement makeQueryWithInferenceStatement() {
+		List<OntologyTriple> triples = new ArrayList<OntologyTriple>();
+		OntologyConcept subject = new OntologyConcept(
+				"http://omdoc.org/ontology#Assertion", "assertion");
+		subject.setId(1);
+		OntologyBlankNode predicate = new OntologyBlankNode();
+		predicate.setId(2);
+		OntologyBlankNode object = new OntologyBlankNode();
+		object.setId(3);
+		OntologyTriple triple = new OntologyTriple(subject, predicate, object);
+		triples.add(triple);
+
+		QueryStatement queryStatement = new QueryStatement(triples);
+		queryStatement.setInferenceOn(false);
+		return queryStatement;
+
+	}*/
 
 	private QueryStatement makeWildcardStatement() {
 		List<OntologyTriple> triples = new ArrayList<OntologyTriple>();
