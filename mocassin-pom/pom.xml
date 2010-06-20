@@ -6,7 +6,7 @@
 	<artifactId>mocassin-pom</artifactId>
 	<packaging>pom</packaging>
 	<name>Mocassin POM</name>
-	<version>1.0.0.3-SNAPSHOT</version>
+	<version>1.0.0.3</version>
 	<organization>
 		<name>N.G. Chebotarev Research Institute of Mathematics and Mechanics</name>
 		<url>http://cll.niimm.ksu.ru</url>
@@ -121,8 +121,8 @@
 	<distributionManagement>
 		<snapshotRepository>
 			<id>server318</id>
-			<name>server318-snapshots</name>
-			<url>http://localhost:8080/artifactory/libs-snapshots-local</url>
+			<name>server318-releases</name>
+			<url>http://localhost:8080/artifactory/libs-releases-local</url>
 		</snapshotRepository>
 	</distributionManagement>
 
