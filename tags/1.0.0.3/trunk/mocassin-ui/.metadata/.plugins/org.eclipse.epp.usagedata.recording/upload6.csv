@@ -1,0 +1,26 @@
+what,kind,bundleId,bundleVersion,description,time
+started,bundle,org.eclipse.debug.ui,3.5.1.v20090811_r351,"org.eclipse.debug.ui",1263586369163
+started,bundle,org.eclipse.compare.core,3.5.0.I20090430-0408,"org.eclipse.compare.core",1263586388235
+opened,editor,com.google.gwt.eclipse.core,1.2.0.v200912062003,"com.google.gwt.eclipse.core.editors.gwtJavaEditor",1263586389854
+started,bundle,org.eclipse.core.variables,3.2.200.v20090521,"org.eclipse.core.variables",1263586390187
+started,bundle,org.eclipse.jdt.debug,3.5.0.v20090526,"org.eclipse.jdt.debug",1263586395950
+started,bundle,org.eclipse.jdt.debug.ui,3.4.1.v20090811_r351,"org.eclipse.jdt.debug.ui",1263586397726
+activated,editor,com.google.gwt.eclipse.core,1.2.0.v200912062003,"com.google.gwt.eclipse.core.editors.gwtJavaEditor",1263586397994
+deactivated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1263586400889
+activated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1263586400967
+deactivated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1263586401476
+activated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1263586483420
+executed,command,org.eclipse.ui.workbench.texteditor,3.5.0.v20090603,"org.eclipse.ui.edit.text.select.lineStart",1263586490446
+executed,command,org.eclipse.ui,3.5.1.M20090902-1000,"org.eclipse.ui.file.save",1263586493897
+error,log,,,"Invalid preference page path: CSS Files",1263586499525
+deactivated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1263586500112
+activated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1263586535606
+activated,view,org.eclipse.ui.ide,3.5.1.M20090826-0800,"org.eclipse.ui.views.ProblemView",1263586540169
+closed,editor,com.google.gwt.eclipse.core,1.2.0.v200912062003,"com.google.gwt.eclipse.core.editors.gwtJavaEditor",1263586540170
+deactivated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1263586543763
+opened,editor,com.google.gwt.eclipse.core,1.2.0.v200912062003,"com.google.gwt.eclipse.core.editors.gwtJavaEditor",1263586549324
+activated,editor,com.google.gwt.eclipse.core,1.2.0.v200912062003,"com.google.gwt.eclipse.core.editors.gwtJavaEditor",1263586549887
+executed,command,org.eclipse.jdt.ui,3.5.1.r351_v20090821-0800,"org.eclipse.jdt.ui.navigate.open.type",1263586550205
+activated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1263586550373
+deactivated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1263586554820
+activated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1263586627802
