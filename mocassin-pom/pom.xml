@@ -119,10 +119,15 @@
 		<module>../mocassin-virtuoso</module>
 	</modules>
 	<distributionManagement>
-		<snapshotRepository>
+		<repository>
 			<id>server318</id>
 			<name>server318-releases</name>
 			<url>http://localhost:8080/artifactory/libs-releases-local</url>
+		</repository>
+		<snapshotRepository>
+			<id>server318</id>
+			<name>server318-snapshots</name>
+			<url>http://localhost:8080/artifactory/libs-snapshots-local</url>
 		</snapshotRepository>
 	</distributionManagement>
 
