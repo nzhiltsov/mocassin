@@ -31,7 +31,7 @@ DB.DBA.VT_INC_INDEX_DB_DBA_RDF_OBJ ();
 DB.DBA.VT_BATCH_UPDATE ('DB.DBA.RDF_OBJ', 'ON', 60);
 }}}
 
-  * Creation of inference rules set
+  * Create the inference rules set
     # Load [http://omdoc.org/ontology OMDoc ontology] into Virtuoso (you may use Virtuoso's admin console), let its graph URI be "http://cll.niimm.ksu.ru/ontology/omdoc"
     # Execute the following command in ISQL window:
 {{{
