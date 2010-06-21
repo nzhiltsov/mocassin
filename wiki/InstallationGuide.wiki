@@ -50,3 +50,7 @@ graph.iri=<http://cll.niimm.ksu.ru/mocassin>
 ...
 omdoc.rules.set=http://cll.niimm.ksu.ru/ontology/omdoc/rules
 }}}
+
+== Mocassin deployment ==
+Rename downloaded WAR to 'mocassin.war' and deploy it on the web container.
+Mocassin's page would be available at http://$HOST_NAME$/mocassin
