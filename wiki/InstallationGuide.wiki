@@ -39,7 +39,7 @@ rdfs_rule_set ("http://cll.niimm.ksu.ru/ontology/omdoc/rules", "http://cll.niimm
 }}}
 
 == Mocassin configuration file == 
-Download WAR application build.
+Download [http://cll.niimm.ksu.ru:8080/artifactory/libs-releases-local/ru/ksu/niimm/cll/mocassin/mocassin-ui/1.0.0.3/mocassin-ui-1.0.0.3.war WAR application build].
 Edit configuration file which is located in $WAR_FILENAME$/WEB-INF/lib/mocassin-ontology-1.0.0.3.jar as follows (besides, set appropriate values for 'connection.url' and 'connection.user.password'!):
 {{{
 # Virtuoso connection settings
