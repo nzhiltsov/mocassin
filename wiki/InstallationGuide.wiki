@@ -7,7 +7,7 @@ Version: 1.0.0.3
 Mocassin uses given RDF graph as underlying search index for now. That graph should be filled with corresponding triples, for instance, by means of [http://tntbase.org/ TNT Base] (see Mocassin TNTBase Plugin).
 
 == Environment requirements ==
-
+  * JDK 1.6+
   * Virtuoso server 6.1.0+
   * Servlet 2.5+ compliant web container (e.g. Apache Tomcat)
 
