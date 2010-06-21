@@ -3,3 +3,5 @@
 Planned date for 1.0.0.1 version milestone: 25.01.2010. This milestone has no application build.
 
 Planned date for 1.0.0.2 version milestone: 14.02.2010. This milestone has no application build.
+
+1.0.0.3 version (ESWC'10 milestone): 20.02.2010. See [http://cll.niimm.ksu.ru:8080/artifactory/libs-releases-local/ru/ksu/niimm/cll/mocassin/mocassin-ui/1.0.0.3/mocassin-ui-1.0.0.3.war WAR application build]
