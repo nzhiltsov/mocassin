@@ -117,6 +117,7 @@
 		<module>../mocassin-ontology</module>
 		<module>../mocassin-ui</module>
 		<module>../mocassin-virtuoso</module>
+		<module>../mocassin-parser</module>
 	</modules>
 	<distributionManagement>
 		<repository>
