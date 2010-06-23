@@ -29,8 +29,6 @@ import ru.ksu.niimm.cll.mocassin.parser.latex.analyzer.Analyzer;
 public class StructureAnalyzer implements Analyzer {
 	private LatexDocumentModel model;
 
-	private int labelPointer;
-
 	@Override
 	public List<Edge<Node, Node>> analyze(LatexDocumentModel model) {
 		prepareAnalysis(model);
@@ -38,7 +36,10 @@ public class StructureAnalyzer implements Analyzer {
 		List<Edge<Node, Node>> edges = new ArrayList<Edge<Node, Node>>();
 
 		Stack<OutlineNode> stack = new Stack<OutlineNode>();
-		stack.addAll(getModel().getTree());
+		List<OutlineNode> tree = getModel().getTree();
+		for (int i = tree.size() - 1; i >= 0; i--) {
+			stack.push(tree.get(i));
+		}
 		while (!stack.isEmpty()) {
 			OutlineNode node = stack.pop();
 
@@ -51,7 +52,9 @@ public class StructureAnalyzer implements Analyzer {
 				for (OutlineNode child : children) {
 					if (child.getType() == OutlineNode.TYPE_LABEL) {
 						List<DocumentReference> references = getReferencesForLabel(child);
-						getReferenceEdges(references, from);
+						List<Edge<Node, Node>> referenceEdges = getReferenceEdges(
+								references, from);
+						edges.addAll(referenceEdges);
 					} else {
 						Edge<Node, Node> edge = makeEdge(from, child,
 								EdgeType.CONTAINS);
@@ -76,12 +79,24 @@ public class StructureAnalyzer implements Analyzer {
 		return edge;
 	}
 
+	private Edge<Node, Node> makeInverseEdge(OutlineNode fromNode, Node to,
+			EdgeType edgeType) {
+		Edge<Node, Node> edge = new EdgeImpl();
+		String childId = String.format("%d:%d", fromNode.getBeginLine(),
+				fromNode.getOffsetOnLine());
+		Node from = new NodeImpl(childId, fromNode.getName());
+		EdgeContext context = new EdgeContextImpl(edgeType);
+		edge.connect(from, to, context);
+		return edge;
+	}
+
 	private List<Edge<Node, Node>> getReferenceEdges(
-			List<DocumentReference> references, Node from) {
+			List<DocumentReference> references, Node to) {
 		List<Edge<Node, Node>> edges = new ArrayList<Edge<Node, Node>>();
 		for (DocumentReference reference : references) {
 			OutlineNode parent = getReferenceParent(reference);
-			Edge<Node, Node> edge = makeEdge(from, parent, EdgeType.REFERS_TO);
+			Edge<Node, Node> edge = makeInverseEdge(parent, to,
+					EdgeType.REFERS_TO);
 			edges.add(edge);
 		}
 		return edges;
@@ -133,7 +148,6 @@ public class StructureAnalyzer implements Analyzer {
 
 	private void prepareAnalysis(LatexDocumentModel model) {
 		setModel(model);
-		setLabelPointer(0);
 	}
 
 	private List<DocumentReference> getReferencesForLabel(OutlineNode child) {
@@ -154,19 +168,18 @@ public class StructureAnalyzer implements Analyzer {
 	}
 
 	private ReferenceEntry getLabel(OutlineNode child) {
-		boolean found = false;
-		ReferenceEntry label = null;
-		while (!found && !isEndOfLabelList()) {
-			label = getLabels().get(this.labelPointer);
-			found = label.key.equals(child.getName())
+		ReferenceEntry foundLabel = null;
+		int i = 0;
+		while (i <= getLabels().size() - 1) {
+			ReferenceEntry label = getLabels().get(i);
+			boolean found = label.key.equals(child.getName())
 					&& label.startLine == child.getBeginLine();
-			this.labelPointer++;
+			if (found) {
+				foundLabel = label;
+			}
+			i++;
 		}
-		return found ? label : null;
-	}
-
-	private boolean isEndOfLabelList() {
-		return this.labelPointer == getLabels().size();
+		return foundLabel;
 	}
 
 	private void setModel(LatexDocumentModel model) {
@@ -175,10 +188,6 @@ public class StructureAnalyzer implements Analyzer {
 
 	private LatexDocumentModel getModel() {
 		return model;
-	}
-
-	private void setLabelPointer(int labelPointer) {
-		this.labelPointer = labelPointer;
 	}
 
 	private List<DocumentReference> getReferences() {
