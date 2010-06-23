@@ -8,4 +8,6 @@ package ru.ksu.niimm.cll.mocassin.parser;
  */
 public interface Edge<From extends Node, To extends Node> {
 	void connect(From from, To to, EdgeContext context);
+
+	EdgeContext getContext();
 }
