@@ -9,7 +9,7 @@ import net.sourceforge.texlipse.texparser.lexer.LexerException;
 
 public interface TreeParser {
 
-	List<OutlineNode> parseTree(Reader reader) throws LexerException,
+	LatexDocumentModel parseTree(Reader reader) throws LexerException,
 			IOException;
 
 }

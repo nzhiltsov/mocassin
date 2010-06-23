@@ -12,7 +12,7 @@ public class AnalyzersProviderImpl implements AnalyzersProvider {
 	@Override
 	public List<Analyzer> get() {
 		List<Analyzer> analyzers = new ArrayList<Analyzer>();
-		analyzers.add(new ContainmentAnalyzer());
+		analyzers.add(new StructureAnalyzer());
 		return Collections.unmodifiableList(analyzers);
 	}
 
