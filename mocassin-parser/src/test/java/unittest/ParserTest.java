@@ -39,7 +39,7 @@ public class ParserTest {
 		getParser().load(getReader());
 		List<Edge<Node, Node>> graph = getParser().getGraph();
 		Assert.assertTrue(!graph.isEmpty());
-//		print(graph);
+		print(graph);
 	}
 
 	private void print(List<Edge<Node, Node>> graph) {

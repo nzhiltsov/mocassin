@@ -8,6 +8,7 @@ import net.sourceforge.texlipse.model.OutlineNode;
 import ru.ksu.niimm.cll.mocassin.parser.Edge;
 import ru.ksu.niimm.cll.mocassin.parser.Node;
 import ru.ksu.niimm.cll.mocassin.parser.Parser;
+import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
 import ru.ksu.niimm.cll.mocassin.parser.latex.TreeParser;
 import ru.ksu.niimm.cll.mocassin.parser.latex.analyzer.Analyzer;
 import ru.ksu.niimm.cll.mocassin.parser.latex.analyzer.AnalyzersProvider;
@@ -20,13 +21,13 @@ public class LatexParserImpl implements Parser {
 	@Inject
 	private AnalyzersProvider analyzersProvider;
 
-	private List<OutlineNode> tree;
+	private LatexDocumentModel model;
 
 	@Override
 	public List<Edge<Node, Node>> getGraph() {
 		List<Edge<Node, Node>> graph = new ArrayList<Edge<Node, Node>>();
 		for (Analyzer analyzer : getAnalyzers()) {
-			List<Edge<Node, Node>> edges = analyzer.analyze(getTree());
+			List<Edge<Node, Node>> edges = analyzer.analyze(getModel());
 			merge(graph, edges);
 		}
 		return graph;
@@ -46,16 +47,16 @@ public class LatexParserImpl implements Parser {
 
 	@Override
 	public void load(Reader reader) throws Exception {
-		List<OutlineNode> parsedTree = getTreeParser().parseTree(reader);
-		setTree(parsedTree);
+		LatexDocumentModel parsedModel = getTreeParser().parseTree(reader);
+		setModel(parsedModel);
 	}
 
-	private List<OutlineNode> getTree() {
-		return tree;
+	private LatexDocumentModel getModel() {
+		return model;
 	}
 
-	private void setTree(List<OutlineNode> tree) {
-		this.tree = tree;
+	private void setModel(LatexDocumentModel model) {
+		this.model = model;
 	}
 
 	private TreeParser getTreeParser() {

@@ -12,6 +12,7 @@ import ru.ksu.niimm.cll.mocassin.parser.Node;
 import ru.ksu.niimm.cll.mocassin.parser.impl.EdgeContextImpl;
 import ru.ksu.niimm.cll.mocassin.parser.impl.EdgeImpl;
 import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl;
+import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
 import ru.ksu.niimm.cll.mocassin.parser.latex.analyzer.Analyzer;
 
 /**
@@ -23,7 +24,8 @@ import ru.ksu.niimm.cll.mocassin.parser.latex.analyzer.Analyzer;
 public class ContainmentAnalyzer implements Analyzer {
 
 	@Override
-	public List<Edge<Node, Node>> analyze(List<OutlineNode> tree) {
+	public List<Edge<Node, Node>> analyze(LatexDocumentModel model) {
+		List<OutlineNode> tree = model.getTree();
 		List<Edge<Node, Node>> edges = new ArrayList<Edge<Node, Node>>();
 
 		LinkedList<OutlineNode> queue = new LinkedList<OutlineNode>();
