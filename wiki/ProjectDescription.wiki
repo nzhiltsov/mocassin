@@ -8,3 +8,5 @@
   * To describe some parts of mathematics with ontological formalisms
 
   * To make the world better:-)
+
+Also see [http://cll.niimm.ksu.ru Computational Linguistics Laboratory (Kazan Federal University)]
