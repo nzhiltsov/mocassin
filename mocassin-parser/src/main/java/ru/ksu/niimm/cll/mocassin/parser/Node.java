@@ -13,4 +13,7 @@ public interface Node {
 
 	String getName();
 
+	boolean equals(Object o);
+
+	int hashCode();
 }
