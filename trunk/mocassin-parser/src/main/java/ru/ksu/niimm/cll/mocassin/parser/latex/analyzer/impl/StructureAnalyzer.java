@@ -37,8 +37,17 @@ public class StructureAnalyzer implements Analyzer {
 
 		Stack<OutlineNode> stack = new Stack<OutlineNode>();
 		List<OutlineNode> tree = getModel().getTree();
+		OutlineNode documentRoot = getModel().getDocumentRoot();
 		for (int i = tree.size() - 1; i >= 0; i--) {
-			stack.push(tree.get(i));
+			OutlineNode treeItem = tree.get(i);
+			stack.push(treeItem);
+
+			Node documentRootNode = new NodeImpl(String
+					.format("%d:%d", documentRoot.getBeginLine(), documentRoot
+							.getOffsetOnLine()), documentRoot.getName());
+			Edge<Node, Node> edge = makeEdge(documentRootNode, treeItem,
+					EdgeType.CONTAINS);
+			edges.add(edge);
 		}
 		while (!stack.isEmpty()) {
 			OutlineNode node = stack.pop();
@@ -95,9 +104,11 @@ public class StructureAnalyzer implements Analyzer {
 		List<Edge<Node, Node>> edges = new ArrayList<Edge<Node, Node>>();
 		for (DocumentReference reference : references) {
 			OutlineNode parent = getReferenceParent(reference);
-			Edge<Node, Node> edge = makeInverseEdge(parent, to,
-					EdgeType.REFERS_TO);
-			edges.add(edge);
+			if (parent != null) {
+				Edge<Node, Node> edge = makeInverseEdge(parent, to,
+						EdgeType.REFERS_TO);
+				edges.add(edge);
+			}
 		}
 		return edges;
 	}
@@ -111,6 +122,7 @@ public class StructureAnalyzer implements Analyzer {
 	 */
 	private OutlineNode getReferenceParent(DocumentReference reference) {
 		Stack<OutlineNode> stack = new Stack<OutlineNode>();
+
 		for (OutlineNode root : getModel().getTree()) {
 			if (reference.startLine >= root.getBeginLine()
 					&& reference.startLine <= root.getEndLine()) {
@@ -118,6 +130,7 @@ public class StructureAnalyzer implements Analyzer {
 				break;
 			}
 		}
+
 		while (!stack.isEmpty()) {
 			OutlineNode node = stack.pop();
 			ArrayList<OutlineNode> children = node.getChildren();
@@ -139,11 +152,13 @@ public class StructureAnalyzer implements Analyzer {
 			}
 
 		}
-		throw new IllegalStateException(
-				String
-						.format(
-								"parent of the following reference couldn't be found: [key: %s, startLine: %d]",
-								reference.key, reference.startLine));
+
+		OutlineNode documentRoot = getModel().getDocumentRoot();
+		if (reference.startLine >= documentRoot.getBeginLine()
+				&& reference.startLine <= documentRoot.getEndLine()) {
+			return documentRoot;
+		}
+		return null; // then the reference is outer
 	}
 
 	private void prepareAnalysis(LatexDocumentModel model) {

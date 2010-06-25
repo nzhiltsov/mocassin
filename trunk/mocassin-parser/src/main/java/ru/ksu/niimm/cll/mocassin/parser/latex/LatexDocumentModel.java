@@ -7,6 +7,7 @@ import net.sourceforge.texlipse.model.OutlineNode;
 import net.sourceforge.texlipse.model.ReferenceEntry;
 
 public class LatexDocumentModel {
+	private OutlineNode documentRoot;
 	private List<OutlineNode> tree;
 	/**
 	 * list of references ordered by their "key" values
@@ -43,6 +44,14 @@ public class LatexDocumentModel {
 
 	public void setLabels(List<ReferenceEntry> labels) {
 		this.labels = labels;
+	}
+
+	public OutlineNode getDocumentRoot() {
+		return documentRoot;
+	}
+
+	public void setDocumentRoot(OutlineNode documentRoot) {
+		this.documentRoot = documentRoot;
 	}
 
 }
