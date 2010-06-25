@@ -17,7 +17,7 @@ import ru.ksu.niimm.ose.ontology.OMDocOntologyFacade;
 import ru.ksu.niimm.ose.ontology.OntologyConcept;
 
 public class NameMatcher implements Matcher {
-	private static final double SIMILARITY_THRESHOLD = 0.1;
+	private static final double SIMILARITY_THRESHOLD = 0;
 	@Inject
 	private StringSimilarityEvaluator stringSimilarityEvaluator;
 	@Inject
@@ -39,15 +39,15 @@ public class NameMatcher implements Matcher {
 		float maxSimilarity = 0;
 		MappingElement closestElement = null;
 		for (OntologyConcept concept : getOntologyConcepts()) {
-			MappingElement element = new MappingElement(node, concept);
-			if (!elements.contains(element)) {
+			
+			if (!containsNode(elements, node)) {
 				float similarity = getStringSimilarityEvaluator()
 						.getSimilarity(node.getName().toLowerCase(),
 								concept.getLabel().toLowerCase(),
-								SimilarityMetrics.LEVENSHTEIN);
+								SimilarityMetrics.N_GRAM);
 				if (similarity > maxSimilarity) {
 					maxSimilarity = similarity;
-					closestElement = element;
+					closestElement = new MappingElement(node, concept);
 					closestElement.setConfidence(similarity);
 				}
 			}
@@ -56,6 +56,17 @@ public class NameMatcher implements Matcher {
 		if (closestElement != null && maxSimilarity >= SIMILARITY_THRESHOLD) {
 			elements.add(closestElement);
 		}
+	}
+
+	private boolean containsNode(List<MappingElement> elements, Node node) {
+		boolean found = false;
+		for (MappingElement element : elements) {
+			if (element.getNode().equals(node)) {
+				found = true;
+				break;
+			}
+		}
+		return found;
 	}
 
 	private StringSimilarityEvaluator getStringSimilarityEvaluator() {
