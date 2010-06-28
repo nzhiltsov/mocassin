@@ -18,10 +18,8 @@ import ru.ksu.niimm.cll.mocassin.parser.ParserModule;
 import ru.ksu.niimm.cll.mocassin.parser.mapping.Mapping;
 import ru.ksu.niimm.cll.mocassin.parser.mapping.MappingElement;
 import ru.ksu.niimm.cll.mocassin.parser.mapping.matchers.Matcher;
-import ru.ksu.niimm.cll.mocassin.parser.mapping.matchers.impl.NameMatcher;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
 import ru.ksu.niimm.ose.ontology.OntologyModule;
-import unittest.util.OntologyTestModule;
 
 import com.google.inject.Inject;
 import com.mycila.testing.junit.MycilaJunitRunner;
@@ -47,7 +45,7 @@ public class NameMatcherTest {
 	@Test
 	public void testDoMapping() {
 		Mapping mapping = getMatcher().doMapping(getGraph());
-		print(mapping);
+//		print(mapping);
 	}
 
 	private void print(Mapping mapping) {
