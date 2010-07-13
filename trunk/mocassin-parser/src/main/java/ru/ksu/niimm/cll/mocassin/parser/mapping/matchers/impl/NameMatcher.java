@@ -3,7 +3,10 @@ package ru.ksu.niimm.cll.mocassin.parser.mapping.matchers.impl;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 
 import ru.ksu.niimm.cll.mocassin.parser.Edge;
@@ -17,11 +20,12 @@ import ru.ksu.niimm.ose.ontology.OMDocOntologyFacade;
 import ru.ksu.niimm.ose.ontology.OntologyConcept;
 
 public class NameMatcher implements Matcher {
-	private static final double SIMILARITY_THRESHOLD = 0;
 	@Inject
 	private StringSimilarityEvaluator stringSimilarityEvaluator;
 	@Inject
 	private OMDocOntologyFacade omdocOntologyFacade;
+	@Inject
+	private NameMatcherPropertiesLoader nameMatcherPropertiesLoader;
 
 	@Override
 	public Mapping doMapping(List<Edge<Node, Node>> graph) {
@@ -36,37 +40,34 @@ public class NameMatcher implements Matcher {
 	}
 
 	private void map(List<MappingElement> elements, Node node) {
-		float maxSimilarity = 0;
-		MappingElement closestElement = null;
+
 		for (OntologyConcept concept : getOntologyConcepts()) {
-			
-			if (!containsNode(elements, node)) {
+			Map<SimilarityMetrics, Float> confidences = new HashMap<SimilarityMetrics, Float>();
+			for (SimilarityMetrics metric : SimilarityMetrics.values()) {
 				float similarity = getStringSimilarityEvaluator()
 						.getSimilarity(node.getName().toLowerCase(),
-								concept.getLabel().toLowerCase(),
-								SimilarityMetrics.N_GRAM);
-				if (similarity > maxSimilarity) {
-					maxSimilarity = similarity;
-					closestElement = new MappingElement(node, concept);
-					closestElement.setConfidence(similarity);
-				}
+								concept.getLabel().toLowerCase(), metric);
+				confidences.put(metric, similarity);
 			}
+			if (!contains(elements, node, concept)) {
+				elements.add(new MappingElement(node, concept, confidences));
+			}
+
 		}
 
-		if (closestElement != null && maxSimilarity >= SIMILARITY_THRESHOLD) {
-			elements.add(closestElement);
-		}
 	}
 
-	private boolean containsNode(List<MappingElement> elements, Node node) {
-		boolean found = false;
+	private boolean contains(List<MappingElement> elements, Node node,
+			OntologyConcept concept) {
+		boolean contains = false;
 		for (MappingElement element : elements) {
-			if (element.getNode().equals(node)) {
-				found = true;
+			contains = element.getNode().getName().equals(node.getName())
+					&& element.getConcept().equals(concept);
+			if (contains) {
 				break;
 			}
 		}
-		return found;
+		return contains;
 	}
 
 	private StringSimilarityEvaluator getStringSimilarityEvaluator() {
@@ -77,8 +78,23 @@ public class NameMatcher implements Matcher {
 		return omdocOntologyFacade;
 	}
 
-	public List<OntologyConcept> getOntologyConcepts() {
-		return getOmdocOntologyFacade().getOntClassList();
+	public List<String> getMatchedURIs() {
+		return nameMatcherPropertiesLoader.getMatchedURIs();
 	}
 
+	public Iterable<OntologyConcept> getOntologyConcepts() {
+		List<OntologyConcept> ontClassList = getOmdocOntologyFacade()
+				.getOntClassList();
+		Predicate<OntologyConcept> matchUriPredicate = new Predicate<OntologyConcept>() {
+
+			@Override
+			public boolean apply(OntologyConcept o) {
+				String uri = o.getUri();
+				return getMatchedURIs().contains(uri);
+			}
+		};
+		Iterable<OntologyConcept> filteredConcepts = Iterables.filter(
+				ontClassList, matchUriPredicate);
+		return filteredConcepts;
+	}
 }

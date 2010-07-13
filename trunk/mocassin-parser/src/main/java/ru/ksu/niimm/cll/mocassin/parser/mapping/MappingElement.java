@@ -1,19 +1,22 @@
 package ru.ksu.niimm.cll.mocassin.parser.mapping;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import ru.ksu.niimm.cll.mocassin.parser.Node;
 import ru.ksu.niimm.ose.ontology.OntologyConcept;
+import ru.ksu.niimm.cll.mocassin.parser.similarity.StringSimilarityEvaluator.SimilarityMetrics;
 
 public class MappingElement {
 	private Node node;
 	private OntologyConcept concept;
-	/**
-	 * confidence value [0..1]
-	 */
-	private float confidence;
+	private Map<SimilarityMetrics, Float> confidences = new HashMap<SimilarityMetrics, Float>();
 
-	public MappingElement(Node node, OntologyConcept concept, float confidence) {
-		this(node, concept);
-		this.confidence = confidence;
+	public MappingElement(Node node, OntologyConcept concept,
+			Map<SimilarityMetrics, Float> confidences) {
+		this.node = node;
+		this.concept = concept;
+		this.confidences = confidences;
 	}
 
 	public MappingElement(Node node, OntologyConcept concept) {
@@ -35,14 +38,6 @@ public class MappingElement {
 
 	public void setConcept(OntologyConcept concept) {
 		this.concept = concept;
-	}
-
-	public float getConfidence() {
-		return confidence;
-	}
-
-	public void setConfidence(float confidence) {
-		this.confidence = confidence;
 	}
 
 	@Override
@@ -78,8 +73,12 @@ public class MappingElement {
 
 	@Override
 	public String toString() {
-		return String.format("%s <-> %s/%s [%f]", node, concept.getUri(),
-				concept.getLabel(), confidence);
+		StringBuffer confidenceValues = new StringBuffer();
+		for (SimilarityMetrics metrics : confidences.keySet()) {
+			confidenceValues.append(String.format(" %f |", confidences
+					.get(metrics)));
+		}
+		return String.format("%s | %s | %s ", node.getName(), concept.getUri(),
+				confidenceValues.toString());
 	}
-
 }
