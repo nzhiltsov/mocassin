@@ -48,6 +48,11 @@
 			<artifactId>simmetrics</artifactId>
 			<version>1.6.2</version>
 		</dependency>
+		<dependency>
+			<groupId>com.google.common</groupId>
+			<artifactId>guava</artifactId>
+			<version>r06</version>
+		</dependency>
 		<!-- for Unit testing  -->
 		<dependency>
 			<groupId>junit</groupId>
