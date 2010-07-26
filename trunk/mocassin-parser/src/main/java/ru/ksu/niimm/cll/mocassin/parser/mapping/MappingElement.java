@@ -40,6 +40,10 @@ public class MappingElement {
 		this.concept = concept;
 	}
 
+	public Map<SimilarityMetrics, Float> getConfidences() {
+		return confidences;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

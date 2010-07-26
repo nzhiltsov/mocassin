@@ -1,12 +1,15 @@
 package ru.ksu.niimm.cll.mocassin.parser.mapping.matchers.impl;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Ordering;
 import com.google.inject.Inject;
 
 import ru.ksu.niimm.cll.mocassin.parser.Edge;
@@ -26,6 +29,7 @@ public class NameMatcher implements Matcher {
 	private OMDocOntologyFacade omdocOntologyFacade;
 	@Inject
 	private NameMatcherPropertiesLoader nameMatcherPropertiesLoader;
+	private static float STRING_SIMILARITY_THRESHOLD = 0.26087f;
 
 	@Override
 	public Mapping doMapping(List<Edge<Node, Node>> graph) {
@@ -39,30 +43,75 @@ public class NameMatcher implements Matcher {
 		return new Mapping(elements);
 	}
 
-	private void map(List<MappingElement> elements, Node node) {
+	private void map(List<MappingElement> elements, final Node node) {
+		if (!contains(elements, node)) {
 
-		for (OntologyConcept concept : getOntologyConcepts()) {
-			Map<SimilarityMetrics, Float> confidences = new HashMap<SimilarityMetrics, Float>();
-			for (SimilarityMetrics metric : SimilarityMetrics.values()) {
-				float similarity = getStringSimilarityEvaluator()
-						.getSimilarity(node.getName().toLowerCase(),
-								concept.getLabel().toLowerCase(), metric);
-				confidences.put(metric, similarity);
-			}
-			if (!contains(elements, node, concept)) {
-				elements.add(new MappingElement(node, concept, confidences));
+			Function<OntologyConcept, MappingElement> stringSimilarityFunction = new Function<OntologyConcept, MappingElement>() {
+
+				@Override
+				public MappingElement apply(OntologyConcept concept) {
+					Map<SimilarityMetrics, Float> confidences = computeConfidence(
+							node, concept);
+					boolean isSimilar = confidences
+							.get(SimilarityMetrics.SMITH_WATERMAN) >= STRING_SIMILARITY_THRESHOLD;
+					return isSimilar ? new MappingElement(node, concept,
+							confidences) : null;
+				}
+			};
+
+			Iterable<MappingElement> similarConcepts = Iterables.transform(
+					getOntologyConcepts(), stringSimilarityFunction);
+
+			Comparator<MappingElement> bySmithWaterman = new Comparator<MappingElement>() {
+
+				@Override
+				public int compare(MappingElement firstElement,
+						MappingElement secondElement) {
+					Float firstSim = firstElement.getConfidences().get(
+							SimilarityMetrics.SMITH_WATERMAN);
+					Float secondSim = secondElement.getConfidences().get(
+							SimilarityMetrics.SMITH_WATERMAN);
+					if (firstSim > secondSim) {
+						return 1;
+					}
+					if (firstSim < secondSim) {
+						return -1;
+					}
+					return 0;
+				}
+			};
+
+			MappingElement mostSimilarElement = Ordering.from(bySmithWaterman)
+					.nullsFirst().max(similarConcepts);
+			if (mostSimilarElement != null) {
+				elements.add(mostSimilarElement);
 			}
 
 		}
-
 	}
 
-	private boolean contains(List<MappingElement> elements, Node node,
+	/**
+	 * compute the mapping elements' confidence according to string similarity
+	 * measures
+	 * 
+	 * @param node
+	 * @param concept
+	 * @return
+	 */
+	private Map<SimilarityMetrics, Float> computeConfidence(Node node,
 			OntologyConcept concept) {
+		Map<SimilarityMetrics, Float> confidences = new HashMap<SimilarityMetrics, Float>();
+		float similarity = getStringSimilarityEvaluator().getSimilarity(
+				node.getName().toLowerCase(), concept.getLabel().toLowerCase(),
+				SimilarityMetrics.SMITH_WATERMAN);
+		confidences.put(SimilarityMetrics.SMITH_WATERMAN, similarity);
+		return confidences;
+	}
+
+	private boolean contains(List<MappingElement> elements, Node node) {
 		boolean contains = false;
 		for (MappingElement element : elements) {
-			contains = element.getNode().getName().equals(node.getName())
-					&& element.getConcept().equals(concept);
+			contains = element.getNode().getName().equals(node.getName());
 			if (contains) {
 				break;
 			}

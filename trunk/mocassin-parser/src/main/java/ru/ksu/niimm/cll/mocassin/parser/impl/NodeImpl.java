@@ -8,7 +8,7 @@ public class NodeImpl implements Node {
 
 	public NodeImpl(String id, String name) {
 		this.id = id;
-		this.name = name;
+		this.name = name.endsWith("*") ? name.substring(0, name.length() - 1) : name;
 	}
 
 	public String getId() {
