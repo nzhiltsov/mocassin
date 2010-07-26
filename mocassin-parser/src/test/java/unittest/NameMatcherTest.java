@@ -1,5 +1,6 @@
 package unittest;
 
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -21,6 +22,7 @@ import ru.ksu.niimm.cll.mocassin.parser.mapping.matchers.Matcher;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
 import ru.ksu.niimm.ose.ontology.OntologyModule;
 
+import com.google.common.collect.Ordering;
 import com.google.inject.Inject;
 import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
@@ -36,7 +38,7 @@ public class NameMatcherTest {
 
 	@Before
 	public void init() throws Exception {
-		InputStream in = this.getClass().getResourceAsStream("/example.tex");
+		 InputStream in = this.getClass().getResourceAsStream("/example.tex");
 		Reader reader = new InputStreamReader(in);
 		getParser().load(reader);
 		graph = getParser().getGraph();
@@ -45,16 +47,37 @@ public class NameMatcherTest {
 	@Test
 	public void testDoMapping() {
 		Mapping mapping = getMatcher().doMapping(getGraph());
-//		print(mapping);
+		print(mapping);
 	}
 
 	private void print(Mapping mapping) {
 		List<MappingElement> elements = mapping.getElements();
-		Collections.sort(elements, new ConfidenceComparator());
-		for (MappingElement element : elements) {
+		Comparator<MappingElement> byNodeName = new Comparator<MappingElement>() {
+
+			@Override
+			public int compare(MappingElement o1, MappingElement o2) {
+				return o1.getNode().getName().compareTo(o2.getNode().getName());
+			}
+		};
+
+		Comparator<MappingElement> byConceptUri = new Comparator<MappingElement>() {
+
+			@Override
+			public int compare(MappingElement o1, MappingElement o2) {
+				return o1.getConcept().getUri().compareTo(
+						o2.getConcept().getUri());
+			}
+		};
+
+		Ordering<MappingElement> mappingElementOrdering = Ordering.from(
+				byNodeName).compound(byConceptUri);
+
+		List<MappingElement> sortedElements = mappingElementOrdering
+				.sortedCopy(elements);
+
+		for (MappingElement element : sortedElements) {
 			System.out.println(element);
 		}
-
 	}
 
 	public Parser getParser() {
@@ -69,16 +92,4 @@ public class NameMatcherTest {
 		return graph;
 	}
 
-	private static class ConfidenceComparator implements
-			Comparator<MappingElement> {
-
-		@Override
-		public int compare(MappingElement o1, MappingElement o2) {
-			if (o1.getConfidence() == o2.getConfidence()) {
-				return 0;
-			}
-			return o1.getConfidence() > o2.getConfidence() ? -1 : 1;
-		}
-
-	}
 }
