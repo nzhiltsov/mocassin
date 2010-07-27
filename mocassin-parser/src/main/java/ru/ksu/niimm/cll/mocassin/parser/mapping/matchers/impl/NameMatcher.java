@@ -53,7 +53,7 @@ public class NameMatcher implements Matcher {
 					Map<SimilarityMetrics, Float> confidences = computeConfidence(
 							node, concept);
 					boolean isSimilar = confidences
-							.get(SimilarityMetrics.SMITH_WATERMAN) >= STRING_SIMILARITY_THRESHOLD;
+							.get(SimilarityMetrics.N_GRAM) >= STRING_SIMILARITY_THRESHOLD;
 					return isSimilar ? new MappingElement(node, concept,
 							confidences) : null;
 				}
@@ -68,9 +68,9 @@ public class NameMatcher implements Matcher {
 				public int compare(MappingElement firstElement,
 						MappingElement secondElement) {
 					Float firstSim = firstElement.getConfidences().get(
-							SimilarityMetrics.SMITH_WATERMAN);
+							SimilarityMetrics.N_GRAM);
 					Float secondSim = secondElement.getConfidences().get(
-							SimilarityMetrics.SMITH_WATERMAN);
+							SimilarityMetrics.N_GRAM);
 					if (firstSim > secondSim) {
 						return 1;
 					}
@@ -103,8 +103,8 @@ public class NameMatcher implements Matcher {
 		Map<SimilarityMetrics, Float> confidences = new HashMap<SimilarityMetrics, Float>();
 		float similarity = getStringSimilarityEvaluator().getSimilarity(
 				node.getName().toLowerCase(), concept.getLabel().toLowerCase(),
-				SimilarityMetrics.SMITH_WATERMAN);
-		confidences.put(SimilarityMetrics.SMITH_WATERMAN, similarity);
+				SimilarityMetrics.N_GRAM);
+		confidences.put(SimilarityMetrics.N_GRAM, similarity);
 		return confidences;
 	}
 
