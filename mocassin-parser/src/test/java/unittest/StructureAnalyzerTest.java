@@ -1,5 +1,6 @@
 package unittest;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -24,9 +25,11 @@ import ru.ksu.niimm.cll.mocassin.parser.ParserModule;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
 import ru.ksu.niimm.cll.mocassin.parser.latex.TreeParser;
 import ru.ksu.niimm.cll.mocassin.parser.latex.analyzer.impl.StructureAnalyzer;
+import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
+import ru.ksu.niimm.ose.ontology.OntologyModule;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext(ParserModule.class)
+@GuiceContext( { ParserModule.class, OntologyModule.class, VirtuosoModule.class })
 public class StructureAnalyzerTest {
 	@Inject
 	private StructureAnalyzer structureAnalyzer;
@@ -38,7 +41,7 @@ public class StructureAnalyzerTest {
 	@Before
 	public void init() throws LexerException, IOException {
 		InputStream in = this.getClass().getResourceAsStream("/example.tex");
-		InputStreamReader reader = new InputStreamReader(in);
+		InputStreamReader reader = new InputStreamReader(in, "IBM866");
 		this.model = this.treeParser.parseTree(reader);
 	}
 
@@ -51,6 +54,7 @@ public class StructureAnalyzerTest {
 			if (edge.getContext().getEdgeType() == EdgeType.REFERS_TO) {
 				count++;
 			}
+			System.out.println(edge);
 		}
 		Assert.assertEquals(getModel().getReferences().size(), count);
 	}
