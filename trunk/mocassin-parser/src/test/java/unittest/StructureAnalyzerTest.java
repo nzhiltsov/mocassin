@@ -40,8 +40,8 @@ public class StructureAnalyzerTest {
 
 	@Before
 	public void init() throws LexerException, IOException {
-		InputStream in = this.getClass().getResourceAsStream("/example.tex");
-		InputStreamReader reader = new InputStreamReader(in, "IBM866");
+		 InputStream in = this.getClass().getResourceAsStream("/example.tex");
+		InputStreamReader reader = new InputStreamReader(in, "utf8");
 		this.model = this.treeParser.parseTree(reader);
 	}
 
@@ -53,8 +53,9 @@ public class StructureAnalyzerTest {
 		for (Edge<Node, Node> edge : edges) {
 			if (edge.getContext().getEdgeType() == EdgeType.REFERS_TO) {
 				count++;
+				System.out.println(edge);
 			}
-			System.out.println(edge);
+			
 		}
 		Assert.assertEquals(getModel().getReferences().size(), count);
 	}

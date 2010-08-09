@@ -9,6 +9,7 @@ import net.sourceforge.texlipse.model.ReferenceEntry;
 public class LatexDocumentModel {
 	private OutlineNode documentRoot;
 	private List<OutlineNode> tree;
+	private String docId;
 	/**
 	 * list of references ordered by their "key" values
 	 */
@@ -52,6 +53,14 @@ public class LatexDocumentModel {
 
 	public void setDocumentRoot(OutlineNode documentRoot) {
 		this.documentRoot = documentRoot;
+	}
+
+	public String getDocId() {
+		return docId;
+	}
+
+	public void setDocId(String docId) {
+		this.docId = docId;
 	}
 
 }

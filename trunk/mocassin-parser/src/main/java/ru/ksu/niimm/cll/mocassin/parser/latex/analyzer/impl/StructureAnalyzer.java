@@ -60,6 +60,7 @@ public class StructureAnalyzer implements Analyzer {
 				Node from = new NodeImpl(nodeId, node.getName());
 				for (OutlineNode child : children) {
 					if (child.getType() == OutlineNode.TYPE_LABEL) {
+						from.setLabelText(child.getName());
 						List<DocumentReference> references = getReferencesForLabel(child);
 						List<Edge<Node, Node>> referenceEdges = getReferenceEdges(
 								references, from);
@@ -83,6 +84,8 @@ public class StructureAnalyzer implements Analyzer {
 		String childId = String.format("%d:%d", toNode.getBeginLine(), toNode
 				.getOffsetOnLine());
 		Node to = new NodeImpl(childId, toNode.getName());
+		String labelText = getLabelText(toNode);
+		to.setLabelText(labelText);
 		EdgeContext context = new EdgeContextImpl(edgeType);
 		edge.connect(from, to, context);
 		return edge;
@@ -94,9 +97,28 @@ public class StructureAnalyzer implements Analyzer {
 		String childId = String.format("%d:%d", fromNode.getBeginLine(),
 				fromNode.getOffsetOnLine());
 		Node from = new NodeImpl(childId, fromNode.getName());
+		String labelText = getLabelText(fromNode);
+		from.setLabelText(labelText);
 		EdgeContext context = new EdgeContextImpl(edgeType);
 		edge.connect(from, to, context);
 		return edge;
+	}
+
+	/**
+	 * get label text of given node
+	 * 
+	 * @param fromNode
+	 * @return
+	 */
+	private String getLabelText(OutlineNode fromNode) {
+		if (fromNode.getChildren() != null) {
+			for (OutlineNode child : fromNode.getChildren()) {
+				if (child.getType() == OutlineNode.TYPE_LABEL) {
+					return child.getName();
+				}
+			}
+		}
+		return null;
 	}
 
 	private List<Edge<Node, Node>> getReferenceEdges(
