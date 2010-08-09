@@ -16,4 +16,8 @@ public interface Node {
 	boolean equals(Object o);
 
 	int hashCode();
+
+	String getLabelText();
+
+	void setLabelText(String labelText);
 }

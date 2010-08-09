@@ -1,5 +1,7 @@
 package ru.ksu.niimm.cll.mocassin.parser;
 
+import ru.ksu.niimm.cll.mocassin.parser.applications.importance.ImportantNodeService;
+import ru.ksu.niimm.cll.mocassin.parser.applications.importance.impl.ImportantNodeServiceImpl;
 import ru.ksu.niimm.cll.mocassin.parser.latex.TreeParser;
 import ru.ksu.niimm.cll.mocassin.parser.latex.analyzer.AnalyzersProvider;
 import ru.ksu.niimm.cll.mocassin.parser.latex.analyzer.impl.AnalyzersProviderImpl;
@@ -26,6 +28,7 @@ public class ParserModule extends AbstractModule {
 		bind(Matcher.class).to(NameMatcher.class);
 		bind(NameMatcherPropertiesLoader.class).to(
 				NameMatcherPropertiesLoaderImpl.class);
+		bind(ImportantNodeService.class).to(ImportantNodeServiceImpl.class);
 	}
 
 }

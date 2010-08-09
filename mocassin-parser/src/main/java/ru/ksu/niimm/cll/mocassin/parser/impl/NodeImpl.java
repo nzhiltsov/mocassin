@@ -5,10 +5,20 @@ import ru.ksu.niimm.cll.mocassin.parser.Node;
 public class NodeImpl implements Node {
 	private String id;
 	private String name;
+	private String labelText;
 
 	public NodeImpl(String id, String name) {
 		this.id = id;
-		this.name = name.endsWith("*") ? name.substring(0, name.length() - 1) : name;
+		this.name = name.endsWith("*") ? name.substring(0, name.length() - 1)
+				: name;
+	}
+
+	public String getLabelText() {
+		return labelText;
+	}
+
+	public void setLabelText(String labelText) {
+		this.labelText = labelText;
 	}
 
 	public String getId() {
@@ -22,7 +32,7 @@ public class NodeImpl implements Node {
 
 	@Override
 	public String toString() {
-		return String.format("[%s/ %s]", getId(), getName());
+		return String.format("\"%s/ %s\"", getId(), getName());
 	}
 
 	@Override
