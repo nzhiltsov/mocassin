@@ -11,7 +11,7 @@ import ru.ksu.niimm.cll.mocassin.parser.Parser;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
 import ru.ksu.niimm.cll.mocassin.parser.latex.TreeParser;
 import ru.ksu.niimm.cll.mocassin.parser.latex.builder.Builder;
-import ru.ksu.niimm.cll.mocassin.parser.latex.builder.AnalyzersProvider;
+import ru.ksu.niimm.cll.mocassin.parser.latex.builder.BuildersProvider;
 
 import com.google.inject.Inject;
 
@@ -19,7 +19,7 @@ public class LatexParserImpl implements Parser {
 	@Inject
 	private TreeParser treeParser;
 	@Inject
-	private AnalyzersProvider analyzersProvider;
+	private BuildersProvider analyzersProvider;
 
 	private LatexDocumentModel model;
 
@@ -63,7 +63,7 @@ public class LatexParserImpl implements Parser {
 		return treeParser;
 	}
 
-	private AnalyzersProvider getAnalyzersProvider() {
+	private BuildersProvider getAnalyzersProvider() {
 		return analyzersProvider;
 	}
 
