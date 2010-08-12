@@ -1,4 +1,4 @@
-package ru.ksu.niimm.cll.mocassin.parser.latex.analyzer.impl;
+package ru.ksu.niimm.cll.mocassin.parser.latex.builder.impl;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -17,7 +17,7 @@ import ru.ksu.niimm.cll.mocassin.parser.impl.EdgeContextImpl;
 import ru.ksu.niimm.cll.mocassin.parser.impl.EdgeImpl;
 import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
-import ru.ksu.niimm.cll.mocassin.parser.latex.analyzer.Analyzer;
+import ru.ksu.niimm.cll.mocassin.parser.latex.builder.Builder;
 
 /**
  * Analyzer that builds graph with labels/references and containment relations
@@ -26,7 +26,7 @@ import ru.ksu.niimm.cll.mocassin.parser.latex.analyzer.Analyzer;
  * @author nzhiltsov
  * 
  */
-public class StructureAnalyzer implements Analyzer {
+public class StructureBuilder implements Builder {
 	private LatexDocumentModel model;
 
 	@Override

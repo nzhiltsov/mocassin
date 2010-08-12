@@ -3,8 +3,8 @@ package ru.ksu.niimm.cll.mocassin.parser;
 import ru.ksu.niimm.cll.mocassin.parser.applications.importance.ImportantNodeService;
 import ru.ksu.niimm.cll.mocassin.parser.applications.importance.impl.ImportantNodeServiceImpl;
 import ru.ksu.niimm.cll.mocassin.parser.latex.TreeParser;
-import ru.ksu.niimm.cll.mocassin.parser.latex.analyzer.AnalyzersProvider;
-import ru.ksu.niimm.cll.mocassin.parser.latex.analyzer.impl.AnalyzersProviderImpl;
+import ru.ksu.niimm.cll.mocassin.parser.latex.builder.AnalyzersProvider;
+import ru.ksu.niimm.cll.mocassin.parser.latex.builder.impl.BuildersProviderImpl;
 import ru.ksu.niimm.cll.mocassin.parser.latex.impl.LatexParserImpl;
 import ru.ksu.niimm.cll.mocassin.parser.latex.impl.TreeParserImpl;
 import ru.ksu.niimm.cll.mocassin.parser.mapping.matchers.Matcher;
@@ -22,7 +22,7 @@ public class ParserModule extends AbstractModule {
 	protected void configure() {
 		bind(Parser.class).to(LatexParserImpl.class);
 		bind(TreeParser.class).to(TreeParserImpl.class);
-		bind(AnalyzersProvider.class).to(AnalyzersProviderImpl.class);
+		bind(AnalyzersProvider.class).to(BuildersProviderImpl.class);
 		bind(StringSimilarityEvaluator.class).to(
 				StringSimilarityEvaluatorImpl.class);
 		bind(Matcher.class).to(NameMatcher.class);
