@@ -7,5 +7,7 @@ import ru.ksu.niimm.cll.mocassin.parser.Node;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
 
 public interface Builder {
-	List<Edge<Node, Node>> analyze(LatexDocumentModel model);
+
+	public abstract List<Edge<Node, Node>> analyze(LatexDocumentModel model);
+
 }

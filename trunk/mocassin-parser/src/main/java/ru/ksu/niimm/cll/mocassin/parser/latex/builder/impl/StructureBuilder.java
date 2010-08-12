@@ -29,6 +29,9 @@ import ru.ksu.niimm.cll.mocassin.parser.latex.builder.Builder;
 public class StructureBuilder implements Builder {
 	private LatexDocumentModel model;
 
+	/* (non-Javadoc)
+	 * @see ru.ksu.niimm.cll.mocassin.parser.latex.builder.impl.Builder#analyze(ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel)
+	 */
 	@Override
 	public List<Edge<Node, Node>> analyze(LatexDocumentModel model) {
 		prepareAnalysis(model);
