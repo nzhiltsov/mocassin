@@ -24,7 +24,7 @@ import ru.ksu.niimm.cll.mocassin.parser.Node;
 import ru.ksu.niimm.cll.mocassin.parser.ParserModule;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
 import ru.ksu.niimm.cll.mocassin.parser.latex.TreeParser;
-import ru.ksu.niimm.cll.mocassin.parser.latex.analyzer.impl.StructureAnalyzer;
+import ru.ksu.niimm.cll.mocassin.parser.latex.builder.impl.StructureBuilder;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
 import ru.ksu.niimm.ose.ontology.OntologyModule;
 
@@ -32,7 +32,7 @@ import ru.ksu.niimm.ose.ontology.OntologyModule;
 @GuiceContext( { ParserModule.class, OntologyModule.class, VirtuosoModule.class })
 public class StructureAnalyzerTest {
 	@Inject
-	private StructureAnalyzer structureAnalyzer;
+	private StructureBuilder structureAnalyzer;
 	@Inject
 	private TreeParser treeParser;
 
@@ -60,7 +60,7 @@ public class StructureAnalyzerTest {
 		Assert.assertEquals(getModel().getReferences().size(), count);
 	}
 
-	public StructureAnalyzer getStructureAnalyzer() {
+	public StructureBuilder getStructureAnalyzer() {
 		return structureAnalyzer;
 	}
 

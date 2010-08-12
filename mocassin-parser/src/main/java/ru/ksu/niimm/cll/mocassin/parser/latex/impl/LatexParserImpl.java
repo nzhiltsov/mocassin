@@ -10,8 +10,8 @@ import ru.ksu.niimm.cll.mocassin.parser.Node;
 import ru.ksu.niimm.cll.mocassin.parser.Parser;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
 import ru.ksu.niimm.cll.mocassin.parser.latex.TreeParser;
-import ru.ksu.niimm.cll.mocassin.parser.latex.analyzer.Analyzer;
-import ru.ksu.niimm.cll.mocassin.parser.latex.analyzer.AnalyzersProvider;
+import ru.ksu.niimm.cll.mocassin.parser.latex.builder.Builder;
+import ru.ksu.niimm.cll.mocassin.parser.latex.builder.AnalyzersProvider;
 
 import com.google.inject.Inject;
 
@@ -26,7 +26,7 @@ public class LatexParserImpl implements Parser {
 	@Override
 	public List<Edge<Node, Node>> getGraph() {
 		List<Edge<Node, Node>> graph = new ArrayList<Edge<Node, Node>>();
-		for (Analyzer analyzer : getAnalyzers()) {
+		for (Builder analyzer : getAnalyzers()) {
 			List<Edge<Node, Node>> edges = analyzer.analyze(getModel());
 			merge(graph, edges);
 		}
@@ -67,7 +67,7 @@ public class LatexParserImpl implements Parser {
 		return analyzersProvider;
 	}
 
-	public List<Analyzer> getAnalyzers() {
+	public List<Builder> getAnalyzers() {
 		return getAnalyzersProvider().get();
 	}
 

@@ -1,4 +1,4 @@
-package ru.ksu.niimm.cll.mocassin.parser.latex.analyzer;
+package ru.ksu.niimm.cll.mocassin.parser.latex.builder;
 
 import java.util.List;
 
@@ -6,6 +6,6 @@ import ru.ksu.niimm.cll.mocassin.parser.Edge;
 import ru.ksu.niimm.cll.mocassin.parser.Node;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
 
-public interface Analyzer {
+public interface Builder {
 	List<Edge<Node, Node>> analyze(LatexDocumentModel model);
 }
