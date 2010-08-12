@@ -1,0 +1,90 @@
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<parent>
+		<groupId>ru.ksu.niimm.cll.mocassin</groupId>
+		<artifactId>mocassin-pom</artifactId>
+		<version>1.0.0.4-SNAPSHOT</version>
+		<relativePath>../mocassin-pom</relativePath>
+	</parent>
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>ru.ksu.niimm.cll.mocassin</groupId>
+	<artifactId>mocassin-analyzer</artifactId>
+	<name>Mocassin Document Analyzer</name>
+	<version>1.0.0.4-SNAPSHOT</version>
+	<organization>
+		<name>N.G. Chebotarev Research Institute of Mathematics and Mechanics</name>
+		<url>http://cll.niimm.ksu.ru</url>
+	</organization>
+	<dependencies>
+		<dependency>
+			<groupId>ru.ksu.niimm.cll.mocassin</groupId>
+			<artifactId>mocassin-ontology</artifactId>
+			<version>1.0.0.4-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.inject</groupId>
+			<artifactId>guice</artifactId>
+		</dependency>
+	
+		<dependency>
+			<groupId>uk.ac.shef.wit</groupId>
+			<artifactId>simmetrics</artifactId>
+			<version>1.6.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.common</groupId>
+			<artifactId>guava</artifactId>
+			<version>r06</version>
+		</dependency>
+		<!--  For applications -->
+		<dependency>
+			<groupId>net.sf.jung</groupId>
+			<artifactId>jung-api</artifactId>
+			<version>2.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.jung</groupId>
+			<artifactId>jung-algorithms</artifactId>
+			<version>2.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.jung</groupId>
+			<artifactId>jung-graph-impl</artifactId>
+			<version>2.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sourceforge.collections</groupId>
+			<artifactId>collections-generic</artifactId>
+			<version>4.01</version>
+		</dependency>
+		<!-- for Unit testing  -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.mycila</groupId>
+			<artifactId>mycila-guice</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.mycila</groupId>
+			<artifactId>mycila-log</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.mycila</groupId>
+			<artifactId>mycila-plugin</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.mycila.testing</groupId>
+			<artifactId>mycila-testing-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.mycila.testing.plugins</groupId>
+			<artifactId>mycila-testing-guice</artifactId>
+		</dependency>
+
+
+	</dependencies>
+</project>
