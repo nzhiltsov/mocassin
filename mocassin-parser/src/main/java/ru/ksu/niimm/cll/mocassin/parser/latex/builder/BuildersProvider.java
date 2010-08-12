@@ -2,6 +2,6 @@ package ru.ksu.niimm.cll.mocassin.parser.latex.builder;
 
 import java.util.List;
 
-public interface AnalyzersProvider {
+public interface BuildersProvider {
 	List<Builder> get();
 }

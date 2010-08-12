@@ -5,9 +5,9 @@ import java.util.Collections;
 import java.util.List;
 
 import ru.ksu.niimm.cll.mocassin.parser.latex.builder.Builder;
-import ru.ksu.niimm.cll.mocassin.parser.latex.builder.AnalyzersProvider;
+import ru.ksu.niimm.cll.mocassin.parser.latex.builder.BuildersProvider;
 
-public class BuildersProviderImpl implements AnalyzersProvider {
+public class BuildersProviderImpl implements BuildersProvider {
 
 	@Override
 	public List<Builder> get() {

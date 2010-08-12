@@ -25,12 +25,10 @@ import ru.ksu.niimm.cll.mocassin.parser.ParserModule;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
 import ru.ksu.niimm.cll.mocassin.parser.latex.TreeParser;
 import ru.ksu.niimm.cll.mocassin.parser.latex.builder.impl.StructureBuilder;
-import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
-import ru.ksu.niimm.ose.ontology.OntologyModule;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext( { ParserModule.class, OntologyModule.class, VirtuosoModule.class })
-public class StructureAnalyzerTest {
+@GuiceContext( { ParserModule.class})
+public class StructureBuilderTest {
 	@Inject
 	private StructureBuilder structureAnalyzer;
 	@Inject
