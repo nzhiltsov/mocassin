@@ -1,5 +1,6 @@
 package ru.ksu.niimm.cll.mocassin.parser;
 
+import java.io.InputStream;
 import java.io.Reader;
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
  * 
  */
 public interface Parser {
-	void load(Reader reader) throws Exception;
+	void load(InputStream inputStream) throws Exception;
 
 	List<Edge<Node, Node>> getGraph();
 }
