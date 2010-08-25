@@ -8,6 +8,6 @@ import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
 
 public interface Builder {
 
-	public abstract List<Edge<Node, Node>> analyze(LatexDocumentModel model);
+	List<Edge<Node, Node>> analyze(LatexDocumentModel model);
 
 }

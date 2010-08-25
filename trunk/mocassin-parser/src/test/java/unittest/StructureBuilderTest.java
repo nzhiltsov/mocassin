@@ -20,14 +20,14 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 
 import ru.ksu.niimm.cll.mocassin.parser.Edge;
 import ru.ksu.niimm.cll.mocassin.parser.EdgeType;
+import ru.ksu.niimm.cll.mocassin.parser.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.parser.Node;
-import ru.ksu.niimm.cll.mocassin.parser.ParserModule;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
 import ru.ksu.niimm.cll.mocassin.parser.latex.TreeParser;
 import ru.ksu.niimm.cll.mocassin.parser.latex.builder.Builder;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext( { ParserModule.class})
+@GuiceContext( { LatexParserModule.class})
 public class StructureBuilderTest {
 	@Inject
 	private Builder structureAnalyzer;

@@ -1,5 +1,7 @@
 package ru.ksu.niimm.cll.mocassin.parser.latex.impl;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +48,8 @@ public class LatexParserImpl implements Parser {
 	}
 
 	@Override
-	public void load(Reader reader) throws Exception {
+	public void load(InputStream inputStream) throws Exception {
+		Reader reader = new InputStreamReader(inputStream);
 		LatexDocumentModel parsedModel = getTreeParser().parseTree(reader);
 		setModel(parsedModel);
 	}
