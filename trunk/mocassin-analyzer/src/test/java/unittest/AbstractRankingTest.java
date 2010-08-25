@@ -23,8 +23,8 @@ import org.junit.runner.RunWith;
 import ru.ksu.niimm.cll.mocassin.analyzer.AnalyzerModule;
 import ru.ksu.niimm.cll.mocassin.analyzer.importance.ImportantNodeService;
 import ru.ksu.niimm.cll.mocassin.parser.Edge;
+import ru.ksu.niimm.cll.mocassin.parser.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.parser.Node;
-import ru.ksu.niimm.cll.mocassin.parser.ParserModule;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
 import ru.ksu.niimm.cll.mocassin.parser.latex.TreeParser;
 import ru.ksu.niimm.cll.mocassin.parser.latex.builder.impl.StructureBuilder;
@@ -36,7 +36,7 @@ import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext( { AnalyzerModule.class, ParserModule.class, OntologyModule.class, VirtuosoModule.class })
+@GuiceContext( { AnalyzerModule.class, LatexParserModule.class, OntologyModule.class, VirtuosoModule.class })
 public class AbstractRankingTest {
 	private static final String DOCS_DIR = "/OTHER_DATA/arxiv_papers/main_results";
 	private static final String DOC_ID = "f000022.tex";
