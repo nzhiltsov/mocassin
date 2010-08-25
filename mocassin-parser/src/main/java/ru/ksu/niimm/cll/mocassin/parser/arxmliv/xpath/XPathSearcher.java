@@ -12,21 +12,21 @@ import org.w3c.dom.NodeList;
 
 public interface XPathSearcher {
 	/**
-	 * return for given document a map which keys are reference nodes, and values are lists of the
-	 * corresponding sibling nodes
+	 * return reference list
 	 * 
-	 * @param given document
+	 * @param given
+	 *            document
 	 * @return
 	 * @throws XPathExpressionException
 	 */
-	Map<Node, List<Node>> findReferencesMap(Document doc)
-			throws XPathExpressionException;
+	NodeList findReferences(Document doc) throws XPathExpressionException;
+
 	/**
 	 * return set of nodes that represent structural elements
 	 * 
 	 * @param doc
 	 * @return
-	 * @throws XPathExpressionException 
+	 * @throws XPathExpressionException
 	 */
 	NodeList findStructureNodes(Document doc) throws XPathExpressionException;
 }

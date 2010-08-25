@@ -1,5 +1,7 @@
 package ru.ksu.niimm.cll.mocassin.parser.arxmliv.xpath.impl;
 
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -17,6 +19,7 @@ import org.w3c.dom.NodeList;
 import ru.ksu.niimm.cll.mocassin.parser.arxmliv.xpath.XPathSearcher;
 
 public class XPathSearcherImpl implements XPathSearcher {
+	private static final String FIND_REFERENCES_EXPRESSION = "//*[name()='ref']";
 	private static final String FIND_STRUCTURE_NODES_EXPRESSION;
 
 	static {
@@ -36,29 +39,34 @@ public class XPathSearcherImpl implements XPathSearcher {
 
 	private XPathFactory xpathFactory;
 
-	public XPathSearcherImpl() {
+	private XPathExpression findReferencesExpression;
+
+	private XPathExpression findStructureNodesExpression;
+
+	public XPathSearcherImpl() throws XPathExpressionException {
 		this.xpathFactory = XPathFactory.newInstance();
+		XPath findReferencesXPath = getXpathFactory().newXPath();
+		this.findReferencesExpression = findReferencesXPath
+				.compile(FIND_REFERENCES_EXPRESSION);
+		XPath findStructureNodesXPath = getXpathFactory().newXPath();
+		this.findStructureNodesExpression = findStructureNodesXPath
+				.compile(FIND_STRUCTURE_NODES_EXPRESSION);
 	}
 
 	@Override
-	public Map<Node, List<Node>> findReferencesMap(Document doc)
+	public NodeList findReferences(Document doc)
 			throws XPathExpressionException {
-		XPath findReferencesXPath = getXpathFactory().newXPath();
-		XPathExpression findReferencesExpression = findReferencesXPath
-				.compile("//*[name()='ref']");
-		Object result = findReferencesExpression.evaluate(doc,
+		Object result = getFindReferencesExpression().evaluate(doc,
 				XPathConstants.NODESET);
 		NodeList referenceNodes = (NodeList) result;
-		throw new UnsupportedOperationException("not yet implemented");
+		return referenceNodes;
 	}
 
 	@Override
 	public NodeList findStructureNodes(Document doc)
 			throws XPathExpressionException {
-		XPath findStructureNodesXPath = getXpathFactory().newXPath();
-		XPathExpression findStructureNodesExpression = findStructureNodesXPath
-				.compile(FIND_STRUCTURE_NODES_EXPRESSION);
-		Object result = findStructureNodesExpression.evaluate(doc,
+
+		Object result = getFindStructureNodesExpression().evaluate(doc,
 				XPathConstants.NODESET);
 		NodeList structureNodes = (NodeList) result;
 		return structureNodes;
@@ -66,6 +74,14 @@ public class XPathSearcherImpl implements XPathSearcher {
 
 	public XPathFactory getXpathFactory() {
 		return xpathFactory;
+	}
+
+	public XPathExpression getFindReferencesExpression() {
+		return findReferencesExpression;
+	}
+
+	public XPathExpression getFindStructureNodesExpression() {
+		return findStructureNodesExpression;
 	}
 
 }
