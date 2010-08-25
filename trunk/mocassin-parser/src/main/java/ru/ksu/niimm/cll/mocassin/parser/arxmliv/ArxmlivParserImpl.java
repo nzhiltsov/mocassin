@@ -27,7 +27,9 @@ public class ArxmlivParserImpl implements Parser {
 	@Inject
 	private XPathSearcher xpathSearcher;
 
-	private List<Edge<Node, Node>> graph;
+	private NodeList referenceNodes;
+
+	private NodeList structureNodes;
 
 	public ArxmlivParserImpl() throws ParserConfigurationException {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -37,15 +39,21 @@ public class ArxmlivParserImpl implements Parser {
 
 	@Override
 	public List<Edge<Node, Node>> getGraph() {
+		for (int i = 0; i < getReferenceNodes().getLength(); i++) {
+			org.w3c.dom.Node refNode = getReferenceNodes().item(i);
+			org.w3c.dom.Node labelAttr = refNode.getAttributes().getNamedItem(
+					"labelref");
+			org.w3c.dom.Node toNode = findStructureNodeByLabel(labelAttr
+					.getTextContent());
+		}
 		throw new UnsupportedOperationException("not yet implemented");
 	}
 
 	@Override
 	public void load(InputStream inputStream) throws Exception {
 		Document doc = getDocumentBuilder().parse(inputStream);
-		NodeList structureNodes = getXpathSearcher().findStructureNodes(doc);
-		structureNodes.item(0);
-		// getXpathSearcher().findReferencesMap(doc);
+		this.structureNodes = getXpathSearcher().findStructureNodes(doc);
+		this.referenceNodes = getXpathSearcher().findReferences(doc);
 
 	}
 
@@ -55,6 +63,31 @@ public class ArxmlivParserImpl implements Parser {
 
 	public XPathSearcher getXpathSearcher() {
 		return xpathSearcher;
+	}
+
+	public NodeList getReferenceNodes() {
+		return referenceNodes;
+	}
+
+	public NodeList getStructureNodes() {
+		return structureNodes;
+	}
+
+	public org.w3c.dom.Node findStructureNodeByLabel(String label) {
+		for (int i = 0; i < getStructureNodes().getLength(); i++) {
+			org.w3c.dom.Node node = getStructureNodes().item(i);
+			org.w3c.dom.Node labelsAttr = node.getAttributes().getNamedItem(
+					"labels");
+			String text = labelsAttr.getTextContent();
+			if (text.equals(label)) {
+				return node;
+			}
+		}
+		throw new RuntimeException(
+				String
+						.format(
+								"The document is in inconsistent state. Couldn't find node with label: %s",
+								label));
 	}
 
 }
