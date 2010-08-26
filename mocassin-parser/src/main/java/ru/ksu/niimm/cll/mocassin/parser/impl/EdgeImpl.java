@@ -30,8 +30,7 @@ public class EdgeImpl implements Edge<Node, Node> {
 
 	@Override
 	public String toString() {
-		return String
-				.format("%s -> %s;", getFrom(), getTo());
+		return String.format("%s|%s|%s", getFrom(), getTo(), getContext());
 	}
 
 }

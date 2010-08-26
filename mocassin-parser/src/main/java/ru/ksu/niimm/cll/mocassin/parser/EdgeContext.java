@@ -8,4 +8,8 @@ package ru.ksu.niimm.cll.mocassin.parser;
  */
 public interface EdgeContext {
 	EdgeType getEdgeType();
+
+	String getAroundText();
+
+	void setAroundText(String aroundText);
 }

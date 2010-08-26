@@ -36,6 +36,14 @@ public class ArxmlivParserTest {
 		getParser().load(getInputStream());
 		List<Edge<Node, Node>> graph = getParser().getGraph();
 		Assert.assertTrue(!graph.isEmpty());
+		print(graph);
+	}
+
+	private static void print(List<Edge<Node, Node>> graph) {
+		for (Edge<Node, Node> edge : graph) {
+			System.out.println(edge);
+		}
+
 	}
 
 	public Parser getParser() {
