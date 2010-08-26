@@ -1,12 +1,19 @@
 package ru.ksu.niimm.cll.mocassin.parser.impl;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
+
 import ru.ksu.niimm.cll.mocassin.parser.Edge;
 import ru.ksu.niimm.cll.mocassin.parser.EdgeContext;
 import ru.ksu.niimm.cll.mocassin.parser.Node;
 
+@XmlType(name = "edge")
 public class EdgeImpl implements Edge<Node, Node> {
+	@XmlElement
 	private Node from;
+	@XmlElement
 	private Node to;
+	@XmlElement
 	private EdgeContext context;
 
 	@Override
