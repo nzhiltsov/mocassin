@@ -1,11 +1,26 @@
 package ru.ksu.niimm.cll.mocassin.parser.impl;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.XmlValue;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
+
 import ru.ksu.niimm.cll.mocassin.parser.Node;
 
+@XmlType
+@XmlAccessorType(XmlAccessType.FIELD)
 public class NodeImpl implements Node {
 	private String id;
+	@XmlElement
 	private String name;
+	@XmlTransient
 	private String labelText;
+
+	private NodeImpl() {
+	}
 
 	public NodeImpl(String id, String name) {
 		this.id = id;

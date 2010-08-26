@@ -1,5 +1,9 @@
 package ru.ksu.niimm.cll.mocassin.parser;
 
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import ru.ksu.niimm.cll.mocassin.parser.impl.adapters.NodeAdapter;
+
 /**
  * 
  * Document part
@@ -7,6 +11,7 @@ package ru.ksu.niimm.cll.mocassin.parser;
  * @author nzhiltsov
  * 
  */
+@XmlJavaTypeAdapter(NodeAdapter.class)
 public interface Node {
 
 	String getId();

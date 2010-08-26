@@ -52,7 +52,11 @@ public class ArxmlivParserImpl implements Parser {
 					ArxmlivFormatConstants.LABEL_REF_ATTRIBUTE_NAME);
 			org.w3c.dom.Node toNode = findStructureNodeByLabel(labelAttr
 					.getTextContent());
+			if (toNode == null)
+				continue;
 			org.w3c.dom.Node fromNode = findEnclosingStructureNode(refNode);
+			if (fromNode == null)
+				continue;
 			Edge<Node, Node> edge = createEdge(fromNode, toNode, refNode);
 			graph.add(edge);
 		}
@@ -94,11 +98,7 @@ public class ArxmlivParserImpl implements Parser {
 				return node;
 			}
 		}
-		throw new RuntimeException(
-				String
-						.format(
-								"The document is in inconsistent state. Couldn't find node with label: %s",
-								label));
+		return null;
 	}
 
 	private org.w3c.dom.Node findEnclosingStructureNode(org.w3c.dom.Node refNode) {
@@ -109,12 +109,7 @@ public class ArxmlivParserImpl implements Parser {
 			}
 			parent = parent.getParentNode();
 		}
-
-		throw new RuntimeException(
-				String
-						.format(
-								"The document is inconsistent state. Couldn't find structure node of the reference node: %s",
-								refNode));
+		return null;
 	}
 
 	private static String generateId(org.w3c.dom.Node node) {
@@ -127,9 +122,14 @@ public class ArxmlivParserImpl implements Parser {
 		}
 		StringBuffer sb = new StringBuffer();
 		while (!path.isEmpty()) {
-			sb.append(path.pop());
+			String pathName = path.pop();
+			if (pathName != null) {
+				sb.append("/");
+				sb.append(pathName);
+			}
 		}
-		return sb.toString();
+		return String.format("%s@%s", sb.toString(), Integer.toHexString(node
+				.hashCode()));
 	}
 
 	private Edge<Node, Node> createEdge(org.w3c.dom.Node fromNode,

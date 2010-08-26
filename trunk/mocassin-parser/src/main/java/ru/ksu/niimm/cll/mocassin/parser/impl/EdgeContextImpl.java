@@ -1,11 +1,18 @@
 package ru.ksu.niimm.cll.mocassin.parser.impl;
 
+import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.XmlValue;
+
 import ru.ksu.niimm.cll.mocassin.parser.EdgeContext;
 import ru.ksu.niimm.cll.mocassin.parser.EdgeType;
 
+@XmlType
 public class EdgeContextImpl implements EdgeContext {
 	private EdgeType type;
 	private String aroundText;
+
+	private EdgeContextImpl() {
+	}
 
 	public EdgeContextImpl(EdgeType type) {
 		this.type = type;

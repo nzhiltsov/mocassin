@@ -1,8 +1,12 @@
 package unittest;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.List;
+
+import javax.xml.bind.JAXBException;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -13,6 +17,8 @@ import ru.ksu.niimm.cll.mocassin.parser.ArxmlivParserModule;
 import ru.ksu.niimm.cll.mocassin.parser.Edge;
 import ru.ksu.niimm.cll.mocassin.parser.Node;
 import ru.ksu.niimm.cll.mocassin.parser.Parser;
+import unittest.util.GraphContainer;
+import unittest.util.JaxbUtil;
 
 import com.google.inject.Inject;
 import com.mycila.testing.junit.MycilaJunitRunner;
@@ -33,24 +39,24 @@ public class ArxmlivParserTest {
 
 	@Test
 	public void testGetGraph() throws Exception {
-		getParser().load(getInputStream());
+
+		getParser().load(getIn());
 		List<Edge<Node, Node>> graph = getParser().getGraph();
 		Assert.assertTrue(!graph.isEmpty());
-		print(graph);
+		// save(graph, file.getName());
 	}
 
-	private static void print(List<Edge<Node, Node>> graph) {
-		for (Edge<Node, Node> edge : graph) {
-			System.out.println(edge);
-		}
-
+	private static void save(List<Edge<Node, Node>> graph, String filename)
+			throws FileNotFoundException, JAXBException {
+		JaxbUtil.marshall(new GraphContainer(String.format(
+				"/tmp/ref-contexts/%s-refcontext.xml", filename), graph));
 	}
 
 	public Parser getParser() {
 		return parser;
 	}
 
-	public InputStream getInputStream() {
+	public InputStream getIn() {
 		return in;
 	}
 
