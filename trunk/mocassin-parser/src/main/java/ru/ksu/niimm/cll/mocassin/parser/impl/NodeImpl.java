@@ -32,7 +32,7 @@ public class NodeImpl implements Node {
 
 	@Override
 	public String toString() {
-		return String.format("\"%s/ %s\"", getId(), getName());
+		return getName();
 	}
 
 	@Override

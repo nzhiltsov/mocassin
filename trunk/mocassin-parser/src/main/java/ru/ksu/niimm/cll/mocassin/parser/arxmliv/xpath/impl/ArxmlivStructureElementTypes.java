@@ -1,8 +1,8 @@
 package ru.ksu.niimm.cll.mocassin.parser.arxmliv.xpath.impl;
 
 public enum ArxmlivStructureElementTypes {
-	SECTION("section"), SUBSECTION("subsection"), THEOREM("theorem"), EQUATION(
-			"equation");
+	SECTION("section"), SUBSECTION("subsection"), THEOREM("theorem"), PROOF(
+			"proof"), EQUATION("equation");
 
 	private String label;
 
@@ -15,4 +15,12 @@ public enum ArxmlivStructureElementTypes {
 		return this.label;
 	}
 
+	public static boolean hasName(String name) {
+		for (ArxmlivStructureElementTypes type : values()) {
+			if (type.toString().equals(name)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
