@@ -17,4 +17,8 @@ public interface EdgeContext {
 	String getAroundText();
 
 	void setAroundText(String aroundText);
+
+	void setRefId(String refId);
+
+	String getRefId();
 }

@@ -10,7 +10,11 @@ import ru.ksu.niimm.cll.mocassin.parser.EdgeType;
 public class EdgeContextImpl implements EdgeContext {
 	private EdgeType type;
 	private String aroundText;
+	private String refId;
 
+	/**
+	 * no-args constructor for JAXB
+	 */
 	private EdgeContextImpl() {
 	}
 
@@ -29,6 +33,14 @@ public class EdgeContextImpl implements EdgeContext {
 
 	public void setAroundText(String aroundText) {
 		this.aroundText = aroundText;
+	}
+
+	public String getRefId() {
+		return refId;
+	}
+
+	public void setRefId(String refId) {
+		this.refId = refId;
 	}
 
 	@Override
