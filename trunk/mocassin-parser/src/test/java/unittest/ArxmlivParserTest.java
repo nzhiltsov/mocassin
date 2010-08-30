@@ -3,6 +3,7 @@ package unittest;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -19,6 +20,7 @@ import ru.ksu.niimm.cll.mocassin.parser.Node;
 import ru.ksu.niimm.cll.mocassin.parser.Parser;
 import unittest.util.GraphContainer;
 import unittest.util.JaxbUtil;
+import unittest.util.XmlUtils;
 
 import com.google.inject.Inject;
 import com.mycila.testing.junit.MycilaJunitRunner;
@@ -30,25 +32,34 @@ public class ArxmlivParserTest {
 	@Inject
 	private Parser parser;
 
-	private InputStream in;
+	private File[] files;
 
 	@Before
 	public void init() throws FileNotFoundException {
-		this.in = this.getClass().getResourceAsStream("/example.tex.xml");
+		// this.in = this.getClass().getResourceAsStream("/example.tex.xml");
+		File dir = new File("/OTHER_DATA/arxmliv-dataset/modified");
+		this.files = dir.listFiles();
 	}
 
 	@Test
 	public void testGetGraph() throws Exception {
 
-		getParser().load(getIn());
-		List<Edge<Node, Node>> graph = getParser().getGraph();
-		Assert.assertTrue(!graph.isEmpty());
-		// save(graph, file.getName());
+		for (File file : getFiles()) {
+			InputStream in = new FileInputStream(file);
+			getParser().load(in);
+			List<Edge<Node, Node>> graph = getParser().getGraph();
+			save(graph, file.getName());
+			in.close();
+		}
 	}
 
 	private static void save(List<Edge<Node, Node>> graph, String filename)
-			throws FileNotFoundException, JAXBException {
-		JaxbUtil.marshall(new GraphContainer(String.format(
+			throws JAXBException, IOException {
+		/*
+		 * JaxbUtil.marshall(new GraphContainer(String.format(
+		 * "/tmp/ref-contexts/%s-refcontext.xml", filename), graph));
+		 */
+		XmlUtils.save(new GraphContainer(String.format(
 				"/tmp/ref-contexts/%s-refcontext.xml", filename), graph));
 	}
 
@@ -56,8 +67,8 @@ public class ArxmlivParserTest {
 		return parser;
 	}
 
-	public InputStream getIn() {
-		return in;
+	public File[] getFiles() {
+		return files;
 	}
 
 }

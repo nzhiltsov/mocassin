@@ -2,10 +2,15 @@ package unittest.util;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.StringWriter;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.Marshaller.Listener;
+import javax.xml.transform.stream.StreamResult;
 
 import ru.ksu.niimm.cll.mocassin.parser.Edge;
 import ru.ksu.niimm.cll.mocassin.parser.EdgeContext;
@@ -29,10 +34,10 @@ public class JaxbUtil {
 	}
 
 	public static void marshall(GraphContainer graphContainer)
-			throws JAXBException, FileNotFoundException {
+			throws JAXBException, IOException {
 
 		Marshaller marshaller = jaxbContext.createMarshaller();
-		marshaller.setProperty("jaxb.formatted.output", true);
+		marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 		marshaller.marshal(graphContainer, new FileOutputStream(graphContainer
 				.getFileName()));
 	}

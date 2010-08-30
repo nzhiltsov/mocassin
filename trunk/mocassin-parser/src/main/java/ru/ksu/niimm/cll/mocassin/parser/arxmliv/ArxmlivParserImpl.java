@@ -1,6 +1,7 @@
 package ru.ksu.niimm.cll.mocassin.parser.arxmliv;
 
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -8,6 +9,15 @@ import java.util.Stack;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Result;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -44,7 +54,7 @@ public class ArxmlivParserImpl implements Parser {
 	}
 
 	@Override
-	public List<Edge<Node, Node>> getGraph() {
+	public List<Edge<Node, Node>> getGraph() throws Exception {
 		List<Edge<Node, Node>> graph = new ArrayList<Edge<Node, Node>>();
 		for (int i = 0; i < getReferenceNodes().getLength(); i++) {
 			org.w3c.dom.Node refNode = getReferenceNodes().item(i);
@@ -133,26 +143,33 @@ public class ArxmlivParserImpl implements Parser {
 	}
 
 	private Edge<Node, Node> createEdge(org.w3c.dom.Node fromNode,
-			org.w3c.dom.Node toNode, org.w3c.dom.Node refNode) {
+			org.w3c.dom.Node toNode, org.w3c.dom.Node refNode)
+			throws TransformerFactoryConfigurationError, TransformerException {
 		Edge<Node, Node> edge = new EdgeImpl();
 		Node from = convertNode(fromNode);
 		Node to = convertNode(toNode);
 		EdgeContext edgeContext = new EdgeContextImpl(EdgeType.REFERS_TO);
-		String aroundText = extractReferenceAroundText(refNode);
+		String aroundText = extractAroundReferenceText(refNode);
 		edgeContext.setAroundText(aroundText);
+		org.w3c.dom.Node refIdNode = refNode.getAttributes().getNamedItem(
+				ArxmlivFormatConstants.REF_ID_ATTRIBUTE_NAME);
+		edgeContext.setRefId(refIdNode.getTextContent());
 		edge.connect(from, to, edgeContext);
 		return edge;
 	}
 
-	private static String extractReferenceAroundText(org.w3c.dom.Node refNode) {
+	private static String extractAroundReferenceText(org.w3c.dom.Node refNode)
+			throws TransformerFactoryConfigurationError, TransformerException {
 		org.w3c.dom.Node parent = refNode.getParentNode();
-		StringBuffer sb = new StringBuffer();
-		for (int i = 0; i < parent.getChildNodes().getLength(); i++) {
-			org.w3c.dom.Node child = parent.getChildNodes().item(i);
-			String text = child != refNode ? child.getTextContent() : "<ref>";
-			sb.append(text);
-		}
-		return sb.toString();
+		StringWriter writer = new StringWriter();
+		Transformer transformer = TransformerFactory.newInstance()
+				.newTransformer();
+		transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+		transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+		transformer.setOutputProperty(OutputKeys.INDENT, "no");
+		transformer.transform(new DOMSource(parent), new StreamResult(writer));
+		String xml = writer.toString();
+		return xml;
 	}
 
 	private Node convertNode(org.w3c.dom.Node node) {
