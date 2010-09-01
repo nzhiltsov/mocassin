@@ -32,10 +32,12 @@ public class XmlUtils {
 		}
 		sb.append("\n</graphContainer>");
 		FileWriter fileWriter = new FileWriter(graphContainer.getFileName());
-		fileWriter.write(sb.toString());
-		fileWriter.flush();
-		fileWriter.close();
+		try {
+			fileWriter.write(sb.toString());
+			fileWriter.flush();
+		} finally {
+			fileWriter.close();
+		}
 	}
-
 
 }

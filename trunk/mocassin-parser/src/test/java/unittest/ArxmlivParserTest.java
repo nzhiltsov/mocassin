@@ -46,10 +46,13 @@ public class ArxmlivParserTest {
 
 		for (File file : getFiles()) {
 			InputStream in = new FileInputStream(file);
-			getParser().load(in);
-			List<Edge<Node, Node>> graph = getParser().getGraph();
-			save(graph, file.getName());
-			in.close();
+			try {
+				getParser().load(in);
+				List<Edge<Node, Node>> graph = getParser().getGraph();
+				save(graph, file.getName());
+			} finally {
+				in.close();
+			}
 		}
 	}
 
