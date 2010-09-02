@@ -25,7 +25,7 @@
 		</dependency>
 		<dependency>
 			<groupId>gate</groupId>
-			<artifactId>gate</artifactId>
+			<artifactId>gate-core</artifactId>
 			<version>5.2.1</version>
 		</dependency>
 
