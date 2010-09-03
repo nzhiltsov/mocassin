@@ -27,7 +27,7 @@ import ru.ksu.niimm.cll.mocassin.parser.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.parser.Node;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
 import ru.ksu.niimm.cll.mocassin.parser.latex.TreeParser;
-import ru.ksu.niimm.cll.mocassin.parser.latex.builder.impl.StructureBuilder;
+import ru.ksu.niimm.cll.mocassin.parser.latex.builder.Builder;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
 import ru.ksu.niimm.ose.ontology.OntologyModule;
 
@@ -41,7 +41,7 @@ public class AbstractRankingTest {
 	private static final String DOCS_DIR = "/OTHER_DATA/arxiv_papers/main_results";
 	private static final String DOC_ID = "f000022.tex";
 	@Inject
-	private StructureBuilder structureAnalyzer;
+	private Builder structureAnalyzer;
 	@Inject
 	private ImportantNodeService importantNodeService;
 	@Inject
@@ -94,7 +94,7 @@ public class AbstractRankingTest {
 		return result;
 	}
 
-	public StructureBuilder getStructureAnalyzer() {
+	public Builder getStructureAnalyzer() {
 		return structureAnalyzer;
 	}
 

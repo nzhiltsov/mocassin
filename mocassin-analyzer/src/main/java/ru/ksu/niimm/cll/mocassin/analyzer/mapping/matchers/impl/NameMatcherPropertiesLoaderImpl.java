@@ -33,8 +33,11 @@ public class NameMatcherPropertiesLoaderImpl implements
 				.getClassLoader();
 		URL url = loader.getResource(PROPERTIES_FILENAME);
 		InputStream stream = url.openStream();
-		properties.load(stream);
-		stream.close();
+		try {
+			properties.load(stream);
+		} finally {
+			stream.close();
+		}
 		return properties;
 	}
 
