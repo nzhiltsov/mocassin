@@ -1,5 +1,6 @@
 package ru.ksu.niimm.cll.mocassin.nlp.impl;
 
+import java.util.Iterator;
 import java.util.List;
 
 import ru.ksu.niimm.cll.mocassin.nlp.Feature;
@@ -52,9 +53,21 @@ public class ReferenceContextImpl implements ReferenceContext {
 		this.features = features;
 	}
 
+	public String featureListToString() {
+		StringBuilder sb = new StringBuilder();
+		Iterator<Feature> it = getFeatures().iterator();
+		while (it.hasNext()) {
+			sb.append(it.next().toString());
+			if (it.hasNext()) {
+				sb.append("|");
+			}
+		}
+		return sb.toString();
+	}
+
 	@Override
 	public String toString() {
-		return String.format("%s|%s|%s|%s", getFilename(), getRefid(),
-				getFrom(), getTo());
+		return String.format("%s|%s|%s|%s|%s", getFilename(), getRefid(),
+				getFrom(), getTo(), featureListToString());
 	}
 }

@@ -1,32 +1,18 @@
 package ru.ksu.niimm.cll.mocassin.nlp.impl;
 
-import java.util.Vector;
-
 import ru.ksu.niimm.cll.mocassin.nlp.Feature;
 
-public class PosFeature implements Feature {
-	private Vector<String> leftTags;
-	private Vector<String> rightTags;
+public class PosFeature extends AbstractPartionableFeature implements Feature {
 
-	public PosFeature(Vector<String> leftTags, Vector<String> rightTags) {
-		this.leftTags = leftTags;
-		this.rightTags = rightTags;
+	public PosFeature(String[] left, String[] right) {
+		super(left, right);
 	}
 
-	public Vector<String> getLeftTags() {
-		return leftTags;
+	public String[] getLeftPosTags() {
+		return left;
 	}
 
-	public void setLeftTags(Vector<String> leftTags) {
-		this.leftTags = leftTags;
+	public String[] getRightPosTags() {
+		return right;
 	}
-
-	public Vector<String> getRightTags() {
-		return rightTags;
-	}
-
-	public void setRightTags(Vector<String> rightTags) {
-		this.rightTags = rightTags;
-	}
-
 }

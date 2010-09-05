@@ -90,6 +90,6 @@
 
 	</dependencies>
 	<properties>
-		<gate.home>/WINDOWS/programs/gate-5.2.1-build3581-BIN</gate.home>
+		<gate.home>/OTHER_DATA/projects/thirdparty/gate-5.2.1-build3581-BIN</gate.home>
 	</properties>
 </project>
