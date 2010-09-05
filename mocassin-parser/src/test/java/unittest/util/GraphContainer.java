@@ -18,6 +18,7 @@ import ru.ksu.niimm.cll.mocassin.parser.Node;
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class GraphContainer {
+	private String rootDir;
 	@XmlTransient
 	private String fileName;
 	@XmlElementWrapper(name = "edges")
@@ -27,9 +28,19 @@ public class GraphContainer {
 	public GraphContainer() {
 	}
 
-	public GraphContainer(String fileName, List<Edge<Node, Node>> graph) {
+	public GraphContainer(String rootDir, String fileName,
+			List<Edge<Node, Node>> graph) {
+		this.rootDir = rootDir;
 		this.fileName = fileName;
 		this.graph = graph;
+	}
+
+	public String getRootDir() {
+		return rootDir;
+	}
+
+	public void setRootDir(String rootDir) {
+		this.rootDir = rootDir;
 	}
 
 	public List<Edge<Node, Node>> getGraph() {

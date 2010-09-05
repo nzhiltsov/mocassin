@@ -58,12 +58,13 @@ public class ArxmlivParserTest {
 
 	private static void save(List<Edge<Node, Node>> graph, String filename)
 			throws JAXBException, IOException {
-		/*
-		 * JaxbUtil.marshall(new GraphContainer(String.format(
-		 * "/tmp/ref-contexts/%s-refcontext.xml", filename), graph));
-		 */
-		XmlUtils.save(new GraphContainer(String.format(
-				"/tmp/ref-contexts/%s-refcontext.xml", filename), graph));
+		String cuttedFileName = cutExtension(filename);
+		XmlUtils.save(new GraphContainer("/tmp/ref-contexts", cuttedFileName,
+				graph));
+	}
+
+	private static String cutExtension(String filename) {
+		return filename.substring(0, filename.indexOf("."));
 	}
 
 	public Parser getParser() {
