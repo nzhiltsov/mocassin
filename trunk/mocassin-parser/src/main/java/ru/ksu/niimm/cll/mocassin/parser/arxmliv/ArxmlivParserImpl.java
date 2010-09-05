@@ -138,7 +138,7 @@ public class ArxmlivParserImpl implements Parser {
 				sb.append(pathName);
 			}
 		}
-		return String.format("%s@%s", sb.toString(), Integer.toHexString(node
+		return String.format("%s:%s", sb.toString(), Integer.toHexString(node
 				.hashCode()));
 	}
 

@@ -1,5 +1,6 @@
 package unittest.util;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -11,33 +12,46 @@ import ru.ksu.niimm.cll.mocassin.parser.Node;
 
 public class XmlUtils {
 
-	private static final String HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<graphContainer>\n";
+	private static final String HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
 
 	private XmlUtils() {
 	}
 
 	public static void save(GraphContainer graphContainer) throws IOException {
-		StringBuffer sb = new StringBuffer();
-		sb.append(HEADER);
+		String rootDir = graphContainer.getRootDir();
+		String filename = graphContainer.getFileName();
+		
+		File dirPerDocument = new File(String
+				.format("%s/%s", rootDir, filename));
+		if (!dirPerDocument.mkdir())
+			throw new RuntimeException(String.format(
+					"couldn't create folder per document:%s", dirPerDocument
+							.toString()));
+
+		
 		for (Edge<Node, Node> edge : graphContainer.getGraph()) {
+			
 			String fromStr = edge.getFrom().getName();
+			String fromIdStr = edge.getFrom().getId();
 			String toStr = edge.getTo().getName();
+			String toIdStr = edge.getTo().getId();
 			String aroundTextStr = edge.getContext().getAroundText();
 			String refIdStr = edge.getContext().getRefId();
+			StringBuffer sb = new StringBuffer();
+			sb.append(HEADER);
 			sb
 					.append(String
 							.format(
-									"<aroundText from=\"%s\" to=\"%s\" refid=\"%s\">%s</aroundText>",
-									fromStr, toStr, refIdStr, aroundTextStr));
-		}
-		sb.append("\n</graphContainer>");
-		FileWriter fileWriter = new FileWriter(graphContainer.getFileName());
-		try {
+									"<aroundText from=\"%s\" fromId=\"%s\" to=\"%s\" toId=\"%s\" refid=\"%s\" filename=\"%s\">%s</aroundText>",
+									fromStr, fromIdStr, toStr, toIdStr,
+									refIdStr, filename, aroundTextStr));
+			FileWriter fileWriter = new FileWriter(String.format("%s/%s",
+					dirPerDocument.getAbsolutePath(), refIdStr));
 			fileWriter.write(sb.toString());
 			fileWriter.flush();
-		} finally {
 			fileWriter.close();
 		}
+
 	}
 
 }
