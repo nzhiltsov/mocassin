@@ -1,6 +1,7 @@
 package ru.ksu.niimm.cll.mocassin.nlp.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -179,6 +180,12 @@ public class AnnotationAnalyzerImpl implements AnnotationAnalyzer {
 		return referenceContext;
 	}
 
+	private String[] makeEmptyStringArray(int length) {
+		String[] a = new String[length];
+		Arrays.fill(a, "");
+		return a;
+	}
+
 	/**
 	 * convert given annotations to features
 	 * 
@@ -188,10 +195,10 @@ public class AnnotationAnalyzerImpl implements AnnotationAnalyzer {
 	 */
 	private List<Feature> convertToFeatures(Annotation refAnnotation,
 			List<Annotation> withinWindowTokens) {
-		String[] leftWordVector = new String[tokenWindowSize];
-		String[] rightWordVector = new String[tokenWindowSize];
-		String[] leftPosVector = new String[tokenWindowSize];
-		String[] rightPosVector = new String[tokenWindowSize];
+		String[] leftWordVector = makeEmptyStringArray(tokenWindowSize);
+		String[] rightWordVector = makeEmptyStringArray(tokenWindowSize);
+		String[] leftPosVector = makeEmptyStringArray(tokenWindowSize);
+		String[] rightPosVector = makeEmptyStringArray(tokenWindowSize);
 
 		int refIndex = withinWindowTokens.indexOf(refAnnotation);
 		for (int l = 1; refIndex - l >= 0; l++) {

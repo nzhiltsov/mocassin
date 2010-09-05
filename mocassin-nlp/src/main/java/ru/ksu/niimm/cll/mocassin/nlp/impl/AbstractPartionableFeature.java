@@ -1,8 +1,10 @@
 package ru.ksu.niimm.cll.mocassin.nlp.impl;
 
+
 public class AbstractPartionableFeature {
 
 	protected String[] left;
+
 	protected String[] right;
 
 	public AbstractPartionableFeature(String[] left, String[] right) {
