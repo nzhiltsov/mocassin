@@ -57,7 +57,9 @@ public class FeatureExtractorImpl implements FeatureExtractor {
 					getDocumentLrType(), features);
 			ReferenceContext referenceContext = getAnnotationAnalyzer()
 					.retrieveReferenceContext(document);
-			referenceContextList.add(referenceContext);
+			if (referenceContext != null) {
+				referenceContextList.add(referenceContext);
+			}
 		}
 		dataStore.close();
 		return referenceContextList;

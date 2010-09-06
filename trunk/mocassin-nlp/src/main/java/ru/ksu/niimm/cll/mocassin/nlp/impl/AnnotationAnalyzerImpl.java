@@ -48,6 +48,8 @@ public class AnnotationAnalyzerImpl implements AnnotationAnalyzer {
 				aroundTextAnnotation);
 		Annotation sentenceAnnotation = getSentenceAnnotation(document,
 				defaultAnnotations, refAnnotation);
+		if (sentenceAnnotation == null)
+			return null;
 		List<Annotation> withinWindowTokens = getTokensWithinWindow(
 				refAnnotation, defaultAnnotations, sentenceAnnotation);
 
@@ -120,7 +122,9 @@ public class AnnotationAnalyzerImpl implements AnnotationAnalyzer {
 				getProperty(SENTENCE_ANNOTATION_NAME_PROPERTY_KEY)).get(
 				refAnnotation.getStartNode().getOffset() - 1,
 				refAnnotation.getEndNode().getOffset() - 1);
-		if (sentences.size() != 1) {
+		if (sentences.size() == 0)
+			return null;
+		if (sentences.size() > 1) {
 			throw new RuntimeException(
 					String
 							.format(
