@@ -3,7 +3,10 @@ package ru.ksu.niimm.cll.mocassin.nlp.impl;
 import gate.Annotation;
 import gate.AnnotationSet;
 import gate.Document;
+import gate.util.OffsetComparator;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -82,20 +85,22 @@ public class StructuralElementSearcherImpl implements StructuralElementSearcher 
 							getProperty(GateFormatConstants.TITLE_ANNOTATION_NAME_PROPERTY_KEY))
 					.getContained(annotation.getStartNode().getOffset(),
 							annotation.getEndNode().getOffset());
+			List<Annotation> titleList = new ArrayList<Annotation>(titleSet);
+			Collections.sort(titleList, new OffsetComparator());
 			List<String> titleTokens = null;
-			if (titleSet.size() > 0) {
-				Annotation title = titleSet.iterator().next();
+			if (titleList.size() > 0) {
+				Annotation title = titleList.get(0);
 				titleTokens = getTokensFromTitle(title);
 			}
 
 			element.setTitleTokens(titleTokens);
 			return element;
 		}
-		
+
 		private List<String> getTokensFromTitle(Annotation title) {
 			List<String> titleTokens;
 			titleTokens = new LinkedList<String>();
-			
+
 			AnnotationSet tokenSet = getDocument()
 					.getAnnotations(
 							GateFormatConstants.DEFAULT_ANNOTATION_SET_NAME)
@@ -103,9 +108,10 @@ public class StructuralElementSearcherImpl implements StructuralElementSearcher 
 							getProperty(GateFormatConstants.TOKEN_ANNOTATION_NAME_PROPERTY_KEY))
 					.getContained(title.getStartNode().getOffset(),
 							title.getEndNode().getOffset());
-			Iterator<Annotation> it = tokenSet.iterator();
-			while (it.hasNext()) {
-				Annotation a = it.next();
+			List<Annotation> tokenList = new ArrayList<Annotation>(tokenSet);
+			Collections.sort(tokenList, new OffsetComparator());
+			for (int i = 0; i < tokenList.size(); i++) {
+				Annotation a = tokenList.get(i);
 				String token = (String) a.getFeatures().get("string");
 				titleTokens.add(token);
 			}
