@@ -1,5 +1,8 @@
 package ru.ksu.niimm.cll.mocassin.parser.arxmliv.xpath.impl;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public enum ArxmlivStructureElementTypes {
 	SECTION("section"), SUBSECTION("subsection"), THEOREM("theorem"), PROOF(
 			"proof"), EQUATION("equation");
@@ -22,5 +25,13 @@ public enum ArxmlivStructureElementTypes {
 			}
 		}
 		return false;
+	}
+
+	public static Set<String> toNameSet() {
+		Set<String> nameSet = new HashSet<String>();
+		for (ArxmlivStructureElementTypes type : values()) {
+			nameSet.add(type.toString());
+		}
+		return nameSet;
 	}
 }
