@@ -2,6 +2,7 @@ package ru.ksu.niimm.cll.mocassin.nlp;
 
 import ru.ksu.niimm.cll.mocassin.nlp.impl.AnnotationAnalyzerImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.FeatureExtractorImpl;
+import ru.ksu.niimm.cll.mocassin.nlp.impl.StructuralElementSearcherImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.util.NlpModulePropertiesLoader;
 import ru.ksu.niimm.cll.mocassin.nlp.util.impl.NlpModulePropertiesLoaderImpl;
 
@@ -15,6 +16,8 @@ public class NlpModule extends AbstractModule {
 		bind(NlpModulePropertiesLoader.class).to(
 				NlpModulePropertiesLoaderImpl.class);
 		bind(AnnotationAnalyzer.class).to(AnnotationAnalyzerImpl.class);
+		bind(StructuralElementSearcher.class).to(
+				StructuralElementSearcherImpl.class);
 	}
 
 }

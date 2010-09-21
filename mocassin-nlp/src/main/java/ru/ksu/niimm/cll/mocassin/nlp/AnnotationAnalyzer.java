@@ -4,4 +4,5 @@ import gate.Document;
 
 public interface AnnotationAnalyzer {
 	ReferenceContext retrieveReferenceContext(Document document);
+
 }

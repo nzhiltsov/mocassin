@@ -1,14 +1,13 @@
 package ru.ksu.niimm.cll.mocassin.nlp.util;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import gate.Corpus;
 import gate.Factory;
 import gate.creole.ResourceInstantiationException;
 import gate.util.ExtensionFileFilter;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 
 public class CorporaUtil {
 	private CorporaUtil() {
