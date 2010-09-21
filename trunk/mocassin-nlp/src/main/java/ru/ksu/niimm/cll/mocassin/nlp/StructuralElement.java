@@ -5,7 +5,7 @@ import java.util.List;
 import ru.ksu.niimm.cll.mocassin.parser.arxmliv.xpath.impl.ArxmlivStructureElementTypes;
 
 /**
- * Structural element is an element that corresponds to rhetorical structure
+ * Structural element is an element that belongs to rhetorical structure
  * (section, subsection) or mathematical structure (theorem, proof) of a
  * document
  * 
