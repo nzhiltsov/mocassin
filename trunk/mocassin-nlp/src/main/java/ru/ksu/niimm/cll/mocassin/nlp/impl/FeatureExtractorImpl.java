@@ -1,7 +1,5 @@
 package ru.ksu.niimm.cll.mocassin.nlp.impl;
 
-import gate.Annotation;
-import gate.AnnotationSet;
 import gate.DataStore;
 import gate.Document;
 import gate.Factory;
@@ -9,22 +7,18 @@ import gate.FeatureMap;
 import gate.Gate;
 import gate.persist.SerialDataStore;
 import gate.util.GateException;
-import gate.util.OffsetComparator;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Vector;
-
-import com.google.inject.Inject;
 
 import ru.ksu.niimm.cll.mocassin.nlp.AnnotationAnalyzer;
-import ru.ksu.niimm.cll.mocassin.nlp.Feature;
 import ru.ksu.niimm.cll.mocassin.nlp.FeatureExtractor;
 import ru.ksu.niimm.cll.mocassin.nlp.ReferenceContext;
+import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
+import ru.ksu.niimm.cll.mocassin.nlp.StructuralElementSearcher;
 import ru.ksu.niimm.cll.mocassin.nlp.util.NlpModulePropertiesLoader;
+
+import com.google.inject.Inject;
 
 public class FeatureExtractorImpl implements FeatureExtractor {
 
@@ -38,6 +32,8 @@ public class FeatureExtractorImpl implements FeatureExtractor {
 	private NlpModulePropertiesLoader nlpModulePropertiesLoader;
 	@Inject
 	private AnnotationAnalyzer annotationAnalyzer;
+	@Inject
+	private StructuralElementSearcher structuralElementSearcher;
 
 	@Override
 	public List<ReferenceContext> getReferenceContextList() throws Exception {
@@ -55,11 +51,9 @@ public class FeatureExtractorImpl implements FeatureExtractor {
 			features.put(DataStore.LR_ID_FEATURE_NAME, documentLrId);
 			Document document = (Document) Factory.createResource(
 					getDocumentLrType(), features);
-			ReferenceContext referenceContext = getAnnotationAnalyzer()
-					.retrieveReferenceContext(document);
-			if (referenceContext != null) {
-				referenceContextList.add(referenceContext);
-			}
+			List<StructuralElement> structuralElements = getStructuralElementSearcher()
+					.retrieve(document);
+			throw new UnsupportedOperationException("n.y.i.");
 		}
 		dataStore.close();
 		return referenceContextList;
@@ -71,6 +65,10 @@ public class FeatureExtractorImpl implements FeatureExtractor {
 
 	public AnnotationAnalyzer getAnnotationAnalyzer() {
 		return annotationAnalyzer;
+	}
+
+	public StructuralElementSearcher getStructuralElementSearcher() {
+		return structuralElementSearcher;
 	}
 
 	private String getDocumentLrType() {

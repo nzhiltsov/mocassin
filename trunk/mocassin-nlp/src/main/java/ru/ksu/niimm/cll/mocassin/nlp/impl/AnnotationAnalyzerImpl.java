@@ -1,25 +1,27 @@
 package ru.ksu.niimm.cll.mocassin.nlp.impl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import com.google.inject.Inject;
-
 import gate.Annotation;
 import gate.AnnotationSet;
 import gate.Document;
 import gate.Factory;
 import gate.FeatureMap;
 import gate.util.OffsetComparator;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import ru.ksu.niimm.cll.mocassin.nlp.AnnotationAnalyzer;
 import ru.ksu.niimm.cll.mocassin.nlp.Feature;
 import ru.ksu.niimm.cll.mocassin.nlp.ReferenceContext;
+import ru.ksu.niimm.cll.mocassin.nlp.gate.GateFormatConstants;
 import ru.ksu.niimm.cll.mocassin.nlp.util.NlpModulePropertiesLoader;
 
+import com.google.inject.Inject;
+
 public class AnnotationAnalyzerImpl implements AnnotationAnalyzer {
-	private static final String TOKEN_ANNOTATION_NAME_PROPERTY_KEY = "token.annotation.name";
+
 	private static final String SENTENCE_ANNOTATION_NAME_PROPERTY_KEY = "sentence.annotation.name";
 	private static final String REF_FEATURE_NAME_PROPERTY_KEY = "ref.feature.name";
 	private static final String AROUND_TEXT_FEATURE_NAME_PROPERTY_KEY = "around.text.feature.name";
@@ -27,9 +29,7 @@ public class AnnotationAnalyzerImpl implements AnnotationAnalyzer {
 	private static final String FROM_FEATURE_NAME_PROPERTY_KEY = "from.feature.name";
 	private static final String FILENAME_FEATURE_NAME_PROPERTY_KEY = "filename.feature.name";
 	private static final String REFID_FEATURE_NAME_PROPERTY_KEY = "refid.feature.name";
-	private static final String ARXMLIV_MARKUP_NAME_PROPERTY_KEY = "arxmliv.markup.name";
 
-	private static final String DEFAULT_ANNOTATION_SET_NAME = "";
 	@Inject
 	private NlpModulePropertiesLoader nlpModulePropertiesLoader;
 
@@ -39,9 +39,9 @@ public class AnnotationAnalyzerImpl implements AnnotationAnalyzer {
 	public ReferenceContext retrieveReferenceContext(Document document) {
 		initTokenWindowSize();
 		AnnotationSet arxmlivTags = document
-				.getAnnotations(getProperty(ARXMLIV_MARKUP_NAME_PROPERTY_KEY));
+				.getAnnotations(getProperty(GateFormatConstants.ARXMLIV_MARKUP_NAME_PROPERTY_KEY));
 		AnnotationSet defaultAnnotations = document
-				.getAnnotations(DEFAULT_ANNOTATION_SET_NAME);
+				.getAnnotations(GateFormatConstants.DEFAULT_ANNOTATION_SET_NAME);
 		Annotation aroundTextAnnotation = getAroundTextAnnotation(document,
 				arxmlivTags);
 		Annotation refAnnotation = findRefAnnotation(document, arxmlivTags,
@@ -149,9 +149,11 @@ public class AnnotationAnalyzerImpl implements AnnotationAnalyzer {
 			AnnotationSet defaultAnnotations, Annotation sentenceAnnotation) {
 		FeatureMap tokenFeatures = Factory.newFeatureMap();
 		tokenFeatures.put("kind", "word");
-		AnnotationSet tokens = defaultAnnotations.get(
-				getProperty(TOKEN_ANNOTATION_NAME_PROPERTY_KEY), tokenFeatures)
-				.getContained(sentenceAnnotation.getStartNode().getOffset(),
+		AnnotationSet tokens = defaultAnnotations
+				.get(
+						getProperty(GateFormatConstants.TOKEN_ANNOTATION_NAME_PROPERTY_KEY),
+						tokenFeatures).getContained(
+						sentenceAnnotation.getStartNode().getOffset(),
 						sentenceAnnotation.getEndNode().getOffset());
 		List tokensList = new ArrayList(tokens);
 		tokensList.add(refAnnotation);
