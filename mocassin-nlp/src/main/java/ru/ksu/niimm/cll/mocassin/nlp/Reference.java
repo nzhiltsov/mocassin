@@ -9,11 +9,15 @@ import java.util.List;
  * 
  */
 public interface Reference {
-	String getId();
+	int getId();
+	
+	String getDocumentName();
 
 	StructuralElement getFrom();
 
 	StructuralElement getTo();
 
 	List<String> getSentenceTokens();
+	
+	void setSentenceTokens(List<String> sentenceTokens);
 }
