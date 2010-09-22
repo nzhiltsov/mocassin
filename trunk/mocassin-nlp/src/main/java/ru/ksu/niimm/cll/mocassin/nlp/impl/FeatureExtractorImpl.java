@@ -10,14 +10,18 @@ import gate.util.GateException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import ru.ksu.niimm.cll.mocassin.nlp.AnnotationAnalyzer;
 import ru.ksu.niimm.cll.mocassin.nlp.FeatureExtractor;
+import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.ReferenceContext;
+import ru.ksu.niimm.cll.mocassin.nlp.ReferenceSearcher;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElementSearcher;
 import ru.ksu.niimm.cll.mocassin.nlp.util.NlpModulePropertiesLoader;
 
+import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
 public class FeatureExtractorImpl implements FeatureExtractor {
@@ -33,30 +37,34 @@ public class FeatureExtractorImpl implements FeatureExtractor {
 	@Inject
 	private AnnotationAnalyzer annotationAnalyzer;
 	@Inject
-	private StructuralElementSearcher structuralElementSearcher;
+	private ReferenceSearcher referenceSearcher;
 
 	@Override
-	public List<ReferenceContext> getReferenceContextList() throws Exception {
+	public Map<String, List<Reference>> getReferencesPerDocument() throws Exception {
 		initialize();
 		SerialDataStore dataStore = new SerialDataStore(
 				getNlpModulePropertiesLoader().get(
 						GATE_STORAGE_DIR_PROPERTY_KEY));
 		dataStore.open();
-		List documents = dataStore.getLrIds(getDocumentLrType());
-		List<ReferenceContext> referenceContextList = new ArrayList<ReferenceContext>();
-		for (Object documentLrId : documents) {
+		Map<String, List<Reference>> map = Maps.newHashMap();;
+		try {
+			List documents = dataStore.getLrIds(getDocumentLrType());
+			
+			for (Object documentLrId : documents) {
 
-			FeatureMap features = Factory.newFeatureMap();
-			features.put(DataStore.DATASTORE_FEATURE_NAME, dataStore);
-			features.put(DataStore.LR_ID_FEATURE_NAME, documentLrId);
-			Document document = (Document) Factory.createResource(
-					getDocumentLrType(), features);
-			List<StructuralElement> structuralElements = getStructuralElementSearcher()
-					.retrieve(document);
-			throw new UnsupportedOperationException("n.y.i.");
+				FeatureMap features = Factory.newFeatureMap();
+				features.put(DataStore.DATASTORE_FEATURE_NAME, dataStore);
+				features.put(DataStore.LR_ID_FEATURE_NAME, documentLrId);
+				Document document = (Document) Factory.createResource(
+						getDocumentLrType(), features);
+				List<Reference> references = getReferenceSearcher().retrieve(
+						document);
+				map.put(document.getName(), references);
+			}
+		} finally {
+			dataStore.close();
 		}
-		dataStore.close();
-		return referenceContextList;
+		return map;
 	}
 
 	public NlpModulePropertiesLoader getNlpModulePropertiesLoader() {
@@ -67,13 +75,13 @@ public class FeatureExtractorImpl implements FeatureExtractor {
 		return annotationAnalyzer;
 	}
 
-	public StructuralElementSearcher getStructuralElementSearcher() {
-		return structuralElementSearcher;
-	}
-
 	private String getDocumentLrType() {
 		return getNlpModulePropertiesLoader().get(
 				GATE_DOCUMENT_LR_TYPE_PROPERTY_KEY);
+	}
+
+	public ReferenceSearcher getReferenceSearcher() {
+		return referenceSearcher;
 	}
 
 	private void initialize() throws GateException {

@@ -15,6 +15,7 @@ import java.util.Set;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElementSearcher;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateFormatConstants;
+import ru.ksu.niimm.cll.mocassin.nlp.util.AnnotationUtil;
 import ru.ksu.niimm.cll.mocassin.nlp.util.CollectionUtil;
 import ru.ksu.niimm.cll.mocassin.nlp.util.NlpModulePropertiesLoader;
 import ru.ksu.niimm.cll.mocassin.parser.arxmliv.xpath.impl.ArxmlivFormatConstants;
@@ -27,6 +28,8 @@ import com.google.inject.Inject;
 public class StructuralElementSearcherImpl implements StructuralElementSearcher {
 	@Inject
 	private NlpModulePropertiesLoader nlpModulePropertiesLoader;
+	@Inject
+	private AnnotationUtil annotationUtil;
 
 	@Override
 	public List<StructuralElement> retrieve(Document document) {
@@ -50,6 +53,15 @@ public class StructuralElementSearcherImpl implements StructuralElementSearcher 
 
 	public NlpModulePropertiesLoader getNlpModulePropertiesLoader() {
 		return nlpModulePropertiesLoader;
+	}
+
+	public AnnotationUtil getAnnotationUtil() {
+		return annotationUtil;
+	}
+
+	public List<String> getTokensForAnnotation(Document document,
+			Annotation annotation) {
+		return getAnnotationUtil().getTokensForAnnotation(document, annotation);
 	}
 
 	private class ExtractionFunction implements
@@ -90,32 +102,12 @@ public class StructuralElementSearcherImpl implements StructuralElementSearcher 
 			List<String> titleTokens = null;
 			if (titleList.size() > 0) {
 				Annotation title = titleList.get(0);
-				titleTokens = getTokensFromTitle(title);
+				titleTokens = getTokensForAnnotation(getDocument(), title);
 			}
 
 			element.setTitleTokens(titleTokens);
 			return element;
 		}
 
-		private List<String> getTokensFromTitle(Annotation title) {
-			List<String> titleTokens;
-			titleTokens = new LinkedList<String>();
-
-			AnnotationSet tokenSet = getDocument()
-					.getAnnotations(
-							GateFormatConstants.DEFAULT_ANNOTATION_SET_NAME)
-					.get(
-							getProperty(GateFormatConstants.TOKEN_ANNOTATION_NAME_PROPERTY_KEY))
-					.getContained(title.getStartNode().getOffset(),
-							title.getEndNode().getOffset());
-			List<Annotation> tokenList = new ArrayList<Annotation>(tokenSet);
-			Collections.sort(tokenList, new OffsetComparator());
-			for (int i = 0; i < tokenList.size(); i++) {
-				Annotation a = tokenList.get(i);
-				String token = (String) a.getFeatures().get("string");
-				titleTokens.add(token);
-			}
-			return titleTokens;
-		}
 	}
 }
