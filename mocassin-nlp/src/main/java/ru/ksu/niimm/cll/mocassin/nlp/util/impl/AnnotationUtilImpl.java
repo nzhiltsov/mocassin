@@ -20,8 +20,12 @@ public class AnnotationUtilImpl implements AnnotationUtil {
 	@Inject
 	private NlpModulePropertiesLoader nlpModulePropertiesLoader;
 
-	/* (non-Javadoc)
-	 * @see ru.ksu.niimm.cll.mocassin.nlp.util.impl.AnnotationUtil#getTokensForAnnotation(gate.Document, gate.Annotation)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * ru.ksu.niimm.cll.mocassin.nlp.util.impl.AnnotationUtil#getTokensForAnnotation
+	 * (gate.Document, gate.Annotation)
 	 */
 	public List<String> getTokensForAnnotation(Document document,
 			Annotation annotation) {
@@ -38,6 +42,9 @@ public class AnnotationUtilImpl implements AnnotationUtil {
 		Collections.sort(tokenList, new OffsetComparator());
 		for (int i = 0; i < tokenList.size(); i++) {
 			Annotation a = tokenList.get(i);
+			String kind = (String) a.getFeatures().get("kind");
+			if (!kind.equals("word"))
+				continue;
 			String token = (String) a.getFeatures().get("string");
 			titleTokens.add(token);
 		}
