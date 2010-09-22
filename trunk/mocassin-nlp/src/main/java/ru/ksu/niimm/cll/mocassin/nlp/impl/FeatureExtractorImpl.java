@@ -40,16 +40,18 @@ public class FeatureExtractorImpl implements FeatureExtractor {
 	private ReferenceSearcher referenceSearcher;
 
 	@Override
-	public Map<String, List<Reference>> getReferencesPerDocument() throws Exception {
+	public Map<String, List<Reference>> getReferencesPerDocument()
+			throws Exception {
 		initialize();
 		SerialDataStore dataStore = new SerialDataStore(
 				getNlpModulePropertiesLoader().get(
 						GATE_STORAGE_DIR_PROPERTY_KEY));
 		dataStore.open();
-		Map<String, List<Reference>> map = Maps.newHashMap();;
+		Map<String, List<Reference>> map = Maps.newHashMap();
+		;
 		try {
 			List documents = dataStore.getLrIds(getDocumentLrType());
-			
+
 			for (Object documentLrId : documents) {
 
 				FeatureMap features = Factory.newFeatureMap();
@@ -60,6 +62,7 @@ public class FeatureExtractorImpl implements FeatureExtractor {
 				List<Reference> references = getReferenceSearcher().retrieve(
 						document);
 				map.put(document.getName(), references);
+				document.cleanup();
 			}
 		} finally {
 			dataStore.close();
