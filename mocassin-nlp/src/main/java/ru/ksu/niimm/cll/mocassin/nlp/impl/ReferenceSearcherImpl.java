@@ -7,6 +7,7 @@ import gate.Document;
 import java.util.List;
 
 import com.google.common.base.Function;
+import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 
@@ -30,24 +31,29 @@ public class ReferenceSearcherImpl implements ReferenceSearcher {
 
 	private List<StructuralElement> structuralElements;
 
+	private Document document;
+
 	@Override
 	public List<Reference> retrieve(Document document) {
-		loadStructuralElements(document);
+		setDocument(document);
+		loadStructuralElements();
 
 		AnnotationSet refAnnotations = document
 				.getAnnotations(
 						getProperty(GateFormatConstants.ARXMLIV_MARKUP_NAME_PROPERTY_KEY))
 				.get(
 						getProperty(GateFormatConstants.ARXMLIV_REF_ANNOTATION_PROPERTY_KEY));
-		Function<Annotation, Reference> extractFunction = new ExtractFunction(
-				document);
+		Iterable<Annotation> filteredRefAnnotations = Iterables.filter(
+				refAnnotations, new NotInMathPredicate());
+
 		Iterable<Reference> referenceIterable = Iterables.transform(
-				refAnnotations, extractFunction);
+				filteredRefAnnotations, new ExtractFunction());
 		return CollectionUtil.asList(referenceIterable);
 	}
 
-	private void loadStructuralElements(Document document) {
-		setStructuralElements(getStructuralElementSearcher().retrieve(document));
+	private void loadStructuralElements() {
+		setStructuralElements(getStructuralElementSearcher().retrieve(
+				getDocument()));
 	}
 
 	public StructuralElementSearcher getStructuralElementSearcher() {
@@ -62,6 +68,14 @@ public class ReferenceSearcherImpl implements ReferenceSearcher {
 		return nlpModulePropertiesLoader;
 	}
 
+	public Document getDocument() {
+		return document;
+	}
+
+	private void setDocument(Document document) {
+		this.document = document;
+	}
+
 	public AnnotationUtil getAnnotationUtil() {
 		return annotationUtil;
 	}
@@ -71,16 +85,36 @@ public class ReferenceSearcherImpl implements ReferenceSearcher {
 		return getAnnotationUtil().getTokensForAnnotation(document, annotation);
 	}
 
+	/**
+	 * Predicate which goal is to filter out all the references in math
+	 * expressions
+	 * 
+	 * @author nzhiltsov
+	 * 
+	 */
+	private class NotInMathPredicate implements Predicate<Annotation> {
+
+		@Override
+		public boolean apply(Annotation refAnnotation) {
+
+			AnnotationSet coveringMathAnnotations = getDocument()
+					.getAnnotations(
+							getProperty(GateFormatConstants.ARXMLIV_MARKUP_NAME_PROPERTY_KEY))
+					.getCovering(
+							getProperty(GateFormatConstants.ARXMLIV_MATH_ANNOTATION_PROPERTY_KEY),
+							refAnnotation.getStartNode().getOffset(),
+							refAnnotation.getEndNode().getOffset());
+			return coveringMathAnnotations.isEmpty();
+		}
+	}
+
+	/**
+	 * Transformation from reference annotations to DAOs
+	 * 
+	 * @author nzhiltsov
+	 * 
+	 */
 	private class ExtractFunction implements Function<Annotation, Reference> {
-		private Document document;
-
-		public ExtractFunction(Document document) {
-			this.document = document;
-		}
-
-		public Document getDocument() {
-			return document;
-		}
 
 		@Override
 		public Reference apply(Annotation annotation) {
@@ -108,12 +142,36 @@ public class ReferenceSearcherImpl implements ReferenceSearcher {
 							getProperty(GateFormatConstants.SENTENCE_ANNOTATION_NAME_PROPERTY_KEY),
 							annotation.getStartNode().getOffset(),
 							annotation.getEndNode().getOffset());
-			if (sentenceSet.size() != 1) {
-				throw new RuntimeException(
-						String
-								.format(
-										"Enclosing sentence of the reference with id='%d' is not single",
-										annotation.getId()));
+			if (sentenceSet.size() == 0) {
+				AnnotationSet allSentences = getDocument()
+						.getAnnotations(
+								GateFormatConstants.DEFAULT_ANNOTATION_SET_NAME)
+						.get(
+								getProperty(GateFormatConstants.SENTENCE_ANNOTATION_NAME_PROPERTY_KEY));
+				long distance = Long.MAX_VALUE;
+				Annotation closestSentence = null;
+				for (Annotation sentence : allSentences) {
+					long endDistance = Math.abs(sentence.getEndNode()
+							.getOffset()
+							- annotation.getStartNode().getOffset());
+					long startDistance = Math.abs(sentence.getStartNode()
+							.getOffset()
+							- annotation.getStartNode().getOffset());
+					long minDistance = Math.min(endDistance, startDistance);
+					if (minDistance < distance) {
+						closestSentence = sentence;
+						distance = minDistance;
+					}
+				}
+				if (closestSentence == null) {
+					throw new RuntimeException(
+							String
+									.format(
+											"couldn't locate sentence for annotation with id='%s'",
+											annotation.getId()));
+				} else {
+					return closestSentence;
+				}
 			}
 			return sentenceSet.iterator().next();
 		}
