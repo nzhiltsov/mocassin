@@ -39,16 +39,21 @@ public class FeatureExtractorImpl implements FeatureExtractor {
 	@Inject
 	private ReferenceSearcher referenceSearcher;
 
+	private List<ReferenceProcessListener> listeners = new ArrayList<ReferenceProcessListener>();
+
 	@Override
-	public Map<String, List<Reference>> getReferencesPerDocument()
+	public void addListener(ReferenceProcessListener listener) {
+		this.listeners.add(listener);
+	}
+
+	@Override
+	public void processReferences()
 			throws Exception {
 		initialize();
 		SerialDataStore dataStore = new SerialDataStore(
 				getNlpModulePropertiesLoader().get(
 						GATE_STORAGE_DIR_PROPERTY_KEY));
 		dataStore.open();
-		Map<String, List<Reference>> map = Maps.newHashMap();
-		;
 		try {
 			List documents = dataStore.getLrIds(getDocumentLrType());
 
@@ -61,13 +66,12 @@ public class FeatureExtractorImpl implements FeatureExtractor {
 						getDocumentLrType(), features);
 				List<Reference> references = getReferenceSearcher().retrieve(
 						document);
-				map.put(document.getName(), references);
+				fireReferenceFinishEvent(document, references);
 				document.cleanup();
 			}
 		} finally {
 			dataStore.close();
 		}
-		return map;
 	}
 
 	public NlpModulePropertiesLoader getNlpModulePropertiesLoader() {
@@ -85,6 +89,17 @@ public class FeatureExtractorImpl implements FeatureExtractor {
 
 	public ReferenceSearcher getReferenceSearcher() {
 		return referenceSearcher;
+	}
+
+	public List<ReferenceProcessListener> getListeners() {
+		return listeners;
+	}
+
+	private void fireReferenceFinishEvent(Document document,
+			List<Reference> references) {
+		for (ReferenceProcessListener listener : getListeners()) {
+			listener.onReferenceFinish(document, references);
+		}
 	}
 
 	private void initialize() throws GateException {

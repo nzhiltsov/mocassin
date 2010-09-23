@@ -1,10 +1,13 @@
 package unittest;
 
+import gate.Document;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,6 +18,8 @@ import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.ReferenceContext;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.PosFeature;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.ReferenceContextImpl;
+import ru.ksu.niimm.cll.mocassin.nlp.impl.ReferenceImpl;
+import ru.ksu.niimm.cll.mocassin.nlp.impl.ReferenceProcessListener;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.WordFeature;
 
 import com.google.inject.Inject;
@@ -24,29 +29,34 @@ import com.thoughtworks.xstream.XStream;
 
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext(NlpModule.class)
-public class FeatureExtractorTest {
+public class FeatureExtractorTest implements ReferenceProcessListener {
 	@Inject
 	private FeatureExtractor featureExtractor;
 
 	@Test
 	public void testGetReferenceContextList() throws Exception {
-		Map<String, List<Reference>> doc2refs = getFeatureExtractor()
-				.getReferencesPerDocument();
-		save(doc2refs);
+		getFeatureExtractor().addListener(this);
+		getFeatureExtractor().processReferences();
 	}
 
-	private void save(Map<String, List<Reference>> doc2refs) throws IOException {
-		/*XStream xstream = new XStream();
-		xstream.alias("context", ReferenceContextImpl.class);
-		xstream.alias("word", WordFeature.class);
-		xstream.alias("pos", PosFeature.class);
-		ObjectOutputStream out = xstream
-				.createObjectOutputStream(new FileWriter(
-						"/tmp/refcontexts-data.xml"));
-		for (ReferenceContext context : doc2refs) {
-			out.writeObject(context);
+	@Override
+	public void onReferenceFinish(Document document, List<Reference> references) {
+		XStream xstream = new XStream();
+		xstream.alias("reference", ReferenceImpl.class);
+
+		ObjectOutputStream out;
+		try {
+			out = xstream
+					.createObjectOutputStream(new FileWriter(String.format(
+							"/tmp/refcontexts-data/%s.xml", document.getName())));
+			for (Reference ref : references) {
+				out.writeObject(ref);
+			}
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		out.close();*/
+
 	}
 
 	public FeatureExtractor getFeatureExtractor() {
