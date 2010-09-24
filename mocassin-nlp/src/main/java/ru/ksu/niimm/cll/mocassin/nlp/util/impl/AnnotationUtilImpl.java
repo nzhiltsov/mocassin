@@ -10,11 +10,11 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.google.inject.Inject;
-
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateFormatConstants;
 import ru.ksu.niimm.cll.mocassin.nlp.util.AnnotationUtil;
 import ru.ksu.niimm.cll.mocassin.nlp.util.NlpModulePropertiesLoader;
+
+import com.google.inject.Inject;
 
 public class AnnotationUtilImpl implements AnnotationUtil {
 	@Inject
