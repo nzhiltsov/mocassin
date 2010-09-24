@@ -6,8 +6,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,12 +13,8 @@ import org.junit.runner.RunWith;
 import ru.ksu.niimm.cll.mocassin.nlp.FeatureExtractor;
 import ru.ksu.niimm.cll.mocassin.nlp.NlpModule;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
-import ru.ksu.niimm.cll.mocassin.nlp.ReferenceContext;
-import ru.ksu.niimm.cll.mocassin.nlp.impl.PosFeature;
-import ru.ksu.niimm.cll.mocassin.nlp.impl.ReferenceContextImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.ReferenceImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.ReferenceProcessListener;
-import ru.ksu.niimm.cll.mocassin.nlp.impl.WordFeature;
 
 import com.google.inject.Inject;
 import com.mycila.testing.junit.MycilaJunitRunner;

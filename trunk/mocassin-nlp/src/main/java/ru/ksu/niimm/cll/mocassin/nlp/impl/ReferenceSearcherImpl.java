@@ -6,11 +6,6 @@ import gate.Document;
 
 import java.util.List;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
-import com.google.inject.Inject;
-
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.ReferenceSearcher;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
@@ -20,6 +15,11 @@ import ru.ksu.niimm.cll.mocassin.nlp.util.AnnotationUtil;
 import ru.ksu.niimm.cll.mocassin.nlp.util.CollectionUtil;
 import ru.ksu.niimm.cll.mocassin.nlp.util.NlpModulePropertiesLoader;
 import ru.ksu.niimm.cll.mocassin.parser.arxmliv.xpath.impl.ArxmlivFormatConstants;
+
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import com.google.inject.Inject;
 
 public class ReferenceSearcherImpl implements ReferenceSearcher {
 	@Inject
@@ -196,9 +196,12 @@ public class ReferenceSearcherImpl implements ReferenceSearcher {
 			}
 
 			if (closestParentElement == null) {
-				throw new RuntimeException(String.format(
-						"parent element for ref with id='%d' not found",
-						annotation.getId()));
+				throw new RuntimeException(
+						String
+								.format(
+										"parent element for ref with id='%d' in document '%s' not found",
+										annotation.getId(), getDocument()
+												.getName()));
 			}
 
 			return closestParentElement;

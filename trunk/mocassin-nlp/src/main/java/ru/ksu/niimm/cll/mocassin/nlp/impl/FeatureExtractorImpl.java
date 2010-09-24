@@ -10,18 +10,13 @@ import gate.util.GateException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import ru.ksu.niimm.cll.mocassin.nlp.AnnotationAnalyzer;
 import ru.ksu.niimm.cll.mocassin.nlp.FeatureExtractor;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
-import ru.ksu.niimm.cll.mocassin.nlp.ReferenceContext;
 import ru.ksu.niimm.cll.mocassin.nlp.ReferenceSearcher;
-import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
-import ru.ksu.niimm.cll.mocassin.nlp.StructuralElementSearcher;
 import ru.ksu.niimm.cll.mocassin.nlp.util.NlpModulePropertiesLoader;
 
-import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
 public class FeatureExtractorImpl implements FeatureExtractor {

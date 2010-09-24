@@ -1,8 +1,5 @@
 package ru.ksu.niimm.cll.mocassin.nlp;
 
-import java.util.List;
-import java.util.Map;
-
 import ru.ksu.niimm.cll.mocassin.nlp.impl.ReferenceProcessListener;
 
 /**
