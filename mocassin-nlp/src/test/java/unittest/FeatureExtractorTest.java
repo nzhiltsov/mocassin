@@ -15,6 +15,7 @@ import ru.ksu.niimm.cll.mocassin.nlp.NlpModule;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.ReferenceImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.ReferenceProcessListener;
+import ru.ksu.niimm.cll.mocassin.nlp.util.ReferenceXStream;
 
 import com.google.inject.Inject;
 import com.mycila.testing.junit.MycilaJunitRunner;
@@ -35,8 +36,7 @@ public class FeatureExtractorTest implements ReferenceProcessListener {
 
 	@Override
 	public void onReferenceFinish(Document document, List<Reference> references) {
-		XStream xstream = new XStream();
-		xstream.alias("reference", ReferenceImpl.class);
+		XStream xstream = new ReferenceXStream();
 
 		ObjectOutputStream out;
 		try {
