@@ -1,16 +1,15 @@
 package ru.ksu.niimm.cll.mocassin.analyzer;
 
-
 import ru.ksu.niimm.cll.mocassin.analyzer.importance.ImportantNodeService;
 import ru.ksu.niimm.cll.mocassin.analyzer.importance.impl.ImportantNodeServiceImpl;
+import ru.ksu.niimm.cll.mocassin.analyzer.lsa.LatentSemanticIndexer;
+import ru.ksu.niimm.cll.mocassin.analyzer.lsa.impl.LatentSemanticIndexerImpl;
 import ru.ksu.niimm.cll.mocassin.analyzer.mapping.matchers.Matcher;
 import ru.ksu.niimm.cll.mocassin.analyzer.mapping.matchers.impl.NameMatcher;
 import ru.ksu.niimm.cll.mocassin.analyzer.mapping.matchers.impl.NameMatcherPropertiesLoader;
 import ru.ksu.niimm.cll.mocassin.analyzer.mapping.matchers.impl.NameMatcherPropertiesLoaderImpl;
 import ru.ksu.niimm.cll.mocassin.analyzer.similarity.StringSimilarityEvaluator;
 import ru.ksu.niimm.cll.mocassin.analyzer.similarity.impl.StringSimilarityEvaluatorImpl;
-
-
 
 import com.google.inject.AbstractModule;
 
@@ -24,6 +23,7 @@ public class AnalyzerModule extends AbstractModule {
 		bind(NameMatcherPropertiesLoader.class).to(
 				NameMatcherPropertiesLoaderImpl.class);
 		bind(ImportantNodeService.class).to(ImportantNodeServiceImpl.class);
+		bind(LatentSemanticIndexer.class).to(LatentSemanticIndexerImpl.class);
 	}
 
 }

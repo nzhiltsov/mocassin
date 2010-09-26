@@ -6,8 +6,10 @@ import ru.ksu.niimm.cll.mocassin.nlp.impl.ReferenceSearcherImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.StructuralElementSearcherImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.util.AnnotationUtil;
 import ru.ksu.niimm.cll.mocassin.nlp.util.NlpModulePropertiesLoader;
+import ru.ksu.niimm.cll.mocassin.nlp.util.StopWordLoader;
 import ru.ksu.niimm.cll.mocassin.nlp.util.impl.AnnotationUtilImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.util.impl.NlpModulePropertiesLoaderImpl;
+import ru.ksu.niimm.cll.mocassin.nlp.util.impl.StopWordLoaderImpl;
 
 import com.google.inject.AbstractModule;
 
@@ -23,6 +25,7 @@ public class NlpModule extends AbstractModule {
 				StructuralElementSearcherImpl.class);
 		bind(ReferenceSearcher.class).to(ReferenceSearcherImpl.class);
 		bind(AnnotationUtil.class).to(AnnotationUtilImpl.class);
+		bind(StopWordLoader.class).to(StopWordLoaderImpl.class);
 	}
 
 }

@@ -74,4 +74,33 @@ public class ReferenceImpl implements Reference {
 		return documentName;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((documentName == null) ? 0 : documentName.hashCode());
+		result = prime * result + id;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ReferenceImpl other = (ReferenceImpl) obj;
+		if (documentName == null) {
+			if (other.documentName != null)
+				return false;
+		} else if (!documentName.equals(other.documentName))
+			return false;
+		if (id != other.id)
+			return false;
+		return true;
+	}
+
 }
