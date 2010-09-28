@@ -64,8 +64,10 @@ public class LatentSemanticIndexerTest {
 				sb.append((double) Math.round(value * 1000) / 1000);
 				sb.append(" ");
 			}
-			writer.write(String.format("%s %s %s %s\n", ref.getDocumentName(),
-					ref.getId(), ref.getAdditionalRefid(), sb.toString()));
+			String documentName = ref.getDocumentName().substring(0,
+					ref.getDocumentName().indexOf("."));
+			writer.write(String.format("%s %s %s %s\n", documentName, ref
+					.getId(), ref.getAdditionalRefid(), sb.toString()));
 		}
 		writer.flush();
 		writer.close();
