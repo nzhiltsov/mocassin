@@ -2,6 +2,8 @@ package unittest;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -46,13 +48,14 @@ public class LatentSemanticIndexerTest {
 	}
 
 	@Test
-	public void testReferenceBuildIndex() {
+	public void testReferenceBuildIndex() throws IOException {
 		Map<Reference, Vector> index = getLatentSemanticIndexer()
-				.buildReferenceIndex(getReferences().subList(0, 100));
+				.buildReferenceIndex(getReferences());
 		printIndex(index);
 	}
 
-	private void printIndex(Map<Reference, Vector> index) {
+	private void printIndex(Map<Reference, Vector> index) throws IOException {
+		FileWriter writer = new FileWriter("/tmp/lsi-refcontexts.txt");
 		for (Reference ref : index.keySet()) {
 			Vector vector = index.get(ref);
 			StringBuilder sb = new StringBuilder();
@@ -61,9 +64,11 @@ public class LatentSemanticIndexerTest {
 				sb.append((double) Math.round(value * 1000) / 1000);
 				sb.append(" ");
 			}
-			System.out.println(String.format("%s:%s %s", ref.getDocumentName(),
-					ref.getId(), sb.toString()));
+			writer.write(String.format("%s %s %s %s\n", ref.getDocumentName(),
+					ref.getId(), ref.getAdditionalRefid(), sb.toString()));
 		}
+		writer.flush();
+		writer.close();
 	}
 
 	public LatentSemanticIndexer getLatentSemanticIndexer() {
