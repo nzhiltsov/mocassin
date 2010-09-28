@@ -10,6 +10,7 @@ public class ReferenceImpl implements Reference {
 	private final StructuralElement from;
 	private final StructuralElement to;
 	private final String documentName;
+	private final String additionalRefid;
 	private List<String> sentenceTokens;
 
 	public static class Builder {
@@ -18,6 +19,7 @@ public class ReferenceImpl implements Reference {
 		private StructuralElement from;
 		private StructuralElement to;
 		private String documentName;
+		private String additionalRefid;
 
 		public Builder(int id) {
 			this.id = id;
@@ -38,6 +40,11 @@ public class ReferenceImpl implements Reference {
 			return this;
 		}
 
+		public Builder additionalRefid(String additionalRefid) {
+			this.additionalRefid = additionalRefid;
+			return this;
+		}
+
 		public Reference build() {
 			return new ReferenceImpl(this);
 		}
@@ -48,6 +55,7 @@ public class ReferenceImpl implements Reference {
 		this.from = builder.from;
 		this.to = builder.to;
 		this.documentName = builder.documentName;
+		this.additionalRefid = builder.additionalRefid;
 	}
 
 	public List<String> getSentenceTokens() {
@@ -72,6 +80,10 @@ public class ReferenceImpl implements Reference {
 
 	public String getDocumentName() {
 		return documentName;
+	}
+
+	public String getAdditionalRefid() {
+		return additionalRefid;
 	}
 
 	@Override

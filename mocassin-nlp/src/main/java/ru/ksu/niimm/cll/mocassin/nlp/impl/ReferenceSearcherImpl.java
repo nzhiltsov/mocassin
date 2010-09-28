@@ -128,8 +128,12 @@ public class ReferenceSearcherImpl implements ReferenceSearcher {
 					enclosingSentence);
 			String documentName = getDocument().getName();
 
+			String additionalRefid = (String) annotation.getFeatures().get(
+					ArxmlivFormatConstants.REF_ID_ATTRIBUTE_NAME);
+
 			Reference reference = new ReferenceImpl.Builder(id).from(from).to(
-					to).document(documentName).build();
+					to).document(documentName).additionalRefid(additionalRefid)
+					.build();
 			reference.setSentenceTokens(sentenceTokens);
 			return reference;
 		}
