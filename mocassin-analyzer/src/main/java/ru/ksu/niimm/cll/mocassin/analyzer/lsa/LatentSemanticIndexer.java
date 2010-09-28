@@ -2,12 +2,10 @@ package ru.ksu.niimm.cll.mocassin.analyzer.lsa;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
-import com.aliasi.dict.Dictionary;
-import com.aliasi.matrix.Vector;
 
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
+
+import com.aliasi.matrix.Vector;
 
 public interface LatentSemanticIndexer {
 	/**

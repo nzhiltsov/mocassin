@@ -3,18 +3,17 @@ package ru.ksu.niimm.cll.mocassin.analyzer.lsa.impl;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import com.aliasi.dict.Dictionary;
+import ru.ksu.niimm.cll.mocassin.analyzer.lsa.LatentSemanticIndexer;
+import ru.ksu.niimm.cll.mocassin.nlp.Reference;
+import ru.ksu.niimm.cll.mocassin.nlp.util.StopWordLoader;
+
+import com.aliasi.matrix.DenseVector;
 import com.aliasi.matrix.SvdMatrix;
 import com.aliasi.matrix.Vector;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.inject.Inject;
-
-import ru.ksu.niimm.cll.mocassin.analyzer.lsa.LatentSemanticIndexer;
-import ru.ksu.niimm.cll.mocassin.nlp.Reference;
-import ru.ksu.niimm.cll.mocassin.nlp.util.StopWordLoader;
 
 public class LatentSemanticIndexerImpl implements LatentSemanticIndexer {
 	private static final int MAX_EPOCHS = 50000;
@@ -24,7 +23,7 @@ public class LatentSemanticIndexerImpl implements LatentSemanticIndexer {
 	private static final int ANNILING_RATE = 1000;
 	private static final double INITIAL_LEARNING_RATE = 0.005;
 	private static final double FEATURE_INIT = 0.01;
-	private static final int MAX_FACTORS = 5;
+	private static final int MAX_FACTORS = 2;
 	@Inject
 	private StopWordLoader stopWordLoader;
 	private Map<String, Integer> token2id;
@@ -71,7 +70,17 @@ public class LatentSemanticIndexerImpl implements LatentSemanticIndexer {
 				MIN_IMPROVEMENT, MIN_EPOCHS, MAX_EPOCHS);
 		double[][] refVectors = svdMatrix.rightSingularVectors();
 
-		throw new UnsupportedOperationException("n.y.i.");
+		Map<Reference, Vector> referenceIndexMap = new HashMap<Reference, Vector>();
+		for (int k = 0; k < refVectors.length; k++) {
+			double[] column = new double[MAX_FACTORS];
+			for (int l = 0; l < MAX_FACTORS; l++) {
+				column[l] = refVectors[k][l];
+			}
+			Vector refVector = new DenseVector(column);
+			referenceIndexMap.put(id2ref.get(k), refVector);
+		}
+
+		return referenceIndexMap;
 	}
 
 	public StopWordLoader getStopWordLoader() {

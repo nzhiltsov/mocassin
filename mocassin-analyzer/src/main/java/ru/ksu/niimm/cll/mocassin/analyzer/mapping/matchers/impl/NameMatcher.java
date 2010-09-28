@@ -6,12 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Ordering;
-import com.google.inject.Inject;
-
 import ru.ksu.niimm.cll.mocassin.analyzer.mapping.Mapping;
 import ru.ksu.niimm.cll.mocassin.analyzer.mapping.MappingElement;
 import ru.ksu.niimm.cll.mocassin.analyzer.mapping.matchers.Matcher;
@@ -21,6 +15,12 @@ import ru.ksu.niimm.cll.mocassin.parser.Edge;
 import ru.ksu.niimm.cll.mocassin.parser.Node;
 import ru.ksu.niimm.ose.ontology.OMDocOntologyFacade;
 import ru.ksu.niimm.ose.ontology.OntologyConcept;
+
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Ordering;
+import com.google.inject.Inject;
 
 public class NameMatcher implements Matcher {
 	@Inject

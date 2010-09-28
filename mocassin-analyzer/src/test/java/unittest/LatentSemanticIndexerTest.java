@@ -1,34 +1,28 @@
 package unittest;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import com.aliasi.dict.Dictionary;
-import com.aliasi.dict.DictionaryEntry;
-import com.aliasi.dict.TrieDictionary;
-import com.google.inject.Inject;
-import com.mycila.testing.junit.MycilaJunitRunner;
-import com.mycila.testing.plugin.guice.GuiceContext;
 
 import ru.ksu.niimm.cll.mocassin.analyzer.AnalyzerModule;
 import ru.ksu.niimm.cll.mocassin.analyzer.lsa.LatentSemanticIndexer;
 import ru.ksu.niimm.cll.mocassin.nlp.NlpModule;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.util.ReferenceFeatureReader;
-import ru.ksu.niimm.cll.mocassin.nlp.util.StopWordLoader;
 import ru.ksu.niimm.cll.mocassin.parser.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
 import ru.ksu.niimm.ose.ontology.OntologyModule;
+
+import com.aliasi.matrix.Vector;
+import com.google.inject.Inject;
+import com.mycila.testing.junit.MycilaJunitRunner;
+import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext( { AnalyzerModule.class, NlpModule.class,
@@ -53,8 +47,23 @@ public class LatentSemanticIndexerTest {
 
 	@Test
 	public void testReferenceBuildIndex() {
-		getLatentSemanticIndexer().buildReferenceIndex(
-				getReferences().subList(0, 50));
+		Map<Reference, Vector> index = getLatentSemanticIndexer()
+				.buildReferenceIndex(getReferences().subList(0, 100));
+		printIndex(index);
+	}
+
+	private void printIndex(Map<Reference, Vector> index) {
+		for (Reference ref : index.keySet()) {
+			Vector vector = index.get(ref);
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < vector.numDimensions(); i++) {
+				double value = vector.value(i);
+				sb.append((double) Math.round(value * 1000) / 1000);
+				sb.append(" ");
+			}
+			System.out.println(String.format("%s:%s %s", ref.getDocumentName(),
+					ref.getId(), sb.toString()));
+		}
 	}
 
 	public LatentSemanticIndexer getLatentSemanticIndexer() {
