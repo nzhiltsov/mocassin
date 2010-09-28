@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface Reference {
 	int getId();
-	
+
 	String getDocumentName();
 
 	StructuralElement getFrom();
@@ -18,6 +18,8 @@ public interface Reference {
 	StructuralElement getTo();
 
 	List<String> getSentenceTokens();
-	
+
 	void setSentenceTokens(List<String> sentenceTokens);
+
+	String getAdditionalRefid();
 }
