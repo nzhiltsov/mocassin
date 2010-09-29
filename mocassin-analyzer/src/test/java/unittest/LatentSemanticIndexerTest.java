@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ru.ksu.niimm.cll.mocassin.analyzer.AnalyzerModule;
+import ru.ksu.niimm.cll.mocassin.analyzer.lsa.LSIndex;
 import ru.ksu.niimm.cll.mocassin.analyzer.lsa.LatentSemanticIndexer;
 import ru.ksu.niimm.cll.mocassin.nlp.NlpModule;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
@@ -30,6 +31,10 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 @GuiceContext( { AnalyzerModule.class, NlpModule.class,
 		LatexParserModule.class, OntologyModule.class, VirtuosoModule.class })
 public class LatentSemanticIndexerTest {
+	private static final String TERM_VECTORS_OUTPUT_FILENAME = "/tmp/lsi-terms.txt";
+
+	private static final String REF_VECTORS_OUTPUT_FILENAME = "/tmp/lsi-refcontexts.txt";
+
 	@Inject
 	private LatentSemanticIndexer latentSemanticIndexer;
 
@@ -49,28 +54,33 @@ public class LatentSemanticIndexerTest {
 
 	@Test
 	public void testReferenceBuildIndex() throws IOException {
-		Map<Reference, Vector> index = getLatentSemanticIndexer()
-				.buildReferenceIndex(getReferences());
-		printIndex(index);
+		LSIndex index = getLatentSemanticIndexer().buildReferenceIndex(
+				getReferences());
+		print(index.getTermVectors(), TERM_VECTORS_OUTPUT_FILENAME);
+		print(index.getReferenceVectors(), REF_VECTORS_OUTPUT_FILENAME);
 	}
 
-	private void printIndex(Map<Reference, Vector> index) throws IOException {
-		FileWriter writer = new FileWriter("/tmp/lsi-refcontexts.txt");
-		for (Reference ref : index.keySet()) {
-			Vector vector = index.get(ref);
-			StringBuilder sb = new StringBuilder();
-			for (int i = 0; i < vector.numDimensions(); i++) {
-				double value = vector.value(i);
-				sb.append((double) Math.round(value * 1000) / 1000);
-				sb.append(" ");
-			}
-			String documentName = ref.getDocumentName().substring(0,
-					ref.getDocumentName().indexOf("."));
-			writer.write(String.format("%s %s %s %s\n", documentName, ref
-					.getId(), ref.getAdditionalRefid(), sb.toString()));
+	private <T> void print(Map<T, Vector> map, String outputPath)
+			throws IOException {
+		FileWriter writer = new FileWriter(outputPath);
+		for (T t : map.keySet()) {
+			Vector vector = map.get(t);
+			String vectorStr = convertToString(vector);
+			writer.write(String.format("%s %s\n", t.toString(), vectorStr));
 		}
 		writer.flush();
 		writer.close();
+	}
+
+	private String convertToString(Vector vector) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < vector.numDimensions(); i++) {
+			double value = vector.value(i);
+			sb.append((double) Math.round(value * 1000) / 1000);
+			sb.append(" ");
+		}
+		String vectorStr = sb.toString();
+		return vectorStr;
 	}
 
 	public LatentSemanticIndexer getLatentSemanticIndexer() {

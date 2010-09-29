@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ru.ksu.niimm.cll.mocassin.analyzer.lsa.LSIndex;
 import ru.ksu.niimm.cll.mocassin.analyzer.lsa.LatentSemanticIndexer;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.util.StopWordLoader;
@@ -26,13 +27,13 @@ public class LatentSemanticIndexerImpl implements LatentSemanticIndexer {
 	private static final int MAX_FACTORS = 2;
 	@Inject
 	private StopWordLoader stopWordLoader;
-	private Map<String, Integer> token2id;
+	private BiMap<String, Integer> token2id;
 
 	private BiMap<Reference, Integer> ref2id;
 
 	@Override
-	public Map<Reference, Vector> buildReferenceIndex(List<Reference> references) {
-		this.token2id = new HashMap<String, Integer>();
+	public LSIndex buildReferenceIndex(List<Reference> references) {
+		this.token2id = HashBiMap.create();
 		int tokenId = 0;
 		this.ref2id = HashBiMap.create();
 		int refId = 0;
@@ -80,7 +81,20 @@ public class LatentSemanticIndexerImpl implements LatentSemanticIndexer {
 			referenceIndexMap.put(id2ref.get(k), refVector);
 		}
 
-		return referenceIndexMap;
+		double[][] termVectors = svdMatrix.leftSingularVectors();
+
+		BiMap<Integer, String> id2token = this.token2id.inverse();
+		Map<String, Vector> termIndexMap = new HashMap<String, Vector>();
+		for (int k = 0; k < termVectors.length; k++) {
+			double[] column = new double[MAX_FACTORS];
+			for (int l = 0; l < MAX_FACTORS; l++) {
+				column[l] = termVectors[k][l];
+			}
+			Vector termVector = new DenseVector(column);
+			termIndexMap.put(id2token.get(k), termVector);
+		}
+
+		return new LSIndexImpl(referenceIndexMap, termIndexMap);
 	}
 
 	public StopWordLoader getStopWordLoader() {
