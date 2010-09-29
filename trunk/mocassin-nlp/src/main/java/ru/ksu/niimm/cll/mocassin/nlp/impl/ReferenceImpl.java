@@ -115,4 +115,10 @@ public class ReferenceImpl implements Reference {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return String.format("%s %s %s ", documentName.substring(0,
+				documentName.indexOf(".")), id, additionalRefid);
+	}
+
 }

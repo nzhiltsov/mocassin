@@ -15,5 +15,5 @@ public interface LatentSemanticIndexer {
 	 * @param stopWords
 	 * @return
 	 */
-	Map<Reference, Vector> buildReferenceIndex(List<Reference> references);
+	LSIndex buildReferenceIndex(List<Reference> references);
 }
