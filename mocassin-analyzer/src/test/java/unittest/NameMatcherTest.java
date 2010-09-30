@@ -12,6 +12,7 @@ import ru.ksu.niimm.cll.mocassin.analyzer.AnalyzerModule;
 import ru.ksu.niimm.cll.mocassin.analyzer.mapping.Mapping;
 import ru.ksu.niimm.cll.mocassin.analyzer.mapping.MappingElement;
 import ru.ksu.niimm.cll.mocassin.analyzer.mapping.matchers.Matcher;
+import ru.ksu.niimm.cll.mocassin.nlp.NlpModule;
 import ru.ksu.niimm.cll.mocassin.parser.Edge;
 import ru.ksu.niimm.cll.mocassin.parser.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.parser.Node;
@@ -25,7 +26,7 @@ import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext( { AnalyzerModule.class, LatexParserModule.class, OntologyModule.class, VirtuosoModule.class })
+@GuiceContext( { AnalyzerModule.class,NlpModule.class, LatexParserModule.class, OntologyModule.class, VirtuosoModule.class })
 public class NameMatcherTest {
 	@Inject
 	private Parser parser;

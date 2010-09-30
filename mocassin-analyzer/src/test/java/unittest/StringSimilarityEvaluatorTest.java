@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import ru.ksu.niimm.cll.mocassin.analyzer.AnalyzerModule;
 import ru.ksu.niimm.cll.mocassin.analyzer.similarity.StringSimilarityEvaluator;
 import ru.ksu.niimm.cll.mocassin.analyzer.similarity.StringSimilarityEvaluator.SimilarityMetrics;
+import ru.ksu.niimm.cll.mocassin.nlp.NlpModule;
 import ru.ksu.niimm.cll.mocassin.parser.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
 import ru.ksu.niimm.ose.ontology.OntologyModule;
@@ -18,7 +19,8 @@ import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext( { AnalyzerModule.class, LatexParserModule.class, OntologyModule.class, VirtuosoModule.class })
+@GuiceContext( { AnalyzerModule.class, NlpModule.class,
+		LatexParserModule.class, OntologyModule.class, VirtuosoModule.class })
 public class StringSimilarityEvaluatorTest {
 	@Inject
 	private StringSimilarityEvaluator stringSimilarityEvaluator;
