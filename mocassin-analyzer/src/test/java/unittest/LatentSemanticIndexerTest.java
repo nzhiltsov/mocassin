@@ -31,6 +31,8 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 @GuiceContext( { AnalyzerModule.class, NlpModule.class,
 		LatexParserModule.class, OntologyModule.class, VirtuosoModule.class })
 public class LatentSemanticIndexerTest {
+	private static final String REF_CONTEXT_DATA_INPUT_FOLDER = "/tmp/refcontexts-data";
+
 	private static final String TERM_VECTORS_OUTPUT_FILENAME = "/tmp/lsi-terms.txt";
 
 	private static final String REF_VECTORS_OUTPUT_FILENAME = "/tmp/lsi-refcontexts.txt";
@@ -42,7 +44,7 @@ public class LatentSemanticIndexerTest {
 
 	@Before
 	public void init() throws Exception {
-		File dir = new File("/tmp/refcontexts-data");
+		File dir = new File(REF_CONTEXT_DATA_INPUT_FOLDER);
 		File[] files = dir.listFiles();
 		this.references = new ArrayList<Reference>();
 		for (File file : files) {
