@@ -29,6 +29,10 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext(ArxmlivParserModule.class)
 public class ArxmlivParserTest {
+	private static final String EXAMPLE_FILENAME = "src/test/resources/example.tex.xml";
+
+	private static final String REF_CONTEXTS_OUTPUT_FOLDER = "/tmp/ref-contexts";
+
 	@Inject
 	private Parser parser;
 
@@ -36,9 +40,8 @@ public class ArxmlivParserTest {
 
 	@Before
 	public void init() throws FileNotFoundException {
-		// this.in = this.getClass().getResourceAsStream("/example.tex.xml");
-		File dir = new File("/OTHER_DATA/arxmliv-dataset/modified");
-		this.files = dir.listFiles();
+		File exampleFile = new File(EXAMPLE_FILENAME);
+		this.files = new File[] { exampleFile };
 	}
 
 	@Test
@@ -59,8 +62,8 @@ public class ArxmlivParserTest {
 	private static void save(List<Edge<Node, Node>> graph, String filename)
 			throws JAXBException, IOException {
 		String cuttedFileName = cutExtension(filename);
-		XmlUtils.save(new GraphContainer("/tmp/ref-contexts", cuttedFileName,
-				graph));
+		XmlUtils.save(new GraphContainer(REF_CONTEXTS_OUTPUT_FOLDER,
+				cuttedFileName, graph));
 	}
 
 	private static String cutExtension(String filename) {

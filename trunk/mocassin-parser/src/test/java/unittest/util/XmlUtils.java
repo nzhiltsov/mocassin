@@ -20,7 +20,15 @@ public class XmlUtils {
 	public static void save(GraphContainer graphContainer) throws IOException {
 		String rootDir = graphContainer.getRootDir();
 		String filename = graphContainer.getFileName();
-		
+
+		File rootFile = new File(rootDir);
+		if (!rootFile.canRead()) {
+			if (!rootFile.mkdir()) {
+				throw new RuntimeException(String.format(
+						"couldn't create root folder:%s", rootFile.toString()));
+			}
+		}
+
 		File dirPerDocument = new File(String
 				.format("%s/%s", rootDir, filename));
 		if (!dirPerDocument.mkdir())
@@ -28,9 +36,8 @@ public class XmlUtils {
 					"couldn't create folder per document:%s", dirPerDocument
 							.toString()));
 
-		
 		for (Edge<Node, Node> edge : graphContainer.getGraph()) {
-			
+
 			String fromStr = edge.getFrom().getName();
 			String fromIdStr = edge.getFrom().getId();
 			String toStr = edge.getTo().getName();
@@ -53,5 +60,4 @@ public class XmlUtils {
 		}
 
 	}
-
 }
