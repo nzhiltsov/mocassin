@@ -2,7 +2,9 @@ package ru.ksu.niimm.cll.mocassin.analyzer;
 
 import ru.ksu.niimm.cll.mocassin.analyzer.importance.ImportantNodeService;
 import ru.ksu.niimm.cll.mocassin.analyzer.importance.impl.ImportantNodeServiceImpl;
+import ru.ksu.niimm.cll.mocassin.analyzer.lsa.LSIPropertiesLoader;
 import ru.ksu.niimm.cll.mocassin.analyzer.lsa.LatentSemanticIndexer;
+import ru.ksu.niimm.cll.mocassin.analyzer.lsa.impl.LSIPropertiesLoaderImpl;
 import ru.ksu.niimm.cll.mocassin.analyzer.lsa.impl.LatentSemanticIndexerImpl;
 import ru.ksu.niimm.cll.mocassin.analyzer.mapping.matchers.Matcher;
 import ru.ksu.niimm.cll.mocassin.analyzer.mapping.matchers.impl.NameMatcher;
@@ -24,6 +26,7 @@ public class AnalyzerModule extends AbstractModule {
 				NameMatcherPropertiesLoaderImpl.class);
 		bind(ImportantNodeService.class).to(ImportantNodeServiceImpl.class);
 		bind(LatentSemanticIndexer.class).to(LatentSemanticIndexerImpl.class);
+		bind(LSIPropertiesLoader.class).to(LSIPropertiesLoaderImpl.class);
 	}
 
 }
