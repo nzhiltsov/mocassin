@@ -20,6 +20,11 @@
 	<dependencies>
 		<dependency>
 			<groupId>ru.ksu.niimm.cll.mocassin</groupId>
+			<artifactId>mocassin-util</artifactId>
+			<version>1.0.0.4-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>ru.ksu.niimm.cll.mocassin</groupId>
 			<artifactId>mocassin-ontology</artifactId>
 			<version>1.0.0.4-SNAPSHOT</version>
 		</dependency>
