@@ -5,15 +5,17 @@ import gate.AnnotationSet;
 import gate.Document;
 import gate.util.OffsetComparator;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateFormatConstants;
+import ru.ksu.niimm.cll.mocassin.nlp.impl.NotInMathPredicate;
 import ru.ksu.niimm.cll.mocassin.nlp.util.AnnotationUtil;
 import ru.ksu.niimm.cll.mocassin.nlp.util.NlpModulePropertiesLoader;
+import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
 
+import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 
 public class AnnotationUtilImpl implements AnnotationUtil {
@@ -38,7 +40,12 @@ public class AnnotationUtilImpl implements AnnotationUtil {
 						getProperty(GateFormatConstants.TOKEN_ANNOTATION_NAME_PROPERTY_KEY))
 				.getContained(annotation.getStartNode().getOffset(),
 						annotation.getEndNode().getOffset());
-		List<Annotation> tokenList = new ArrayList<Annotation>(tokenSet);
+		Iterable<Annotation> filteredTokens = Iterables
+				.filter(tokenSet, new NotInMathPredicate(
+						getNlpModulePropertiesLoader(), document));
+
+		List<Annotation> tokenList = CollectionUtil.asList(filteredTokens);
+
 		Collections.sort(tokenList, new OffsetComparator());
 		for (int i = 0; i < tokenList.size(); i++) {
 			Annotation a = tokenList.get(i);

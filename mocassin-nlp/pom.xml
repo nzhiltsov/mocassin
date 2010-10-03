@@ -20,6 +20,11 @@
 	<dependencies>
 		<dependency>
 			<groupId>ru.ksu.niimm.cll.mocassin</groupId>
+			<artifactId>mocassin-util</artifactId>
+			<version>1.0.0.4-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>ru.ksu.niimm.cll.mocassin</groupId>
 			<artifactId>mocassin-parser</artifactId>
 			<version>1.0.0.4-SNAPSHOT</version>
 		</dependency>
@@ -29,12 +34,12 @@
 			<version>5.2.1</version>
 			<type>pom</type>
 		</dependency>
-		  
-        <dependency>
-            <groupId>nl.mpi</groupId>
-            <artifactId>lookup</artifactId>
-            <version>4.0</version>
-        </dependency>
+
+		<dependency>
+			<groupId>nl.mpi</groupId>
+			<artifactId>lookup</artifactId>
+			<version>4.0</version>
+		</dependency>
 		<dependency>
 			<groupId>net.didion</groupId>
 			<artifactId>jwnl</artifactId>

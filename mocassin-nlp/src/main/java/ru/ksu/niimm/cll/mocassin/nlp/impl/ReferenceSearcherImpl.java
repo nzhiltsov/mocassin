@@ -12,12 +12,11 @@ import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElementSearcher;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateFormatConstants;
 import ru.ksu.niimm.cll.mocassin.nlp.util.AnnotationUtil;
-import ru.ksu.niimm.cll.mocassin.nlp.util.CollectionUtil;
 import ru.ksu.niimm.cll.mocassin.nlp.util.NlpModulePropertiesLoader;
 import ru.ksu.niimm.cll.mocassin.parser.arxmliv.xpath.impl.ArxmlivFormatConstants;
+import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
 
 import com.google.common.base.Function;
-import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 
@@ -44,7 +43,8 @@ public class ReferenceSearcherImpl implements ReferenceSearcher {
 				.get(
 						getProperty(GateFormatConstants.ARXMLIV_REF_ANNOTATION_PROPERTY_KEY));
 		Iterable<Annotation> filteredRefAnnotations = Iterables.filter(
-				refAnnotations, new NotInMathPredicate());
+				refAnnotations, new NotInMathPredicate(
+						getNlpModulePropertiesLoader(), getDocument()));
 
 		Iterable<Reference> referenceIterable = Iterables.transform(
 				filteredRefAnnotations, new ExtractFunction());
@@ -83,29 +83,6 @@ public class ReferenceSearcherImpl implements ReferenceSearcher {
 	public List<String> getTokensForAnnotation(Document document,
 			Annotation annotation) {
 		return getAnnotationUtil().getTokensForAnnotation(document, annotation);
-	}
-
-	/**
-	 * Predicate which goal is to filter out all the references in math
-	 * expressions
-	 * 
-	 * @author nzhiltsov
-	 * 
-	 */
-	private class NotInMathPredicate implements Predicate<Annotation> {
-
-		@Override
-		public boolean apply(Annotation refAnnotation) {
-
-			AnnotationSet coveringMathAnnotations = getDocument()
-					.getAnnotations(
-							getProperty(GateFormatConstants.ARXMLIV_MARKUP_NAME_PROPERTY_KEY))
-					.getCovering(
-							getProperty(GateFormatConstants.ARXMLIV_MATH_ANNOTATION_PROPERTY_KEY),
-							refAnnotation.getStartNode().getOffset(),
-							refAnnotation.getEndNode().getOffset());
-			return coveringMathAnnotations.isEmpty();
-		}
 	}
 
 	/**
