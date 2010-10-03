@@ -134,6 +134,7 @@
 		<module>../mocassin-parser</module>
 		<module>../mocassin-analyzer</module>
 		<module>../mocassin-nlp</module>
+		<module>../mocassin-util</module>
 	</modules>
 	<distributionManagement>
 		<repository>
