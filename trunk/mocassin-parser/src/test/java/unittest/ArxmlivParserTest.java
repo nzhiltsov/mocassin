@@ -9,7 +9,6 @@ import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +18,6 @@ import ru.ksu.niimm.cll.mocassin.parser.Edge;
 import ru.ksu.niimm.cll.mocassin.parser.Node;
 import ru.ksu.niimm.cll.mocassin.parser.Parser;
 import unittest.util.GraphContainer;
-import unittest.util.JaxbUtil;
 import unittest.util.XmlUtils;
 
 import com.google.inject.Inject;

@@ -2,7 +2,6 @@ package ru.ksu.niimm.cll.mocassin.parser.latex.builder.impl;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 

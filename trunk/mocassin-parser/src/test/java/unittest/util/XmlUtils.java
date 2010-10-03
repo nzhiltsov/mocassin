@@ -3,9 +3,6 @@ package unittest.util;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.StringWriter;
-
-import javax.xml.transform.stream.StreamResult;
 
 import ru.ksu.niimm.cll.mocassin.parser.Edge;
 import ru.ksu.niimm.cll.mocassin.parser.Node;
