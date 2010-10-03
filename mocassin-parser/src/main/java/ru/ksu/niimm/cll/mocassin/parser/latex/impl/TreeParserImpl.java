@@ -8,7 +8,6 @@ import java.util.Comparator;
 import java.util.List;
 
 import net.sourceforge.texlipse.model.DocumentReference;
-import net.sourceforge.texlipse.model.OutlineNode;
 import net.sourceforge.texlipse.texparser.LatexLexer;
 import net.sourceforge.texlipse.texparser.LatexParser;
 import net.sourceforge.texlipse.texparser.lexer.LexerException;

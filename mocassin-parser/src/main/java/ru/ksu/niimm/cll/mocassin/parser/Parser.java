@@ -1,11 +1,7 @@
 package ru.ksu.niimm.cll.mocassin.parser;
 
 import java.io.InputStream;
-import java.io.Reader;
 import java.util.List;
-
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactoryConfigurationError;
 
 /**
  * Parser that analyzes a document and build the graph model for that

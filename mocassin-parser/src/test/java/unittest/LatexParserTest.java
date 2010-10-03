@@ -2,8 +2,6 @@ package unittest;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.List;
 
 import org.junit.Assert;
@@ -15,7 +13,6 @@ import ru.ksu.niimm.cll.mocassin.parser.Edge;
 import ru.ksu.niimm.cll.mocassin.parser.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.parser.Node;
 import ru.ksu.niimm.cll.mocassin.parser.Parser;
-import ru.ksu.niimm.cll.mocassin.parser.latex.impl.LatexParserImpl;
 
 import com.google.inject.Inject;
 import com.mycila.testing.junit.MycilaJunitRunner;

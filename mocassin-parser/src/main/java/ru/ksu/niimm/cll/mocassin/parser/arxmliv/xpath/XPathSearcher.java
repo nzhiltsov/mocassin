@@ -1,13 +1,8 @@
 package ru.ksu.niimm.cll.mocassin.parser.arxmliv.xpath;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import javax.xml.xpath.XPathExpressionException;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public interface XPathSearcher {

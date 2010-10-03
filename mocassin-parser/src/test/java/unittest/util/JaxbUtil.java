@@ -1,20 +1,12 @@
 package unittest.util;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.StringWriter;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import javax.xml.bind.Marshaller.Listener;
-import javax.xml.transform.stream.StreamResult;
 
-import ru.ksu.niimm.cll.mocassin.parser.Edge;
-import ru.ksu.niimm.cll.mocassin.parser.EdgeContext;
-import ru.ksu.niimm.cll.mocassin.parser.Node;
 import ru.ksu.niimm.cll.mocassin.parser.impl.EdgeContextImpl;
 import ru.ksu.niimm.cll.mocassin.parser.impl.EdgeImpl;
 import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl;
