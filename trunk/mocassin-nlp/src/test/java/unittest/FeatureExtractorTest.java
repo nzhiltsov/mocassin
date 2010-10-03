@@ -15,7 +15,6 @@ import org.junit.runner.RunWith;
 import ru.ksu.niimm.cll.mocassin.nlp.FeatureExtractor;
 import ru.ksu.niimm.cll.mocassin.nlp.NlpModule;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
-import ru.ksu.niimm.cll.mocassin.nlp.impl.ReferenceImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.ReferenceProcessListener;
 import ru.ksu.niimm.cll.mocassin.nlp.util.ReferenceXStream;
 
