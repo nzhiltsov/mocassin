@@ -1,0 +1,35 @@
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<parent>
+		<groupId>ru.ksu.niimm.cll.mocassin</groupId>
+		<artifactId>mocassin-pom</artifactId>
+		<version>1.0.0.4-SNAPSHOT</version>
+		<relativePath>../mocassin-pom</relativePath>
+	</parent>
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>ru.ksu.niimm.cll.mocassin</groupId>
+	<artifactId>mocassin-util</artifactId>
+	<name>Mocassin General Utilities</name>
+	<version>1.0.0.4-SNAPSHOT</version>
+	<organization>
+		<name>N.G. Chebotarev Research Institute of Mathematics and Mechanics</name>
+		<url>http://cll.niimm.ksu.ru</url>
+	</organization>
+	<dependencies>
+		
+		<dependency>
+			<groupId>com.google.common</groupId>
+			<artifactId>guava</artifactId>
+			<version>r06</version>
+		</dependency>
+		
+		<!-- for Unit testing  -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+		
+	</dependencies>
+</project>
