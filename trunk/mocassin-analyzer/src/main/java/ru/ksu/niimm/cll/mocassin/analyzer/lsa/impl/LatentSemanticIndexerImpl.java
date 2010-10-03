@@ -59,7 +59,7 @@ public class LatentSemanticIndexerImpl implements LatentSemanticIndexer {
 		BiMap<Integer, Reference> id2ref = this.ref2id.inverse();
 		int m = this.token2id.size();
 		int n = this.ref2id.size();
-		double[][] matrix = buildTermReferenceMatrix(id2ref, m, n);
+		double[][] matrix = buildWeightedTermReferenceMatrix(id2ref, m, n);
 
 		SvdMatrix svdMatrix = SvdMatrix.svd(matrix, MAX_FACTORS, FEATURE_INIT,
 				INITIAL_LEARNING_RATE, ANNILING_RATE, REGULARIZATION, null,
@@ -92,7 +92,18 @@ public class LatentSemanticIndexerImpl implements LatentSemanticIndexer {
 		}
 	}
 
-	private double[][] buildTermReferenceMatrix(
+	/**
+	 * build term/reference matrix with values weighted using tf-idf
+	 * 
+	 * @param id2ref
+	 *            identifier-to-reference map
+	 * @param m
+	 *            count of terms
+	 * @param n
+	 *            count of references
+	 * @return
+	 */
+	private double[][] buildWeightedTermReferenceMatrix(
 			BiMap<Integer, Reference> id2ref, int m, int n) {
 		double[][] matrix = new double[m][n];
 		for (int j = 0; j < n; j++) {
@@ -106,7 +117,30 @@ public class LatentSemanticIndexerImpl implements LatentSemanticIndexer {
 			}
 
 		}
-		return matrix;
+		double[][] weightedMatrix = new double[m][n];
+
+		for (int k = 0; k < m; k++) {
+			for (int l = 0; l < n; l++) {
+				if (matrix[k][l] == 0)
+					continue;
+				int termCount = 0;
+				for (int s = 0; s < m; s++) {
+					termCount += matrix[s][l];
+				}
+				double tf = matrix[k][l] / termCount;
+
+				int docCount = 0;
+				for (int s = 0; s < n; s++) {
+					if (matrix[k][s] > 0) {
+						docCount++;
+					}
+				}
+				double idf = ((double) n) / docCount;
+				weightedMatrix[k][l] = tf * idf;
+			}
+		}
+
+		return weightedMatrix;
 	}
 
 	private Map<String, Vector> getTermIndexMap(SvdMatrix svdMatrix) {

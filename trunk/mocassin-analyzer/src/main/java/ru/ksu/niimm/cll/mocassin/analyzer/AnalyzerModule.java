@@ -11,7 +11,9 @@ import ru.ksu.niimm.cll.mocassin.analyzer.mapping.matchers.impl.NameMatcher;
 import ru.ksu.niimm.cll.mocassin.analyzer.mapping.matchers.impl.NameMatcherPropertiesLoader;
 import ru.ksu.niimm.cll.mocassin.analyzer.mapping.matchers.impl.NameMatcherPropertiesLoaderImpl;
 import ru.ksu.niimm.cll.mocassin.analyzer.similarity.StringSimilarityEvaluator;
+import ru.ksu.niimm.cll.mocassin.analyzer.similarity.StructuralElementTypeRecognizer;
 import ru.ksu.niimm.cll.mocassin.analyzer.similarity.impl.StringSimilarityEvaluatorImpl;
+import ru.ksu.niimm.cll.mocassin.analyzer.similarity.impl.StructuralElementTypeRecognizerImpl;
 
 import com.google.inject.AbstractModule;
 
@@ -27,6 +29,8 @@ public class AnalyzerModule extends AbstractModule {
 		bind(ImportantNodeService.class).to(ImportantNodeServiceImpl.class);
 		bind(LatentSemanticIndexer.class).to(LatentSemanticIndexerImpl.class);
 		bind(LSIPropertiesLoader.class).to(LSIPropertiesLoaderImpl.class);
+		bind(StructuralElementTypeRecognizer.class).to(
+				StructuralElementTypeRecognizerImpl.class);
 	}
 
 }
