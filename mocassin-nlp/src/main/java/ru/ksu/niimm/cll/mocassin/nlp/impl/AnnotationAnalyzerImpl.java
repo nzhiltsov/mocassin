@@ -20,6 +20,7 @@ import ru.ksu.niimm.cll.mocassin.nlp.util.NlpModulePropertiesLoader;
 
 import com.google.inject.Inject;
 
+@Deprecated
 public class AnnotationAnalyzerImpl implements AnnotationAnalyzer {
 
 	private static final String SENTENCE_ANNOTATION_NAME_PROPERTY_KEY = "sentence.annotation.name";

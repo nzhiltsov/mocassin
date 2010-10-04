@@ -82,7 +82,8 @@ public class ReferenceSearcherImpl implements ReferenceSearcher {
 
 	public List<String> getTokensForAnnotation(Document document,
 			Annotation annotation) {
-		return getAnnotationUtil().getTokensForAnnotation(document, annotation);
+		return getAnnotationUtil().getTokensForAnnotation(document, annotation,
+				getNlpModulePropertiesLoader().useStemming());
 	}
 
 	/**

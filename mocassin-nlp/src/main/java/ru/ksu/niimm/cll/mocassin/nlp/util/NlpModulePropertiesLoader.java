@@ -4,4 +4,6 @@ public interface NlpModulePropertiesLoader {
 	String get(String key);
 	
 	int getWindowTokenSize();
+	
+	boolean useStemming();
 }

@@ -30,7 +30,7 @@ public class AnnotationUtilImpl implements AnnotationUtil {
 	 * (gate.Document, gate.Annotation)
 	 */
 	public List<String> getTokensForAnnotation(Document document,
-			Annotation annotation) {
+			Annotation annotation, boolean useStemming) {
 		List<String> titleTokens;
 		titleTokens = new LinkedList<String>();
 
@@ -52,7 +52,9 @@ public class AnnotationUtilImpl implements AnnotationUtil {
 			String kind = (String) a.getFeatures().get("kind");
 			if (!kind.equals("word"))
 				continue;
-			String token = (String) a.getFeatures().get("string");
+			String tokenFeatureName = useStemming ? GateFormatConstants.STEM_FEATURE_NAME
+					: GateFormatConstants.TOKEN_FEATURE_NAME;
+			String token = (String) a.getFeatures().get(tokenFeatureName);
 			titleTokens.add(token);
 		}
 		return titleTokens;
