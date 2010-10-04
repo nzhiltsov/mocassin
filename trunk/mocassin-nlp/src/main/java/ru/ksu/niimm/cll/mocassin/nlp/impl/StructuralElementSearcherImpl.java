@@ -59,7 +59,8 @@ public class StructuralElementSearcherImpl implements StructuralElementSearcher 
 
 	public List<String> getTokensForAnnotation(Document document,
 			Annotation annotation) {
-		return getAnnotationUtil().getTokensForAnnotation(document, annotation);
+		return getAnnotationUtil().getTokensForAnnotation(document, annotation,
+				getNlpModulePropertiesLoader().useStemming());
 	}
 
 	private class ExtractionFunction implements

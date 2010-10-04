@@ -30,8 +30,6 @@ public class FeatureExtractorImpl implements FeatureExtractor {
 	@Inject
 	private NlpModulePropertiesLoader nlpModulePropertiesLoader;
 	@Inject
-	private AnnotationAnalyzer annotationAnalyzer;
-	@Inject
 	private ReferenceSearcher referenceSearcher;
 
 	private List<ReferenceProcessListener> listeners = new ArrayList<ReferenceProcessListener>();
@@ -42,8 +40,7 @@ public class FeatureExtractorImpl implements FeatureExtractor {
 	}
 
 	@Override
-	public void processReferences()
-			throws Exception {
+	public void processReferences() throws Exception {
 		initialize();
 		SerialDataStore dataStore = new SerialDataStore(
 				getNlpModulePropertiesLoader().get(
@@ -71,10 +68,6 @@ public class FeatureExtractorImpl implements FeatureExtractor {
 
 	public NlpModulePropertiesLoader getNlpModulePropertiesLoader() {
 		return nlpModulePropertiesLoader;
-	}
-
-	public AnnotationAnalyzer getAnnotationAnalyzer() {
-		return annotationAnalyzer;
 	}
 
 	private String getDocumentLrType() {

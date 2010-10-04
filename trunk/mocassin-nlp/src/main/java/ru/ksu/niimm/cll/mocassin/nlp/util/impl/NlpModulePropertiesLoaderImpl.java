@@ -26,6 +26,12 @@ public class NlpModulePropertiesLoaderImpl implements NlpModulePropertiesLoader 
 		return Integer.parseInt(value);
 	}
 
+	@Override
+	public boolean useStemming() {
+		String value = getProperties().getProperty("useStemming");
+		return Boolean.parseBoolean(value);
+	}
+
 	public Properties getProperties() {
 		return properties;
 	}

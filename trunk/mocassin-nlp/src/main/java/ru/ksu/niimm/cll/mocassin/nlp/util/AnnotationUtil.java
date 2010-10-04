@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface AnnotationUtil {
 
-	List<String> getTokensForAnnotation(Document document, Annotation annotation);
+	List<String> getTokensForAnnotation(Document document,
+			Annotation annotation, boolean useStemming);
 
 }
