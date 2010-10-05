@@ -2,6 +2,7 @@ package ru.ksu.niimm.cll.mocassin.nlp.impl;
 
 import java.util.List;
 
+import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 
@@ -9,7 +10,7 @@ public class ReferenceImpl implements Reference {
 	private final int id;
 	private final StructuralElement from;
 	private final StructuralElement to;
-	private final String documentName;
+	private final ParsedDocument document;
 	private final String additionalRefid;
 	private List<String> sentenceTokens;
 
@@ -18,7 +19,7 @@ public class ReferenceImpl implements Reference {
 
 		private StructuralElement from;
 		private StructuralElement to;
-		private String documentName;
+		private ParsedDocument document;
 		private String additionalRefid;
 
 		public Builder(int id) {
@@ -35,8 +36,8 @@ public class ReferenceImpl implements Reference {
 			return this;
 		}
 
-		public Builder document(String documentName) {
-			this.documentName = documentName;
+		public Builder document(ParsedDocument document) {
+			this.document = document;
 			return this;
 		}
 
@@ -54,7 +55,7 @@ public class ReferenceImpl implements Reference {
 		this.id = builder.id;
 		this.from = builder.from;
 		this.to = builder.to;
-		this.documentName = builder.documentName;
+		this.document = builder.document;
 		this.additionalRefid = builder.additionalRefid;
 	}
 
@@ -78,8 +79,8 @@ public class ReferenceImpl implements Reference {
 		return to;
 	}
 
-	public String getDocumentName() {
-		return documentName;
+	public ParsedDocument getDocument() {
+		return document;
 	}
 
 	public String getAdditionalRefid() {
@@ -91,7 +92,7 @@ public class ReferenceImpl implements Reference {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((documentName == null) ? 0 : documentName.hashCode());
+				+ ((document.getFilename() == null) ? 0 : document.hashCode());
 		result = prime * result + id;
 		return result;
 	}
@@ -105,10 +106,10 @@ public class ReferenceImpl implements Reference {
 		if (getClass() != obj.getClass())
 			return false;
 		ReferenceImpl other = (ReferenceImpl) obj;
-		if (documentName == null) {
-			if (other.documentName != null)
+		if (document == null) {
+			if (other.document != null)
 				return false;
-		} else if (!documentName.equals(other.documentName))
+		} else if (!document.equals(other.document))
 			return false;
 		if (id != other.id)
 			return false;
@@ -117,8 +118,8 @@ public class ReferenceImpl implements Reference {
 
 	@Override
 	public String toString() {
-		return String.format("%s %s %s", documentName.substring(0, documentName
-				.indexOf(".")), id, additionalRefid);
+		return String.format("%s %s %s", document.getFilename().substring(0,
+				document.getFilename().indexOf(".")), id, additionalRefid);
 	}
 
 }
