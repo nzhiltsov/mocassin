@@ -3,15 +3,23 @@ package ru.ksu.niimm.cll.mocassin.nlp;
 import java.util.List;
 
 /**
- * Reference between structural elements which semantics needs to be defined
+ * Reference between structural elements which semantics need to be defined
  * 
  * @author nzhiltsov
  * 
  */
 public interface Reference {
-	int getId();
+	/**
+	 * 
+	 * @return document where a reference is located
+	 */
+	ParsedDocument getDocument();
 
-	String getDocumentName();
+	/**
+	 * 
+	 * @return within-document identifier of a reference
+	 */
+	int getId();
 
 	StructuralElement getFrom();
 

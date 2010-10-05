@@ -6,6 +6,7 @@ import gate.Document;
 
 import java.util.List;
 
+import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.ReferenceSearcher;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
@@ -105,12 +106,15 @@ public class ReferenceSearcherImpl implements ReferenceSearcher {
 			List<String> sentenceTokens = getTokensForAnnotation(getDocument(),
 					enclosingSentence);
 			String documentName = getDocument().getName();
+			long documentSize = getDocument().getContent().size();
+			ParsedDocument refDocument = new ParsedDocumentImpl(documentName,
+					documentSize);
 
 			String additionalRefid = (String) annotation.getFeatures().get(
 					ArxmlivFormatConstants.REF_ID_ATTRIBUTE_NAME);
 
 			Reference reference = new ReferenceImpl.Builder(id).from(from).to(
-					to).document(documentName).additionalRefid(additionalRefid)
+					to).document(refDocument).additionalRefid(additionalRefid)
 					.build();
 			reference.setSentenceTokens(sentenceTokens);
 			return reference;
