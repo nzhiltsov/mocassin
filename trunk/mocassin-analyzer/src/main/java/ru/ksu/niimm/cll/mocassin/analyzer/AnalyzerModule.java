@@ -2,6 +2,8 @@ package ru.ksu.niimm.cll.mocassin.analyzer;
 
 import ru.ksu.niimm.cll.mocassin.analyzer.importance.ImportantNodeService;
 import ru.ksu.niimm.cll.mocassin.analyzer.importance.impl.ImportantNodeServiceImpl;
+import ru.ksu.niimm.cll.mocassin.analyzer.location.ReferenceElementLocationAnalyzer;
+import ru.ksu.niimm.cll.mocassin.analyzer.location.impl.ReferenceElementLocationAnalyzerImpl;
 import ru.ksu.niimm.cll.mocassin.analyzer.lsa.LSIPropertiesLoader;
 import ru.ksu.niimm.cll.mocassin.analyzer.lsa.LatentSemanticIndexer;
 import ru.ksu.niimm.cll.mocassin.analyzer.lsa.impl.LSIPropertiesLoaderImpl;
@@ -31,6 +33,8 @@ public class AnalyzerModule extends AbstractModule {
 		bind(LSIPropertiesLoader.class).to(LSIPropertiesLoaderImpl.class);
 		bind(StructuralElementTypeRecognizer.class).to(
 				StructuralElementTypeRecognizerImpl.class);
+		bind(ReferenceElementLocationAnalyzer.class).to(
+				ReferenceElementLocationAnalyzerImpl.class);
 	}
 
 }
