@@ -12,6 +12,8 @@ public class GateFormatConstants {
 	public static final String DEFAULT_ANNOTATION_SET_NAME = "";
 	public static final String TOKEN_FEATURE_NAME = "string";
 	public static final String STEM_FEATURE_NAME = "stem";
+	public static final String POS_FEATURE_NAME = "category";
+	public static final String VERB_POS_TAG_PREFIX = "vb";
 
 	private GateFormatConstants() {
 	}

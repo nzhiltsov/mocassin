@@ -12,6 +12,8 @@ import ru.ksu.niimm.cll.mocassin.analyzer.mapping.matchers.Matcher;
 import ru.ksu.niimm.cll.mocassin.analyzer.mapping.matchers.impl.NameMatcher;
 import ru.ksu.niimm.cll.mocassin.analyzer.mapping.matchers.impl.NameMatcherPropertiesLoader;
 import ru.ksu.niimm.cll.mocassin.analyzer.mapping.matchers.impl.NameMatcherPropertiesLoaderImpl;
+import ru.ksu.niimm.cll.mocassin.analyzer.pos.VerbBasedFeatureAnalyzer;
+import ru.ksu.niimm.cll.mocassin.analyzer.pos.impl.VerbBasedFeatureAnalyzerImpl;
 import ru.ksu.niimm.cll.mocassin.analyzer.similarity.StringSimilarityEvaluator;
 import ru.ksu.niimm.cll.mocassin.analyzer.similarity.StructuralElementTypeRecognizer;
 import ru.ksu.niimm.cll.mocassin.analyzer.similarity.impl.StringSimilarityEvaluatorImpl;
@@ -35,6 +37,8 @@ public class AnalyzerModule extends AbstractModule {
 				StructuralElementTypeRecognizerImpl.class);
 		bind(ReferenceElementLocationAnalyzer.class).to(
 				ReferenceElementLocationAnalyzerImpl.class);
+		bind(VerbBasedFeatureAnalyzer.class).to(
+				VerbBasedFeatureAnalyzerImpl.class);
 	}
 
 }

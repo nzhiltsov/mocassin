@@ -11,6 +11,7 @@ import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.ReferenceSearcher;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElementSearcher;
+import ru.ksu.niimm.cll.mocassin.nlp.Token;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateFormatConstants;
 import ru.ksu.niimm.cll.mocassin.nlp.util.AnnotationUtil;
 import ru.ksu.niimm.cll.mocassin.nlp.util.NlpModulePropertiesLoader;
@@ -81,7 +82,7 @@ public class ReferenceSearcherImpl implements ReferenceSearcher {
 		return annotationUtil;
 	}
 
-	public List<String> getTokensForAnnotation(Document document,
+	public List<Token> getTokensForAnnotation(Document document,
 			Annotation annotation) {
 		return getAnnotationUtil().getTokensForAnnotation(document, annotation,
 				getNlpModulePropertiesLoader().useStemming());
@@ -103,7 +104,7 @@ public class ReferenceSearcherImpl implements ReferenceSearcher {
 			StructuralElement to = getElementByLabel(labelref);
 			StructuralElement from = getEnclosingElement(annotation);
 			Annotation enclosingSentence = getEnclosingSentence(annotation);
-			List<String> sentenceTokens = getTokensForAnnotation(getDocument(),
+			List<Token> sentenceTokens = getTokensForAnnotation(getDocument(),
 					enclosingSentence);
 			String documentName = getDocument().getName();
 			long documentSize = getDocument().getContent().size();

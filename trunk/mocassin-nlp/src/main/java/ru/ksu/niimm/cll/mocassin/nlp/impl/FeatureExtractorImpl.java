@@ -11,7 +11,6 @@ import gate.util.GateException;
 import java.util.ArrayList;
 import java.util.List;
 
-import ru.ksu.niimm.cll.mocassin.nlp.AnnotationAnalyzer;
 import ru.ksu.niimm.cll.mocassin.nlp.FeatureExtractor;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.ReferenceSearcher;

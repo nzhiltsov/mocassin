@@ -5,9 +5,11 @@ import gate.Document;
 
 import java.util.List;
 
+import ru.ksu.niimm.cll.mocassin.nlp.Token;
+
 public interface AnnotationUtil {
 
-	List<String> getTokensForAnnotation(Document document,
+	List<Token> getTokensForAnnotation(Document document,
 			Annotation annotation, boolean useStemming);
 
 }

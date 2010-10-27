@@ -9,8 +9,10 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import ru.ksu.niimm.cll.mocassin.nlp.Token;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateFormatConstants;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.NotInMathPredicate;
+import ru.ksu.niimm.cll.mocassin.nlp.impl.TokenImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.util.AnnotationUtil;
 import ru.ksu.niimm.cll.mocassin.nlp.util.NlpModulePropertiesLoader;
 import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
@@ -29,10 +31,10 @@ public class AnnotationUtilImpl implements AnnotationUtil {
 	 * ru.ksu.niimm.cll.mocassin.nlp.util.impl.AnnotationUtil#getTokensForAnnotation
 	 * (gate.Document, gate.Annotation)
 	 */
-	public List<String> getTokensForAnnotation(Document document,
+	public List<Token> getTokensForAnnotation(Document document,
 			Annotation annotation, boolean useStemming) {
-		List<String> titleTokens;
-		titleTokens = new LinkedList<String>();
+		List<Token> titleTokens;
+		titleTokens = new LinkedList<Token>();
 
 		AnnotationSet tokenSet = document
 				.getAnnotations(GateFormatConstants.DEFAULT_ANNOTATION_SET_NAME)
@@ -54,7 +56,10 @@ public class AnnotationUtilImpl implements AnnotationUtil {
 				continue;
 			String tokenFeatureName = useStemming ? GateFormatConstants.STEM_FEATURE_NAME
 					: GateFormatConstants.TOKEN_FEATURE_NAME;
-			String token = (String) a.getFeatures().get(tokenFeatureName);
+			String tokenValue = (String) a.getFeatures().get(tokenFeatureName);
+			String pos = (String) a.getFeatures().get(
+					GateFormatConstants.POS_FEATURE_NAME);
+			Token token = new TokenImpl(tokenValue, pos);
 			titleTokens.add(token);
 		}
 		return titleTokens;

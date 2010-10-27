@@ -44,9 +44,13 @@ public abstract class AbstractAnalyzerTest {
 		}
 	}
 
-	protected <T> void print(Map<T, Vector> map, String outputPath)
-			throws IOException {
+	protected <T> void print(Map<T, Vector> map, String outputPath,
+			String header) throws IOException {
 		FileWriter writer = new FileWriter(outputPath);
+
+		if (header != null) {
+			writer.write(String.format("%s\n", header));
+		}
 		for (T t : map.keySet()) {
 			Vector vector = map.get(t);
 			String vectorStr = convertToString(vector);

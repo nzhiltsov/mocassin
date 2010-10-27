@@ -1,23 +1,26 @@
 package ru.ksu.niimm.cll.mocassin.analyzer.lsa.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import ru.ksu.niimm.cll.mocassin.analyzer.lsa.LSIPropertiesLoader;
-import ru.ksu.niimm.cll.mocassin.analyzer.lsa.LSIndex;
 import ru.ksu.niimm.cll.mocassin.analyzer.lsa.LatentSemanticIndexer;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
-import ru.ksu.niimm.cll.mocassin.nlp.util.StopWordLoader;
+import ru.ksu.niimm.cll.mocassin.nlp.Token;
+import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
 
 import com.aliasi.matrix.DenseVector;
 import com.aliasi.matrix.SvdMatrix;
 import com.aliasi.matrix.Vector;
+import com.google.common.base.Predicate;
 import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
+import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 
-public class LatentSemanticIndexerImpl implements LatentSemanticIndexer {
+public class LatentSemanticIndexerImpl extends AbstractScoringIndexer implements
+		LatentSemanticIndexer {
 	private final int MAX_EPOCHS;
 	private final int MIN_EPOCHS;
 	private final double MIN_IMPROVEMENT;
@@ -26,13 +29,6 @@ public class LatentSemanticIndexerImpl implements LatentSemanticIndexer {
 	private final double INITIAL_LEARNING_RATE;
 	private final double FEATURE_INIT;
 	private final int MAX_FACTORS;
-
-	@Inject
-	private StopWordLoader stopWordLoader;
-
-	private BiMap<String, Integer> token2id;
-
-	private BiMap<Reference, Integer> ref2id;
 
 	private LSIPropertiesLoader lsiPropertiesLoader;
 
@@ -69,78 +65,24 @@ public class LatentSemanticIndexerImpl implements LatentSemanticIndexer {
 
 		Map<String, Vector> termIndexMap = getTermIndexMap(svdMatrix);
 
-		return new LSIndexImpl(referenceIndexMap, termIndexMap);
+		return new LSIndexImpl(referenceIndexMap, termIndexMap,
+				new ArrayList<String>(this.token2id.keySet()));
 	}
 
-	private void initializeIndices(List<Reference> references) {
-		this.token2id = HashBiMap.create();
-		int tokenId = 0;
-		this.ref2id = HashBiMap.create();
-		int refId = 0;
-		for (Reference ref : references) {
-			List<String> sentenceTokens = ref.getSentenceTokens();
-			for (String sentenceToken : sentenceTokens) {
-				if (isStopWord(sentenceToken)
-						|| this.token2id.containsKey(sentenceToken
-								.toLowerCase()))
-					continue;
-				this.token2id.put(sentenceToken.toLowerCase(), tokenId);
-				tokenId++;
+	@Override
+	protected List<Token> filterTokens(List<Token> tokens) {
+		Predicate<Token> filter = new Predicate<Token>() {
+
+			@Override
+			public boolean apply(Token token) {
+				if (!getLsiPropertiesLoader().useStopWords()
+						&& isStopWord(token.getValue()))
+					return false;
+				return true;
 			}
-			this.ref2id.put(ref, refId);
-			refId++;
-		}
-	}
+		};
 
-	/**
-	 * build term/reference matrix with values weighted using tf-idf
-	 * 
-	 * @param id2ref
-	 *            identifier-to-reference map
-	 * @param m
-	 *            count of terms
-	 * @param n
-	 *            count of references
-	 * @return
-	 */
-	private double[][] buildWeightedTermReferenceMatrix(
-			BiMap<Integer, Reference> id2ref, int m, int n) {
-		double[][] matrix = new double[m][n];
-		for (int j = 0; j < n; j++) {
-			Reference ref = id2ref.get(j);
-			List<String> sentenceTokens = ref.getSentenceTokens();
-			for (String sentenceToken : sentenceTokens) {
-				if (isStopWord(sentenceToken))
-					continue;
-				int i = this.token2id.get(sentenceToken.toLowerCase());
-				matrix[i][j] += 1;
-			}
-
-		}
-		double[][] weightedMatrix = new double[m][n];
-
-		for (int k = 0; k < m; k++) {
-			for (int l = 0; l < n; l++) {
-				if (matrix[k][l] == 0)
-					continue;
-				int termCount = 0;
-				for (int s = 0; s < m; s++) {
-					termCount += matrix[s][l];
-				}
-				double tf = matrix[k][l] / termCount;
-
-				int docCount = 0;
-				for (int s = 0; s < n; s++) {
-					if (matrix[k][s] > 0) {
-						docCount++;
-					}
-				}
-				double idf = ((double) n) / docCount;
-				weightedMatrix[k][l] = tf * idf;
-			}
-		}
-
-		return weightedMatrix;
+		return CollectionUtil.asList(Iterables.filter(tokens, filter));
 	}
 
 	private Map<String, Vector> getTermIndexMap(SvdMatrix svdMatrix) {
@@ -173,16 +115,6 @@ public class LatentSemanticIndexerImpl implements LatentSemanticIndexer {
 			indexMap.put(biMap.get(k), termVector);
 		}
 		return indexMap;
-	}
-
-	public StopWordLoader getStopWordLoader() {
-		return stopWordLoader;
-	}
-
-	public boolean isStopWord(String word) {
-		if (!getLsiPropertiesLoader().useStopWords())
-			return false;
-		return stopWordLoader.getStopWords().contains(word.toLowerCase());
 	}
 
 }

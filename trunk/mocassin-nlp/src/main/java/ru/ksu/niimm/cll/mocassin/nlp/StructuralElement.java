@@ -53,7 +53,7 @@ public interface StructuralElement {
 	 * @return tokens of a title (e.g. 'Introduction', 'Theorem 1.1'), return
 	 *         null if the title is absent
 	 */
-	List<String> getTitleTokens();
+	List<Token> getTitleTokens();
 
-	void setTitleTokens(List<String> title);
+	void setTitleTokens(List<Token> title);
 }

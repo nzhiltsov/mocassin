@@ -3,6 +3,7 @@ package ru.ksu.niimm.cll.mocassin.nlp.impl;
 import java.util.List;
 
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
+import ru.ksu.niimm.cll.mocassin.nlp.Token;
 
 public class StructuralElementImpl implements StructuralElement {
 	private final int id;
@@ -10,7 +11,7 @@ public class StructuralElementImpl implements StructuralElement {
 	private final long end;
 	private final String name;
 	private String label;
-	private List<String> titleTokens;
+	private List<Token> titleTokens;
 
 	public static class Builder {
 		private final int id;
@@ -58,11 +59,11 @@ public class StructuralElementImpl implements StructuralElement {
 		this.label = label;
 	}
 
-	public List<String> getTitleTokens() {
+	public List<Token> getTitleTokens() {
 		return titleTokens;
 	}
 
-	public void setTitleTokens(List<String> titleTokens) {
+	public void setTitleTokens(List<Token> titleTokens) {
 		this.titleTokens = titleTokens;
 	}
 

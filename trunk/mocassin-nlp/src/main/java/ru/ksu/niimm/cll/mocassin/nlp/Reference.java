@@ -25,9 +25,9 @@ public interface Reference {
 
 	StructuralElement getTo();
 
-	List<String> getSentenceTokens();
+	List<Token> getSentenceTokens();
 
-	void setSentenceTokens(List<String> sentenceTokens);
+	void setSentenceTokens(List<Token> sentenceTokens);
 
 	String getAdditionalRefid();
 }

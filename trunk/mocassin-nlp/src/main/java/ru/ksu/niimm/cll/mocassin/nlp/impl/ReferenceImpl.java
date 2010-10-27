@@ -5,6 +5,7 @@ import java.util.List;
 import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
+import ru.ksu.niimm.cll.mocassin.nlp.Token;
 
 public class ReferenceImpl implements Reference {
 	private final int id;
@@ -12,7 +13,7 @@ public class ReferenceImpl implements Reference {
 	private final StructuralElement to;
 	private final ParsedDocument document;
 	private final String additionalRefid;
-	private List<String> sentenceTokens;
+	private List<Token> sentenceTokens;
 
 	public static class Builder {
 		private final int id;
@@ -59,11 +60,11 @@ public class ReferenceImpl implements Reference {
 		this.additionalRefid = builder.additionalRefid;
 	}
 
-	public List<String> getSentenceTokens() {
+	public List<Token> getSentenceTokens() {
 		return sentenceTokens;
 	}
 
-	public void setSentenceTokens(List<String> sentenceTokens) {
+	public void setSentenceTokens(List<Token> sentenceTokens) {
 		this.sentenceTokens = sentenceTokens;
 	}
 
