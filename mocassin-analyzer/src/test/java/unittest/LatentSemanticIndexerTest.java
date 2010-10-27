@@ -4,8 +4,8 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import ru.ksu.niimm.cll.mocassin.analyzer.lsa.LSIndex;
 import ru.ksu.niimm.cll.mocassin.analyzer.lsa.LatentSemanticIndexer;
+import ru.ksu.niimm.cll.mocassin.analyzer.lsa.impl.LSIndex;
 
 import com.google.inject.Inject;
 
@@ -22,8 +22,8 @@ public class LatentSemanticIndexerTest extends AbstractAnalyzerTest {
 	public void testReferenceBuildIndex() throws IOException {
 		LSIndex index = getLatentSemanticIndexer().buildReferenceIndex(
 				getReferences());
-		print(index.getTermVectors(), TERM_VECTORS_OUTPUT_FILENAME);
-		print(index.getReferenceVectors(), REF_VECTORS_OUTPUT_FILENAME);
+		print(index.getTermVectors(), TERM_VECTORS_OUTPUT_FILENAME, null);
+		print(index.getReferenceVectors(), REF_VECTORS_OUTPUT_FILENAME, null);
 	}
 
 	public LatentSemanticIndexer getLatentSemanticIndexer() {

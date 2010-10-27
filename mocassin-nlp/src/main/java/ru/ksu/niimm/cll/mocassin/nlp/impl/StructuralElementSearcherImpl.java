@@ -12,6 +12,7 @@ import java.util.Set;
 
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElementSearcher;
+import ru.ksu.niimm.cll.mocassin.nlp.Token;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateFormatConstants;
 import ru.ksu.niimm.cll.mocassin.nlp.util.AnnotationUtil;
 import ru.ksu.niimm.cll.mocassin.nlp.util.NlpModulePropertiesLoader;
@@ -57,7 +58,7 @@ public class StructuralElementSearcherImpl implements StructuralElementSearcher 
 		return annotationUtil;
 	}
 
-	public List<String> getTokensForAnnotation(Document document,
+	public List<Token> getTokensForAnnotation(Document document,
 			Annotation annotation) {
 		return getAnnotationUtil().getTokensForAnnotation(document, annotation,
 				getNlpModulePropertiesLoader().useStemming());
@@ -98,7 +99,7 @@ public class StructuralElementSearcherImpl implements StructuralElementSearcher 
 							annotation.getEndNode().getOffset());
 			List<Annotation> titleList = new ArrayList<Annotation>(titleSet);
 			Collections.sort(titleList, new OffsetComparator());
-			List<String> titleTokens = null;
+			List<Token> titleTokens = null;
 			if (titleList.size() > 0) {
 				Annotation title = titleList.get(0);
 				titleTokens = getTokensForAnnotation(getDocument(), title);
