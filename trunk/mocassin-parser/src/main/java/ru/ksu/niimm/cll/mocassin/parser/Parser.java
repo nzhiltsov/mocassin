@@ -13,4 +13,6 @@ public interface Parser {
 	void load(InputStream inputStream) throws Exception;
 
 	List<Edge<Node, Node>> getGraph() throws Exception;
+
+	List<Node> getNodes();
 }

@@ -72,6 +72,17 @@ public class ArxmlivParserImpl implements Parser {
 	}
 
 	@Override
+	public List<Node> getNodes() {
+		List<Node> nodes = new ArrayList<Node>();
+		for (int i = 0; i < getStructureNodes().getLength(); i++) {
+			org.w3c.dom.Node node = getStructureNodes().item(i);
+			Node graphNode = convertNode(node);
+			nodes.add(graphNode);
+		}
+		return nodes;
+	}
+
+	@Override
 	public void load(InputStream inputStream) throws Exception {
 		Document doc = getDocumentBuilder().parse(inputStream);
 		this.structureNodes = getXpathSearcher().findStructureNodes(doc);
