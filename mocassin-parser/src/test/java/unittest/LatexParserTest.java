@@ -40,6 +40,19 @@ public class LatexParserTest {
 		print(graph);
 	}
 
+	@Test
+	public void testGetNodes() throws Exception {
+		getParser().load(getInputStream());
+		List<Node> nodes = getParser().getNodes();
+		printNodes(nodes);
+	}
+
+	private void printNodes(List<Node> nodes) {
+		for (Node node : nodes) {
+			System.out.println(node);
+		}
+	}
+
 	private void print(List<Edge<Node, Node>> graph) {
 		for (Edge<Node, Node> edge : graph) {
 			System.out.println(edge);
