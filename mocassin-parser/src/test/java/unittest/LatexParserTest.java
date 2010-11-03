@@ -34,7 +34,7 @@ public class LatexParserTest {
 	@Inject
 	private Logger logger;
 
-	private static final String COLLECTION_STATS_OUTPUT_DIR = "/tmp/collection-stats";
+	private static final String COLLECTION_STATS_OUTPUT_FILE = "/tmp/collection-stats.txt";
 
 	private static final String DOCUMENT_COLLECTION_INPUT_DIR = "<enter dir name here>";
 
@@ -51,7 +51,6 @@ public class LatexParserTest {
 
 		initializeFileList();
 
-		makeOutputDir();
 	}
 
 	@Test
@@ -64,6 +63,7 @@ public class LatexParserTest {
 
 	@Test
 	public void testGetNodes() throws Exception {
+		List<Node> nodes = new ArrayList<Node>();
 		for (File file : getFiles()) {
 			InputStream inputStream = new FileInputStream(file);
 			try {
@@ -74,21 +74,10 @@ public class LatexParserTest {
 								.getAbsolutePath()));
 				continue;
 			}
-			List<Node> nodes = getParser().getNodes();
+			nodes.addAll(getParser().getNodes());
 
-			saveStats(file, nodes);
 		}
-
-	}
-
-	private void saveStats(File file, List<Node> nodes) throws IOException {
-		File parentFile = file.getParentFile();
-		File grandParentFile = parentFile.getParentFile();
-		String parentDir = parentFile.getName();
-		String grandParentDir = grandParentFile.getName();
-		printNodes(nodes, new File(String.format("%s/%s_%s_%s.txt",
-				COLLECTION_STATS_OUTPUT_DIR, grandParentDir, parentDir, file
-						.getName())));
+		printNodes(nodes, new File(COLLECTION_STATS_OUTPUT_FILE));
 	}
 
 	public Parser getParser() {
@@ -120,6 +109,7 @@ public class LatexParserTest {
 		}
 
 		FileWriter writer = new FileWriter(file);
+		writer.write("element count\n");
 		for (String nodeName : node2count.keySet()) {
 			Integer value = node2count.get(nodeName);
 			writer.write(String.format("%s %d\n", nodeName, value));
@@ -153,16 +143,4 @@ public class LatexParserTest {
 		}
 	}
 
-	private void makeOutputDir() {
-		File outputDir = new File(COLLECTION_STATS_OUTPUT_DIR);
-		if (!outputDir.canRead()) {
-			if (!outputDir.mkdir()) {
-				throw new RuntimeException(
-						String
-								.format(
-										"couldn't create root folder to save collection stats: %s",
-										COLLECTION_STATS_OUTPUT_DIR));
-			}
-		}
-	}
 }
