@@ -1,5 +1,7 @@
 package ru.ksu.niimm.cll.mocassin.nlp;
 
+import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
+import ru.ksu.niimm.cll.mocassin.nlp.gate.impl.GateDocumentDAOImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.AnnotationAnalyzerImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.FeatureExtractorImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.ReferenceSearcherImpl;
@@ -26,6 +28,7 @@ public class NlpModule extends AbstractModule {
 		bind(ReferenceSearcher.class).to(ReferenceSearcherImpl.class);
 		bind(AnnotationUtil.class).to(AnnotationUtilImpl.class);
 		bind(StopWordLoader.class).to(StopWordLoaderImpl.class);
+		bind(GateDocumentDAO.class).to(GateDocumentDAOImpl.class);
 	}
 
 }

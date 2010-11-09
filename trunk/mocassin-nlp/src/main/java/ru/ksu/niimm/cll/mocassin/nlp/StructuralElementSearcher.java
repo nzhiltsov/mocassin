@@ -12,5 +12,20 @@ import java.util.List;
  * 
  */
 public interface StructuralElementSearcher {
+	/**
+	 * retrieve all the structural element of a given document
+	 * 
+	 * @param document
+	 * @return
+	 */
 	List<StructuralElement> retrieve(Document document);
+
+	/**
+	 * returns element by id for a given document
+	 * 
+	 * @param document
+	 * @param id
+	 * @return
+	 */
+	StructuralElement findById(Document document, int id);
 }

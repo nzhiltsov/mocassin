@@ -83,4 +83,14 @@ public class StructuralElementImpl implements StructuralElement {
 		return name;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		for (Token token : titleTokens) {
+			sb.append(token.toString());
+			sb.append(" ");
+		}
+		return String.format("%d; %s; %s", id, name, sb.toString());
+	}
+
 }

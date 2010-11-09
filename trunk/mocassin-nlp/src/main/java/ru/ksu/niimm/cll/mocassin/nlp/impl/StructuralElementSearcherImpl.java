@@ -46,6 +46,30 @@ public class StructuralElementSearcherImpl implements StructuralElementSearcher 
 		return CollectionUtil.asList(structuralElementIterable);
 	}
 
+	@Override
+	public StructuralElement findById(Document document, int id) {
+		Set<String> nameSet = ArxmlivStructureElementTypes.toNameSet();
+		AnnotationSet structuralAnnotations = document
+				.getAnnotations(
+						getProperty(GateFormatConstants.ARXMLIV_MARKUP_NAME_PROPERTY_KEY))
+				.get(nameSet);
+		Annotation foundAnnotation = null;
+		for (Annotation annotation : structuralAnnotations) {
+			if (annotation.getId().equals(id)) {
+				foundAnnotation = annotation;
+			}
+		}
+		if (foundAnnotation == null)
+			throw new RuntimeException(
+					String
+							.format(
+									"there is no structural element with id='%d' in document %s",
+									id, document.getName()));
+		StructuralElement foundElement = new ExtractionFunction(document)
+				.apply(foundAnnotation);
+		return foundElement;
+	}
+
 	public String getProperty(String key) {
 		return getNlpModulePropertiesLoader().get(key);
 	}
