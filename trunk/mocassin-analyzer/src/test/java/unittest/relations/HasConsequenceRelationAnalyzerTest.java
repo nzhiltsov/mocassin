@@ -1,5 +1,6 @@
 package unittest.relations;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,6 +30,7 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 		LatexParserModule.class, OntologyModule.class, VirtuosoModule.class })
 public class HasConsequenceRelationAnalyzerTest {
 	private static final String TEST_DATA_FILEPATH = "/tmp/Corollary-training-data.csv";
+	private static final String EVALUATION_RESULTS_OUTPUT_FILENAME = "/tmp/hasConsequence-results.txt";
 	@Inject
 	private HasConsequenceRelationAnalyzer hasConsequenceRelationAnalyzer;
 
@@ -60,11 +62,10 @@ public class HasConsequenceRelationAnalyzerTest {
 	}
 
 	@Test
-	public void testAnalyze() {
-		List<RelationInfo> sample = testRecords.subList(0, 10);
+	public void testAnalyze() throws IOException {
 		List<RelationInfo> processedRecords = getHasConsequenceRelationAnalyzer()
-				.analyze(sample);
-		for (RelationInfo testInfo : sample) {
+				.analyze(testRecords);
+		for (RelationInfo testInfo : testRecords) {
 			for (RelationInfo processedInfo : processedRecords) {
 				if (processedInfo.getFilename().equals(testInfo.getFilename())
 						&& processedInfo.getRangeId() == testInfo.getRangeId()) {
@@ -81,11 +82,14 @@ public class HasConsequenceRelationAnalyzerTest {
 		printEvaluationResults();
 	}
 
-	private void printEvaluationResults() {
+	private void printEvaluationResults() throws IOException {
 		float precision = ((float) successCount) / (successCount + errorCount);
-		System.out.println(String.format(
-				"precision: %f; success: %d, error: %d", precision,
-				successCount, errorCount));
+
+		FileWriter fw = new FileWriter(EVALUATION_RESULTS_OUTPUT_FILENAME);
+		fw.write(String.format("precision: %f; success: %d, error: %d",
+				precision, successCount, errorCount));
+		fw.flush();
+		fw.close();
 	}
 
 	public HasConsequenceRelationAnalyzer getHasConsequenceRelationAnalyzer() {
