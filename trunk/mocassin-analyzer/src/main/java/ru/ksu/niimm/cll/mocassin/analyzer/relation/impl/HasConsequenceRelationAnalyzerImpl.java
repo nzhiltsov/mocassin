@@ -11,6 +11,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import ru.ksu.niimm.cll.mocassin.analyzer.relation.HasConsequenceRelationAnalyzer;
+import ru.ksu.niimm.cll.mocassin.analyzer.relation.MocassinOntologyClasses;
+import ru.ksu.niimm.cll.mocassin.analyzer.relation.MocassinOntologyRelations;
 import ru.ksu.niimm.cll.mocassin.analyzer.relation.RelationInfo;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElementSearcher;
@@ -50,6 +52,7 @@ public class HasConsequenceRelationAnalyzerImpl implements
 				for (RelationInfo info : relationInfoList) {
 					processedInfoList.add(processRelationInfo(document, info));
 				}
+				getGateDocumentDAO().release(document);
 
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, String.format(
@@ -69,7 +72,29 @@ public class HasConsequenceRelationAnalyzerImpl implements
 			RelationInfo info) {
 		StructuralElement rangeElement = getStructuralElementSearcher()
 				.findById(document, info.getRangeId());
-		throw new UnsupportedOperationException("n.y.i.");
+		MocassinOntologyClasses[] validDomains = MocassinOntologyRelations
+				.getValidDomains(MocassinOntologyRelations.HAS_CONSEQUENCE);
+		List<String> domains = new ArrayList<String>();
+		for (MocassinOntologyClasses clazz : validDomains) {
+			for (String str : clazz.getLabels()) {
+				if (!domains.contains(str)) {
+					domains.add(str);
+				}
+			}
+		}
+		String[] domainArray = new String[domains.size()];
+		for (int i = 0; i < domainArray.length; i++) {
+			domainArray[i] = domains.get(i);
+		}
+		StructuralElement predecessor = getStructuralElementSearcher()
+				.findClosestPredecessor(document, rangeElement.getId(),
+						domainArray);
+		RelationInfo definedInfo = new RelationInfo();
+		definedInfo.setFilename(info.getFilename());
+		definedInfo.setRelation(info.getRelation());
+		definedInfo.setRangeId(info.getRangeId());
+		definedInfo.setDomainId(predecessor.getId());
+		return definedInfo;
 	}
 
 	public StructuralElementSearcher getStructuralElementSearcher() {
@@ -84,12 +109,15 @@ public class HasConsequenceRelationAnalyzerImpl implements
 		Collections.sort(docPrefixes);
 
 		Map<String, String> prefix2id = Maps.newHashMap();
-
+		int j = 0;
 		for (String docPrefix : docPrefixes) {
-			for (String documentId : documentIds) {
+			while (j < documentIds.size()) {
+				String documentId = documentIds.get(j);
 				if (documentId.startsWith(docPrefix)) {
 					prefix2id.put(docPrefix, documentId);
+					break;
 				}
+				j++;
 			}
 		}
 		return prefix2id;

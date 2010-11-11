@@ -1,13 +1,22 @@
 package unittest;
 
+import gate.Document;
+
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
+import ru.ksu.niimm.cll.mocassin.analyzer.relation.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.analyzer.similarity.StructuralElementTypeRecognizer;
 import ru.ksu.niimm.cll.mocassin.analyzer.similarity.StructuralElementTypesInfo;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
+import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
+import ru.ksu.niimm.cll.mocassin.nlp.StructuralElementSearcher;
+import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
@@ -18,6 +27,28 @@ public class StructuralElementTypeRecognizerTest extends AbstractAnalyzerTest {
 
 	@Inject
 	private StructuralElementTypeRecognizer structuralElementTypeRecognizer;
+
+	@Inject
+	private StructuralElementSearcher structuralElementSearcher;
+	@Inject
+	private GateDocumentDAO gateDocumentDAO;
+
+	private StructuralElement testElement;
+
+	@Before
+	public void init() throws Exception {
+		List<String> ids = gateDocumentDAO.getDocumentIds();
+		String foundId = null;
+		for (String id : ids) {
+			if (id.startsWith("f000008.tex")) {
+				foundId = id;
+			}
+		}
+		Assert.assertNotNull(foundId);
+		Document document = gateDocumentDAO.load(foundId);
+		testElement = structuralElementSearcher.findById(document, 3747);
+		gateDocumentDAO.release(document);
+	}
 
 	@Test
 	public void testRecognize() throws IOException {
@@ -32,6 +63,14 @@ public class StructuralElementTypeRecognizerTest extends AbstractAnalyzerTest {
 		Iterable<StructuralElementTypesInfo> types = Iterables.transform(
 				getReferences(), function);
 		print(types, TYPES_OUTPUT_FILENAME);
+	}
+
+	@Test
+	public void testPredict() {
+
+		MocassinOntologyClasses prediction = getStructuralElementTypeRecognizer()
+				.predict(testElement);
+		System.out.println(prediction);
 	}
 
 	public StructuralElementTypeRecognizer getStructuralElementTypeRecognizer() {

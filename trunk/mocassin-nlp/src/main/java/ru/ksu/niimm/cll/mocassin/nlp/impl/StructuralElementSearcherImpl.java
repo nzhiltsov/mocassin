@@ -6,7 +6,9 @@ import gate.Document;
 import gate.util.OffsetComparator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -21,7 +23,9 @@ import ru.ksu.niimm.cll.mocassin.parser.arxmliv.xpath.impl.ArxmlivStructureEleme
 import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
 
 import com.google.common.base.Function;
+import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Ordering;
 import com.google.inject.Inject;
 
 public class StructuralElementSearcherImpl implements StructuralElementSearcher {
@@ -68,6 +72,44 @@ public class StructuralElementSearcherImpl implements StructuralElementSearcher 
 		StructuralElement foundElement = new ExtractionFunction(document)
 				.apply(foundAnnotation);
 		return foundElement;
+	}
+
+	@Override
+	public StructuralElement findClosestPredecessor(Document document,
+			final int id, final String... filterPredecessorTypes) {
+		List<StructuralElement> elements = retrieve(document);
+
+		Predicate<StructuralElement> typeFilter = new Predicate<StructuralElement>() {
+
+			@Override
+			public boolean apply(StructuralElement element) {
+				return Arrays.asList(filterPredecessorTypes).contains(
+						element.getName());
+			}
+		};
+
+		List<StructuralElement> filteredElements = CollectionUtil
+				.asList(Iterables.filter(elements, typeFilter));
+		Collections.sort(filteredElements,
+				new StructuralElementByLocationComparator());
+
+		Predicate<StructuralElement> findById = new Predicate<StructuralElement>() {
+
+			@Override
+			public boolean apply(StructuralElement element) {
+				return element.getId() == id;
+			}
+		};
+
+		StructuralElement foundElement = Iterables.find(filteredElements,
+				findById);
+
+		int foundElementIndex = filteredElements.indexOf(foundElement);
+
+		int predecessorIndex = foundElementIndex - 1;
+
+		return predecessorIndex > -1 ? filteredElements.get(predecessorIndex)
+				: null;
 	}
 
 	public String getProperty(String key) {

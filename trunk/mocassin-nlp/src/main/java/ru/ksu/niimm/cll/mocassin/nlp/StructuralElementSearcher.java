@@ -28,4 +28,16 @@ public interface StructuralElementSearcher {
 	 * @return
 	 */
 	StructuralElement findById(Document document, int id);
+
+	/**
+	 * returns the closest predecessor of element with given id, filtering by
+	 * its type name if necessary
+	 * 
+	 * @param document
+	 * @param id
+	 * @param filterTypes
+	 * @return
+	 */
+	StructuralElement findClosestPredecessor(Document document, int id,
+			String... filterPredecessorTypes);
 }
