@@ -5,6 +5,7 @@ import gate.Document;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -25,8 +26,10 @@ public class StructuralElementSearcherTest {
 	@Inject
 	private GateDocumentDAO gateDocumentDAO;
 
-	@Test
-	public void testFindById() throws Exception {
+	private Document document;
+
+	@Before
+	public void init() throws Exception {
 		List<String> ids = getGateDocumentDAO().getDocumentIds();
 		String foundId = null;
 		for (String id : ids) {
@@ -35,11 +38,26 @@ public class StructuralElementSearcherTest {
 			}
 		}
 		Assert.assertNotNull(foundId);
-		Document document = getGateDocumentDAO().load(foundId);
+		document = getGateDocumentDAO().load(foundId);
+	}
+
+	@Test
+	public void testFindById() throws Exception {
+
 		StructuralElement foundElement = getStructuralElementSearcher()
 				.findById(document, 3747);
 		getGateDocumentDAO().release(document);
 		System.out.println(foundElement);
+	}
+
+	@Test
+	public void testFindClosestPredecessor() {
+		String[] filterTypes = { "axiom", "claim", "assertion", "statement",
+				"conjecture", "hypothesis", "corollary", "lemma",
+				"proposition", "theorem" };
+		StructuralElement predecessor = getStructuralElementSearcher()
+				.findClosestPredecessor(document, 8884, filterTypes);
+		System.out.println(predecessor);
 	}
 
 	public StructuralElementSearcher getStructuralElementSearcher() {

@@ -8,5 +8,22 @@ package ru.ksu.niimm.cll.mocassin.analyzer.relation;
  * 
  */
 public enum MocassinOntologyRelations {
-	HAS_CONSEQUENCE
+	HAS_CONSEQUENCE;
+
+	public static MocassinOntologyClasses[] getValidDomains(
+			MocassinOntologyRelations relation) {
+		if (relation == HAS_CONSEQUENCE) {
+			MocassinOntologyClasses[] domains = {
+					MocassinOntologyClasses.AXIOM,
+					MocassinOntologyClasses.CLAIM,
+					MocassinOntologyClasses.CONJECTURE,
+					MocassinOntologyClasses.COROLLARY,
+					MocassinOntologyClasses.LEMMA,
+					MocassinOntologyClasses.PROPOSITION,
+					MocassinOntologyClasses.THEOREM };
+			return domains;
+		}
+		throw new UnsupportedOperationException(String.format(
+				"this relation is not supported: %s", relation.toString()));
+	}
 }

@@ -5,12 +5,15 @@ import gate.Document;
 import gate.Factory;
 import gate.FeatureMap;
 import gate.Gate;
+import gate.creole.ResourceInstantiationException;
 import gate.persist.PersistenceException;
 import gate.persist.SerialDataStore;
 import gate.util.GateException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
 import ru.ksu.niimm.cll.mocassin.nlp.util.NlpModulePropertiesLoader;
@@ -18,11 +21,15 @@ import ru.ksu.niimm.cll.mocassin.nlp.util.NlpModulePropertiesLoader;
 import com.google.inject.Inject;
 
 public class GateDocumentDAOImpl implements GateDocumentDAO {
+
 	private static final String GATE_BUILTIN_CREOLE_DIR_PROPERTY_KEY = "gate.builtin.creole.dir";
 	private static final String GATE_HOME_PROPERTY_KEY = "gate.home";
 
 	private static final String GATE_DOCUMENT_LR_TYPE_PROPERTY_KEY = "gate.document.lr.type";
 	private static final String GATE_STORAGE_DIR_PROPERTY_KEY = "gate.storage.dir";
+
+	@Inject
+	private Logger logger;
 
 	private boolean isInitialized = false;
 
@@ -38,8 +45,16 @@ public class GateDocumentDAOImpl implements GateDocumentDAO {
 		FeatureMap features = Factory.newFeatureMap();
 		features.put(DataStore.DATASTORE_FEATURE_NAME, getDataStore());
 		features.put(DataStore.LR_ID_FEATURE_NAME, documentId);
-		Document document = (Document) Factory.createResource(
-				getDocumentLrType(), features);
+		Document document;
+		try {
+			document = (Document) Factory.createResource(getDocumentLrType(),
+					features);
+		} catch (ResourceInstantiationException e) {
+			logger.log(Level.SEVERE, String.format(
+					"couldn't create resource with id: %s", documentId));
+			getDataStore().close();
+			throw new GateException(e);
+		}
 		return document;
 	}
 
@@ -75,6 +90,7 @@ public class GateDocumentDAOImpl implements GateDocumentDAO {
 
 	private void initialize() throws GateException {
 		if (!isInitialized) {
+			isInitialized = true;
 			System.setProperty(GATE_HOME_PROPERTY_KEY,
 					getNlpModulePropertiesLoader().get(GATE_HOME_PROPERTY_KEY));
 			System.setProperty(GATE_BUILTIN_CREOLE_DIR_PROPERTY_KEY,

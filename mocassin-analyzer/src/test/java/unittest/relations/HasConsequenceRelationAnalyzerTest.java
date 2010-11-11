@@ -2,6 +2,7 @@ package unittest.relations;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.Before;
@@ -18,6 +19,7 @@ import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
 import ru.ksu.niimm.ose.ontology.OntologyModule;
 
 import com.csvreader.CsvReader;
+import com.google.common.base.Predicate;
 import com.google.inject.Inject;
 import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
@@ -30,13 +32,18 @@ public class HasConsequenceRelationAnalyzerTest {
 	@Inject
 	private HasConsequenceRelationAnalyzer hasConsequenceRelationAnalyzer;
 
-	private List<RelationInfo> testRecords = new ArrayList<RelationInfo>();
+	private List<RelationInfo> testRecords;
+
+	private int successCount;
+
+	private int errorCount;
 
 	@Before
 	public void init() throws IOException {
 		CsvReader reader = new CsvReader(TEST_DATA_FILEPATH, ';');
 		reader.setTrimWhitespace(true);
 		reader.readHeaders();
+		List<RelationInfo> list = new ArrayList<RelationInfo>();
 		while (reader.readRecord()) {
 			String filename = reader.get("filename");
 			int domainId = Integer.parseInt(reader.get("domain_id"));
@@ -46,15 +53,39 @@ public class HasConsequenceRelationAnalyzerTest {
 			record.setFilename(filename);
 			record.setDomainId(domainId);
 			record.setRangeId(rangeId);
-			this.testRecords.add(record);
+			list.add(record);
 		}
+		this.testRecords = Collections.unmodifiableList(list);
 		reader.close();
 	}
 
 	@Test
 	public void testAnalyze() {
+		List<RelationInfo> sample = testRecords.subList(0, 10);
 		List<RelationInfo> processedRecords = getHasConsequenceRelationAnalyzer()
-				.analyze(testRecords);
+				.analyze(sample);
+		for (RelationInfo testInfo : sample) {
+			for (RelationInfo processedInfo : processedRecords) {
+				if (processedInfo.getFilename().equals(testInfo.getFilename())
+						&& processedInfo.getRangeId() == testInfo.getRangeId()) {
+					boolean isValid = processedInfo.getDomainId() == testInfo
+							.getDomainId();
+					if (isValid) {
+						successCount++;
+					} else {
+						errorCount++;
+					}
+				}
+			}
+		}
+		printEvaluationResults();
+	}
+
+	private void printEvaluationResults() {
+		float precision = ((float) successCount) / (successCount + errorCount);
+		System.out.println(String.format(
+				"precision: %f; success: %d, error: %d", precision,
+				successCount, errorCount));
 	}
 
 	public HasConsequenceRelationAnalyzer getHasConsequenceRelationAnalyzer() {
