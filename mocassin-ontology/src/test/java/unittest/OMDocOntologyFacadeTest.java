@@ -1,5 +1,7 @@
 package unittest;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.junit.Assert;
@@ -9,7 +11,6 @@ import org.junit.runner.RunWith;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
 import ru.ksu.niimm.ose.ontology.OMDocOntologyFacade;
 import ru.ksu.niimm.ose.ontology.OntologyConcept;
-import ru.ksu.niimm.ose.ontology.OntologyModule;
 import ru.ksu.niimm.ose.ontology.OntologyRelation;
 import unittest.util.OntologyTestModule;
 
@@ -22,6 +23,16 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 public class OMDocOntologyFacadeTest {
 	@Inject
 	private OMDocOntologyFacade omdocOntologyFacade;
+
+	@Test
+	public void testGetOntClasses() {
+		List<OntologyConcept> ontClassList = getOmdocOntologyFacade()
+				.getOntClassList();
+		Collections.sort(ontClassList, new OntologyConceptComparator());
+		for (OntologyConcept concept : ontClassList) {
+			System.out.println(concept);
+		}
+	}
 
 	@Test
 	public void testGetPropertiesForConcreteDomain() {
@@ -77,4 +88,13 @@ public class OMDocOntologyFacadeTest {
 		return omdocOntologyFacade;
 	}
 
+	private static class OntologyConceptComparator implements
+			Comparator<OntologyConcept> {
+
+		@Override
+		public int compare(OntologyConcept o1, OntologyConcept o2) {
+			return o1.getLabel().compareTo(o2.getLabel());
+		}
+
+	}
 }

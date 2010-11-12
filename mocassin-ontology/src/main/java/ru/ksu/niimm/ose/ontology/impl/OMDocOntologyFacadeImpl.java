@@ -1,18 +1,14 @@
 package ru.ksu.niimm.ose.ontology.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.Stack;
 
 import ru.ksu.niimm.ose.ontology.OMDocOntologyFacade;
 import ru.ksu.niimm.ose.ontology.OntologyConcept;
-import ru.ksu.niimm.ose.ontology.OntologyIndividual;
 import ru.ksu.niimm.ose.ontology.OntologyRelation;
 import ru.ksu.niimm.ose.ontology.loader.OMDocOntologyLoader;
-import ru.ksu.niimm.ose.ontology.loader.impl.OMDocOntologyLoaderImpl;
 
 import com.google.inject.Inject;
 import com.hp.hpl.jena.ontology.OntClass;

@@ -11,7 +11,6 @@ import ru.ksu.niimm.ose.ontology.loader.OMDocOntologyLoader;
 import ru.ksu.niimm.ose.ontology.loader.RDFGraphPropertiesLoader;
 import ru.ksu.niimm.ose.ontology.loader.RDFStorageLoader;
 import ru.ksu.niimm.ose.ontology.loader.SparqlQueryLoader;
-import ru.ksu.niimm.ose.ontology.loader.impl.ModulePropertiesLoaderImpl;
 import ru.ksu.niimm.ose.ontology.loader.impl.OMDocOntologyPelletLoader;
 import ru.ksu.niimm.ose.ontology.loader.impl.RDFGraphPropertiesLoaderImpl;
 import ru.ksu.niimm.ose.ontology.loader.impl.RDFStorageLoaderImpl;
