@@ -8,7 +8,6 @@ import gate.util.OffsetComparator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -16,8 +15,10 @@ import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElementSearcher;
 import ru.ksu.niimm.cll.mocassin.nlp.Token;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateFormatConstants;
+import ru.ksu.niimm.cll.mocassin.nlp.recognizer.StructuralElementTypeRecognizer;
 import ru.ksu.niimm.cll.mocassin.nlp.util.AnnotationUtil;
 import ru.ksu.niimm.cll.mocassin.nlp.util.NlpModulePropertiesLoader;
+import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.parser.arxmliv.xpath.impl.ArxmlivFormatConstants;
 import ru.ksu.niimm.cll.mocassin.parser.arxmliv.xpath.impl.ArxmlivStructureElementTypes;
 import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
@@ -25,7 +26,6 @@ import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Ordering;
 import com.google.inject.Inject;
 
 public class StructuralElementSearcherImpl implements StructuralElementSearcher {
@@ -33,6 +33,9 @@ public class StructuralElementSearcherImpl implements StructuralElementSearcher 
 	private NlpModulePropertiesLoader nlpModulePropertiesLoader;
 	@Inject
 	private AnnotationUtil annotationUtil;
+
+	@Inject
+	private StructuralElementTypeRecognizer structuralElementTypeRecognizer;
 
 	@Override
 	public List<StructuralElement> retrieve(Document document) {
@@ -76,15 +79,18 @@ public class StructuralElementSearcherImpl implements StructuralElementSearcher 
 
 	@Override
 	public StructuralElement findClosestPredecessor(Document document,
-			final int id, final String... filterPredecessorTypes) {
+			final int id,
+			final MocassinOntologyClasses... filterPredecessorTypes) {
 		List<StructuralElement> elements = retrieve(document);
 
 		Predicate<StructuralElement> typeFilter = new Predicate<StructuralElement>() {
 
 			@Override
 			public boolean apply(StructuralElement element) {
+				MocassinOntologyClasses elementType = getStructuralElementTypeRecognizer()
+						.predict(element);
 				return Arrays.asList(filterPredecessorTypes).contains(
-						element.getName());
+						elementType);
 			}
 		};
 
@@ -110,6 +116,10 @@ public class StructuralElementSearcherImpl implements StructuralElementSearcher 
 
 		return predecessorIndex > -1 ? filteredElements.get(predecessorIndex)
 				: null;
+	}
+
+	public StructuralElementTypeRecognizer getStructuralElementTypeRecognizer() {
+		return structuralElementTypeRecognizer;
 	}
 
 	public String getProperty(String key) {
@@ -171,7 +181,7 @@ public class StructuralElementSearcherImpl implements StructuralElementSearcher 
 				titleTokens = getTokensForAnnotation(getDocument(), title);
 			}
 
-			element.setTitleTokens(titleTokens);
+			element.setTitleTokens(titleTokens != null ? titleTokens : new ArrayList<Token>());
 			return element;
 		}
 

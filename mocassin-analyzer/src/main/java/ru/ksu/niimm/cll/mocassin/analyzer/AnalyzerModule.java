@@ -16,10 +16,6 @@ import ru.ksu.niimm.cll.mocassin.analyzer.pos.VerbBasedFeatureAnalyzer;
 import ru.ksu.niimm.cll.mocassin.analyzer.pos.impl.VerbBasedFeatureAnalyzerImpl;
 import ru.ksu.niimm.cll.mocassin.analyzer.relation.HasConsequenceRelationAnalyzer;
 import ru.ksu.niimm.cll.mocassin.analyzer.relation.impl.HasConsequenceRelationAnalyzerImpl;
-import ru.ksu.niimm.cll.mocassin.analyzer.similarity.StringSimilarityEvaluator;
-import ru.ksu.niimm.cll.mocassin.analyzer.similarity.StructuralElementTypeRecognizer;
-import ru.ksu.niimm.cll.mocassin.analyzer.similarity.impl.StringSimilarityEvaluatorImpl;
-import ru.ksu.niimm.cll.mocassin.analyzer.similarity.impl.StructuralElementTypeRecognizerImpl;
 
 import com.google.inject.AbstractModule;
 
@@ -27,16 +23,13 @@ public class AnalyzerModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		bind(StringSimilarityEvaluator.class).to(
-				StringSimilarityEvaluatorImpl.class);
 		bind(Matcher.class).to(NameMatcher.class);
 		bind(NameMatcherPropertiesLoader.class).to(
 				NameMatcherPropertiesLoaderImpl.class);
 		bind(ImportantNodeService.class).to(ImportantNodeServiceImpl.class);
 		bind(LatentSemanticIndexer.class).to(LatentSemanticIndexerImpl.class);
 		bind(LSIPropertiesLoader.class).to(LSIPropertiesLoaderImpl.class);
-		bind(StructuralElementTypeRecognizer.class).to(
-				StructuralElementTypeRecognizerImpl.class);
+		
 		bind(ReferenceElementLocationAnalyzer.class).to(
 				ReferenceElementLocationAnalyzerImpl.class);
 		bind(VerbBasedFeatureAnalyzer.class).to(

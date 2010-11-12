@@ -1,27 +1,23 @@
-package ru.ksu.niimm.cll.mocassin.analyzer.similarity.impl;
+package ru.ksu.niimm.cll.mocassin.nlp.recognizer.impl;
 
 import java.io.IOException;
-import java.net.URL;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import ru.ksu.niimm.cll.mocassin.analyzer.relation.MocassinOntologyClasses;
-import ru.ksu.niimm.cll.mocassin.analyzer.similarity.StringSimilarityEvaluator;
-import ru.ksu.niimm.cll.mocassin.analyzer.similarity.StructuralElementTypeRecognizer;
-import ru.ksu.niimm.cll.mocassin.analyzer.similarity.StructuralElementTypesInfo;
-import ru.ksu.niimm.cll.mocassin.analyzer.similarity.StringSimilarityEvaluator.SimilarityMetrics;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
-import ru.ksu.niimm.cll.mocassin.util.IOUtils;
-
-import com.google.inject.Inject;
+import ru.ksu.niimm.cll.mocassin.nlp.Token;
+import ru.ksu.niimm.cll.mocassin.nlp.recognizer.StructuralElementTypeRecognizer;
+import ru.ksu.niimm.cll.mocassin.nlp.recognizer.StructuralElementTypesInfo;
+import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
+import ru.ksu.niimm.cll.mocassin.util.StringSimilarityEvaluator;
+import ru.ksu.niimm.cll.mocassin.util.StringSimilarityEvaluator.SimilarityMetrics;
 
 public class StructuralElementTypeRecognizerImpl implements
 		StructuralElementTypeRecognizer {
-	@Inject
-	private StringSimilarityEvaluator stringSimilarityEvaluator;
 
 	private Set<String> structuralElementTypes;
 
@@ -42,8 +38,10 @@ public class StructuralElementTypeRecognizerImpl implements
 
 	@Override
 	public MocassinOntologyClasses predict(StructuralElement structuralElement) {
-		SortedMap<String, Float> similarityVector = computeSimilarityVector(structuralElement
-				.getTitleTokens().get(0).getValue());
+		List<Token> titleTokens = structuralElement.getTitleTokens();
+		String name = titleTokens.isEmpty() ? structuralElement.getName()
+				: titleTokens.get(0).getValue();
+		SortedMap<String, Float> similarityVector = computeSimilarityVector(name);
 		float maxValue = Float.NEGATIVE_INFINITY;
 		String maxName = null;
 		for (Map.Entry<String, Float> entry : similarityVector.entrySet()) {
@@ -61,16 +59,11 @@ public class StructuralElementTypeRecognizerImpl implements
 	private SortedMap<String, Float> computeSimilarityVector(String name) {
 		SortedMap<String, Float> map = new TreeMap<String, Float>();
 		for (String structuralElementType : getStructuralElementTypes()) {
-			float similarity = getStringSimilarityEvaluator().getSimilarity(
-					name.toLowerCase(), structuralElementType,
-					SimilarityMetrics.N_GRAM);
+			float similarity = StringSimilarityEvaluator.getSimilarity(name,
+					structuralElementType, SimilarityMetrics.N_GRAM);
 			map.put(structuralElementType, similarity);
 		}
 		return map;
-	}
-
-	public StringSimilarityEvaluator getStringSimilarityEvaluator() {
-		return stringSimilarityEvaluator;
 	}
 
 	public Set<String> getStructuralElementTypes() {

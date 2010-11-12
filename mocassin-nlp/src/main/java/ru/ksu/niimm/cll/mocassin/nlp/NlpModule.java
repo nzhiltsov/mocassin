@@ -6,6 +6,8 @@ import ru.ksu.niimm.cll.mocassin.nlp.impl.AnnotationAnalyzerImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.FeatureExtractorImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.ReferenceSearcherImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.StructuralElementSearcherImpl;
+import ru.ksu.niimm.cll.mocassin.nlp.recognizer.StructuralElementTypeRecognizer;
+import ru.ksu.niimm.cll.mocassin.nlp.recognizer.impl.StructuralElementTypeRecognizerImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.util.AnnotationUtil;
 import ru.ksu.niimm.cll.mocassin.nlp.util.NlpModulePropertiesLoader;
 import ru.ksu.niimm.cll.mocassin.nlp.util.StopWordLoader;
@@ -29,6 +31,8 @@ public class NlpModule extends AbstractModule {
 		bind(AnnotationUtil.class).to(AnnotationUtilImpl.class);
 		bind(StopWordLoader.class).to(StopWordLoaderImpl.class);
 		bind(GateDocumentDAO.class).to(GateDocumentDAOImpl.class);
+		bind(StructuralElementTypeRecognizer.class).to(
+				StructuralElementTypeRecognizerImpl.class);
 	}
 
 }

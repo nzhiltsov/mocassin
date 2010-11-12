@@ -1,8 +1,8 @@
-package ru.ksu.niimm.cll.mocassin.analyzer.similarity;
+package ru.ksu.niimm.cll.mocassin.nlp.recognizer;
 
-import ru.ksu.niimm.cll.mocassin.analyzer.relation.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
+import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
 
 public interface StructuralElementTypeRecognizer {
 	/**
@@ -11,6 +11,7 @@ public interface StructuralElementTypeRecognizer {
 	 * @param reference
 	 * @return
 	 */
+	@Deprecated
 	StructuralElementTypesInfo recognize(Reference reference);
 
 	/**

@@ -11,12 +11,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import ru.ksu.niimm.cll.mocassin.analyzer.relation.HasConsequenceRelationAnalyzer;
-import ru.ksu.niimm.cll.mocassin.analyzer.relation.MocassinOntologyClasses;
-import ru.ksu.niimm.cll.mocassin.analyzer.relation.MocassinOntologyRelations;
 import ru.ksu.niimm.cll.mocassin.analyzer.relation.RelationInfo;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElementSearcher;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
+import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
+import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
 
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
@@ -44,9 +44,9 @@ public class HasConsequenceRelationAnalyzerImpl implements
 		Map<String, String> prefix2id = mapPrefixWithIds(documentIds, prefixSet);
 
 		for (String filename : prefix2id.keySet()) {
+			String documentId = prefix2id.get(filename);
 			try {
-				Document document = getGateDocumentDAO().load(
-						prefix2id.get(filename));
+				Document document = getGateDocumentDAO().load(documentId);
 				List<RelationInfo> relationInfoList = filename2relations
 						.get(filename);
 				for (RelationInfo info : relationInfoList) {
@@ -56,7 +56,7 @@ public class HasConsequenceRelationAnalyzerImpl implements
 
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, String.format(
-						"failed to load document: %s", filename));
+						"failed to load document: %s", documentId));
 			}
 		}
 		return processedInfoList;
@@ -74,21 +74,10 @@ public class HasConsequenceRelationAnalyzerImpl implements
 				.findById(document, info.getRangeId());
 		MocassinOntologyClasses[] validDomains = MocassinOntologyRelations
 				.getValidDomains(MocassinOntologyRelations.HAS_CONSEQUENCE);
-		List<String> domains = new ArrayList<String>();
-		for (MocassinOntologyClasses clazz : validDomains) {
-			for (String str : clazz.getLabels()) {
-				if (!domains.contains(str)) {
-					domains.add(str);
-				}
-			}
-		}
-		String[] domainArray = new String[domains.size()];
-		for (int i = 0; i < domainArray.length; i++) {
-			domainArray[i] = domains.get(i);
-		}
+
 		StructuralElement predecessor = getStructuralElementSearcher()
 				.findClosestPredecessor(document, rangeElement.getId(),
-						domainArray);
+						validDomains);
 		RelationInfo definedInfo = new RelationInfo();
 		definedInfo.setFilename(info.getFilename());
 		definedInfo.setRelation(info.getRelation());

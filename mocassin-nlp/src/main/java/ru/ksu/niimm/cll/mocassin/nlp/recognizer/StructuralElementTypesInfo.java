@@ -1,4 +1,4 @@
-package ru.ksu.niimm.cll.mocassin.analyzer.similarity;
+package ru.ksu.niimm.cll.mocassin.nlp.recognizer;
 
 import java.util.SortedMap;
 

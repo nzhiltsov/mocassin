@@ -4,6 +4,8 @@ import gate.Document;
 
 import java.util.List;
 
+import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
+
 /**
  * Goal of the interface to represent a functionality of searching the
  * structural elements in GATE documents
@@ -39,5 +41,5 @@ public interface StructuralElementSearcher {
 	 * @return
 	 */
 	StructuralElement findClosestPredecessor(Document document, int id,
-			String... filterPredecessorTypes);
+			MocassinOntologyClasses... filterPredecessorTypes);
 }

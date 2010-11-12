@@ -69,6 +69,10 @@ public class GateDocumentDAOImpl implements GateDocumentDAO {
 				gateDocuments.add(documentLrId.toString());
 			}
 			return gateDocuments;
+		} catch (PersistenceException e) {
+			logger.log(Level.SEVERE,
+					"couldn't get language resources identifiers");
+			throw new GateException(e);
 		} finally {
 			getDataStore().close();
 		}
