@@ -13,7 +13,6 @@ import ru.ksu.niimm.ose.ontology.OntologyBlankNode;
 import ru.ksu.niimm.ose.ontology.OntologyConcept;
 import ru.ksu.niimm.ose.ontology.OntologyIndividual;
 import ru.ksu.niimm.ose.ontology.OntologyLiteral;
-import ru.ksu.niimm.ose.ontology.OntologyModule;
 import ru.ksu.niimm.ose.ontology.OntologyRelation;
 import ru.ksu.niimm.ose.ontology.OntologyResource;
 import ru.ksu.niimm.ose.ontology.OntologyTriple;

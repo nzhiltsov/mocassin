@@ -1,15 +1,13 @@
 package ru.ksu.niimm.ose.ontology.loader.impl;
 
 import java.io.IOException;
-import java.net.URL;
-import java.util.Properties;
-
-import com.google.inject.Inject;
 
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFGraph;
 import ru.ksu.niimm.cll.mocassin.virtuoso.impl.RDFGraphImpl;
 import ru.ksu.niimm.ose.ontology.loader.ModulePropertiesLoader;
 import ru.ksu.niimm.ose.ontology.loader.RDFGraphPropertiesLoader;
+
+import com.google.inject.Inject;
 
 public class RDFGraphPropertiesLoaderImpl implements RDFGraphPropertiesLoader {
 	private ModulePropertiesLoader modulePropertiesLoader;

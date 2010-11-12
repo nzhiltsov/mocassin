@@ -2,7 +2,6 @@ package ru.ksu.niimm.ose.ontology.loader.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 
 import org.mindswap.pellet.jena.PelletReasonerFactory;
 

@@ -1,7 +1,6 @@
 package ru.ksu.niimm.ose.ontology;
 
 import ru.ksu.niimm.ose.ontology.impl.OMDocOntologyFacadeImpl;
-import ru.ksu.niimm.ose.ontology.impl.OMDocResourceFacadeOldImpl;
 import ru.ksu.niimm.ose.ontology.impl.OMDocResourceFacadeImpl;
 import ru.ksu.niimm.ose.ontology.impl.QueryManagerFacadeImpl;
 import ru.ksu.niimm.ose.ontology.loader.ModulePropertiesLoader;
@@ -10,7 +9,6 @@ import ru.ksu.niimm.ose.ontology.loader.RDFGraphPropertiesLoader;
 import ru.ksu.niimm.ose.ontology.loader.RDFStorageLoader;
 import ru.ksu.niimm.ose.ontology.loader.SparqlQueryLoader;
 import ru.ksu.niimm.ose.ontology.loader.impl.ModulePropertiesLoaderImpl;
-import ru.ksu.niimm.ose.ontology.loader.impl.OMDocOntologyLoaderImpl;
 import ru.ksu.niimm.ose.ontology.loader.impl.OMDocOntologyPelletLoader;
 import ru.ksu.niimm.ose.ontology.loader.impl.RDFGraphPropertiesLoaderImpl;
 import ru.ksu.niimm.ose.ontology.loader.impl.RDFStorageLoaderImpl;

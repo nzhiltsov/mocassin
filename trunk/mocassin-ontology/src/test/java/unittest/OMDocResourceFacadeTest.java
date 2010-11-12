@@ -1,23 +1,19 @@
 package unittest;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import com.google.inject.Inject;
-import com.mycila.testing.junit.MycilaJunitRunner;
-import com.mycila.testing.plugin.guice.GuiceContext;
 
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
 import ru.ksu.niimm.ose.ontology.ArticleMetadata;
 import ru.ksu.niimm.ose.ontology.OMDocElement;
 import ru.ksu.niimm.ose.ontology.OMDocResourceFacade;
-import ru.ksu.niimm.ose.ontology.OntologyModule;
 import ru.ksu.niimm.ose.ontology.OntologyResource;
-import ru.ksu.niimm.ose.ontology.SourceReference;
-import ru.ksu.niimm.ose.ontology.impl.OMDocResourceFacadeOldImpl;
 import unittest.util.OntologyTestModule;
+
+import com.google.inject.Inject;
+import com.mycila.testing.junit.MycilaJunitRunner;
+import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext( { OntologyTestModule.class, VirtuosoModule.class })

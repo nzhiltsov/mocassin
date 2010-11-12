@@ -1,7 +1,6 @@
 package ru.ksu.niimm.ose.ontology.loader.impl;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 import ru.ksu.niimm.ose.ontology.loader.ModulePropertiesLoader;
 import ru.ksu.niimm.ose.ontology.loader.OMDocOntologyLoader;
