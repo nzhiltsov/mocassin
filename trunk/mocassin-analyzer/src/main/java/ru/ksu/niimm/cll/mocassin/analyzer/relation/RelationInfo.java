@@ -1,5 +1,7 @@
 package ru.ksu.niimm.cll.mocassin.analyzer.relation;
 
+import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
+
 
 public class RelationInfo {
 	private MocassinOntologyRelations relation;

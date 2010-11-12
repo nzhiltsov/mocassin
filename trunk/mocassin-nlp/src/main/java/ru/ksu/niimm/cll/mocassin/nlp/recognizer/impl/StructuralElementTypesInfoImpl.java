@@ -1,9 +1,9 @@
-package ru.ksu.niimm.cll.mocassin.analyzer.similarity.impl;
+package ru.ksu.niimm.cll.mocassin.nlp.recognizer.impl;
 
 import java.util.SortedMap;
 
-import ru.ksu.niimm.cll.mocassin.analyzer.similarity.StructuralElementTypesInfo;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
+import ru.ksu.niimm.cll.mocassin.nlp.recognizer.StructuralElementTypesInfo;
 
 public class StructuralElementTypesInfoImpl implements
 		StructuralElementTypesInfo {

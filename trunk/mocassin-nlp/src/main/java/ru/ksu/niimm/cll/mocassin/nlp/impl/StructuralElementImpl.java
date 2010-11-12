@@ -1,5 +1,6 @@
 package ru.ksu.niimm.cll.mocassin.nlp.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;

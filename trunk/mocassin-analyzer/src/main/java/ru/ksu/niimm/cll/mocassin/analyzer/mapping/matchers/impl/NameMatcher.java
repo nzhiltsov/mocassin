@@ -9,10 +9,10 @@ import java.util.Map;
 import ru.ksu.niimm.cll.mocassin.analyzer.mapping.Mapping;
 import ru.ksu.niimm.cll.mocassin.analyzer.mapping.MappingElement;
 import ru.ksu.niimm.cll.mocassin.analyzer.mapping.matchers.Matcher;
-import ru.ksu.niimm.cll.mocassin.analyzer.similarity.StringSimilarityEvaluator;
-import ru.ksu.niimm.cll.mocassin.analyzer.similarity.StringSimilarityEvaluator.SimilarityMetrics;
 import ru.ksu.niimm.cll.mocassin.parser.Edge;
 import ru.ksu.niimm.cll.mocassin.parser.Node;
+import ru.ksu.niimm.cll.mocassin.util.StringSimilarityEvaluator;
+import ru.ksu.niimm.cll.mocassin.util.StringSimilarityEvaluator.SimilarityMetrics;
 import ru.ksu.niimm.ose.ontology.OMDocOntologyFacade;
 import ru.ksu.niimm.ose.ontology.OntologyConcept;
 
@@ -23,8 +23,6 @@ import com.google.common.collect.Ordering;
 import com.google.inject.Inject;
 
 public class NameMatcher implements Matcher {
-	@Inject
-	private StringSimilarityEvaluator stringSimilarityEvaluator;
 	@Inject
 	private OMDocOntologyFacade omdocOntologyFacade;
 	@Inject
@@ -101,8 +99,8 @@ public class NameMatcher implements Matcher {
 	private Map<SimilarityMetrics, Float> computeConfidence(Node node,
 			OntologyConcept concept) {
 		Map<SimilarityMetrics, Float> confidences = new HashMap<SimilarityMetrics, Float>();
-		float similarity = getStringSimilarityEvaluator().getSimilarity(
-				node.getName().toLowerCase(), concept.getLabel().toLowerCase(),
+		float similarity = StringSimilarityEvaluator.getSimilarity(
+				node.getName(), concept.getLabel(),
 				SimilarityMetrics.N_GRAM);
 		confidences.put(SimilarityMetrics.N_GRAM, similarity);
 		return confidences;
@@ -117,10 +115,6 @@ public class NameMatcher implements Matcher {
 			}
 		}
 		return contains;
-	}
-
-	private StringSimilarityEvaluator getStringSimilarityEvaluator() {
-		return stringSimilarityEvaluator;
 	}
 
 	private OMDocOntologyFacade getOmdocOntologyFacade() {
