@@ -3,7 +3,7 @@
 
   * To extend search capabilities of the modern math search engines by resolving sophisticated semantic queries
 
-  * To make mathematical knowledge source items (articles, reports, slides etc.) semantically enriched
+  * To make mathematical documents (papers, reports, slides etc.) semantically enriched
 
   * To describe some parts of mathematics with ontological formalisms
 
