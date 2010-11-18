@@ -8,10 +8,9 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.StringTokenizer;
 
 import ru.ksu.niimm.ose.ontology.loader.SparqlQueryLoader;
-
-import com.ibm.icu.util.StringTokenizer;
 
 public class SparqlQueryLoaderImpl implements SparqlQueryLoader {
 	private static final String NAMES_PARAMETER = "scriptNames";
