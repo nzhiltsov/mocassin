@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ru.ksu.niimm.cll.mocassin.analyzer.AnalyzerModule;
-import ru.ksu.niimm.cll.mocassin.analyzer.relation.HasConsequenceRelationAnalyzer;
+import ru.ksu.niimm.cll.mocassin.analyzer.relation.ExemplifiesRelationAnalyzer;
 import ru.ksu.niimm.cll.mocassin.analyzer.relation.RelationInfo;
 import ru.ksu.niimm.cll.mocassin.nlp.NlpModule;
 import ru.ksu.niimm.cll.mocassin.parser.LatexParserModule;
@@ -21,26 +21,30 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext( { AnalyzerModule.class, NlpModule.class,
 		LatexParserModule.class, OntologyModule.class, VirtuosoModule.class })
-public class HasConsequenceRelationAnalyzerTest extends
+public class ExemplifiesRelationAnalyzerTest extends
 		AbstractRelationAnalyzerTest {
+	private static final String TEST_DATA_FILEPATH = "/tmp/Exemplifies-training-data.csv";
+	private static final String EVALUATION_RESULTS_OUTPUT_FILENAME = "/tmp/exemplifies-results.txt";
 	@Inject
-	private HasConsequenceRelationAnalyzer hasConsequenceRelationAnalyzer;
+	ExemplifiesRelationAnalyzer exemplifiesRelationAnalyzer;
 
-	public HasConsequenceRelationAnalyzerTest() {
-		super("/tmp/Corollary-training-data.csv",
-				"/tmp/hasConsequence-results.txt");
+	public ExemplifiesRelationAnalyzerTest(String testDataFilepath,
+			String outputFilename) {
+		super("/tmp/Exemplifies-training-data.csv",
+				"/tmp/exemplifies-results.txt");
 	}
 
 	@Test
 	public void testAnalyze() throws IOException {
-		List<RelationInfo> processedRecords = getHasConsequenceRelationAnalyzer()
+		List<RelationInfo> processedRecords = exemplifiesRelationAnalyzer
 				.analyze(testRecords);
 		for (RelationInfo testInfo : testRecords) {
 			for (RelationInfo processedInfo : processedRecords) {
 				if (processedInfo.getFilename().equals(testInfo.getFilename())
-						&& processedInfo.getRangeId() == testInfo.getRangeId()) {
-					boolean isValid = processedInfo.getDomainId() == testInfo
-							.getDomainId();
+						&& processedInfo.getDomainId() == testInfo
+								.getDomainId()) {
+					boolean isValid = processedInfo.getRangeId() == testInfo
+							.getRangeId();
 					if (isValid) {
 						successCount++;
 					} else {
@@ -50,10 +54,6 @@ public class HasConsequenceRelationAnalyzerTest extends
 			}
 		}
 		printEvaluationResults();
-	}
-
-	public HasConsequenceRelationAnalyzer getHasConsequenceRelationAnalyzer() {
-		return hasConsequenceRelationAnalyzer;
 	}
 
 }
