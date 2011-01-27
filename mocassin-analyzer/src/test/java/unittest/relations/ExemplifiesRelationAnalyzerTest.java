@@ -23,13 +23,10 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 		LatexParserModule.class, OntologyModule.class, VirtuosoModule.class })
 public class ExemplifiesRelationAnalyzerTest extends
 		AbstractRelationAnalyzerTest {
-	private static final String TEST_DATA_FILEPATH = "/tmp/Exemplifies-training-data.csv";
-	private static final String EVALUATION_RESULTS_OUTPUT_FILENAME = "/tmp/exemplifies-results.txt";
 	@Inject
 	ExemplifiesRelationAnalyzer exemplifiesRelationAnalyzer;
 
-	public ExemplifiesRelationAnalyzerTest(String testDataFilepath,
-			String outputFilename) {
+	public ExemplifiesRelationAnalyzerTest() {
 		super("/tmp/Exemplifies-training-data.csv",
 				"/tmp/exemplifies-results.txt");
 	}

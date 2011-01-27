@@ -14,7 +14,7 @@ import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
 
 import com.csvreader.CsvReader;
 
-public abstract class AbstractRelationAnalyzerTest  {
+public abstract class AbstractRelationAnalyzerTest {
 	private final String TEST_DATA_FILEPATH;
 
 	private final String EVALUATION_RESULTS_OUTPUT_FILENAME;

@@ -14,7 +14,9 @@ import ru.ksu.niimm.cll.mocassin.analyzer.mapping.matchers.impl.NameMatcherPrope
 import ru.ksu.niimm.cll.mocassin.analyzer.mapping.matchers.impl.NameMatcherPropertiesLoaderImpl;
 import ru.ksu.niimm.cll.mocassin.analyzer.pos.VerbBasedFeatureAnalyzer;
 import ru.ksu.niimm.cll.mocassin.analyzer.pos.impl.VerbBasedFeatureAnalyzerImpl;
+import ru.ksu.niimm.cll.mocassin.analyzer.relation.ExemplifiesRelationAnalyzer;
 import ru.ksu.niimm.cll.mocassin.analyzer.relation.HasConsequenceRelationAnalyzer;
+import ru.ksu.niimm.cll.mocassin.analyzer.relation.impl.ExemplifiesRelationAnalyzerImpl;
 import ru.ksu.niimm.cll.mocassin.analyzer.relation.impl.HasConsequenceRelationAnalyzerImpl;
 
 import com.google.inject.AbstractModule;
@@ -29,13 +31,15 @@ public class AnalyzerModule extends AbstractModule {
 		bind(ImportantNodeService.class).to(ImportantNodeServiceImpl.class);
 		bind(LatentSemanticIndexer.class).to(LatentSemanticIndexerImpl.class);
 		bind(LSIPropertiesLoader.class).to(LSIPropertiesLoaderImpl.class);
-		
+
 		bind(ReferenceElementLocationAnalyzer.class).to(
 				ReferenceElementLocationAnalyzerImpl.class);
 		bind(VerbBasedFeatureAnalyzer.class).to(
 				VerbBasedFeatureAnalyzerImpl.class);
 		bind(HasConsequenceRelationAnalyzer.class).to(
 				HasConsequenceRelationAnalyzerImpl.class);
+		bind(ExemplifiesRelationAnalyzer.class).to(
+				ExemplifiesRelationAnalyzerImpl.class);
 	}
 
 }
