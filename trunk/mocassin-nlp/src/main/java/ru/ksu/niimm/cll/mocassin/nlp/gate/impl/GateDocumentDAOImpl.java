@@ -42,7 +42,6 @@ public class GateDocumentDAOImpl implements GateDocumentDAO {
 	@Override
 	public Document load(String documentId) throws GateException {
 		initialize();
-		getDataStore().open();
 		FeatureMap features = Factory.newFeatureMap();
 		features.put(DataStore.DATASTORE_FEATURE_NAME, getDataStore());
 		features.put(DataStore.LR_ID_FEATURE_NAME, documentId);
@@ -62,7 +61,7 @@ public class GateDocumentDAOImpl implements GateDocumentDAO {
 	@Override
 	public List<String> getDocumentIds() throws GateException {
 		initialize();
-		getDataStore().open();
+		
 		try {
 			List documents = getDataStore().getLrIds(getDocumentLrType());
 			List<String> gateDocuments = new ArrayList<String>();
@@ -74,16 +73,14 @@ public class GateDocumentDAOImpl implements GateDocumentDAO {
 		} catch (PersistenceException e) {
 			logger.log(Level.SEVERE,
 					"couldn't get language resources identifiers");
-			throw new GateException(e);
-		} finally {
 			getDataStore().close();
-		}
+			throw new GateException(e);
+		}	
 	}
 
 	@Override
 	public void release(Document document) throws PersistenceException {
-		document.cleanup();
-		getDataStore().close();
+		Factory.deleteResource(document);
 	}
 
 	public NlpModulePropertiesLoader getNlpModulePropertiesLoader() {
@@ -105,6 +102,7 @@ public class GateDocumentDAOImpl implements GateDocumentDAO {
 			Gate.init();
 			this.dataStore = new SerialDataStore(getNlpModulePropertiesLoader()
 					.get(GATE_STORAGE_DIR_PROPERTY_KEY));
+			getDataStore().open();
 		}
 
 	}
