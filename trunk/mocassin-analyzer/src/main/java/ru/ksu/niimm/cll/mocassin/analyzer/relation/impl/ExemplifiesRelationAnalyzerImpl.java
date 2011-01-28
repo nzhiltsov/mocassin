@@ -20,20 +20,20 @@ public class ExemplifiesRelationAnalyzerImpl extends AbstractRelationAnalyzer
 	 * @param info
 	 */
 	public RelationInfo processRelationInfo(Document document, RelationInfo info) {
-		StructuralElement rangeElement = getStructuralElementSearcher()
-				.findById(document, info.getRangeId());
+		StructuralElement domainElement = getStructuralElementSearcher()
+				.findById(document, info.getDomainId());
 
 		MocassinOntologyClasses[] validDomains = MocassinOntologyRelations
 				.getValidRanges(MocassinOntologyRelations.EXEMPLIFIES);
 
 		StructuralElement predecessor = getStructuralElementSearcher()
-				.findClosestPredecessor(document, rangeElement.getId(),
+				.findClosestPredecessor(document, domainElement.getId(),
 						validDomains);
 		RelationInfo definedInfo = new RelationInfo();
 		definedInfo.setFilename(info.getFilename());
 		definedInfo.setRelation(info.getRelation());
-		definedInfo.setRangeId(info.getRangeId());
-		definedInfo.setDomainId(predecessor.getId());
+		definedInfo.setRangeId(predecessor.getId());
+		definedInfo.setDomainId(domainElement.getId());
 		return definedInfo;
 	}
 
