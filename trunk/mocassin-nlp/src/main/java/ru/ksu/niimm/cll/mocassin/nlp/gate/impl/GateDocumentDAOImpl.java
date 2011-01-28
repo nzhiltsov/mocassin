@@ -11,6 +11,7 @@ import gate.persist.SerialDataStore;
 import gate.util.GateException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -51,7 +52,7 @@ public class GateDocumentDAOImpl implements GateDocumentDAO {
 					features);
 		} catch (ResourceInstantiationException e) {
 			logger.log(Level.SEVERE, String.format(
-					"couldn't create resource with id: %s", documentId));
+					"couldn't create resource with id='%s' caused by: %s", documentId, e.getMessage()));
 			getDataStore().close();
 			throw new GateException(e);
 		}
@@ -68,6 +69,7 @@ public class GateDocumentDAOImpl implements GateDocumentDAO {
 			for (Object documentLrId : documents) {
 				gateDocuments.add(documentLrId.toString());
 			}
+			Collections.sort(gateDocuments);
 			return gateDocuments;
 		} catch (PersistenceException e) {
 			logger.log(Level.SEVERE,
