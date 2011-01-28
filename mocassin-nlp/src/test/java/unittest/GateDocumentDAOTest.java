@@ -11,7 +11,6 @@ import org.junit.runner.RunWith;
 
 import ru.ksu.niimm.cll.mocassin.nlp.NlpModule;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
-import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
 
 import com.google.inject.Inject;
 import com.mycila.testing.junit.MycilaJunitRunner;
