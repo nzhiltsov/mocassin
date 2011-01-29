@@ -1,7 +1,6 @@
 package ru.ksu.niimm.cll.mocassin.nlp.gate;
 
 import gate.Document;
-import gate.persist.PersistenceException;
 import gate.util.GateException;
 
 import java.util.List;
@@ -31,7 +30,6 @@ public interface GateDocumentDAO {
 	 * releases resources connected with given document
 	 * 
 	 * @param document
-	 * @throws PersistenceException
 	 */
-	void release(Document document) throws Exception;
+	void release(Document document);
 }

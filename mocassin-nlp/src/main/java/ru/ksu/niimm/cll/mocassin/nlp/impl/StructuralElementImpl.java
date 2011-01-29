@@ -1,10 +1,10 @@
 package ru.ksu.niimm.cll.mocassin.nlp.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.nlp.Token;
+import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
 
 public class StructuralElementImpl implements StructuralElement {
 	private final int id;
@@ -13,6 +13,7 @@ public class StructuralElementImpl implements StructuralElement {
 	private final String name;
 	private String label;
 	private List<Token> titleTokens;
+	private MocassinOntologyClasses predictedClass;
 
 	public static class Builder {
 		private final int id;
@@ -84,14 +85,26 @@ public class StructuralElementImpl implements StructuralElement {
 		return name;
 	}
 
+	public MocassinOntologyClasses getPredictedClass() {
+		return predictedClass;
+	}
+
+	public void setPredictedClass(MocassinOntologyClasses predictedClass) {
+		this.predictedClass = predictedClass;
+	}
+
 	@Override
-	public String toString() {
+	public String toTitleString() {
 		StringBuilder sb = new StringBuilder();
 		for (Token token : titleTokens) {
 			sb.append(token.toString());
 			sb.append(" ");
 		}
-		return String.format("%d; %s; %s", id, name, sb.toString());
+		return sb.toString();
 	}
 
+	@Override
+	public String toString() {
+		return String.format("%d; %s; %s", id, name, toTitleString());
+	}
 }

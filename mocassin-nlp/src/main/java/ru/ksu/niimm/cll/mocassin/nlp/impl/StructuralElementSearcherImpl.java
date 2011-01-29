@@ -96,8 +96,6 @@ public class StructuralElementSearcherImpl implements StructuralElementSearcher 
 
 		List<StructuralElement> filteredElements = CollectionUtil
 				.asList(Iterables.filter(elements, typeFilter));
-		Collections.sort(filteredElements,
-				new StructuralElementByLocationComparator());
 
 		Predicate<StructuralElement> findById = new Predicate<StructuralElement>() {
 
@@ -107,8 +105,12 @@ public class StructuralElementSearcherImpl implements StructuralElementSearcher 
 			}
 		};
 
-		StructuralElement foundElement = Iterables.find(filteredElements,
-				findById);
+		StructuralElement foundElement = Iterables.find(elements, findById);
+		if (!filteredElements.contains(foundElement))
+			filteredElements.add(foundElement);
+
+		Collections.sort(filteredElements,
+				new StructuralElementByLocationComparator());
 
 		int foundElementIndex = filteredElements.indexOf(foundElement);
 
@@ -137,7 +139,7 @@ public class StructuralElementSearcherImpl implements StructuralElementSearcher 
 	public List<Token> getTokensForAnnotation(Document document,
 			Annotation annotation) {
 		return getAnnotationUtil().getTokensForAnnotation(document, annotation,
-				getNlpModulePropertiesLoader().useStemming());
+				false);
 	}
 
 	private class ExtractionFunction implements
@@ -181,7 +183,8 @@ public class StructuralElementSearcherImpl implements StructuralElementSearcher 
 				titleTokens = getTokensForAnnotation(getDocument(), title);
 			}
 
-			element.setTitleTokens(titleTokens != null ? titleTokens : new ArrayList<Token>());
+			element.setTitleTokens(titleTokens != null ? titleTokens
+					: new ArrayList<Token>());
 			return element;
 		}
 

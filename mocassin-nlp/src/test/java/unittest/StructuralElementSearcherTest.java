@@ -23,32 +23,35 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext(NlpModule.class)
 public class StructuralElementSearcherTest {
+
 	@Inject
 	private StructuralElementSearcher structuralElementSearcher;
+
 	@Inject
 	private GateDocumentDAO gateDocumentDAO;
 
-	private Document document;
+	private Document testDocument;
 
 	@Before
 	public void init() throws Exception {
-		List<String> ids = getGateDocumentDAO().getDocumentIds();
+		List<String> documentIds = getGateDocumentDAO().getDocumentIds();
 		String foundId = null;
-		for (String id : ids) {
+		for (String id : documentIds) {
 			if (id.startsWith("f000022.tex")) {
 				foundId = id;
 			}
 		}
 		Assert.assertNotNull(foundId);
-		document = getGateDocumentDAO().load(foundId);
+		testDocument = getGateDocumentDAO().load(foundId);
+
 	}
 
 	@Test
 	public void testFindById() throws Exception {
 
 		StructuralElement foundElement = getStructuralElementSearcher()
-				.findById(document, 11808);
-		getGateDocumentDAO().release(document);
+				.findById(testDocument, 11808);
+		getGateDocumentDAO().release(testDocument);
 		System.out.println(foundElement);
 	}
 
@@ -57,7 +60,8 @@ public class StructuralElementSearcherTest {
 		MocassinOntologyClasses[] hasConsequenceDomains = MocassinOntologyRelations
 				.getValidDomains(MocassinOntologyRelations.HAS_CONSEQUENCE);
 		StructuralElement predecessor = getStructuralElementSearcher()
-				.findClosestPredecessor(document, 11808, hasConsequenceDomains);
+				.findClosestPredecessor(testDocument, 11808,
+						hasConsequenceDomains);
 		System.out.println(predecessor);
 	}
 
