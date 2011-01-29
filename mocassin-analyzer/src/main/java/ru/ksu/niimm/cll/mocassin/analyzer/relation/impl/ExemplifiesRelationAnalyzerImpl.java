@@ -1,9 +1,6 @@
 package ru.ksu.niimm.cll.mocassin.analyzer.relation.impl;
 
 import gate.Document;
-
-import java.util.List;
-
 import ru.ksu.niimm.cll.mocassin.analyzer.relation.ExemplifiesRelationAnalyzer;
 import ru.ksu.niimm.cll.mocassin.analyzer.relation.RelationInfo;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
