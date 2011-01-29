@@ -21,4 +21,5 @@ public interface StructuralElementTypeRecognizer {
 	 * @return
 	 */
 	MocassinOntologyClasses predict(StructuralElement structuralElement);
+
 }

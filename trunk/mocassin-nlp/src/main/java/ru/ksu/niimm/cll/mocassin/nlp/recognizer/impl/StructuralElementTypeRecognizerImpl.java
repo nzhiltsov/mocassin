@@ -1,6 +1,7 @@
 package ru.ksu.niimm.cll.mocassin.nlp.recognizer.impl;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -18,6 +19,10 @@ import ru.ksu.niimm.cll.mocassin.util.StringSimilarityEvaluator.SimilarityMetric
 
 public class StructuralElementTypeRecognizerImpl implements
 		StructuralElementTypeRecognizer {
+	/**
+	 * threshold for checking prediction
+	 */
+	private float threshold = 0.501f;
 
 	private Set<String> structuralElementTypes;
 
@@ -38,6 +43,12 @@ public class StructuralElementTypeRecognizerImpl implements
 
 	@Override
 	public MocassinOntologyClasses predict(StructuralElement structuralElement) {
+		// special handling of sections
+		if (Arrays.asList(MocassinOntologyClasses.SECTION.getLabels())
+				.contains(structuralElement.getName())) {
+			return MocassinOntologyClasses.SECTION;
+		}
+
 		List<Token> titleTokens = structuralElement.getTitleTokens();
 		String name = titleTokens.isEmpty() ? structuralElement.getName()
 				: titleTokens.get(0).getValue();
@@ -53,7 +64,8 @@ public class StructuralElementTypeRecognizerImpl implements
 		if (maxName == null)
 			throw new RuntimeException(
 					"list of structural element types is empty");
-		return MocassinOntologyClasses.fromString(maxName);
+		return maxValue >= threshold ? MocassinOntologyClasses
+				.fromString(maxName) : null;
 	}
 
 	private SortedMap<String, Float> computeSimilarityVector(String name) {

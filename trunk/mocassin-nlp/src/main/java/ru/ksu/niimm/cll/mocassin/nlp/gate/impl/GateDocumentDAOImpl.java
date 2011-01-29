@@ -12,6 +12,7 @@ import gate.util.GateException;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -51,8 +52,8 @@ public class GateDocumentDAOImpl implements GateDocumentDAO {
 					features);
 		} catch (ResourceInstantiationException e) {
 			logger.log(Level.SEVERE, String.format(
-					"couldn't create resource with id='%s' caused by: %s", documentId, e.getMessage()));
-			getDataStore().close();
+					"couldn't create resource with id='%s' caused by: %s",
+					documentId, e.getMessage()));
 			throw new GateException(e);
 		}
 		return document;
@@ -61,12 +62,14 @@ public class GateDocumentDAOImpl implements GateDocumentDAO {
 	@Override
 	public List<String> getDocumentIds() throws GateException {
 		initialize();
-		
+
 		try {
-			List documents = getDataStore().getLrIds(getDocumentLrType());
+			Iterator it = getDataStore().getLrIds(getDocumentLrType())
+					.iterator();
 			List<String> gateDocuments = new ArrayList<String>();
-			for (Object documentLrId : documents) {
-				gateDocuments.add(documentLrId.toString());
+			while (it.hasNext()) {
+				String documentLrId = (String) it.next();
+				gateDocuments.add(documentLrId);
 			}
 			Collections.sort(gateDocuments);
 			return gateDocuments;
@@ -75,11 +78,11 @@ public class GateDocumentDAOImpl implements GateDocumentDAO {
 					"couldn't get language resources identifiers");
 			getDataStore().close();
 			throw new GateException(e);
-		}	
+		}
 	}
 
 	@Override
-	public void release(Document document) throws PersistenceException {
+	public void release(Document document) {
 		Factory.deleteResource(document);
 	}
 

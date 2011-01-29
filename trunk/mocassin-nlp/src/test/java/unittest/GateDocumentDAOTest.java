@@ -34,11 +34,15 @@ public class GateDocumentDAOTest {
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, String.format(
 						"couldn't load the document: %s", id));
+			} finally {
+				if (document != null) {
+					logger.log(Level.INFO, String.format("document %s is OK",
+							id));
+					getGateDocumentDAO().release(document);
+					document = null;
+				}
 			}
-			if (document != null) {
-				logger.log(Level.INFO, String.format("document %s is OK", id));
-				getGateDocumentDAO().release(document);
-			}
+
 		}
 	}
 

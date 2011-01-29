@@ -2,6 +2,7 @@ package ru.ksu.niimm.cll.mocassin.nlp;
 
 import java.util.List;
 
+import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.parser.arxmliv.xpath.impl.ArxmlivStructureElementTypes;
 
 /**
@@ -55,5 +56,15 @@ public interface StructuralElement {
 	 */
 	List<Token> getTitleTokens();
 
+	/**
+	 * 
+	 * @return title tokens as a string
+	 */
+	String toTitleString();
+
 	void setTitleTokens(List<Token> title);
+
+	void setPredictedClass(MocassinOntologyClasses clazz);
+
+	MocassinOntologyClasses getPredictedClass();
 }

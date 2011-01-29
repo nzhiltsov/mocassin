@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
+import ru.ksu.niimm.cll.mocassin.nlp.Token;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -23,6 +24,12 @@ public class ReferenceFeatureReader {
 		try {
 			while (true) {
 				Reference reference = (Reference) in.readObject();
+				if (reference.getTo().getTitleTokens() == null) {
+					reference.getTo().setTitleTokens(new ArrayList<Token>());
+				}
+				if (reference.getFrom().getTitleTokens() == null) {
+					reference.getFrom().setTitleTokens(new ArrayList<Token>());
+				}
 				refs.add(reference);
 			}
 		} catch (EOFException e) {
