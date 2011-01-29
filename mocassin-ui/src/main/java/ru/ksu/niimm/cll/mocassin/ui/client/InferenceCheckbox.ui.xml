@@ -8,7 +8,6 @@
 	</ui:style>
 	<g:HorizontalPanel styleName='{style.main-panel}'>
 		<g:CheckBox ui:field="checkbox"/>
-		<g:Label>turn inference on/off</g:Label>
 	</g:HorizontalPanel>
 
 </ui:UiBinder>
