@@ -11,6 +11,7 @@ public class InferenceCheckbox extends Composite {
 
 	private static InferenceCheckboxUiBinder uiBinder = GWT
 			.create(InferenceCheckboxUiBinder.class);
+	private MocassinConstants constants = GWT.create(MocassinConstants.class);
 
 	interface InferenceCheckboxUiBinder extends
 			UiBinder<HorizontalPanel, InferenceCheckbox> {
@@ -21,6 +22,7 @@ public class InferenceCheckbox extends Composite {
 
 	public InferenceCheckbox() {
 		initWidget(uiBinder.createAndBindUi(this));
+		checkbox.setText(constants.inferenceCheckboxLabel());
 		checkbox.setValue(true);
 	}
 
