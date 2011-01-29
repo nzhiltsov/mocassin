@@ -1,8 +1,6 @@
 package ru.ksu.niimm.cll.mocassin.analyzer.relation.impl;
 
 import gate.Document;
-
-
 import ru.ksu.niimm.cll.mocassin.analyzer.relation.HasConsequenceRelationAnalyzer;
 import ru.ksu.niimm.cll.mocassin.analyzer.relation.RelationInfo;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
