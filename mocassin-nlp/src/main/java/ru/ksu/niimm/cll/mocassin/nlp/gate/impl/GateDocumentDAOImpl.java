@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateDocumentException;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
 import ru.ksu.niimm.cll.mocassin.nlp.util.NlpModulePropertiesLoader;
 
@@ -41,7 +42,7 @@ public class GateDocumentDAOImpl implements GateDocumentDAO {
 	private NlpModulePropertiesLoader nlpModulePropertiesLoader;
 
 	@Override
-	public Document load(String documentId) throws GateException {
+	public Document load(String documentId) throws AccessGateDocumentException {
 		initialize();
 		FeatureMap features = Factory.newFeatureMap();
 		features.put(DataStore.DATASTORE_FEATURE_NAME, getDataStore());
@@ -54,13 +55,13 @@ public class GateDocumentDAOImpl implements GateDocumentDAO {
 			logger.log(Level.SEVERE, String.format(
 					"couldn't create resource with id='%s' caused by: %s",
 					documentId, e.getMessage()));
-			throw new GateException(e);
+			throw new AccessGateDocumentException(e);
 		}
 		return document;
 	}
 
 	@Override
-	public List<String> getDocumentIds() throws GateException {
+	public List<String> getDocumentIds() throws AccessGateDocumentException {
 		initialize();
 
 		try {
@@ -76,8 +77,7 @@ public class GateDocumentDAOImpl implements GateDocumentDAO {
 		} catch (PersistenceException e) {
 			logger.log(Level.SEVERE,
 					"couldn't get language resources identifiers");
-			getDataStore().close();
-			throw new GateException(e);
+			throw new AccessGateDocumentException(e);
 		}
 	}
 
@@ -94,7 +94,7 @@ public class GateDocumentDAOImpl implements GateDocumentDAO {
 		return dataStore;
 	}
 
-	private void initialize() throws GateException {
+	private void initialize() throws AccessGateDocumentException {
 		if (!isInitialized) {
 			isInitialized = true;
 			System.setProperty(GATE_HOME_PROPERTY_KEY,
@@ -102,10 +102,15 @@ public class GateDocumentDAOImpl implements GateDocumentDAO {
 			System.setProperty(GATE_BUILTIN_CREOLE_DIR_PROPERTY_KEY,
 					getNlpModulePropertiesLoader().get(
 							GATE_BUILTIN_CREOLE_DIR_PROPERTY_KEY));
-			Gate.init();
-			this.dataStore = new SerialDataStore(getNlpModulePropertiesLoader()
-					.get(GATE_STORAGE_DIR_PROPERTY_KEY));
-			getDataStore().open();
+			try {
+				Gate.init();
+				this.dataStore = new SerialDataStore(
+						getNlpModulePropertiesLoader().get(
+								GATE_STORAGE_DIR_PROPERTY_KEY));
+				getDataStore().open();
+			} catch (GateException e) {
+				throw new AccessGateDocumentException(e);
+			}
 		}
 
 	}
