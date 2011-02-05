@@ -46,7 +46,8 @@ public class ReferenceSearcherTest {
 						.retrieve(document);
 				data.add(new DocumentData(document.getName(), document
 						.getContent().size(), references.size()));
-
+				logger.log(Level.INFO, String.format(
+						"the document '%s' was processed successfully", id));
 			} catch (AccessGateDocumentException e) {
 				logger.log(Level.SEVERE, String.format(
 						"failed to load the document: %s", id));
