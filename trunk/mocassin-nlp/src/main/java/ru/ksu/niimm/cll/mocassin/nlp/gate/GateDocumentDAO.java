@@ -13,7 +13,7 @@ public interface GateDocumentDAO {
 	 * @return
 	 * @throws GateException
 	 */
-	List<String> getDocumentIds() throws Exception;
+	List<String> getDocumentIds() throws AccessGateDocumentException;
 
 	/**
 	 * returns document with given id; <br>
@@ -24,7 +24,7 @@ public interface GateDocumentDAO {
 	 * @return
 	 * @throws GateException
 	 */
-	Document load(String documentId) throws Exception;
+	Document load(String documentId) throws AccessGateDocumentException;
 
 	/**
 	 * releases resources connected with given document
