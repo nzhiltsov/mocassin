@@ -39,6 +39,7 @@ public class StructuralElementSearcherTest {
 		for (String id : documentIds) {
 			if (id.startsWith("f000022.tex")) {
 				foundId = id;
+				break;
 			}
 		}
 		Assert.assertNotNull(foundId);

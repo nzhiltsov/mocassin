@@ -58,6 +58,7 @@ public class StructuralElementTypeRecognizerTest {
 		for (String id : documentIds) {
 			if (id.startsWith("f000008.tex")) {
 				foundId = id;
+				break;
 			}
 		}
 		Assert.assertNotNull(foundId);
@@ -78,7 +79,7 @@ public class StructuralElementTypeRecognizerTest {
 		System.out.println(prediction);
 	}
 
-	@Test
+//	@Test
 	public void testPredictForCorpus() throws Exception {
 		for (String id : documentIds) {
 			Document doc = null;
