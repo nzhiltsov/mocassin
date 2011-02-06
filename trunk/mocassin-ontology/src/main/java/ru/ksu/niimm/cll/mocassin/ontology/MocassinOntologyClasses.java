@@ -6,7 +6,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Mocassin Ontology classes with their synonyms
+ * Mocassin Ontology classes with their synonyms and classes imported from SALT
+ * ontology
  * 
  * @author nzhiltsov
  * 
@@ -15,7 +16,7 @@ public enum MocassinOntologyClasses {
 	AXIOM("axiom"), CLAIM("claim", "assertion", "statement"), CONJECTURE(
 			"conjecture", "hypothesis"), COROLLARY("corollary"), DEFINITION(
 			"definition"), EQUATION("equation", "equationgroup"), EXAMPLE(
-			"example"), LEMMA("lemma"), PROOF("proof"), PROPOSITION(
+			"example"), FIGURE("figure"), LEMMA("lemma"), PROOF("proof"), PROPOSITION(
 			"proposition"), REMARK("remark", "note", "comment"), SECTION(
 			"section", "subsection"), THEOREM("theorem");
 

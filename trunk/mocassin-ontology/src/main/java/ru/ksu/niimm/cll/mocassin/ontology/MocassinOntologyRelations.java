@@ -25,10 +25,8 @@ public enum MocassinOntologyRelations {
 					MocassinOntologyClasses.CONJECTURE,
 					MocassinOntologyClasses.COROLLARY,
 					MocassinOntologyClasses.DEFINITION,
-					MocassinOntologyClasses.EQUATION,
 					MocassinOntologyClasses.LEMMA,
 					MocassinOntologyClasses.PROPOSITION,
-					MocassinOntologyClasses.REMARK,
 					MocassinOntologyClasses.THEOREM };
 			return domains;
 		}
