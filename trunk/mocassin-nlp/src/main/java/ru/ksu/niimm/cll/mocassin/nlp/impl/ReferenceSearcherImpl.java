@@ -107,7 +107,7 @@ public class ReferenceSearcherImpl implements ReferenceSearcher {
 					ArxmlivFormatConstants.LABEL_REF_ATTRIBUTE_NAME);
 			StructuralElement to = getElementByLabel(labelref);
 			StructuralElement from = getEnclosingElement(annotation);
-			if (from == null)
+			if (to == null || from == null)
 				return null;
 			Annotation enclosingSentence = getEnclosingSentence(annotation);
 			List<Token> sentenceTokens = getTokensForAnnotation(getDocument(),
@@ -210,8 +210,9 @@ public class ReferenceSearcherImpl implements ReferenceSearcher {
 					return element;
 				}
 			}
-			throw new RuntimeException(String.format(
+			logger.log(Level.INFO, String.format(
 					"element with label '%s' not found", labelref));
+			return null;
 		}
 	}
 
