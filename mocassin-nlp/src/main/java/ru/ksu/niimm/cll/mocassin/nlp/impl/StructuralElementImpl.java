@@ -11,7 +11,7 @@ public class StructuralElementImpl implements StructuralElement {
 	private final long start;
 	private final long end;
 	private final String name;
-	private String label;
+	private List<String> labels;
 	private List<Token> titleTokens;
 	private MocassinOntologyClasses predictedClass;
 
@@ -53,12 +53,12 @@ public class StructuralElementImpl implements StructuralElement {
 		this.name = builder.name;
 	}
 
-	public String getLabel() {
-		return label;
+	public List<String> getLabels() {
+		return labels;
 	}
 
-	public void setLabel(String label) {
-		this.label = label;
+	public void setLabels(List<String> labels) {
+		this.labels = labels;
 	}
 
 	public List<Token> getTitleTokens() {

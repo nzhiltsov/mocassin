@@ -206,14 +206,13 @@ public class ReferenceSearcherImpl implements ReferenceSearcher {
 		private StructuralElement getElementByLabel(String labelref) {
 			List<StructuralElement> elements = getStructuralElements();
 			for (StructuralElement element : elements) {
-				if (labelref.equals(element.getLabel())) {
+				if (element.getLabels().contains(labelref)) {
 					return element;
 				}
 			}
 			throw new RuntimeException(String.format(
 					"element with label '%s' not found", labelref));
 		}
-
 	}
 
 	public List<StructuralElement> getStructuralElements() {

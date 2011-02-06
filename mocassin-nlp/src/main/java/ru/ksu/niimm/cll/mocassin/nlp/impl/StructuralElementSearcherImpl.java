@@ -10,6 +10,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.StringTokenizer;
+
+import org.eclipse.ui.actions.LabelRetargetAction;
 
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElementSearcher;
@@ -22,10 +25,14 @@ import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.parser.arxmliv.xpath.impl.ArxmlivFormatConstants;
 import ru.ksu.niimm.cll.mocassin.parser.arxmliv.xpath.impl.ArxmlivStructureElementTypes;
 import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
+import ru.ksu.niimm.cll.mocassin.util.StringUtil;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets;
+import com.google.common.collect.Sets.SetView;
 import com.google.inject.Inject;
 
 public class StructuralElementSearcherImpl implements StructuralElementSearcher {
@@ -37,13 +44,17 @@ public class StructuralElementSearcherImpl implements StructuralElementSearcher 
 	@Inject
 	private StructuralElementTypeRecognizer structuralElementTypeRecognizer;
 
+	private Set<String> nameSet = ArxmlivStructureElementTypes.toNameSet();
+
+	private AnnotationSet structuralAnnotations;
+
 	@Override
 	public List<StructuralElement> retrieve(Document document) {
-		Set<String> nameSet = ArxmlivStructureElementTypes.toNameSet();
-		AnnotationSet structuralAnnotations = document
+
+		setStructuralAnnotations(document
 				.getAnnotations(
 						getProperty(GateFormatConstants.ARXMLIV_MARKUP_NAME_PROPERTY_KEY))
-				.get(nameSet);
+				.get(nameSet));
 
 		Function<Annotation, StructuralElement> extractFunction = new ExtractionFunction(
 				document);
@@ -142,6 +153,14 @@ public class StructuralElementSearcherImpl implements StructuralElementSearcher 
 				false);
 	}
 
+	public AnnotationSet getStructuralAnnotations() {
+		return structuralAnnotations;
+	}
+
+	public void setStructuralAnnotations(AnnotationSet structuralAnnotations) {
+		this.structuralAnnotations = structuralAnnotations;
+	}
+
 	private class ExtractionFunction implements
 			Function<Annotation, StructuralElement> {
 		private Document document;
@@ -165,9 +184,9 @@ public class StructuralElementSearcherImpl implements StructuralElementSearcher 
 			String name = classFeature != null ? classFeature : type;
 			StructuralElement element = new StructuralElementImpl.Builder(id)
 					.start(start).end(end).name(name).build();
-			String label = (String) annotation.getFeatures().get(
-					ArxmlivFormatConstants.LABEL_ATTRIBUTE_NAME);
-			element.setLabel(label);
+
+			List<String> labels = collectLabels(annotation);
+			element.setLabels(labels);
 			AnnotationSet titleSet = getDocument()
 					.getAnnotations(
 							getProperty(GateFormatConstants.ARXMLIV_MARKUP_NAME_PROPERTY_KEY))
@@ -188,5 +207,34 @@ public class StructuralElementSearcherImpl implements StructuralElementSearcher 
 			return element;
 		}
 
+		/**
+		 * return all labels for a given annotation and for all contained
+		 * non-arxmliv annotations
+		 * 
+		 * @param annotation
+		 * @return
+		 */
+		private List<String> collectLabels(Annotation annotation) {
+			List<String> labels = extractLabels(annotation);
+			AnnotationSet containedElementSet = getDocument()
+					.getAnnotations(
+							getProperty(GateFormatConstants.ARXMLIV_MARKUP_NAME_PROPERTY_KEY))
+					.getContained(annotation.getStartNode().getOffset(),
+							annotation.getEndNode().getOffset());
+			ImmutableSet<Annotation> containedAxiliaryElements = Sets
+					.difference(containedElementSet, getStructuralAnnotations())
+					.immutableCopy();
+			for (Annotation a : containedAxiliaryElements) {
+				labels.addAll(extractLabels(a));
+			}
+			return labels;
+		}
+
+		private List<String> extractLabels(Annotation annotation) {
+			String labelStr = (String) annotation.getFeatures().get(
+					ArxmlivFormatConstants.LABEL_ATTRIBUTE_NAME);
+			List<String> labels = StringUtil.tokenize(labelStr);
+			return labels;
+		}
 	}
 }

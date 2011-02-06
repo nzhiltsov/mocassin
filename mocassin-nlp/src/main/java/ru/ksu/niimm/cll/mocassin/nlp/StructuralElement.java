@@ -36,11 +36,11 @@ public interface StructuralElement {
 
 	/**
 	 * 
-	 * @return label value of element to make references to it
+	 * @return label values of an element to make references to it
 	 */
-	String getLabel();
+	List<String> getLabels();
 
-	void setLabel(String label);
+	void setLabels(List<String> labels);
 
 	/**
 	 * 
