@@ -5,6 +5,8 @@ import gate.AnnotationSet;
 import gate.Document;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
@@ -23,6 +25,8 @@ import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 
 public class ReferenceSearcherImpl implements ReferenceSearcher {
+	@Inject
+	private Logger logger;
 	@Inject
 	private StructuralElementSearcher structuralElementSearcher;
 	@Inject
@@ -103,6 +107,8 @@ public class ReferenceSearcherImpl implements ReferenceSearcher {
 					ArxmlivFormatConstants.LABEL_REF_ATTRIBUTE_NAME);
 			StructuralElement to = getElementByLabel(labelref);
 			StructuralElement from = getEnclosingElement(annotation);
+			if (from == null)
+				return null;
 			Annotation enclosingSentence = getEnclosingSentence(annotation);
 			List<Token> sentenceTokens = getTokensForAnnotation(getDocument(),
 					enclosingSentence);
@@ -183,12 +189,15 @@ public class ReferenceSearcherImpl implements ReferenceSearcher {
 			}
 
 			if (closestParentElement == null) {
-				throw new RuntimeException(
-						String
-								.format(
-										"parent element for ref with id='%d' in document '%s' not found",
-										annotation.getId(), getDocument()
-												.getName()));
+				getLogger()
+						.log(
+								Level.INFO,
+								String
+										.format(
+												"parent element for ref with id='%d' in document '%s' not found",
+												annotation.getId(),
+												getDocument().getName()));
+
 			}
 
 			return closestParentElement;
@@ -213,6 +222,10 @@ public class ReferenceSearcherImpl implements ReferenceSearcher {
 
 	public void setStructuralElements(List<StructuralElement> structuralElements) {
 		this.structuralElements = structuralElements;
+	}
+
+	public Logger getLogger() {
+		return logger;
 	}
 
 }
