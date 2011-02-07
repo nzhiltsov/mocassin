@@ -23,6 +23,7 @@ import ru.ksu.niimm.cll.mocassin.nlp.StructuralElementSearcher;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
 import ru.ksu.niimm.cll.mocassin.nlp.recognizer.StructuralElementTypeRecognizer;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
+import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
 
 import com.google.inject.Inject;
 import com.google.inject.internal.Maps;
@@ -79,9 +80,10 @@ public class StructuralElementTypeRecognizerTest {
 		System.out.println(prediction);
 	}
 
-//	@Test
+	@Test
 	public void testPredictForCorpus() throws Exception {
-		for (String id : documentIds) {
+		List<String> sample = CollectionUtil.sampleRandomSublist(documentIds, 30);
+		for (String id : sample) {
 			Document doc = null;
 			try {
 				doc = getGateDocumentDAO().load(id);
@@ -95,6 +97,7 @@ public class StructuralElementTypeRecognizerTest {
 			}
 			if (doc != null) {
 				getGateDocumentDAO().release(doc);
+				doc = null;
 			}
 		}
 	}
