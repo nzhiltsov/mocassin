@@ -18,6 +18,7 @@ import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.ReferenceSearcher;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateDocumentException;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
+import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
 
 import com.google.inject.Inject;
 import com.mycila.testing.junit.MycilaJunitRunner;
@@ -37,7 +38,8 @@ public class ReferenceSearcherTest {
 	@Test
 	public void testRetrieve() throws AccessGateDocumentException, IOException {
 		List<DocumentData> data = new ArrayList<DocumentData>();
-		List<String> ids = gateDocumentDAO.getDocumentIds();
+		List<String> ids = CollectionUtil.sampleRandomSublist(gateDocumentDAO
+				.getDocumentIds(), 30);
 		for (String id : ids) {
 			Document document = null;
 			try {
