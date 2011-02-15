@@ -6,7 +6,7 @@
 	<artifactId>mocassin-pom</artifactId>
 	<packaging>pom</packaging>
 	<name>Mocassin POM</name>
-	<version>1.0.0.4-SNAPSHOT</version>
+	<version>1.0.0.4</version>
 	<organization>
 		<name>N.G. Chebotarev Research Institute of Mathematics and Mechanics</name>
 		<url>http://cll.niimm.ksu.ru</url>
