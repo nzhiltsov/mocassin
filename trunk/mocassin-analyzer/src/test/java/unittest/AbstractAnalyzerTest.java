@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -21,6 +23,7 @@ import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
 import ru.ksu.niimm.ose.ontology.OntologyModule;
 
 import com.aliasi.matrix.Vector;
+import com.google.inject.Inject;
 import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
@@ -30,6 +33,9 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 public abstract class AbstractAnalyzerTest {
 	private static final String REF_CONTEXT_DATA_INPUT_FOLDER = "/tmp/refcontexts-data";
 
+	@Inject
+	private Logger logger;
+
 	private List<Reference> references;
 
 	@Before
@@ -38,9 +44,15 @@ public abstract class AbstractAnalyzerTest {
 		File[] files = dir.listFiles();
 		this.references = new ArrayList<Reference>();
 		for (File file : files) {
-			List<Reference> refs = ReferenceFeatureReader.read(new FileReader(
-					file));
-			this.references.addAll(refs);
+			List<Reference> refs;
+			try {
+				refs = ReferenceFeatureReader.read(new FileReader(file));
+				this.references.addAll(refs);
+			} catch (Exception e) {
+				logger.log(Level.SEVERE, String.format(
+						"failed to parse file: %s", file.getName()));
+			}
+
 		}
 	}
 
