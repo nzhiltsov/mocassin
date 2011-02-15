@@ -1,0 +1,26 @@
+what,kind,bundleId,bundleVersion,description,time
+started,bundle,org.eclipse.compare,3.5.0.I20090514-0808,"org.eclipse.compare",1263591825790
+error,log,,,"Invalid preference page path: CSS Files",1263591833041
+started,bundle,org.eclipse.team.cvs.ssh2,3.2.200.I20090508-2000,"org.eclipse.team.cvs.ssh2",1263591833134
+started,bundle,org.eclipse.ui.navigator,3.4.1.M20090911-1550,"org.eclipse.ui.navigator",1263591833456
+started,bundle,org.eclipse.ui.navigator.resources,3.4.1.M20090826-0800,"org.eclipse.ui.navigator.resources",1263591835679
+deactivated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1263591836672
+executed,command,org.eclipse.ui,3.5.1.M20090902-1000,"org.eclipse.ui.edit.paste",1263591901287
+activated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1263591919776
+deactivated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1263591934326
+executed,command,org.eclipse.ui,3.5.1.M20090902-1000,"org.eclipse.ui.perspectives.showPerspective",1263591937913
+executed,command,org.eclipse.ui,3.5.1.M20090902-1000,"org.eclipse.ui.perspectives.showPerspective",1263591937913
+activated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1263591938021
+deactivated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1263591944455
+executed,command,org.eclipse.ui,3.5.1.M20090902-1000,"org.eclipse.ui.help.aboutAction",1263591978448
+activated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1263591978550
+deactivated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1263591981374
+activated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1263592047991
+started,bundle,org.eclipse.equinox.p2.ui,1.0.101.R35x_v20090819,"org.eclipse.equinox.p2.ui",1263592053397
+started,bundle,org.eclipse.equinox.p2.ui.sdk,1.0.100.v20090520-1905,"org.eclipse.equinox.p2.ui.sdk",1263592053402
+started,bundle,org.eclipse.equinox.p2.metadata,1.0.100.v20090525,"org.eclipse.equinox.p2.metadata",1263592053678
+deactivated,workbench,org.eclipse.ui.workbench,3.5.1.M20090826-0800a,"",1263592059767
+started,bundle,org.eclipse.equinox.p2.extensionlocation,1.0.100.v20090520-1905,"org.eclipse.equinox.p2.extensionlocation",1263592061360
+started,bundle,org.eclipse.equinox.p2.updatesite,1.0.100.v20090525,"org.eclipse.equinox.p2.updatesite",1263592061386
+started,bundle,org.eclipse.equinox.p2.publisher,1.0.0.v20090527-1812,"org.eclipse.equinox.p2.publisher",1263592061452
+executed,command,org.eclipse.ui,3.5.1.M20090902-1000,"org.eclipse.ui.edit.paste",1263592074552
