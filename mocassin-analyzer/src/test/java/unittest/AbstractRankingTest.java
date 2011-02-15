@@ -15,6 +15,7 @@ import java.util.Map.Entry;
 import net.sourceforge.texlipse.texparser.lexer.LexerException;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 
 import ru.ksu.niimm.cll.mocassin.analyzer.AnalyzerModule;
@@ -35,9 +36,8 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext( { AnalyzerModule.class, NlpModule.class,
 		LatexParserModule.class, OntologyModule.class, VirtuosoModule.class })
+@Ignore
 public class AbstractRankingTest {
-	private static final String DOCS_DIR = "/OTHER_DATA/arxiv_papers/main_results";
-	private static final String DOC_ID = "f000022.tex";
 	@Inject
 	private Builder structureAnalyzer;
 	@Inject
@@ -54,15 +54,6 @@ public class AbstractRankingTest {
 		LatexDocumentModel model = this.treeParser.parseTree(reader);
 		model.setDocId("example.tex");
 		this.models.add(model);
-		/*
-		 * File dir = new File(DOCS_DIR); File[] docs = dir.listFiles();
-		 * 
-		 * for (File doc : docs) { InputStream in = new
-		 * FileInputStream(String.format( "%s/%s", DOCS_DIR, doc.getName()));
-		 * InputStreamReader reader = new InputStreamReader(in, "utf8");
-		 * LatexDocumentModel model = this.treeParser.parseTree(reader);
-		 * model.setDocId(doc.getName()); this.models.add(model); }
-		 */
 
 	}
 
