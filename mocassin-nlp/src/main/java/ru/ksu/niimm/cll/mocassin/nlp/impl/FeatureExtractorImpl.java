@@ -10,6 +10,7 @@ import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.ReferenceSearcher;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
 import ru.ksu.niimm.cll.mocassin.nlp.util.NlpModulePropertiesLoader;
+import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
 
 import com.google.inject.Inject;
 
@@ -30,14 +31,23 @@ public class FeatureExtractorImpl implements FeatureExtractor {
 	}
 
 	@Override
-	public void processReferences() throws Exception {
+	public void processReferences(int count) throws Exception {
+
 		List<String> documentIds = getGateDocumentDAO().getDocumentIds();
-		for (String id : documentIds) {
+		List<String> selectedDocumentIds = count == 0 ? documentIds : CollectionUtil
+				.sampleRandomSublist(documentIds, count);
+		for (String id : selectedDocumentIds) {
 			Document document = getGateDocumentDAO().load(id);
-			List<Reference> references = getReferenceSearcher().retrieve(
-					document);
-			fireReferenceFinishEvent(document, references);
-			getGateDocumentDAO().release(document);
+			try {
+				List<Reference> references = getReferenceSearcher().retrieve(
+						document);
+				fireReferenceFinishEvent(document, references);
+			} catch (Exception e) {
+				if (document != null) {
+					getGateDocumentDAO().release(document);
+				}
+			}
+
 		}
 
 	}
