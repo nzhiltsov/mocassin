@@ -27,7 +27,7 @@ public class GateDocumentDAOTest {
 
 	@Test
 	public void testLoad() throws Exception {
-		List<String> ids = CollectionUtil.sampleRandomSublist(getGateDocumentDAO().getDocumentIds(), 30);
+		List<String> ids = CollectionUtil.sampleRandomSublist(getGateDocumentDAO().getDocumentIds(), 10);
 		for (String id : ids) {
 			Document document = null;
 			try {
