@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>ru.ksu.niimm.cll.mocassin</groupId>
 		<artifactId>mocassin-pom</artifactId>
-		<version>1.0.0.4-SNAPSHOT</version>
+		<version>1.0.0.4</version>
 		<relativePath>../mocassin-pom</relativePath>
 	</parent>
 
@@ -12,7 +12,7 @@
 	<groupId>ru.ksu.niimm.cll.mocassin</groupId>
 	<artifactId>mocassin-virtuoso</artifactId>
 	<name>Mocassin Virtuoso Adapter</name>
-	<version>1.0.0.4-SNAPSHOT</version>
+	<version>1.0.0.4</version>
 	<organization>
 		<name>N.G. Chebotarev Research Institute of Mathematics and Mechanics</name>
 		<url>http://cll.niimm.ksu.ru</url>
