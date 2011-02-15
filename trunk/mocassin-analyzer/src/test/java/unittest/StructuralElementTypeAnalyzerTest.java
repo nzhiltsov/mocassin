@@ -48,8 +48,11 @@ public class StructuralElementTypeAnalyzerTest extends AbstractAnalyzerTest {
 		writer.write("filename id refid f t\n");
 		for (PredictedPairInfo info : locations) {
 			Reference ref = info.getReference();
-			writer.write(String.format("%s %s %s\n", ref.toString(), info
-					.getFromType().toString(), info.getToType().toString()));
+			MocassinOntologyClasses fromType = info.getFromType();
+			MocassinOntologyClasses toType = info.getToType();
+			writer.write(String.format("%s %s %s\n", ref.toString(),
+					fromType != null ? fromType.toString() : "null",
+					toType != null ? toType.toString() : "null"));
 		}
 		writer.flush();
 		writer.close();
