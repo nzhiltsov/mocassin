@@ -66,11 +66,11 @@ public class StructuralElementSearcherImpl implements StructuralElementSearcher 
 
 	@Override
 	public StructuralElement findById(Document document, int id) {
-		Set<String> nameSet = ArxmlivStructureElementTypes.toNameSet();
-		AnnotationSet structuralAnnotations = document
+		setStructuralAnnotations(document
 				.getAnnotations(
 						getProperty(GateFormatConstants.ARXMLIV_MARKUP_NAME_PROPERTY_KEY))
-				.get(nameSet);
+				.get(nameSet));
+		
 		Annotation foundAnnotation = null;
 		for (Annotation annotation : structuralAnnotations) {
 			if (annotation.getId().equals(id)) {
