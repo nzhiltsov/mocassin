@@ -24,6 +24,7 @@ public class ReferenceFeatureReader {
 		try {
 			while (true) {
 				Reference reference = (Reference) in.readObject();
+				if (reference == null) continue;
 				if (reference.getTo().getTitleTokens() == null) {
 					reference.getTo().setTitleTokens(new ArrayList<Token>());
 				}
