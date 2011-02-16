@@ -47,7 +47,7 @@ public class FeatureExtractorTest implements ReferenceProcessListener {
 	@Test
 	public void testGetReferenceContextList() throws Exception {
 		getFeatureExtractor().addListener(this);
-		getFeatureExtractor().processReferences(20);
+		getFeatureExtractor().processReferences(0);
 	}
 
 	@Override
