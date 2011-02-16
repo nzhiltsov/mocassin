@@ -40,6 +40,36 @@ public abstract class AbstractScoringIndexer {
 	}
 
 	/**
+	 * build term/reference matrix with boolean values
+	 * 
+	 * @param id2ref
+	 *            identifier-to-reference map
+	 * @param m
+	 *            count of terms
+	 * @param n
+	 *            count of references
+	 * @return
+	 */
+	protected double[][] buildBooleanTermReferenceMatrix(
+			BiMap<Integer, Reference> id2ref, int m, int n) {
+		double[][] matrix = new double[m][n];
+		for (int j = 0; j < n; j++) {
+			Reference ref = id2ref.get(j);
+			List<Token> sentenceTokens = filterTokens(ref.getSentenceTokens());
+			for (Token sentenceToken : sentenceTokens) {
+				int i = this.token2id.get(sentenceToken.getValue()
+						.toLowerCase());
+				if (matrix[i][j] == 0) {
+					matrix[i][j] = 1;
+				}
+
+			}
+
+		}
+		return matrix;
+	}
+
+	/**
 	 * build term/reference matrix with values weighted using tf-idf
 	 * 
 	 * @param id2ref

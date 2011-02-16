@@ -7,11 +7,11 @@ import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 
 import com.aliasi.matrix.Vector;
 
-public class WeightedIndexImpl implements WeightedIndex {
+public class IndexImpl implements Index {
 	private Map<Reference, Vector> referenceVectors;
 	private List<String> terms;
 
-	public WeightedIndexImpl(Map<Reference, Vector> referenceVectors,
+	public IndexImpl(Map<Reference, Vector> referenceVectors,
 			List<String> terms) {
 		this.referenceVectors = referenceVectors;
 		this.terms = terms;

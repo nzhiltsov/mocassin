@@ -7,8 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import ru.ksu.niimm.cll.mocassin.analyzer.indexers.WeightedIndex;
-import ru.ksu.niimm.cll.mocassin.analyzer.indexers.WeightedIndexImpl;
+import ru.ksu.niimm.cll.mocassin.analyzer.indexers.Index;
+import ru.ksu.niimm.cll.mocassin.analyzer.indexers.IndexImpl;
 import ru.ksu.niimm.cll.mocassin.analyzer.lsa.impl.AbstractScoringIndexer;
 import ru.ksu.niimm.cll.mocassin.analyzer.pos.VerbBasedFeatureAnalyzer;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
@@ -26,12 +26,27 @@ public class VerbBasedFeatureAnalyzerImpl extends AbstractScoringIndexer
 		implements VerbBasedFeatureAnalyzer {
 
 	@Override
-	public WeightedIndex buildReferenceIndex(List<Reference> references) {
+	public Index buildReferenceBooleanIndex(List<Reference> references) {
+		initializeIndices(references);
+		BiMap<Integer, Reference> id2ref = this.ref2id.inverse();
+		int m = this.token2id.size();
+		int n = this.ref2id.size();
+		double[][] matrix = buildBooleanTermReferenceMatrix(id2ref, m, n);
+		return buildReferenceVectorIndex(id2ref, m, n, matrix);
+	}
+
+	@Override
+	public Index buildReferenceWeightedIndex(List<Reference> references) {
 		initializeIndices(references);
 		BiMap<Integer, Reference> id2ref = this.ref2id.inverse();
 		int m = this.token2id.size();
 		int n = this.ref2id.size();
 		double[][] matrix = buildWeightedTermReferenceMatrix(id2ref, m, n);
+		return buildReferenceVectorIndex(id2ref, m, n, matrix);
+	}
+
+	private Index buildReferenceVectorIndex(BiMap<Integer, Reference> id2ref,
+			int m, int n, double[][] matrix) {
 		Map<Reference, Vector> referenceIndexMap = new HashMap<Reference, Vector>();
 		for (int k = 0; k < n; k++) {
 			double[] column = new double[m];
@@ -48,7 +63,7 @@ public class VerbBasedFeatureAnalyzerImpl extends AbstractScoringIndexer
 		for (Integer id : ids) {
 			terms.add(id2token.get(id));
 		}
-		return new WeightedIndexImpl(referenceIndexMap, terms);
+		return new IndexImpl(referenceIndexMap, terms);
 	}
 
 	@Override
@@ -57,7 +72,7 @@ public class VerbBasedFeatureAnalyzerImpl extends AbstractScoringIndexer
 
 			@Override
 			public boolean apply(Token token) {
-				if (isStopWord(token.getValue()))
+				if (token.getValue() == null || isStopWord(token.getValue()))
 					return false;
 				String pos = token.getPos();
 				if (pos == null)

@@ -7,7 +7,7 @@ import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 
 import com.aliasi.matrix.Vector;
 
-public interface WeightedIndex {
+public interface Index {
 	Map<Reference, Vector> getReferenceVectors();
 	
 	List<String> getTerms();

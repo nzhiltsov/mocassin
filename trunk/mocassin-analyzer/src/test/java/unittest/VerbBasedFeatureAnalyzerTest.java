@@ -5,24 +5,33 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import ru.ksu.niimm.cll.mocassin.analyzer.indexers.WeightedIndex;
+import ru.ksu.niimm.cll.mocassin.analyzer.indexers.Index;
 import ru.ksu.niimm.cll.mocassin.analyzer.pos.VerbBasedFeatureAnalyzer;
 
 import com.google.inject.Inject;
 
 public class VerbBasedFeatureAnalyzerTest extends AbstractAnalyzerTest {
 	private static final String TERMS_OUTPUT_FILENAME = "/tmp/verb-terms.txt";
-	private static final String REF_VECTORS_OUTPUT_FILENAME = "/tmp/verb-features.txt";
+	private static final String REF_TFIDF_VECTORS_OUTPUT_FILENAME = "/tmp/verb-tfidf-features.txt";
+	private static final String REF_BOOLEAN_VECTORS_OUTPUT_FILENAME = "/tmp/verb-boolean-features.txt";
 	@Inject
 	private VerbBasedFeatureAnalyzer verbBasedFeatureAnalyzer;
 
 	@Test
-	public void testBuildReferenceIndex() throws IOException {
-		WeightedIndex index = getVerbBasedFeatureAnalyzer()
-				.buildReferenceIndex(getReferences());
+	public void testBuildReferenceWeightedIndex() throws IOException {
+		Index index = getVerbBasedFeatureAnalyzer()
+				.buildReferenceWeightedIndex(getReferences());
 		print(index.getTerms(), TERMS_OUTPUT_FILENAME);
 		String header = makeHeader(index.getTerms().size());
-		print(index.getReferenceVectors(), REF_VECTORS_OUTPUT_FILENAME, header);
+		print(index.getReferenceVectors(), REF_TFIDF_VECTORS_OUTPUT_FILENAME, header);
+	}
+	
+	@Test
+	public void testBuildReferenceBooleanIndex() throws IOException {
+		Index index = getVerbBasedFeatureAnalyzer()
+				.buildReferenceBooleanIndex(getReferences());
+		String header = makeHeader(index.getTerms().size());
+		print(index.getReferenceVectors(), REF_BOOLEAN_VECTORS_OUTPUT_FILENAME, header);
 	}
 
 	private String makeHeader(int n) {
