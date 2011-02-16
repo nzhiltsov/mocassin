@@ -3,12 +3,12 @@ package ru.ksu.niimm.cll.mocassin.analyzer.lsa.impl;
 import java.util.List;
 import java.util.Map;
 
-import ru.ksu.niimm.cll.mocassin.analyzer.indexers.WeightedIndexImpl;
+import ru.ksu.niimm.cll.mocassin.analyzer.indexers.IndexImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 
 import com.aliasi.matrix.Vector;
 
-public class LSIndexImpl extends WeightedIndexImpl implements LSIndex {
+public class LSIndexImpl extends IndexImpl implements LSIndex {
 
 	private Map<String, Vector> termVectors;
 
