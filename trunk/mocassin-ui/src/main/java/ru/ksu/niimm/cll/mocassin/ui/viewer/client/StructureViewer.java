@@ -22,12 +22,13 @@ import com.google.gwt.event.logical.shared.AttachEvent.Handler;
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.CaptionPanel;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class StructureViewer implements EntryPoint {
-	
+
 	public void onModuleLoad() {
 		RootPanel rootPanel = RootPanel.get();
 		rootPanel.setSize("1024", "768");
@@ -37,46 +38,45 @@ public class StructureViewer implements EntryPoint {
 		documentPanel.setSize("700", "100%");
 
 		final Frame frame = new Frame(
-				"http://docs.google.com/viewer?url=http://arxiv.org/pdf/1103.2935v1&embedded=true");
+				"http://docs.google.com/viewer?url=http://arxiv.org/pdf/math/0205003v1&embedded=true");
 		documentPanel.add(frame);
 		frame.setSize("100%", "100%");
 
 		VerticalPanel structurePanel = new VerticalPanel();
+		structurePanel.setSpacing(5);
 		rootPanel.add(structurePanel, 706, 0);
 		structurePanel.setSize("280px", "100%");
 
-		VerticalPanel verticalPanel = new VerticalPanel();
-		verticalPanel.setBorderWidth(1);
-		verticalPanel.setSpacing(5);
-		structurePanel.add(verticalPanel);
-		verticalPanel.setSize("100%", "30%");
+		CaptionPanel metadataCaptionPanel = new CaptionPanel();
+		metadataCaptionPanel.setCaptionText("Metadata");
+		VerticalPanel metadataPanel = new VerticalPanel();
+		metadataPanel.setSpacing(5);
 
-		Label lblNewLabel = new Label(" arXiv:1103.2935");
+		metadataPanel.setSize("100%", "150");
+
+		Label lblNewLabel = new Label("arXiv:math/0205003");
 		lblNewLabel.setStyleName("paper-id");
-		verticalPanel.add(lblNewLabel);
+		metadataPanel.add(lblNewLabel);
 
 		Label lblNewLabel_1 = new Label(
-				"Involutive distributions and dynamical systems of second-order type");
+				"A strengthening of the Nyman-Beurling criterion for the Riemann hypothesis, 2");
 		lblNewLabel_1.setStyleName("paper-title");
-		verticalPanel.add(lblNewLabel_1);
+		metadataPanel.add(lblNewLabel_1);
 
-		Label lblNewLabel_2 = new Label("T. Mestdag, M. Crampin");
+		Label lblNewLabel_2 = new Label("Luis Baez-Duarte");
 		lblNewLabel_2.setStyleName("paper-author");
-		verticalPanel.add(lblNewLabel_2);
+		metadataPanel.add(lblNewLabel_2);
+		metadataCaptionPanel.add(metadataPanel);
+		structurePanel.add(metadataCaptionPanel);
 
-		Hyperlink hprlnkNewHyperlink = new Hyperlink("Page 2", false, "");
-		hprlnkNewHyperlink.addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				frame
-						.setUrl("http://docs.google.com/viewer?url=http://arxiv.org/pdf/1103.2935v1&embedded=true#:0.page.1");
-			}
-		});
-
-		VerticalPanel htmlNewHtml = new VerticalPanel();
-		htmlNewHtml.setSize("280", "280");
-		structurePanel.add(hprlnkNewHyperlink);
+		CaptionPanel documentStructureGraphPanel = new CaptionPanel();
+		documentStructureGraphPanel
+				.setCaptionText("Graph of the Document Structure");
+		DocumentStructureGraph documentStructureGraph = new DocumentStructureGraph();
+		documentStructureGraph.setHeight("350");
+		documentStructureGraphPanel.add(documentStructureGraph.asWidget());
+		documentStructureGraph.setFrame(frame);
+		structurePanel.add(documentStructureGraphPanel);
 	}
-	
+
 }
