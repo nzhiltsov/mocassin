@@ -6,12 +6,10 @@ import java.util.List;
 
 import ru.ksu.niimm.cll.mocassin.ui.client.OntConcept;
 import ru.ksu.niimm.cll.mocassin.ui.client.OntElement;
-import ru.ksu.niimm.cll.mocassin.ui.client.OntIndividual;
 import ru.ksu.niimm.cll.mocassin.ui.client.OntRelation;
 import ru.ksu.niimm.cll.mocassin.ui.client.OntologyService;
 import ru.ksu.niimm.ose.ontology.OMDocOntologyFacade;
 import ru.ksu.niimm.ose.ontology.OntologyConcept;
-import ru.ksu.niimm.ose.ontology.OntologyIndividual;
 import ru.ksu.niimm.ose.ontology.OntologyRelation;
 
 import com.google.inject.Inject;

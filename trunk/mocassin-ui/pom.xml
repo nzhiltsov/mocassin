@@ -96,6 +96,13 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
+			<groupId>ru.ksu.niimm.cll.mocassin</groupId>
+			<artifactId>mocassin-arxiv</artifactId>
+			<version>1.0.0.5-SNAPSHOT</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
 		</dependency>
@@ -104,6 +111,7 @@
 			<artifactId>protovis-gwt</artifactId>
 			<version>0.3</version>
 		</dependency>
+
 	</dependencies>
 	<properties>
 		<gwt.version>2.2.0</gwt.version>

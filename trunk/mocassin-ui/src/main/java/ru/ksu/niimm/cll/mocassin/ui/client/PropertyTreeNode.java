@@ -2,10 +2,6 @@ package ru.ksu.niimm.cll.mocassin.ui.client;
 
 import java.util.List;
 
-import ru.ksu.niimm.cll.mocassin.ui.client.widget.suggestbox.OntologyElementOracle;
-import ru.ksu.niimm.cll.mocassin.ui.client.widget.suggestbox.OntologyElementSuggestBox;
-import ru.ksu.niimm.cll.mocassin.ui.client.widget.suggestbox.OntologyElementSuggestion;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.uibinder.client.UiBinder;

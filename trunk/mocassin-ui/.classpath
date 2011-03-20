@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" output="target/mocassin-ui-1.0.0.5-SNAPSHOT/WEB-INF/classes" path="src/main/java"/>
+	<classpathentry excluding="**" kind="src" output="target/mocassin-ui-1.0.0.5-SNAPSHOT/WEB-INF/classes" path="src/main/resources"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER"/>
 	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/mocassin-ontology"/>
-	<classpathentry exported="true" kind="lib" path="war/WEB-INF/lib/guice-2.0.jar">
+	<classpathentry kind="lib" path="/OTHER_DATA/projects/thirdparty/gwt-2.2.0/gwt-user.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="file:/home/nzhiltsov/projects/thirdparty/guice-2.0/javadoc/"/>
+			<attribute name="javadoc_location" value="file:/OTHER_DATA/projects/thirdparty/gwt-2.2.0/doc/javadoc/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="war/WEB-INF/lib/guice-servlet-2.0.jar">
+	<classpathentry kind="lib" path="/OTHER_DATA/projects/thirdparty/gwt-2.2.0/gwt-dev.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="file:/home/nzhiltsov/projects/thirdparty/guice-2.0/javadoc/"/>
+			<attribute name="javadoc_location" value="file:/OTHER_DATA/projects/thirdparty/gwt-2.2.0/doc/javadoc/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="war/WEB-INF/lib/aopalliance-1.0.jar"/>
-	<classpathentry kind="output" path="war/WEB-INF/classes"/>
+	<classpathentry kind="output" path="target/mocassin-ui-1.0.0.5-SNAPSHOT/WEB-INF/classes"/>
 </classpath>
