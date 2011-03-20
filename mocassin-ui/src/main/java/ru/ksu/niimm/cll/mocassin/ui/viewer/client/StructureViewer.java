@@ -1,28 +1,11 @@
 package ru.ksu.niimm.cll.mocassin.ui.viewer.client;
 
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.ScriptElement;
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.TextResource;
-import com.google.gwt.resources.client.CssResource.Strict;
-import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.CaptionPanel;
+import com.google.gwt.user.client.ui.Frame;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.Frame;
-import com.google.gwt.user.client.ui.Hyperlink;
-import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.logical.shared.AttachEvent.Handler;
-import com.google.gwt.event.logical.shared.AttachEvent;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.CaptionPanel;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -69,14 +52,16 @@ public class StructureViewer implements EntryPoint {
 		metadataCaptionPanel.add(metadataPanel);
 		structurePanel.add(metadataCaptionPanel);
 
-		CaptionPanel documentStructureGraphPanel = new CaptionPanel();
+		final CaptionPanel documentStructureGraphPanel = new CaptionPanel();
 		documentStructureGraphPanel
 				.setCaptionText("Graph of the Document Structure");
+		structurePanel.add(documentStructureGraphPanel);
+
 		DocumentStructureGraph documentStructureGraph = new DocumentStructureGraph();
 		documentStructureGraph.setHeight("350");
 		documentStructureGraphPanel.add(documentStructureGraph.asWidget());
 		documentStructureGraph.setFrame(frame);
-		structurePanel.add(documentStructureGraphPanel);
+
 	}
 
 }

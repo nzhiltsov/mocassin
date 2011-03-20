@@ -1,11 +1,9 @@
 package ru.ksu.niimm.cll.mocassin.ui.server.util;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 
 public class FileUtil {
 	private FileUtil() {

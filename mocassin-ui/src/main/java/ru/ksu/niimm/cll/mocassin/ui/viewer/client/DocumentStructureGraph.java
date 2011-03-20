@@ -1,9 +1,6 @@
 package ru.ksu.niimm.cll.mocassin.ui.viewer.client;
 
-import java.util.Comparator;
-
 import org.thechiselgroup.choosel.protovis.client.PV;
-import org.thechiselgroup.choosel.protovis.client.PVBehavior;
 import org.thechiselgroup.choosel.protovis.client.PVColor;
 import org.thechiselgroup.choosel.protovis.client.PVColors;
 import org.thechiselgroup.choosel.protovis.client.PVDot;
