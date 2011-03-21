@@ -1,7 +1,5 @@
 package ru.ksu.niimm.cll.mocassin.arxiv.impl;
 
-import java.io.Serializable;
-
 import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.arxiv.Author;
 
