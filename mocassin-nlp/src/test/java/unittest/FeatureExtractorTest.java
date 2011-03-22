@@ -9,6 +9,7 @@ import java.io.ObjectOutputStream;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -25,6 +26,7 @@ import com.thoughtworks.xstream.XStream;
 
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext(NlpModule.class)
+@Ignore("needs to fix the performance of the test")
 public class FeatureExtractorTest implements ReferenceProcessListener {
 	private static final String REF_CONTEXT_DATA_OUTPUT_DIR = "/tmp/refcontexts-data";
 	@Inject
@@ -44,6 +46,7 @@ public class FeatureExtractorTest implements ReferenceProcessListener {
 		}
 	}
 
+	
 	@Test
 	public void testGetReferenceContextList() throws Exception {
 		getFeatureExtractor().addListener(this);
