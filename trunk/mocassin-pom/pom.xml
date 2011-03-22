@@ -146,6 +146,7 @@
 		<module>../mocassin-analyzer</module>
 		<module>../mocassin-nlp</module>
 		<module>../mocassin-util</module>
+		<module>../mocassin-arxiv</module>
 	</modules>
 	<distributionManagement>
 		<repository>
