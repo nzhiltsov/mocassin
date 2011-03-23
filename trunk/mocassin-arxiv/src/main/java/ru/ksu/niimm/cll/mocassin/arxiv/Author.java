@@ -10,7 +10,7 @@ public class Author {
 	private String name;
 	private String affiliation;
 
-	private Author(String name, String affiliation) {
+	public Author(String name, String affiliation) {
 		this.name = name;
 		this.affiliation = affiliation;
 	}

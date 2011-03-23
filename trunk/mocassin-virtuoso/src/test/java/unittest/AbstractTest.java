@@ -8,11 +8,10 @@ import org.junit.runner.RunWith;
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFGraph;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
 import ru.ksu.niimm.cll.mocassin.virtuoso.impl.RDFGraphImpl;
+import unittest.util.LoadPropertiesUtil;
 
 import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
-
-import unittest.util.LoadPropertiesUtil;
 
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext(VirtuosoModule.class)

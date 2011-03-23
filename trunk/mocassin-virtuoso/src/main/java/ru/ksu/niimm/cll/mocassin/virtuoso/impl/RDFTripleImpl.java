@@ -17,4 +17,9 @@ public class RDFTripleImpl implements RDFTriple {
 		this.value = value;
 	}
 
+	@Override
+	public String toString() {
+		return this.value;
+	}
+
 }

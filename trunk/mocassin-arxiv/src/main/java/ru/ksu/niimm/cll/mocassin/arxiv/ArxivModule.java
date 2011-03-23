@@ -15,7 +15,8 @@ public class ArxivModule extends AbstractModule {
 	protected void configure() {
 		try {
 			Properties properties = new Properties();
-			properties.load(new FileReader("src/main/resources/arxiv-module.properties"));
+			properties.load(this.getClass().getClassLoader()
+					.getResourceAsStream("arxiv-module.properties"));
 			Names.bindProperties(binder(), properties);
 		} catch (IOException ex) {
 			throw new RuntimeException(
@@ -23,5 +24,4 @@ public class ArxivModule extends AbstractModule {
 		}
 		bind(ArxivDAOFacade.class).to(ArxivDAOFacadeImpl.class);
 	}
-
 }

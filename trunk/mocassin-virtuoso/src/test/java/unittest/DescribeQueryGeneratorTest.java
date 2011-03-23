@@ -4,9 +4,9 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.google.inject.Inject;
-
 import ru.ksu.niimm.cll.mocassin.virtuoso.generator.DescribeQueryGenerator;
+
+import com.google.inject.Inject;
 
 public class DescribeQueryGeneratorTest extends AbstractTest {
 	private static final String RESOURCE_URI = "<http://linkeddata.tntbase.org/slides/dmath/en/sets-introduction#ninset.sym>";

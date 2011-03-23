@@ -17,6 +17,7 @@ import virtuoso.jena.driver.VirtuosoUpdateFactory;
 import virtuoso.jena.driver.VirtuosoUpdateRequest;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
@@ -30,6 +31,17 @@ public class VirtuosoDAOImpl implements VirtuosoDAO {
 	@Inject
 	DescribeQueryGenerator describeQueryGenerator;
 
+	private RDFGraph graph;
+
+	@Inject
+	public VirtuosoDAOImpl(@Named("connection.url") String connectionUrl,
+			@Named("connection.user.name") String username,
+			@Named("connection.user.password") String password,
+			@Named("graph.iri") String graphIri) {
+		this.graph = new RDFGraphImpl.Builder(graphIri).url(connectionUrl)
+				.username(username).password(password).build();
+	}
+
 	@Override
 	@ValidateGraph
 	public void insert(List<RDFTriple> triples, RDFGraph graph) {
@@ -38,6 +50,11 @@ public class VirtuosoDAOImpl implements VirtuosoDAO {
 		String expression = getInsertQueryGenerator().generate(triples, graph);
 		execute(virtGraph, expression);
 
+	}
+
+	@Override
+	public void insert(List<RDFTriple> triples) {
+		insert(triples, this.graph);
 	}
 
 	@Override
@@ -79,7 +96,7 @@ public class VirtuosoDAOImpl implements VirtuosoDAO {
 	@ValidateGraph
 	public List<QuerySolution> get(String query, RDFGraph graph) {
 		List<QuerySolution> solutions = new ArrayList<QuerySolution>();
-		
+
 		VirtGraph virtGraph = new VirtGraph(graph.getUrl(),
 				graph.getUsername(), graph.getPassword());
 		VirtuosoQueryExecution vqe = VirtuosoQueryExecutionFactory.create(
