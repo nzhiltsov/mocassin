@@ -44,7 +44,7 @@ public class EdgeContextImpl implements EdgeContext {
 
 	@Override
 	public String toString() {
-		return String.format("%s", getAroundText());
+		return getEdgeType().toString();
 	}
 
 }
