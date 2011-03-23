@@ -6,7 +6,7 @@ import java.util.Properties;
 
 public class LoadPropertiesUtil {
 
-	private static final String CONFIG_PROPERTIES_FILENAME = "config.properties";
+	private static final String CONFIG_PROPERTIES_FILENAME = "test_config.properties";
 
 	private LoadPropertiesUtil() {
 	}

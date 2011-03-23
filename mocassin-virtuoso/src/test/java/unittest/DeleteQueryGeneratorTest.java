@@ -4,9 +4,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import ru.ksu.niimm.cll.mocassin.virtuoso.RDFGraph;
 import ru.ksu.niimm.cll.mocassin.virtuoso.generator.DeleteQueryGenerator;
-import ru.ksu.niimm.cll.mocassin.virtuoso.impl.RDFGraphImpl;
 
 import com.google.inject.Inject;
 

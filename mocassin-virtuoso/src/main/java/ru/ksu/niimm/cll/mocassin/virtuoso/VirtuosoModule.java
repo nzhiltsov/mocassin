@@ -1,5 +1,8 @@
 package ru.ksu.niimm.cll.mocassin.virtuoso;
 
+import java.io.IOException;
+import java.util.Properties;
+
 import ru.ksu.niimm.cll.mocassin.virtuoso.generator.DeleteQueryGenerator;
 import ru.ksu.niimm.cll.mocassin.virtuoso.generator.DescribeQueryGenerator;
 import ru.ksu.niimm.cll.mocassin.virtuoso.generator.InsertQueryGenerator;
@@ -12,11 +15,21 @@ import ru.ksu.niimm.cll.mocassin.virtuoso.validation.ValidateGraphInterceptor;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.matcher.Matchers;
+import com.google.inject.name.Names;
 
 public class VirtuosoModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
+		try {
+			Properties properties = new Properties();
+			properties.load(this.getClass().getClassLoader()
+					.getResourceAsStream("virtuoso_config.properties"));
+			Names.bindProperties(binder(), properties);
+		} catch (IOException ex) {
+			throw new RuntimeException(
+					"failed to load the Virtuoso module configuration");
+		}
 		bind(VirtuosoDAO.class).to(VirtuosoDAOImpl.class);
 		bind(InsertQueryGenerator.class).to(InsertQueryGeneratorImpl.class);
 		bind(DeleteQueryGenerator.class).to(DeleteQueryGeneratorImpl.class);

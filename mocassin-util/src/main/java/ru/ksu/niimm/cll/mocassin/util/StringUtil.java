@@ -1,8 +1,10 @@
 package ru.ksu.niimm.cll.mocassin.util;
 
+import java.rmi.server.UID;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class StringUtil {
 	private StringUtil() {
@@ -25,4 +27,16 @@ public class StringUtil {
 		}
 		return tokens;
 	}
+
+	/**
+	 * Generates an identifier that is unique over time with respect to the host
+	 * that it was generated on. Used approach is similar to Jena's.
+	 * 
+	 * 
+	 * @return
+	 */
+	public static String generateBlankNodeId() {
+		return String.format("_:bnode%d", new UID().hashCode());
+	}
+
 }
