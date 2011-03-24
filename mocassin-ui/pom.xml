@@ -39,6 +39,7 @@
 					<modules>
 						<module>${project.groupId}.ui.Mocassin</module>
 						<module>${project.groupId}.ui.viewer.StructureViewer</module>
+						<module>${project.groupId}.ui.dashboard.Dashboard</module>
 					</modules>
 				</configuration>
 				<dependencies>
@@ -123,7 +124,22 @@
 			<artifactId>protovis-gwt</artifactId>
 			<version>0.3</version>
 		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>1.3.2</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
 
+
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>r06</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
 
 	</dependencies>
 	<properties>
