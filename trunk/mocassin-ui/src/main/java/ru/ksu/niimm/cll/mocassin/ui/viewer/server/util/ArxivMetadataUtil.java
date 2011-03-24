@@ -13,6 +13,8 @@ import ru.ksu.niimm.cll.mocassin.virtuoso.impl.RDFTripleImpl;
 public class ArxivMetadataUtil {
 	private static final String ATOM_RDF_SCHEMA = "http://djpowell.net/schemas/atomrdf/0.3";
 
+	private static final String SALT_SCHEMA = "http:/salt.semanticauthoring.org/ontologies/sdo";
+
 	private static final String RDFS_TYPE = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
 
 	private ArxivMetadataUtil() {
@@ -20,6 +22,8 @@ public class ArxivMetadataUtil {
 
 	public static List<RDFTriple> convertToTriples(ArticleMetadata metadata) {
 		List<RDFTriple> triples = new ArrayList<RDFTriple>();
+		triples.add(createTriple("<%s> <%s> <%s#Publication> .", metadata
+				.getId(), RDFS_TYPE, SALT_SCHEMA));
 		convertTitle(triples, metadata);
 		convertAuthors(triples, metadata);
 		convertLinks(triples, metadata);

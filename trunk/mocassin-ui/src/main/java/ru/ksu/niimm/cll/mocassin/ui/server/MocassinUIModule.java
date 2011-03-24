@@ -2,8 +2,8 @@ package ru.ksu.niimm.cll.mocassin.ui.server;
 
 import ru.ksu.niimm.cll.mocassin.ui.client.OntologyService;
 import ru.ksu.niimm.cll.mocassin.ui.client.QueryService;
-import ru.ksu.niimm.cll.mocassin.ui.viewer.client.ArxivService;
-import ru.ksu.niimm.cll.mocassin.ui.viewer.server.ArxivServiceImpl;
+import ru.ksu.niimm.cll.mocassin.ui.dashboard.client.ArxivService;
+import ru.ksu.niimm.cll.mocassin.ui.dashboard.server.ArxivServiceImpl;
 
 import com.google.inject.servlet.ServletModule;
 

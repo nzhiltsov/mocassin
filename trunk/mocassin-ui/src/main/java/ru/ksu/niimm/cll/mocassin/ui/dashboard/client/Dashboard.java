@@ -4,6 +4,7 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TabBar;
 import com.google.gwt.user.client.ui.TabPanel;
+import com.google.gwt.user.client.ui.TextBox;
 
 public class Dashboard implements EntryPoint {
 
@@ -11,12 +12,7 @@ public class Dashboard implements EntryPoint {
 	public void onModuleLoad() {
 		RootPanel rootPanel = RootPanel.get();
 		rootPanel.setSize("1024", "768");
-
-		TabPanel tabPanel = new TabPanel();
-		tabPanel.add(new TabBar(), "Upload");
-		tabPanel.add(new TabBar(), "Index");
-		tabPanel.add(new TabBar(), "Collection Graph");
-		rootPanel.add(tabPanel);
+		rootPanel.add(new DashboardTabPanel());
 
 	}
 
