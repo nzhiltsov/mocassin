@@ -5,6 +5,7 @@ import java.util.List;
 
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFGraph;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoDAO;
+import ru.ksu.niimm.cll.mocassin.virtuoso.impl.RDFGraphImpl;
 import ru.ksu.niimm.ose.ontology.OntologyBlankNode;
 import ru.ksu.niimm.ose.ontology.OntologyElement;
 import ru.ksu.niimm.ose.ontology.OntologyIndividual;
@@ -13,29 +14,40 @@ import ru.ksu.niimm.ose.ontology.OntologyResource;
 import ru.ksu.niimm.ose.ontology.OntologyTriple;
 import ru.ksu.niimm.ose.ontology.QueryManagerFacade;
 import ru.ksu.niimm.ose.ontology.QueryStatement;
-import ru.ksu.niimm.ose.ontology.loader.ModulePropertiesLoader;
-import ru.ksu.niimm.ose.ontology.loader.OMDocOntologyLoader;
-import ru.ksu.niimm.ose.ontology.loader.RDFGraphPropertiesLoader;
+import ru.ksu.niimm.ose.ontology.loader.OntologyLoader;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 
 public class QueryManagerFacadeImpl implements QueryManagerFacade {
-	private static final String OMDOC_RULES_SET_PARAMETER_NAME = "omdoc.rules.set";
 	private static final String RULES_SET_ENTRY = "define input:inference \"%s\"";
 	private static final String RDF_PREFIX_STRING = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>";
 	private static final String SELECT_STATEMENT = "SELECT DISTINCT %s WHERE";
 	private static final String RETRIEVED_CONCEPT_KEY = "?1";
 	@Inject
-	private OMDocOntologyLoader ontologyLoader;
+	private OntologyLoader ontologyLoader;
 	@Inject
 	private VirtuosoDAO virtuosoDAO;
+
+	private RDFGraph searchGraph;
+	
+	private String ontologyRulesSetName;
+
 	@Inject
-	private RDFGraphPropertiesLoader graphPropertiesLoader;
-	@Inject
-	private ModulePropertiesLoader modulePropertiesLoader;
+	public QueryManagerFacadeImpl(
+			@Named("connection.url") String connectionUrl,
+			@Named("connection.user.name") String username,
+			@Named("connection.user.password") String password,
+			@Named("graph.iri") String graphIri,
+			@Named("ontology.rules.set") String ontologyRuleSet) {
+		this.searchGraph = new RDFGraphImpl.Builder(graphIri)
+				.url(connectionUrl).username(username).password(password)
+				.build();
+		this.ontologyRulesSetName = ontologyRuleSet;
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -48,7 +60,7 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 		List<Resource> resultResources = new ArrayList<Resource>();
 
 		List<QuerySolution> solutions = getVirtuosoDAO().get(queryString,
-				getGraph());
+				getSearchGraph());
 		for (QuerySolution solution : solutions) {
 			Resource resource = solution.getResource(retrievedResourceKey);
 			resultResources.add(resource);
@@ -85,7 +97,7 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 	public String generateQuery(QueryStatement queryStatement) {
 		StringBuffer sb = new StringBuffer();
 		if (queryStatement.isInferenceOn()) {
-			sb.append(String.format(RULES_SET_ENTRY, getOmdocRulesSetName()));
+			sb.append(String.format(RULES_SET_ENTRY, getOntologyRulesSetName()));
 			sb.append("\n");
 		}
 		sb.append(RDF_PREFIX_STRING);
@@ -141,8 +153,8 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 		return sb.toString();
 	}
 
-	private String getOmdocRulesSetName() {
-		return getModulePropertiesLoader().get(OMDOC_RULES_SET_PARAMETER_NAME);
+	private String getOntologyRulesSetName() {
+		return this.ontologyRulesSetName;
 	}
 
 	private String getPredicateExpression(OntologyTriple triple) {
@@ -155,10 +167,10 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 	@Override
 	public Model describe(String resourceUri) {
 		String uri = String.format("<%s>", resourceUri);
-		return getVirtuosoDAO().describe(uri, getGraph());
+		return getVirtuosoDAO().describe(uri, getSearchGraph());
 	}
 
-	public OMDocOntologyLoader getOntologyLoader() {
+	public OntologyLoader getOntologyLoader() {
 		return ontologyLoader;
 	}
 
@@ -166,16 +178,9 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 		return virtuosoDAO;
 	}
 
-	public RDFGraphPropertiesLoader getGraphPropertiesLoader() {
-		return graphPropertiesLoader;
+	public RDFGraph getSearchGraph() {
+		return this.searchGraph;
 	}
 
-	public RDFGraph getGraph() {
-		return getGraphPropertiesLoader().getGraph();
-	}
-
-	public ModulePropertiesLoader getModulePropertiesLoader() {
-		return modulePropertiesLoader;
-	}
-
+	
 }

@@ -26,6 +26,12 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
+			<groupId>ru.ksu.niimm.cll.mocassin</groupId>
+			<artifactId>mocassin-arxiv</artifactId>
+			<version>1.0.0.5-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
 			<groupId>com.google.inject</groupId>
 			<artifactId>guice</artifactId>
 		</dependency>
@@ -121,6 +127,13 @@
 			<artifactId>relaxngDatatype</artifactId>
 			<version>1.5</version>
 			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>ru.ksu.niimm.cll.mocassin</groupId>
+			<artifactId>mocassin-util</artifactId>
+			<version>1.0.0.5-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>

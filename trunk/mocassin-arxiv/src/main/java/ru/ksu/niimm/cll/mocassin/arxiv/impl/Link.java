@@ -1,5 +1,7 @@
 package ru.ksu.niimm.cll.mocassin.arxiv.impl;
 
+import com.google.common.base.Predicate;
+
 public class Link {
 	/**
 	 * URL of a version, e.g. 'http://arxiv.org/pdf/math/0205003v1'
@@ -26,4 +28,12 @@ public class Link {
 		this.type = type;
 	}
 
+	public static class PdfLinkPredicate implements Predicate<Link> {
+
+		@Override
+		public boolean apply(Link link) {
+			return link.equals("application/pdf");
+		}
+
+	}
 }

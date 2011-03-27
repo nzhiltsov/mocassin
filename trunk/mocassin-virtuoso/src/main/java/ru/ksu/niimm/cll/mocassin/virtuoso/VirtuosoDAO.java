@@ -28,16 +28,7 @@ public interface VirtuosoDAO {
 	 * @param triples
 	 * @param graph
 	 */
-	@Deprecated
 	void insert(List<RDFTriple> triples, RDFGraph graph);
-
-	/**
-	 * insert the triples into a given graph
-	 * 
-	 * @param triples
-	 * @param graph
-	 */
-	void insert(List<RDFTriple> triples);
 
 	/**
 	 * update the triples that relate to a document with given URI

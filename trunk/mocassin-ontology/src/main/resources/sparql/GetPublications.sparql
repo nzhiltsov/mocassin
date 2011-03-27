@@ -1,0 +1,3 @@
+SELECT DISTINCT ?1 {
+?1 a <http:/salt.semanticauthoring.org/ontologies/sdo#Publication> .
+}

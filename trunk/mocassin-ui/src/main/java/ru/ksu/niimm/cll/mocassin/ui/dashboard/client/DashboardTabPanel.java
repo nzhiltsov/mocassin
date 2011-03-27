@@ -2,9 +2,6 @@ package ru.ksu.niimm.cll.mocassin.ui.dashboard.client;
 
 import java.util.List;
 
-import ru.ksu.niimm.cll.mocassin.ui.client.QueryService;
-import ru.ksu.niimm.cll.mocassin.ui.client.QueryServiceAsync;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -15,7 +12,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.ui.TextBox;

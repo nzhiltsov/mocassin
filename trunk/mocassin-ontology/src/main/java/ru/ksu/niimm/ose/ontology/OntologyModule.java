@@ -1,33 +1,37 @@
 package ru.ksu.niimm.ose.ontology;
 
-import ru.ksu.niimm.ose.ontology.impl.OMDocOntologyFacadeImpl;
-import ru.ksu.niimm.ose.ontology.impl.OMDocResourceFacadeImpl;
+import java.io.IOException;
+import java.util.Properties;
+
+import ru.ksu.niimm.ose.ontology.impl.OntologyFacadeImpl;
+import ru.ksu.niimm.ose.ontology.impl.OntologyResourceFacadeImpl;
 import ru.ksu.niimm.ose.ontology.impl.QueryManagerFacadeImpl;
-import ru.ksu.niimm.ose.ontology.loader.ModulePropertiesLoader;
-import ru.ksu.niimm.ose.ontology.loader.OMDocOntologyLoader;
-import ru.ksu.niimm.ose.ontology.loader.RDFGraphPropertiesLoader;
-import ru.ksu.niimm.ose.ontology.loader.RDFStorageLoader;
+import ru.ksu.niimm.ose.ontology.loader.OntologyLoader;
 import ru.ksu.niimm.ose.ontology.loader.SparqlQueryLoader;
-import ru.ksu.niimm.ose.ontology.loader.impl.ModulePropertiesLoaderImpl;
-import ru.ksu.niimm.ose.ontology.loader.impl.OMDocOntologyPelletLoader;
-import ru.ksu.niimm.ose.ontology.loader.impl.RDFGraphPropertiesLoaderImpl;
-import ru.ksu.niimm.ose.ontology.loader.impl.RDFStorageLoaderImpl;
+import ru.ksu.niimm.ose.ontology.loader.impl.OntologyPelletLoader;
 import ru.ksu.niimm.ose.ontology.loader.impl.SparqlQueryLoaderImpl;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.name.Names;
 
 public class OntologyModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		bind(OMDocOntologyFacade.class).to(OMDocOntologyFacadeImpl.class);
+		try {
+			Properties properties = new Properties();
+			properties.load(this.getClass().getClassLoader()
+					.getResourceAsStream("ontology_config.properties"));
+			Names.bindProperties(binder(), properties);
+		} catch (IOException ex) {
+			throw new RuntimeException(
+					"failed to load the Virtuoso module configuration");
+		}
+		
+		bind(OntologyFacade.class).to(OntologyFacadeImpl.class);
 		bind(QueryManagerFacade.class).to(QueryManagerFacadeImpl.class);
-		bind(OMDocResourceFacade.class).to(OMDocResourceFacadeImpl.class);
-		bind(ModulePropertiesLoader.class).to(ModulePropertiesLoaderImpl.class);
-		bind(RDFStorageLoader.class).to(RDFStorageLoaderImpl.class);
-		bind(OMDocOntologyLoader.class).to(OMDocOntologyPelletLoader.class);
-		bind(RDFGraphPropertiesLoader.class).to(
-				RDFGraphPropertiesLoaderImpl.class);
+		bind(OntologyResourceFacade.class).to(OntologyResourceFacadeImpl.class);
+		bind(OntologyLoader.class).to(OntologyPelletLoader.class);
 		bind(SparqlQueryLoader.class).to(SparqlQueryLoaderImpl.class);
 		
 	}

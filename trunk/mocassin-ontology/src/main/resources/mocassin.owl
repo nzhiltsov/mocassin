@@ -15,17 +15,17 @@
     <!ENTITY sao "http://salt.semanticauthoring.org/ontologies/sao#" >
     <!ENTITY xsp "http://www.owl-ontologies.com/2005/08/07/xsp.owl#" >
     <!ENTITY sdo "http://salt.semanticauthoring.org/ontologies/sdo#" >
-    <!ENTITY mocassin "http://www.cll.niimm.ksu.ru/ontologies/2010/10/mocassin.owl#" >
+    <!ENTITY mocassin "http://cll.niimm.ksu.ru/ontologies/mocassin#" >
 ]>
 
 
-<rdf:RDF xmlns="http://www.cll.niimm.ksu.ru/ontologies/2010/10/mocassin.owl#"
-     xml:base="http://www.cll.niimm.ksu.ru/ontologies/2010/10/mocassin.owl"
+<rdf:RDF xmlns="http://cll.niimm.ksu.ru/ontologies/mocassin#"
+     xml:base="http://cll.niimm.ksu.ru/ontologies/mocassin"
      xmlns:dc="http://purl.org/dc/elements/1.1/"
      xmlns:protege="http://protege.stanford.edu/plugins/owl/protege#"
      xmlns:ontologies="http://salt.semanticauthoring.org/ontologies/"
      xmlns:xsp="http://www.owl-ontologies.com/2005/08/07/xsp.owl#"
-     xmlns:mocassin="http://www.cll.niimm.ksu.ru/ontologies/2010/10/mocassin.owl#"
+     xmlns:mocassin="http://cll.niimm.ksu.ru/ontologies/mocassin#"
      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
      xmlns:swrl="http://www.w3.org/2003/11/swrl#"
      xmlns:sao="&ontologies;sao#"
@@ -43,7 +43,7 @@
             >Ontology of MocaSSIN (Mathematical Semantic Search engINe) project</dc:title>
         <dc:creator rdf:datatype="&xsd;string"
             >Valery Solovyev &lt;maki.solovyev@mail.ru&gt;</dc:creator>
-        <owl:imports rdf:resource="&ontologies;sdo"/>
+        <owl:imports rdf:resource="http://salt.semanticauthoring.org/ontologies/sdo#"/>
     </owl:Ontology>
     
 
@@ -73,7 +73,7 @@
     
 
 
-    <!-- http://www.cll.niimm.ksu.ru/ontologies/2010/10/mocassin.owl#dependsOn -->
+    <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#dependsOn -->
 
     <owl:ObjectProperty rdf:about="#dependsOn">
         <rdf:type rdf:resource="&owl;TransitiveProperty"/>
@@ -115,7 +115,7 @@
     
 
 
-    <!-- http://www.cll.niimm.ksu.ru/ontologies/2010/10/mocassin.owl#exemplifies -->
+    <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#exemplifies -->
 
     <owl:ObjectProperty rdf:about="#exemplifies">
         <rdfs:label xml:lang="en">exemplifies</rdfs:label>
@@ -142,7 +142,7 @@
     
 
 
-    <!-- http://www.cll.niimm.ksu.ru/ontologies/2010/10/mocassin.owl#hasConsequence -->
+    <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#hasConsequence -->
 
     <owl:ObjectProperty rdf:about="#hasConsequence">
         <rdfs:label rdf:datatype="&xsd;string"
@@ -167,7 +167,7 @@
     
 
 
-    <!-- http://www.cll.niimm.ksu.ru/ontologies/2010/10/mocassin.owl#hasPart -->
+    <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#hasPart -->
 
     <owl:ObjectProperty rdf:about="#hasPart">
         <rdf:type rdf:resource="&owl;TransitiveProperty"/>
@@ -193,7 +193,7 @@
     
 
 
-    <!-- http://www.cll.niimm.ksu.ru/ontologies/2010/10/mocassin.owl#hasSegment -->
+    <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#hasSegment -->
 
     <owl:ObjectProperty rdf:about="#hasSegment">
         <rdfs:label xml:lang="en">has segment</rdfs:label>
@@ -207,7 +207,7 @@
     
 
 
-    <!-- http://www.cll.niimm.ksu.ru/ontologies/2010/10/mocassin.owl#proves -->
+    <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#proves -->
 
     <owl:ObjectProperty rdf:about="#proves">
         <rdfs:label xml:lang="en">proves</rdfs:label>
@@ -230,7 +230,7 @@
     
 
 
-    <!-- http://www.cll.niimm.ksu.ru/ontologies/2010/10/mocassin.owl#refersTo -->
+    <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#refersTo -->
 
     <owl:ObjectProperty rdf:about="#refersTo">
         <rdfs:label xml:lang="en">refers to</rdfs:label>
@@ -315,7 +315,7 @@
     
 
 
-    <!-- http://www.cll.niimm.ksu.ru/ontologies/2010/10/mocassin.owl#Axiom -->
+    <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#Axiom -->
 
     <owl:Class rdf:about="#Axiom">
         <rdfs:label xml:lang="en">Axiom</rdfs:label>
@@ -327,7 +327,7 @@
     
 
 
-    <!-- http://www.cll.niimm.ksu.ru/ontologies/2010/10/mocassin.owl#Claim -->
+    <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#Claim -->
 
     <owl:Class rdf:about="#Claim">
         <rdfs:label xml:lang="en">Claim</rdfs:label>
@@ -339,7 +339,7 @@
     
 
 
-    <!-- http://www.cll.niimm.ksu.ru/ontologies/2010/10/mocassin.owl#Conjecture -->
+    <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#Conjecture -->
 
     <owl:Class rdf:about="#Conjecture">
         <rdfs:label rdf:datatype="&xsd;string"
@@ -351,7 +351,7 @@
     
 
 
-    <!-- http://www.cll.niimm.ksu.ru/ontologies/2010/10/mocassin.owl#Corollary -->
+    <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#Corollary -->
 
     <owl:Class rdf:about="#Corollary">
         <rdfs:label xml:lang="en">Corollary</rdfs:label>
@@ -363,7 +363,7 @@
     
 
 
-    <!-- http://www.cll.niimm.ksu.ru/ontologies/2010/10/mocassin.owl#Definition -->
+    <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#Definition -->
 
     <owl:Class rdf:about="#Definition">
         <rdfs:label xml:lang="en">Definition</rdfs:label>
@@ -375,7 +375,7 @@
     
 
 
-    <!-- http://www.cll.niimm.ksu.ru/ontologies/2010/10/mocassin.owl#DocumentSegment -->
+    <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#DocumentSegment -->
 
     <owl:Class rdf:about="#DocumentSegment">
         <rdfs:label xml:lang="en"
@@ -388,7 +388,7 @@
     
 
 
-    <!-- http://www.cll.niimm.ksu.ru/ontologies/2010/10/mocassin.owl#Equation -->
+    <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#Equation -->
 
     <owl:Class rdf:about="#Equation">
         <rdfs:label xml:lang="en">Equation</rdfs:label>
@@ -400,7 +400,7 @@
     
 
 
-    <!-- http://www.cll.niimm.ksu.ru/ontologies/2010/10/mocassin.owl#Example -->
+    <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#Example -->
 
     <owl:Class rdf:about="#Example">
         <rdfs:label xml:lang="en">Example</rdfs:label>
@@ -412,7 +412,7 @@
     
 
 
-    <!-- http://www.cll.niimm.ksu.ru/ontologies/2010/10/mocassin.owl#Lemma -->
+    <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#Lemma -->
 
     <owl:Class rdf:about="#Lemma">
         <rdfs:label xml:lang="en">Lemma</rdfs:label>
@@ -424,7 +424,7 @@
     
 
 
-    <!-- http://www.cll.niimm.ksu.ru/ontologies/2010/10/mocassin.owl#Proof -->
+    <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#Proof -->
 
     <owl:Class rdf:about="#Proof">
         <rdfs:label xml:lang="en">Proof</rdfs:label>
@@ -436,7 +436,7 @@
     
 
 
-    <!-- http://www.cll.niimm.ksu.ru/ontologies/2010/10/mocassin.owl#Proposition -->
+    <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#Proposition -->
 
     <owl:Class rdf:about="#Proposition">
         <rdfs:label xml:lang="en">Proposition</rdfs:label>
@@ -448,7 +448,7 @@
     
 
 
-    <!-- http://www.cll.niimm.ksu.ru/ontologies/2010/10/mocassin.owl#Remark -->
+    <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#Remark -->
 
     <owl:Class rdf:about="#Remark">
         <rdfs:label xml:lang="en">Remark</rdfs:label>
@@ -460,7 +460,7 @@
     
 
 
-    <!-- http://www.cll.niimm.ksu.ru/ontologies/2010/10/mocassin.owl#Theorem -->
+    <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#Theorem -->
 
     <owl:Class rdf:about="#Theorem">
         <rdfs:label xml:lang="en">Theorem</rdfs:label>

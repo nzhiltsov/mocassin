@@ -1,5 +1,7 @@
 package ru.ksu.niimm.cll.mocassin.arxiv;
 
+import com.google.common.base.Function;
+
 /**
  * Author of an arXiv article
  * 
@@ -23,4 +25,12 @@ public class Author {
 		return affiliation;
 	}
 
+	public static class NameFunction implements Function<Author, String> {
+
+		@Override
+		public String apply(Author author) {
+			return author.getName();
+		}
+
+	}
 }

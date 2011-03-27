@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -21,14 +20,13 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext( { OntologyTestModule.class, VirtuosoModule.class })
-@Ignore
-public class OMDocOntologyFacadeTest {
+public class MocassinOntologyFacadeTest {
 	@Inject
-	private OntologyFacade omdocOntologyFacade;
+	private OntologyFacade ontologyFacade;
 
 	@Test
 	public void testGetOntClasses() {
-		List<OntologyConcept> ontClassList = getOntologyFacade()
+		List<OntologyConcept> ontClassList = this.ontologyFacade
 				.getOntClassList();
 		Collections.sort(ontClassList, new OntologyConceptComparator());
 		for (OntologyConcept concept : ontClassList) {
@@ -39,45 +37,49 @@ public class OMDocOntologyFacadeTest {
 	@Test
 	public void testGetPropertiesForConcreteDomain() {
 		OntologyConcept concept = new OntologyConcept(
-				"http://omdoc.org/ontology#Property", "property");
-		List<OntologyRelation> properties = getOntologyFacade()
+				"http://cll.niimm.ksu.ru/ontologies/mocassin#Theorem",
+				"theorem");
+		List<OntologyRelation> properties = this.ontologyFacade
 				.getOntPropertyList(concept);
 		OntologyRelation relation = new OntologyRelation(
-				"http://omdoc.org/ontology#usesSymbol", "uses symbol");
+				"http://cll.niimm.ksu.ru/ontologies/mocassin#refersTo",
+				"refers to");
 		Assert.assertTrue(properties.contains(relation));
 	}
 
 	@Test
 	public void testGetRangeOfConcreteProperty() {
 		OntologyRelation relation = new OntologyRelation(
-				"http://omdoc.org/ontology#proves", "proves");
-		List<OntologyConcept> ontPropertyRangeList = getOntologyFacade()
+				"http://cll.niimm.ksu.ru/ontologies/mocassin#dependsOn",
+				"depends on");
+		List<OntologyConcept> ontPropertyRangeList = this.ontologyFacade
 				.getOntPropertyRangeList(relation);
-		boolean containsAssertion = false;
-		boolean containsAssumption = false;
+		boolean containsConjecture = false;
+		boolean containsCorollary = false;
 		for (OntologyConcept rangeConcept : ontPropertyRangeList) {
 			if (rangeConcept.getUri().equals(
-					"http://omdoc.org/ontology#Assertion")) {
-				containsAssertion = true;
+					"http://cll.niimm.ksu.ru/ontologies/mocassin#Conjecture")) {
+				containsConjecture = true;
 			} else if (rangeConcept.getUri().equals(
-					"http://omdoc.org/ontology#AssumptionAssertion")) {
-				containsAssumption = true;
+					"http://cll.niimm.ksu.ru/ontologies/mocassin#Corollary")) {
+				containsCorollary = true;
 			}
 		}
 
-		Assert.assertTrue(containsAssertion && containsAssumption);
+		Assert.assertTrue(containsConjecture && containsCorollary);
 	}
 
 	@Test
 	public void testGetInferredRangeOfProperty() {
 		OntologyRelation relation = new OntologyRelation(
-				"http://omdoc.org/ontology#exemplifies", "exemplifies");
-		List<OntologyConcept> ontPropertyRangeList = getOntologyFacade()
+				"http://cll.niimm.ksu.ru/ontologies/mocassin#hasSegment",
+				"has segment");
+		List<OntologyConcept> ontPropertyRangeList = this.ontologyFacade
 				.getOntPropertyRangeList(relation);
 		boolean containsDefinition = false;
 		for (OntologyConcept rangeConcept : ontPropertyRangeList) {
 			if (rangeConcept.getUri().equals(
-					"http://omdoc.org/ontology#Definition")) {
+					"http://cll.niimm.ksu.ru/ontologies/mocassin#Definition")) {
 				containsDefinition = true;
 				break;
 			}
@@ -85,9 +87,4 @@ public class OMDocOntologyFacadeTest {
 
 		Assert.assertTrue(containsDefinition);
 	}
-
-	public OntologyFacade getOntologyFacade() {
-		return omdocOntologyFacade;
-	}
-
 }

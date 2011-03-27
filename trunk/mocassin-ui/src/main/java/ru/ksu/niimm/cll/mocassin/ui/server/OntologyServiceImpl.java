@@ -8,8 +8,8 @@ import ru.ksu.niimm.cll.mocassin.ui.client.OntConcept;
 import ru.ksu.niimm.cll.mocassin.ui.client.OntElement;
 import ru.ksu.niimm.cll.mocassin.ui.client.OntRelation;
 import ru.ksu.niimm.cll.mocassin.ui.client.OntologyService;
-import ru.ksu.niimm.ose.ontology.OMDocOntologyFacade;
 import ru.ksu.niimm.ose.ontology.OntologyConcept;
+import ru.ksu.niimm.ose.ontology.OntologyFacade;
 import ru.ksu.niimm.ose.ontology.OntologyRelation;
 
 import com.google.inject.Inject;
@@ -19,10 +19,10 @@ import com.google.inject.Inject;
  */
 public class OntologyServiceImpl implements OntologyService {
 
-	private OMDocOntologyFacade omdocOntologyFacade;
+	private OntologyFacade omdocOntologyFacade;
 
 	@Inject
-	public OntologyServiceImpl(OMDocOntologyFacade omdocOntologyFacade) {
+	public OntologyServiceImpl(OntologyFacade omdocOntologyFacade) {
 		this.omdocOntologyFacade = omdocOntologyFacade;
 	}
 
@@ -78,7 +78,7 @@ public class OntologyServiceImpl implements OntologyService {
 		return targetConceptList;
 	}
 
-	public OMDocOntologyFacade getOmdocOntologyFacade() {
+	public OntologyFacade getOmdocOntologyFacade() {
 		return omdocOntologyFacade;
 	}
 

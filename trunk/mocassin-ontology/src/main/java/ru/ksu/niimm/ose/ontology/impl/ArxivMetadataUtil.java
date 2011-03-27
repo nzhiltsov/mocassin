@@ -1,4 +1,4 @@
-package ru.ksu.niimm.cll.mocassin.ui.viewer.server.util;
+package ru.ksu.niimm.ose.ontology.impl;
 
 import java.util.ArrayList;
 import java.util.List;

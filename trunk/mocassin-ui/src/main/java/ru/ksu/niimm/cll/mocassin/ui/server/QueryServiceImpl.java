@@ -3,6 +3,9 @@ package ru.ksu.niimm.cll.mocassin.ui.server;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
+import ru.ksu.niimm.cll.mocassin.arxiv.Author;
+import ru.ksu.niimm.cll.mocassin.arxiv.impl.Link;
 import ru.ksu.niimm.cll.mocassin.ui.client.OntBlankNode;
 import ru.ksu.niimm.cll.mocassin.ui.client.OntConcept;
 import ru.ksu.niimm.cll.mocassin.ui.client.OntLiteral;
@@ -13,8 +16,7 @@ import ru.ksu.niimm.cll.mocassin.ui.client.PagingLoadConfig;
 import ru.ksu.niimm.cll.mocassin.ui.client.PagingLoadInfo;
 import ru.ksu.niimm.cll.mocassin.ui.client.QueryService;
 import ru.ksu.niimm.cll.mocassin.ui.client.ResultDescription;
-import ru.ksu.niimm.ose.ontology.OMDocElement;
-import ru.ksu.niimm.ose.ontology.OMDocResourceFacade;
+import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
 import ru.ksu.niimm.ose.ontology.OntologyBlankNode;
 import ru.ksu.niimm.ose.ontology.OntologyConcept;
 import ru.ksu.niimm.ose.ontology.OntologyElement;
@@ -22,19 +24,21 @@ import ru.ksu.niimm.ose.ontology.OntologyIndividual;
 import ru.ksu.niimm.ose.ontology.OntologyLiteral;
 import ru.ksu.niimm.ose.ontology.OntologyRelation;
 import ru.ksu.niimm.ose.ontology.OntologyResource;
+import ru.ksu.niimm.ose.ontology.OntologyResourceFacade;
 import ru.ksu.niimm.ose.ontology.OntologyTriple;
 import ru.ksu.niimm.ose.ontology.QueryManagerFacade;
 import ru.ksu.niimm.ose.ontology.QueryStatement;
 
+import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 
 public class QueryServiceImpl implements QueryService {
 	private QueryManagerFacade queryManager;
-	private OMDocResourceFacade omdocResourceFacade;
+	private OntologyResourceFacade omdocResourceFacade;
 
 	@Inject
 	public QueryServiceImpl(QueryManagerFacade queryManagerFacade,
-			OMDocResourceFacade omdocResourceFacade) {
+			OntologyResourceFacade omdocResourceFacade) {
 		this.queryManager = queryManagerFacade;
 		this.omdocResourceFacade = omdocResourceFacade;
 	}
@@ -47,7 +51,7 @@ public class QueryServiceImpl implements QueryService {
 				queryStatement);
 		List<OntologyResource> filteredResources = filterResources(resources,
 				pagingLoadConfig);
-		List<OMDocElement> omdocElements = retriveOmdocElements(filteredResources);
+		List<ArticleMetadata> omdocElements = retriveOmdocElements(filteredResources);
 		List<ResultDescription> resultDescriptions = convertToResultDescriptions(omdocElements);
 		PagingLoadInfo<ResultDescription> pagingLoadInfo = new PagingLoadInfo<ResultDescription>();
 		pagingLoadInfo.setPagingLoadConfig(pagingLoadConfig);
@@ -78,18 +82,20 @@ public class QueryServiceImpl implements QueryService {
 	}
 
 	private List<ResultDescription> convertToResultDescriptions(
-			List<OMDocElement> omdocElements) {
+			List<ArticleMetadata> omdocElements) {
 		List<ResultDescription> resultDescriptions = new ArrayList<ResultDescription>();
-		for (OMDocElement omDocElement : omdocElements) {
+		for (ArticleMetadata omDocElement : omdocElements) {
 			ResultDescription rd = new ResultDescription();
-			rd.setDocumentUri(omDocElement.getResourceUri());
-			rd.setLatexUri(omDocElement.getSrcRef().getFileName());
-			rd.setPdfUri(omDocElement.getPdfFileName());
-			rd.setAuthors(omDocElement.getArticleMetadata().getAuthors());
-			String articleTitle = omDocElement.getArticleMetadata().getTitle();
-			String title = !isEmpty(articleTitle) ? articleTitle : omDocElement
-					.getArticleMetadata().getUri();
-			rd.setTitle(title);
+			rd.setDocumentUri(omDocElement.getId());
+			List<Link> links = omDocElement.getLinks();
+			Link pdfLink = Iterables.find(links, new Link.PdfLinkPredicate());
+			rd.setPdfUri(pdfLink.getHref());
+			List<Author> authors = omDocElement.getAuthors();
+			List<String> authorsNames = CollectionUtil.asList(Iterables
+					.transform(authors, new Author.NameFunction()));
+			rd.setAuthors(authorsNames);
+			String articleTitle = omDocElement.getTitle();
+			rd.setTitle(articleTitle);
 			resultDescriptions.add(rd);
 		}
 		return resultDescriptions;
@@ -161,11 +167,12 @@ public class QueryServiceImpl implements QueryService {
 	 * @param resources
 	 * @return
 	 */
-	private List<OMDocElement> retriveOmdocElements(
+	private List<ArticleMetadata> retriveOmdocElements(
 			List<OntologyResource> resources) {
-		List<OMDocElement> elements = new ArrayList<OMDocElement>();
+		List<ArticleMetadata> elements = new ArrayList<ArticleMetadata>();
 		for (OntologyResource resource : resources) {
-			OMDocElement omdocElement = getOmdocResourceFacade().load(resource);
+			ArticleMetadata omdocElement = getOmdocResourceFacade().load(
+					resource);
 			elements.add(omdocElement);
 		}
 		return elements;
@@ -175,7 +182,7 @@ public class QueryServiceImpl implements QueryService {
 		return queryManager;
 	}
 
-	public OMDocResourceFacade getOmdocResourceFacade() {
+	public OntologyResourceFacade getOmdocResourceFacade() {
 		return omdocResourceFacade;
 	}
 
