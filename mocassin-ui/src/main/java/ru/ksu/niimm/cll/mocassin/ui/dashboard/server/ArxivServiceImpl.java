@@ -7,11 +7,11 @@ import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.arxiv.ArxivDAOFacade;
 import ru.ksu.niimm.cll.mocassin.ui.dashboard.client.ArxivArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.ui.dashboard.client.ArxivService;
-import ru.ksu.niimm.cll.mocassin.ui.viewer.server.util.ArxivMetadataUtil;
-import ru.ksu.niimm.cll.mocassin.virtuoso.RDFTriple;
-import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoDAO;
+import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
+import ru.ksu.niimm.ose.ontology.OntologyResourceFacade;
 
-
+import com.google.common.base.Function;
+import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 
 public class ArxivServiceImpl implements ArxivService {
@@ -19,21 +19,31 @@ public class ArxivServiceImpl implements ArxivService {
 	@Inject
 	private ArxivDAOFacade arxivDAOFacade;
 	@Inject
-	private VirtuosoDAO virtuosoDAO;
+	private OntologyResourceFacade ontologyResourceFacade;
 
 	@Override
 	public void handle(String arxivId) {
 		ArticleMetadata metadata = arxivDAOFacade.retrieve(arxivId);
-		List<RDFTriple> triples = ArxivMetadataUtil.convertToTriples(metadata);
-		virtuosoDAO.insert(triples);
+		ontologyResourceFacade.insert(metadata);
 	}
 
 	@Override
 	public List<ArxivArticleMetadata> loadArticles() {
-		List<ArxivArticleMetadata> list = new ArrayList<ArxivArticleMetadata>();
-				list.add(new ArxivArticleMetadata("math/0205003v1",
-						"A strengthening of the Nyman-Beurling criterion for the Riemann hypothesis, 2"));
-		return list;
+		List<ArticleMetadata> publications = ontologyResourceFacade.loadAll();
+		List<ArxivArticleMetadata> articlesList = CollectionUtil
+				.asList(Iterables.transform(publications,
+						new ArxivArticleMetadataFunction()));
+		return articlesList;
 	}
 
+	private static class ArxivArticleMetadataFunction implements
+			Function<ArticleMetadata, ArxivArticleMetadata> {
+
+		@Override
+		public ArxivArticleMetadata apply(ArticleMetadata metadata) {
+			return new ArxivArticleMetadata(metadata.getId(), metadata
+					.getTitle());
+		}
+
+	}
 }

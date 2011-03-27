@@ -2,9 +2,6 @@ package ru.ksu.niimm.cll.mocassin.ui.dashboard.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.TabBar;
-import com.google.gwt.user.client.ui.TabPanel;
-import com.google.gwt.user.client.ui.TextBox;
 
 public class Dashboard implements EntryPoint {
 

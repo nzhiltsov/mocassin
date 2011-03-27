@@ -21,15 +21,7 @@ public class VirtuosoModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		try {
-			Properties properties = new Properties();
-			properties.load(this.getClass().getClassLoader()
-					.getResourceAsStream("virtuoso_config.properties"));
-			Names.bindProperties(binder(), properties);
-		} catch (IOException ex) {
-			throw new RuntimeException(
-					"failed to load the Virtuoso module configuration");
-		}
+		
 		bind(VirtuosoDAO.class).to(VirtuosoDAOImpl.class);
 		bind(InsertQueryGenerator.class).to(InsertQueryGeneratorImpl.class);
 		bind(DeleteQueryGenerator.class).to(DeleteQueryGeneratorImpl.class);
