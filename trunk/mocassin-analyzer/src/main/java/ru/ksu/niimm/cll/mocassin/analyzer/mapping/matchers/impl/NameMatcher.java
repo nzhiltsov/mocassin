@@ -13,7 +13,7 @@ import ru.ksu.niimm.cll.mocassin.parser.Edge;
 import ru.ksu.niimm.cll.mocassin.parser.Node;
 import ru.ksu.niimm.cll.mocassin.util.StringSimilarityEvaluator;
 import ru.ksu.niimm.cll.mocassin.util.StringSimilarityEvaluator.SimilarityMetrics;
-import ru.ksu.niimm.ose.ontology.OMDocOntologyFacade;
+import ru.ksu.niimm.ose.ontology.OntologyFacade;
 import ru.ksu.niimm.ose.ontology.OntologyConcept;
 
 import com.google.common.base.Function;
@@ -24,7 +24,7 @@ import com.google.inject.Inject;
 
 public class NameMatcher implements Matcher {
 	@Inject
-	private OMDocOntologyFacade omdocOntologyFacade;
+	private OntologyFacade OntologyFacade;
 	@Inject
 	private NameMatcherPropertiesLoader nameMatcherPropertiesLoader;
 	private static float STRING_SIMILARITY_THRESHOLD = 0.26087f;
@@ -117,8 +117,8 @@ public class NameMatcher implements Matcher {
 		return contains;
 	}
 
-	private OMDocOntologyFacade getOmdocOntologyFacade() {
-		return omdocOntologyFacade;
+	private OntologyFacade getOntologyFacade() {
+		return OntologyFacade;
 	}
 
 	public List<String> getMatchedURIs() {
@@ -126,7 +126,7 @@ public class NameMatcher implements Matcher {
 	}
 
 	public Iterable<OntologyConcept> getOntologyConcepts() {
-		List<OntologyConcept> ontClassList = getOmdocOntologyFacade()
+		List<OntologyConcept> ontClassList = getOntologyFacade()
 				.getOntClassList();
 		Predicate<OntologyConcept> matchUriPredicate = new Predicate<OntologyConcept>() {
 

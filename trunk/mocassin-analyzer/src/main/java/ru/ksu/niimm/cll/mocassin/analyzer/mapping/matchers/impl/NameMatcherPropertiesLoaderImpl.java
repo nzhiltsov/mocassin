@@ -10,7 +10,7 @@ import java.util.StringTokenizer;
 
 public class NameMatcherPropertiesLoaderImpl implements
 		NameMatcherPropertiesLoader {
-	private static final String OMDOC_ONTOLOGY_URI_PARAMETER_NAME = "omdoc.ontology.uri";
+	private static final String OMDOC_ONTOLOGY_URI_PARAMETER_NAME = "ontology.uri";
 	private static final String MATCH_CONCEPT_URIS_PARAMETER_NAME = "match.concept.uris";
 	private static final String PROPERTIES_FILENAME = "matcher/name_matcher.properties";
 	private Properties properties;
