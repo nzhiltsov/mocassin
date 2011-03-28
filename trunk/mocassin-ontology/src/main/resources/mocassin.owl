@@ -43,7 +43,7 @@
             >Ontology of MocaSSIN (Mathematical Semantic Search engINe) project</dc:title>
         <dc:creator rdf:datatype="&xsd;string"
             >Valery Solovyev &lt;maki.solovyev@mail.ru&gt;</dc:creator>
-        <owl:imports rdf:resource="http://salt.semanticauthoring.org/ontologies/sdo#"/>
+        <owl:imports rdf:resource="file://tmp/sdo.owl"/>
     </owl:Ontology>
     
 
