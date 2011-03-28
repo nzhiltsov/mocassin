@@ -13,7 +13,7 @@ import ru.ksu.niimm.cll.mocassin.virtuoso.impl.RDFTripleImpl;
 public class ArxivMetadataUtil {
 	private static final String ATOM_RDF_SCHEMA = "http://djpowell.net/schemas/atomrdf/0.3";
 
-	private static final String SALT_SCHEMA = "http:/salt.semanticauthoring.org/ontologies/sdo";
+	private static final String SALT_SCHEMA = "http://salt.semanticauthoring.org/ontologies/sdo";
 
 	private static final String RDFS_TYPE = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
 
