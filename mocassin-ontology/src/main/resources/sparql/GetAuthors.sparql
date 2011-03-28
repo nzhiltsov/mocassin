@@ -1,5 +1,5 @@
 SELECT * {
-?1 a <http:/salt.semanticauthoring.org/ontologies/sdo#Publication> .
+?1 a <http://salt.semanticauthoring.org/ontologies/sdo#Publication> .
 ?1 <http://djpowell.net/schemas/atomrdf/0.3/author> ?2 .
 ?2 a <http://djpowell.net/schemas/atomrdf/0.3/Person> .
 ?2 <http://djpowell.net/schemas/atomrdf/0.3/personName> ?3 .
