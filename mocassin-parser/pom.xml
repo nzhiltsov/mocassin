@@ -18,7 +18,7 @@
 		<url>http://cll.niimm.ksu.ru</url>
 	</organization>
 	<dependencies>
-	<dependency>
+		<dependency>
 			<groupId>ru.ksu.niimm.cll.mocassin</groupId>
 			<artifactId>mocassin-util</artifactId>
 			<version>1.0.0.5-SNAPSHOT</version>
@@ -28,9 +28,9 @@
 			<artifactId>guice</artifactId>
 		</dependency>
 		<dependency>
-				<groupId>com.google.inject.extensions</groupId>
-				<artifactId>guice-assisted-inject</artifactId>
-			</dependency>
+			<groupId>com.google.inject.extensions</groupId>
+			<artifactId>guice-assisted-inject</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.texlipse</groupId>
 			<artifactId>texlipse</artifactId>
@@ -77,9 +77,8 @@
 			<version>1.6.2</version>
 		</dependency>
 		<dependency>
-			<groupId>com.google.common</groupId>
+			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
-			<version>r06</version>
 		</dependency>
 		<!--  For applications -->
 		<dependency>

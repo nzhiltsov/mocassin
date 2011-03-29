@@ -34,13 +34,13 @@ import com.google.inject.Inject;
 
 public class QueryServiceImpl implements QueryService {
 	private QueryManagerFacade queryManager;
-	private OntologyResourceFacade omdocResourceFacade;
+	private OntologyResourceFacade ontologyResourceFacade;
 
 	@Inject
 	public QueryServiceImpl(QueryManagerFacade queryManagerFacade,
-			OntologyResourceFacade omdocResourceFacade) {
+			OntologyResourceFacade ontologyResourceFacade) {
 		this.queryManager = queryManagerFacade;
-		this.omdocResourceFacade = omdocResourceFacade;
+		this.ontologyResourceFacade = ontologyResourceFacade;
 	}
 
 	public PagingLoadInfo<ResultDescription> query(OntQueryStatement statement,
@@ -51,8 +51,8 @@ public class QueryServiceImpl implements QueryService {
 				queryStatement);
 		List<OntologyResource> filteredResources = filterResources(resources,
 				pagingLoadConfig);
-		List<ArticleMetadata> omdocElements = retriveOmdocElements(filteredResources);
-		List<ResultDescription> resultDescriptions = convertToResultDescriptions(omdocElements);
+		List<ArticleMetadata> ontologyElements = retriveOntologyElements(filteredResources);
+		List<ResultDescription> resultDescriptions = convertToResultDescriptions(ontologyElements);
 		PagingLoadInfo<ResultDescription> pagingLoadInfo = new PagingLoadInfo<ResultDescription>();
 		pagingLoadInfo.setPagingLoadConfig(pagingLoadConfig);
 		pagingLoadInfo.setData(resultDescriptions);
@@ -82,13 +82,15 @@ public class QueryServiceImpl implements QueryService {
 	}
 
 	private List<ResultDescription> convertToResultDescriptions(
-			List<ArticleMetadata> omdocElements) {
+			List<ArticleMetadata> ontologyElements) {
 		List<ResultDescription> resultDescriptions = new ArrayList<ResultDescription>();
-		for (ArticleMetadata omDocElement : omdocElements) {
+		for (ArticleMetadata omDocElement : ontologyElements) {
 			ResultDescription rd = new ResultDescription();
 			rd.setDocumentUri(omDocElement.getId());
 			List<Link> links = omDocElement.getLinks();
-			Link pdfLink = Iterables.find(links, new Link.PdfLinkPredicate());
+
+			Link pdfLink = Iterables.find(links, new Link.PdfLinkPredicate(),
+					Link.nullPdfLink());
 			rd.setPdfUri(pdfLink.getHref());
 			List<Author> authors = omDocElement.getAuthors();
 			List<String> authorsNames = CollectionUtil.asList(Iterables
@@ -162,16 +164,16 @@ public class QueryServiceImpl implements QueryService {
 	}
 
 	/**
-	 * retrieve the list of omdoc elements for given list of resources
+	 * retrieve the list of ontology elements for given list of resources
 	 * 
 	 * @param resources
 	 * @return
 	 */
-	private List<ArticleMetadata> retriveOmdocElements(
+	private List<ArticleMetadata> retriveOntologyElements(
 			List<OntologyResource> resources) {
 		List<ArticleMetadata> elements = new ArrayList<ArticleMetadata>();
 		for (OntologyResource resource : resources) {
-			ArticleMetadata omdocElement = getOmdocResourceFacade().load(
+			ArticleMetadata omdocElement = getOntologyResourceFacade().load(
 					resource);
 			elements.add(omdocElement);
 		}
@@ -182,11 +184,8 @@ public class QueryServiceImpl implements QueryService {
 		return queryManager;
 	}
 
-	public OntologyResourceFacade getOmdocResourceFacade() {
-		return omdocResourceFacade;
+	public OntologyResourceFacade getOntologyResourceFacade() {
+		return ontologyResourceFacade;
 	}
 
-	private boolean isEmpty(String text) {
-		return text == null || text.equals("");
-	}
 }
