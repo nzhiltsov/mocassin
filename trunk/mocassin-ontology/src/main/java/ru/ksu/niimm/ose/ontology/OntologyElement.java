@@ -42,7 +42,7 @@ public class OntologyElement {
 
 	@Override
 	public String toString() {
-		return label;
+		return uri + " " + label;
 	}
 
 	@Override

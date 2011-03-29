@@ -61,17 +61,17 @@ public class VirtuosoDAOTest extends AbstractTest {
 	public void testDescribe() {
 		Model model = getVirtuosoDAO()
 				.describe(
-						"<all.omdoc>",
+						"<http://arxiv.org/abs/math/0205001v1>",
 						getGraph());
 		Graph describeGraph = model.getGraph();
 		ExtendedIterator<Triple> foundIt = describeGraph.find(Node.ANY,
 				Node.ANY, Node.ANY);
 		boolean contains = false;
 		Node subject = Node
-				.createURI("all.omdoc");
+				.createURI("http://arxiv.org/abs/math/0205001v1");
 		Node predicate = Node.createURI("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
 		Node object = Node
-				.createURI("http://omdoc.org/ontology#Document");
+				.createURI("http://salt.semanticauthoring.org/ontologies/sdo#Publication");
 		Triple tripleForSearch = new Triple(subject, predicate, object);
 		while (foundIt.hasNext()) {
 			Triple triple = foundIt.next();

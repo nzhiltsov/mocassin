@@ -61,9 +61,8 @@
 			<artifactId>guice</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.google.common</groupId>
+			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
-			<version>r06</version>
 		</dependency>
 
 		<!-- for Unit testing  -->
