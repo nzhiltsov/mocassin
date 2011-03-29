@@ -28,6 +28,13 @@ public class Link {
 		this.type = type;
 	}
 
+	public static Link nullPdfLink() {
+		Link link = new Link();
+		link.setHref("");
+		link.setType("application/pdf");
+		return link;
+	}
+
 	public static class PdfLinkPredicate implements Predicate<Link> {
 
 		@Override
