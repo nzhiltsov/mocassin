@@ -1,0 +1,320 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY owl2xml "http://www.w3.org/2006/12/owl2-xml#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+    <!ENTITY ontologies "http://salt.semanticauthoring.org/ontologies/" >
+    <!ENTITY sao "http://salt.semanticauthoring.org/ontologies/sao#" >
+    <!ENTITY sdo "http://salt.semanticauthoring.org/ontologies/sdo#" >
+]>
+
+
+<rdf:RDF xmlns="http:/salt.semanticauthoring.org/ontologies/sdo#"
+     xml:base="&ontologies;sdo#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:sao="&ontologies;sao#"
+     xmlns:owl2xml="http://www.w3.org/2006/12/owl2-xml#"
+     xmlns:ontologies="http://salt.semanticauthoring.org/ontologies/sdo#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:sdo="&ontologies;sdo#">
+    <owl:Ontology rdf:about=""/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://salt.semanticauthoring.org/ontologies/sdo#hasAnnotation -->
+
+    <owl:ObjectProperty rdf:about="&sdo;hasAnnotation">
+        <rdfs:label>hasAnnotation</rdfs:label>
+        <rdfs:range rdf:resource="&ontologies;sao#Annotation"/>
+        <rdfs:domain rdf:resource="&sdo;Paragraph"/>
+        <rdfs:domain rdf:resource="&sdo;Section"/>
+        <rdfs:domain rdf:resource="&sdo;Sentence"/>
+        <rdfs:domain rdf:resource="&sdo;TextChunk"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://salt.semanticauthoring.org/ontologies/sdo#hasFigure -->
+
+    <owl:ObjectProperty rdf:about="&sdo;hasFigure">
+        <rdfs:label>hasFigure</rdfs:label>
+        <rdfs:range rdf:resource="&sdo;Figure"/>
+        <rdfs:domain rdf:resource="&sdo;Section"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://salt.semanticauthoring.org/ontologies/sdo#hasParagraph -->
+
+    <owl:ObjectProperty rdf:about="&sdo;hasParagraph">
+        <rdfs:label>hasParagraph</rdfs:label>
+        <rdfs:range rdf:resource="&sdo;Paragraph"/>
+        <rdfs:domain rdf:resource="&sdo;Section"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://salt.semanticauthoring.org/ontologies/sdo#hasRevision -->
+
+    <owl:ObjectProperty rdf:about="&sdo;hasRevision">
+        <rdfs:label>hasRevision</rdfs:label>
+        <rdfs:domain rdf:resource="&sdo;Paragraph"/>
+        <rdfs:range rdf:resource="&sdo;Revision"/>
+        <rdfs:domain rdf:resource="&sdo;Sentence"/>
+        <rdfs:domain rdf:resource="&sdo;TextChunk"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://salt.semanticauthoring.org/ontologies/sdo#hasSection -->
+
+    <owl:ObjectProperty rdf:about="&sdo;hasSection">
+        <rdfs:label>hasSection</rdfs:label>
+        <rdfs:domain rdf:resource="&ontologies;Publication"/>
+        <rdfs:range rdf:resource="&sdo;Section"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://salt.semanticauthoring.org/ontologies/sdo#hasSentence -->
+
+    <owl:ObjectProperty rdf:about="&sdo;hasSentence">
+        <rdfs:label>hasSentence</rdfs:label>
+        <rdfs:domain rdf:resource="&sdo;Paragraph"/>
+        <rdfs:range rdf:resource="&sdo;Sentence"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://salt.semanticauthoring.org/ontologies/sdo#hasSubSection -->
+
+    <owl:ObjectProperty rdf:about="&sdo;hasSubSection">
+        <rdfs:label>hasSubSection</rdfs:label>
+        <rdfs:domain rdf:resource="&sdo;Section"/>
+        <rdfs:range rdf:resource="&sdo;Section"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://salt.semanticauthoring.org/ontologies/sdo#hasTable -->
+
+    <owl:ObjectProperty rdf:about="&sdo;hasTable">
+        <rdfs:label>hasTable</rdfs:label>
+        <rdfs:domain rdf:resource="&sdo;Section"/>
+        <rdfs:range rdf:resource="&sdo;Table"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://salt.semanticauthoring.org/ontologies/sdo#hasTextChunk -->
+
+    <owl:ObjectProperty rdf:about="&sdo;hasTextChunk">
+        <rdfs:label>hasTextChunk</rdfs:label>
+        <rdfs:domain rdf:resource="&sdo;Paragraph"/>
+        <rdfs:domain rdf:resource="&sdo;Sentence"/>
+        <rdfs:range rdf:resource="&sdo;TextChunk"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://salt.semanticauthoring.org/ontologies/sdo#hasCaption -->
+
+    <owl:DatatypeProperty rdf:about="&sdo;hasCaption">
+        <rdfs:label>hasCaption</rdfs:label>
+        <rdfs:domain rdf:resource="&sdo;Figure"/>
+        <rdfs:domain rdf:resource="&sdo;Table"/>
+        <rdfs:range rdf:resource="&rdfs;Literal"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://salt.semanticauthoring.org/ontologies/sdo#hasEndPointer -->
+
+    <owl:DatatypeProperty rdf:about="&sdo;hasEndPointer">
+        <rdfs:label>hasEndPointer</rdfs:label>
+        <rdfs:domain rdf:resource="&sdo;Paragraph"/>
+        <rdfs:domain rdf:resource="&sdo;Revision"/>
+        <rdfs:domain rdf:resource="&sdo;Sentence"/>
+        <rdfs:domain rdf:resource="&sdo;TextChunk"/>
+        <rdfs:range rdf:resource="&rdfs;Literal"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://salt.semanticauthoring.org/ontologies/sdo#hasOrderNumber -->
+
+    <owl:DatatypeProperty rdf:about="&sdo;hasOrderNumber">
+        <rdfs:label>hasOrderNumber</rdfs:label>
+        <rdfs:domain rdf:resource="&sdo;Paragraph"/>
+        <rdfs:domain rdf:resource="&sdo;Section"/>
+        <rdfs:domain rdf:resource="&sdo;Sentence"/>
+        <rdfs:range rdf:resource="&rdfs;Literal"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://salt.semanticauthoring.org/ontologies/sdo#hasSALTVersion -->
+
+    <owl:DatatypeProperty rdf:about="&sdo;hasSALTVersion">
+        <rdfs:label>hasSALTVersion</rdfs:label>
+        <rdfs:domain rdf:resource="Publication"/>
+        <rdfs:range rdf:resource="&rdfs;Literal"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://salt.semanticauthoring.org/ontologies/sdo#hasSectionTitle -->
+
+    <owl:DatatypeProperty rdf:about="&sdo;hasSectionTitle">
+        <rdfs:label>hasSectionTitle</rdfs:label>
+        <rdfs:domain rdf:resource="&sdo;Section"/>
+        <rdfs:range rdf:resource="&rdfs;Literal"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://salt.semanticauthoring.org/ontologies/sdo#hasStartPointer -->
+
+    <owl:DatatypeProperty rdf:about="&sdo;hasStartPointer">
+        <rdfs:label>hasStartPointer</rdfs:label>
+        <rdfs:domain rdf:resource="&sdo;Paragraph"/>
+        <rdfs:domain rdf:resource="&sdo;Revision"/>
+        <rdfs:domain rdf:resource="&sdo;Sentence"/>
+        <rdfs:domain rdf:resource="&sdo;TextChunk"/>
+        <rdfs:range rdf:resource="&rdfs;Literal"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://salt.semanticauthoring.org/ontologies/Publication -->
+
+    <owl:Class rdf:about="&ontologies;Publication"/>
+    
+
+
+    <!-- http://salt.semanticauthoring.org/ontologies/sao#Annotation -->
+
+    <owl:Class rdf:about="&ontologies;sao#Annotation"/>
+    
+
+
+    <!-- http://salt.semanticauthoring.org/ontologies/sdo#Figure -->
+
+    <owl:Class rdf:about="&sdo;Figure">
+        <rdfs:label xml:lang="en">Figure</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&rdfs;Resource"/>
+    </owl:Class>
+    
+
+
+    <!-- http://salt.semanticauthoring.org/ontologies/sdo#Paragraph -->
+
+    <owl:Class rdf:about="&sdo;Paragraph">
+        <rdfs:label>Paragraph</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&rdfs;Resource"/>
+    </owl:Class>
+    
+
+
+    <!-- http://salt.semanticauthoring.org/ontologies/sdo#Publication -->
+
+    <owl:Class rdf:about="&sdo;Publication">
+        <rdfs:label xml:lang="en">Publication</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&rdfs;Resource"/>
+    </owl:Class>
+    
+
+
+    <!-- http://salt.semanticauthoring.org/ontologies/sdo#Revision -->
+
+    <owl:Class rdf:about="&sdo;Revision">
+        <rdfs:label>Revision</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&rdfs;Resource"/>
+    </owl:Class>
+    
+
+
+    <!-- http://salt.semanticauthoring.org/ontologies/sdo#Section -->
+
+    <owl:Class rdf:about="&sdo;Section">
+        <rdfs:label xml:lang="en">Section</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&rdfs;Resource"/>
+    </owl:Class>
+    
+
+
+    <!-- http://salt.semanticauthoring.org/ontologies/sdo#Sentence -->
+
+    <owl:Class rdf:about="&sdo;Sentence">
+        <rdfs:label>Sentence</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&rdfs;Resource"/>
+    </owl:Class>
+    
+
+
+    <!-- http://salt.semanticauthoring.org/ontologies/sdo#Table -->
+
+    <owl:Class rdf:about="&sdo;Table">
+        <rdfs:label xml:lang="en">Table</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&rdfs;Resource"/>
+    </owl:Class>
+    
+
+
+    <!-- http://salt.semanticauthoring.org/ontologies/sdo#TextChunk -->
+
+    <owl:Class rdf:about="&sdo;TextChunk">
+        <rdfs:label>TextChunk</rdfs:label>
+        <rdfs:subClassOf rdf:resource="&rdfs;Resource"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.w3.org/2000/01/rdf-schema#Resource -->
+
+    <owl:Class rdf:about="&rdfs;Resource"/>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 2.2.1.1138) http://owlapi.sourceforge.net -->
+
