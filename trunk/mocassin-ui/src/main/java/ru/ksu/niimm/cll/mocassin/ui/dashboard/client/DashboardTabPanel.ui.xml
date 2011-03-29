@@ -20,7 +20,7 @@
 		}
 	</ui:style>
 	<g:TabLayoutPanel addStyleNames="{style.dashboardTabPanel}"
-		ui:field="tabPanel" barUnit="PX" barHeight="60" width="375px" height="150px">
+		ui:field="tabPanel" barUnit="PX" barHeight="60" width="400px">
 		<g:tab>
 			<g:header>
 				Upload
