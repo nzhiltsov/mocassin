@@ -1,6 +1,7 @@
 package ru.ksu.niimm.cll.mocassin.ui.viewer.client;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.CaptionPanel;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Label;
@@ -13,6 +14,10 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class StructureViewer implements EntryPoint {
 
 	public void onModuleLoad() {
+		String resourceUri = Location.getParameter("resourceuri");
+		if (resourceUri == null)
+			return;
+
 		RootPanel rootPanel = RootPanel.get();
 		rootPanel.setSize("1024", "768");
 
@@ -20,8 +25,8 @@ public class StructureViewer implements EntryPoint {
 		rootPanel.add(documentPanel, 0, 0);
 		documentPanel.setSize("700", "100%");
 
-		final Frame frame = new Frame(
-				"http://docs.google.com/viewer?url=http://arxiv.org/pdf/math/0205003v1&embedded=true");
+		final Frame frame = new Frame("http://docs.google.com/viewer?url="
+				+ resourceUri + "&embedded=true");
 		documentPanel.add(frame);
 		frame.setSize("100%", "100%");
 

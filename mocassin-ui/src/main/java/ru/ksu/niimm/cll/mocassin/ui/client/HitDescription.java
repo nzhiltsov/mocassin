@@ -26,13 +26,10 @@ public class HitDescription extends Composite {
 	Label authorLabel;
 	@UiField
 	Hyperlink titleLink;
-	/*
-	 * @UiField DocumentFormat latexDocumentFormat;
-	 * 
-	 * @UiField DocumentFormat pdfDocumentFormat;
-	 */
 	@UiField
 	DocumentFormat rdfDocumentFormat;
+	@UiField
+	DocumentFormat viewerDocumentFormat;
 	@UiField
 	Label relevantContextLabel;
 
@@ -43,13 +40,11 @@ public class HitDescription extends Composite {
 		initWidget(binder.createAndBindUi(this));
 		documentUri = resultDescription.getDocumentUri();
 		titleLink.setHTML(getLinkCode(resultDescription));
-		/*
-		 * latexDocumentFormat.setText("LaTeX");
-		 * latexDocumentFormat.setUri(resultDescription.getLatexUri());
-		 * pdfDocumentFormat.setText("PDF");
-		 * pdfDocumentFormat.setUri(resultDescription.getPdfUri());
-		 */
+		viewerDocumentFormat.setText("View");
+		viewerDocumentFormat.setUri(resultDescription.getPdfUri());
+		viewerDocumentFormat.setAction("view");
 		rdfDocumentFormat.setText("RDF");
+		rdfDocumentFormat.setAction("describe");
 		rdfDocumentFormat.setUri(getDocumentUri());
 		relevantContextLabel.setText(resultDescription
 				.getRelevantContextString());

@@ -13,8 +13,8 @@ public class MocassinUIContextListener extends GuiceServletContextListener {
 
 	@Override
 	protected Injector getInjector() {
-		 return forProduction();
-//		return forMock();
+//		 return forProduction();
+		return forMock();
 	}
 
 	private Injector forProduction() {
