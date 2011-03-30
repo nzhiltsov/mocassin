@@ -8,7 +8,7 @@ public class ResultDescription implements Serializable {
 	private String title;
 	private List<String> authors;
 	private String documentUri;
-	private String latexUri;
+	private String viewerUri;
 	private String pdfUri;
 	private String relevantContextString;
 
@@ -36,12 +36,12 @@ public class ResultDescription implements Serializable {
 		this.documentUri = documentUri;
 	}
 
-	public String getLatexUri() {
-		return latexUri;
+	public String getViewerUri() {
+		return viewerUri;
 	}
 
-	public void setLatexUri(String latexUri) {
-		this.latexUri = latexUri;
+	public void setViewerUri(String viewerUri) {
+		this.viewerUri = viewerUri;
 	}
 
 	public String getPdfUri() {

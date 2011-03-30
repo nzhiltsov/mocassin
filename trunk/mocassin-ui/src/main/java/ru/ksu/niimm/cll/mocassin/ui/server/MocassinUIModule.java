@@ -12,8 +12,9 @@ public class MocassinUIModule extends ServletModule {
 	@Override
 	protected void configureServlets() {
 		serve("*/GWT.rpc").with(GuiceRemoteServiceServlet.class);
-		serve("/mocassin/download").with(DownloadServlet.class);
-		serve("/mocassin/describe").with(DescriptionServlet.class);
+//		serve("/mocassin/download").with(DownloadServlet.class);
+		serve("*/describe").with(DescriptionServlet.class);
+		serve("*/view").with(ViewerServlet.class);
 		bind(OntologyService.class).to(OntologyServiceImpl.class);
 		bind(QueryService.class).to(QueryServiceImpl.class);
 		bind(ArxivService.class).to(ArxivServiceImpl.class);

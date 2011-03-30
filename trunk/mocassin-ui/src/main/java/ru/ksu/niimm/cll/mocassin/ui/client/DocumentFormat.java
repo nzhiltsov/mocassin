@@ -19,6 +19,12 @@ public class DocumentFormat extends Composite {
 	Anchor link;
 
 	private String uri;
+	/**
+	 * string that represents an action performed after click on the link. This
+	 * is used via generating appropriate link, @see
+	 * {@link DocumentFormat#handleClick(ClickEvent)}
+	 */
+	private String action;
 
 	public DocumentFormat() {
 		initWidget(binder.createAndBindUi(this));
@@ -32,11 +38,15 @@ public class DocumentFormat extends Composite {
 		this.uri = uri;
 	}
 
+	public void setAction(String action) {
+		this.action = action.trim();
+	}
+
 	@UiHandler("link")
 	void handleClick(ClickEvent event) {
 
 		String encodedUri = uri.replaceFirst("#", "%23");
-		String url = GWT.getModuleBaseURL() + "describe?resourceuri="
+		String url = GWT.getModuleBaseURL() + action + "?resourceuri="
 				+ encodedUri;
 		Window.open(url, "_blank", "");
 
