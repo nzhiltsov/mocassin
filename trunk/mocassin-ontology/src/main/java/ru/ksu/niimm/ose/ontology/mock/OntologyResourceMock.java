@@ -21,11 +21,11 @@ public class OntologyResourceMock implements OntologyResourceFacade {
 		ArticleMetadata metadata = new ArticleMetadata();
 		metadata.setId(resource.getUri());
 		metadata
-				.setTitle("Qualitative analysis of the eigenvalue problem for two coupled Ginzburg-Landau equations");
+				.setTitle("A note on the Gurov-Reshetnyak condition");
 		List<Author> authors = new ArrayList<Author>();
-		authors.add(new Author("R. Myrzakulov", ""));
-		authors.add(new Author("V. Folomeev", ""));
-		authors.add(new Author("V. Dzhunushaliev", ""));
+		authors.add(new Author("A.A.Korenovskyy", ""));
+		authors.add(new Author("A.K.Lerner", ""));
+		authors.add(new Author("A.M.Stokolos", ""));
 		metadata.setAuthors(authors);
 		List<Link> links = new ArrayList<Link>();
 		Link pdfLink = new Link();
