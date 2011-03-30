@@ -1,20 +1,19 @@
-package ru.ksu.niimm.ose.ontology;
+package ru.ksu.niimm.ose.ontology.mock;
 
 import java.io.IOException;
 import java.util.Properties;
 
+import ru.ksu.niimm.ose.ontology.OntologyFacade;
+import ru.ksu.niimm.ose.ontology.OntologyResourceFacade;
+import ru.ksu.niimm.ose.ontology.QueryManagerFacade;
 import ru.ksu.niimm.ose.ontology.impl.OntologyFacadeImpl;
-import ru.ksu.niimm.ose.ontology.impl.OntologyResourceFacadeImpl;
-import ru.ksu.niimm.ose.ontology.impl.QueryManagerFacadeImpl;
 import ru.ksu.niimm.ose.ontology.loader.OntologyLoader;
-import ru.ksu.niimm.ose.ontology.loader.SparqlQueryLoader;
 import ru.ksu.niimm.ose.ontology.loader.impl.OntologyPelletLoader;
-import ru.ksu.niimm.ose.ontology.loader.impl.SparqlQueryLoaderImpl;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
 
-public class OntologyModule extends AbstractModule {
+public class OntologyModuleMock extends AbstractModule {
 
 	@Override
 	protected void configure() {
@@ -27,13 +26,12 @@ public class OntologyModule extends AbstractModule {
 			throw new RuntimeException(
 					"failed to load the Ontology module configuration");
 		}
-		
+
 		bind(OntologyFacade.class).to(OntologyFacadeImpl.class);
-		bind(QueryManagerFacade.class).to(QueryManagerFacadeImpl.class);
-		bind(OntologyResourceFacade.class).to(OntologyResourceFacadeImpl.class);
 		bind(OntologyLoader.class).to(OntologyPelletLoader.class);
-		bind(SparqlQueryLoader.class).to(SparqlQueryLoaderImpl.class);
 		
+		bind(QueryManagerFacade.class).to(QueryManagerMock.class);
+		bind(OntologyResourceFacade.class).to(OntologyResourceMock.class);
 	}
 
 }
