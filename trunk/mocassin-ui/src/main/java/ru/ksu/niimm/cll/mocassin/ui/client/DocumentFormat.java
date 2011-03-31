@@ -46,8 +46,9 @@ public class DocumentFormat extends Composite {
 	void handleClick(ClickEvent event) {
 
 		String encodedUri = uri.replaceFirst("#", "%23");
-		String url = GWT.getModuleBaseURL() + action + "?resourceuri="
-				+ encodedUri;
+		String debugParam = GWT.isScript() ? "" : "&gwt.codesvr=127.0.0.1:9997";
+		String url = GWT.getHostPageBaseURL() + action + "?resourceuri="
+				+ encodedUri + debugParam;
 		Window.open(url, "_blank", "");
 
 	}
