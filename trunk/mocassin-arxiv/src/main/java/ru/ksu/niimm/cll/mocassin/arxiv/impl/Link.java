@@ -39,7 +39,7 @@ public class Link {
 
 		@Override
 		public boolean apply(Link link) {
-			return link.equals("application/pdf");
+			return link.getType().equals("application/pdf");
 		}
 
 	}

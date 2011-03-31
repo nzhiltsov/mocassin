@@ -1,7 +1,12 @@
 package ru.ksu.niimm.cll.mocassin.ui.viewer.client;
 
+import java.util.List;
+
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.Location;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.CaptionPanel;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Label;
@@ -12,6 +17,9 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class StructureViewer implements EntryPoint {
+	private final ViewerServiceAsync viewerService = GWT
+			.create(ViewerService.class);
+	private CaptionPanel metadataCaptionPanel;
 
 	public void onModuleLoad() {
 		String resourceUri = Location.getParameter("resourceuri");
@@ -35,27 +43,10 @@ public class StructureViewer implements EntryPoint {
 		rootPanel.add(structurePanel, 706, 0);
 		structurePanel.setSize("280px", "100%");
 
-		CaptionPanel metadataCaptionPanel = new CaptionPanel();
+		metadataCaptionPanel = new CaptionPanel();
 		metadataCaptionPanel.setCaptionText("Metadata");
-		VerticalPanel metadataPanel = new VerticalPanel();
-		metadataPanel.setSpacing(5);
-
-		metadataPanel.setSize("100%", "150");
-
-		Label lblNewLabel = new Label("arXiv:math/0205003");
-		lblNewLabel.setStyleName("paper-id");
-		metadataPanel.add(lblNewLabel);
-
-		Label lblNewLabel_1 = new Label(
-				"A strengthening of the Nyman-Beurling criterion for the Riemann hypothesis, 2");
-		lblNewLabel_1.setStyleName("paper-title");
-		metadataPanel.add(lblNewLabel_1);
-
-		Label lblNewLabel_2 = new Label("Luis Baez-Duarte");
-		lblNewLabel_2.setStyleName("paper-author");
-		metadataPanel.add(lblNewLabel_2);
-		metadataCaptionPanel.add(metadataPanel);
 		structurePanel.add(metadataCaptionPanel);
+		viewerService.load(resourceUri, new LoadMetadataCallback());
 
 		final CaptionPanel documentStructureGraphPanel = new CaptionPanel();
 		documentStructureGraphPanel
@@ -69,4 +60,40 @@ public class StructureViewer implements EntryPoint {
 
 	}
 
+	private class LoadMetadataCallback implements AsyncCallback<ArticleInfo> {
+
+		@Override
+		public void onFailure(Throwable caught) {
+			Window.alert("couldn't load the metadata: " + caught.getMessage());
+
+		}
+
+		@Override
+		public void onSuccess(ArticleInfo result) {
+			VerticalPanel metadataPanel = new VerticalPanel();
+			metadataPanel.setSpacing(5);
+
+			metadataPanel.setSize("100%", "150");
+
+			String key = result.getKey() != null ? result.getKey() : "";
+			Label lblNewLabel = new Label("arXiv:" + key);
+			lblNewLabel.setStyleName("paper-id");
+			metadataPanel.add(lblNewLabel);
+
+			Label lblNewLabel_1 = new Label(result.getTitle());
+			lblNewLabel_1.setStyleName("paper-title");
+			metadataPanel.add(lblNewLabel_1);
+
+			List<String> authors = result.getAuthors();
+			for (String authorName : authors) {
+				Label lblNewLabel_2 = new Label(authorName);
+				lblNewLabel_2.setStyleName("paper-author");
+				metadataPanel.add(lblNewLabel_2);
+			}
+
+			metadataCaptionPanel.add(metadataPanel);
+
+		}
+
+	}
 }
