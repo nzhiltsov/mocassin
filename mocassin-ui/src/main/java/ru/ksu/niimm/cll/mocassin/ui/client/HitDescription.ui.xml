@@ -25,8 +25,8 @@
 		</g:HorizontalPanel>
 		<g:HorizontalPanel>
 			<g:Label ui:field="authorLabel" styleName='{style.author-label}' />
+			<ose:DocumentFormat ui:field="viewerDocumentFormat" />
 			<ose:DocumentFormat ui:field="rdfDocumentFormat" />
-		<ose:DocumentFormat ui:field="viewerDocumentFormat" /> 
 		<!--  	<ose:DocumentFormat ui:field="pdfDocumentFormat" /> -->
 		</g:HorizontalPanel>
 	</g:VerticalPanel>
