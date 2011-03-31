@@ -15,6 +15,16 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 
+	<filter>
+		<filter-name>viewerFilter</filter-name>
+		<filter-class>ru.ksu.niimm.cll.mocassin.ui.server.ViewerFilter</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>viewerFilter</filter-name>
+		<url-pattern>/StructureViewer.html</url-pattern>
+	</filter-mapping>
+
 	<listener>
 		<listener-class>ru.ksu.niimm.cll.mocassin.ui.server.MocassinUIContextListener</listener-class>
 	</listener>
@@ -23,6 +33,7 @@
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
 	<error-page>
-	<location>/error.html</location>
+		<error-code>*</error-code>
+		<location>/error.html</location>
 	</error-page>
 </web-app>
