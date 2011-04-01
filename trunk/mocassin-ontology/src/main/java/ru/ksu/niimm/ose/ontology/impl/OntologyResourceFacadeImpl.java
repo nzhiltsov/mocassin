@@ -61,6 +61,7 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 		List<Link> links = retrieveLinks(documentUri);
 
 		ArticleMetadata articleMetadata = new ArticleMetadata();
+		articleMetadata.setId(documentUri);
 		articleMetadata.setTitle(title);
 		articleMetadata.setAuthors(authors);
 		articleMetadata.setLinks(links);
