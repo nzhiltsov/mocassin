@@ -41,11 +41,13 @@ public class HitDescription extends Composite {
 		documentUri = resultDescription.getDocumentUri();
 		titleLink.setHTML(getLinkCode(resultDescription));
 		viewerDocumentFormat.setText("View");
-		viewerDocumentFormat.setUri(resultDescription.getPdfUri());
+		viewerDocumentFormat.setPdfUri(resultDescription.getPdfUri());
+		viewerDocumentFormat.setResourceUri(getDocumentUri());
 		viewerDocumentFormat.setAction("StructureViewer.html");
 		rdfDocumentFormat.setText("RDF");
 		rdfDocumentFormat.setAction("describe");
-		rdfDocumentFormat.setUri(getDocumentUri());
+		rdfDocumentFormat.setPdfUri(resultDescription.getPdfUri());
+		rdfDocumentFormat.setResourceUri(getDocumentUri());
 		relevantContextLabel.setText(resultDescription
 				.getRelevantContextString());
 
