@@ -18,7 +18,9 @@ public class DocumentFormat extends Composite {
 	@UiField
 	Anchor link;
 
-	private String uri;
+	private String pdfUri;
+
+	private String resourceUri;
 	/**
 	 * string that represents an action performed after click on the link. This
 	 * is used via generating appropriate link, @see
@@ -34,8 +36,12 @@ public class DocumentFormat extends Composite {
 		link.setText(text);
 	}
 
-	public void setUri(String uri) {
-		this.uri = uri;
+	public void setPdfUri(String uri) {
+		this.pdfUri = uri;
+	}
+
+	public void setResourceUri(String resourceUri) {
+		this.resourceUri = resourceUri;
 	}
 
 	public void setAction(String action) {
@@ -44,11 +50,10 @@ public class DocumentFormat extends Composite {
 
 	@UiHandler("link")
 	void handleClick(ClickEvent event) {
-
-		String encodedUri = uri.replaceFirst("#", "%23");
+		String encodedResourceUri = resourceUri.replaceFirst("#", "%23");
 		String debugParam = GWT.isScript() ? "" : "&gwt.codesvr=127.0.0.1:9997";
 		String url = GWT.getHostPageBaseURL() + action + "?resourceuri="
-				+ encodedUri + debugParam;
+				+ encodedResourceUri + "&pdfuri=" + pdfUri + debugParam;
 		Window.open(url, "_blank", "");
 
 	}

@@ -23,7 +23,8 @@ public class StructureViewer implements EntryPoint {
 
 	public void onModuleLoad() {
 		String resourceUri = Location.getParameter("resourceuri");
-		if (resourceUri == null)
+		String pdfUri = Location.getParameter("pdfuri");
+		if (resourceUri == null || pdfUri == null)
 			return;
 
 		RootPanel rootPanel = RootPanel.get();
@@ -34,7 +35,7 @@ public class StructureViewer implements EntryPoint {
 		documentPanel.setSize("700", "100%");
 
 		final Frame frame = new Frame("http://docs.google.com/viewer?url="
-				+ resourceUri + "&embedded=true");
+				+ pdfUri + "&embedded=true");
 		documentPanel.add(frame);
 		frame.setSize("100%", "100%");
 
