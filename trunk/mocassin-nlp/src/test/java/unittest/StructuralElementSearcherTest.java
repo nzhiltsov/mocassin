@@ -15,13 +15,17 @@ import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.ParsedDocumentImpl;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
+import ru.ksu.niimm.cll.mocassin.parser.LatexParserModule;
+import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
+import ru.ksu.niimm.ose.ontology.OntologyModule;
 
 import com.google.inject.Inject;
 import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext(NlpModule.class)
+@GuiceContext( { NlpModule.class, OntologyModule.class, VirtuosoModule.class,
+		LatexParserModule.class })
 public class StructuralElementSearcherTest {
 
 	@Inject
