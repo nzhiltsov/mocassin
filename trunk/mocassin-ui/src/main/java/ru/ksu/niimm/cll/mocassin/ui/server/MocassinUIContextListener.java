@@ -1,6 +1,8 @@
 package ru.ksu.niimm.cll.mocassin.ui.server;
 
 import ru.ksu.niimm.cll.mocassin.arxiv.ArxivModule;
+import ru.ksu.niimm.cll.mocassin.nlp.NlpModule;
+import ru.ksu.niimm.cll.mocassin.parser.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
 import ru.ksu.niimm.ose.ontology.OntologyModule;
 import ru.ksu.niimm.ose.ontology.mock.OntologyModuleMock;
@@ -19,10 +21,13 @@ public class MocassinUIContextListener extends GuiceServletContextListener {
 
 	private Injector forProduction() {
 		return Guice.createInjector(new MocassinUIModule(),
-				new OntologyModule(), new VirtuosoModule(), new ArxivModule());
+				new OntologyModule(), new VirtuosoModule(), new ArxivModule(),
+				new NlpModule(), new LatexParserModule());
 	}
 
 	private Injector forMock() {
-		return Guice.createInjector(new OntologyModuleMock(), new MocassinUIModule(), new ArxivModule());
+		return Guice.createInjector(new OntologyModuleMock(),
+				new MocassinUIModule(), new ArxivModule(), new NlpModule(),
+				new LatexParserModule());
 	}
 }
