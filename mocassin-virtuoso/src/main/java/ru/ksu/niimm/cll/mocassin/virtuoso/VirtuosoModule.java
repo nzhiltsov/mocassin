@@ -1,8 +1,5 @@
 package ru.ksu.niimm.cll.mocassin.virtuoso;
 
-import java.io.IOException;
-import java.util.Properties;
-
 import ru.ksu.niimm.cll.mocassin.virtuoso.generator.DeleteQueryGenerator;
 import ru.ksu.niimm.cll.mocassin.virtuoso.generator.DescribeQueryGenerator;
 import ru.ksu.niimm.cll.mocassin.virtuoso.generator.InsertQueryGenerator;
@@ -15,7 +12,6 @@ import ru.ksu.niimm.cll.mocassin.virtuoso.validation.ValidateGraphInterceptor;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.matcher.Matchers;
-import com.google.inject.name.Names;
 
 public class VirtuosoModule extends AbstractModule {
 

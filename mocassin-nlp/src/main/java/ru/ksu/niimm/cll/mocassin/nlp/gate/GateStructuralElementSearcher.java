@@ -1,4 +1,4 @@
-package ru.ksu.niimm.cll.mocassin.nlp.impl;
+package ru.ksu.niimm.cll.mocassin.nlp.gate;
 
 import gate.Annotation;
 import gate.AnnotationSet;
@@ -10,14 +10,15 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.eclipse.ui.actions.LabelRetargetAction;
-
+import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElementSearcher;
 import ru.ksu.niimm.cll.mocassin.nlp.Token;
-import ru.ksu.niimm.cll.mocassin.nlp.gate.GateFormatConstants;
+import ru.ksu.niimm.cll.mocassin.nlp.impl.StructuralElementByLocationComparator;
+import ru.ksu.niimm.cll.mocassin.nlp.impl.StructuralElementImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.recognizer.StructuralElementTypeRecognizer;
 import ru.ksu.niimm.cll.mocassin.nlp.util.AnnotationUtil;
 import ru.ksu.niimm.cll.mocassin.nlp.util.NlpModulePropertiesLoader;
@@ -32,10 +33,11 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
-import com.google.common.collect.Sets.SetView;
 import com.google.inject.Inject;
 
-public class StructuralElementSearcherImpl implements StructuralElementSearcher {
+public class GateStructuralElementSearcher implements StructuralElementSearcher {
+	@Inject
+	private Logger logger;
 	@Inject
 	private NlpModulePropertiesLoader nlpModulePropertiesLoader;
 	@Inject
@@ -44,55 +46,81 @@ public class StructuralElementSearcherImpl implements StructuralElementSearcher 
 	@Inject
 	private StructuralElementTypeRecognizer structuralElementTypeRecognizer;
 
+	@Inject
+	private GateDocumentDAO gateDocumentDAO;
+
 	private Set<String> nameSet = ArxmlivStructureElementTypes.toNameSet();
 
 	private AnnotationSet structuralAnnotations;
 
 	@Override
-	public List<StructuralElement> retrieve(Document document) {
+	public List<StructuralElement> retrieveElements(ParsedDocument parsedDocument) {
+		Document document = null;
+		try {
+			document = gateDocumentDAO.load(parsedDocument.getFilename());
 
-		setStructuralAnnotations(document
-				.getAnnotations(
-						getProperty(GateFormatConstants.ARXMLIV_MARKUP_NAME_PROPERTY_KEY))
-				.get(nameSet));
+			setStructuralAnnotations(document
+					.getAnnotations(
+							getProperty(GateFormatConstants.ARXMLIV_MARKUP_NAME_PROPERTY_KEY))
+					.get(nameSet));
 
-		Function<Annotation, StructuralElement> extractFunction = new ExtractionFunction(
-				document);
+			Function<Annotation, StructuralElement> extractFunction = new ExtractionFunction(
+					document);
 
-		Iterable<StructuralElement> structuralElementIterable = Iterables
-				.transform(structuralAnnotations, extractFunction);
-		return CollectionUtil.asList(structuralElementIterable);
-	}
-
-	@Override
-	public StructuralElement findById(Document document, int id) {
-		setStructuralAnnotations(document
-				.getAnnotations(
-						getProperty(GateFormatConstants.ARXMLIV_MARKUP_NAME_PROPERTY_KEY))
-				.get(nameSet));
-		
-		Annotation foundAnnotation = null;
-		for (Annotation annotation : structuralAnnotations) {
-			if (annotation.getId().equals(id)) {
-				foundAnnotation = annotation;
-			}
+			Iterable<StructuralElement> structuralElementIterable = Iterables
+					.transform(structuralAnnotations, extractFunction);
+			return CollectionUtil.asList(structuralElementIterable);
+		} catch (AccessGateDocumentException e) {
+			logger.log(Level.SEVERE, String.format(
+					"failed to load the document: %s", parsedDocument
+							.getFilename()));
+			throw new RuntimeException(e);
+		} finally {
+			gateDocumentDAO.release(document);
 		}
-		if (foundAnnotation == null)
-			throw new RuntimeException(
-					String
-							.format(
-									"there is no structural element with id='%d' in document %s",
-									id, document.getName()));
-		StructuralElement foundElement = new ExtractionFunction(document)
-				.apply(foundAnnotation);
-		return foundElement;
 	}
 
 	@Override
-	public StructuralElement findClosestPredecessor(Document document,
+	public StructuralElement findById(ParsedDocument parsedDocument, int id) {
+		Document document = null;
+		try {
+			document = gateDocumentDAO.load(parsedDocument.getFilename());
+
+			setStructuralAnnotations(document
+					.getAnnotations(
+							getProperty(GateFormatConstants.ARXMLIV_MARKUP_NAME_PROPERTY_KEY))
+					.get(nameSet));
+
+			Annotation foundAnnotation = null;
+			for (Annotation annotation : structuralAnnotations) {
+				if (annotation.getId().equals(id)) {
+					foundAnnotation = annotation;
+				}
+			}
+			if (foundAnnotation == null)
+				throw new RuntimeException(
+						String
+								.format(
+										"there is no structural element with id='%d' in document %s",
+										id, document.getName()));
+			StructuralElement foundElement = new ExtractionFunction(document)
+					.apply(foundAnnotation);
+			return foundElement;
+		} catch (AccessGateDocumentException e) {
+			logger.log(Level.SEVERE, String.format(
+					"failed to load the document: %s", parsedDocument
+							.getFilename()));
+			throw new RuntimeException(e);
+		} finally {
+			gateDocumentDAO.release(document);
+		}
+	}
+
+	@Override
+	public StructuralElement findClosestPredecessor(ParsedDocument document,
 			final int id,
 			final MocassinOntologyClasses... filterPredecessorTypes) {
-		List<StructuralElement> elements = retrieve(document);
+		List<StructuralElement> elements = retrieveElements(document);
 
 		Predicate<StructuralElement> typeFilter = new Predicate<StructuralElement>() {
 

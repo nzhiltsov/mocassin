@@ -1,7 +1,5 @@
 package ru.ksu.niimm.cll.mocassin.analyzer.relation.impl;
 
-import gate.Document;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -10,8 +8,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import ru.ksu.niimm.cll.mocassin.analyzer.relation.RelationInfo;
+import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElementSearcher;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
+import ru.ksu.niimm.cll.mocassin.nlp.impl.ParsedDocumentImpl;
 import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
 
 import com.google.common.collect.Maps;
@@ -45,15 +45,8 @@ public abstract class AbstractRelationAnalyzer {
 
 		for (String filename : prefix2id.keySet()) {
 			String documentId = prefix2id.get(filename);
-			Document document = null;
-			try {
-				document = getGateDocumentDAO().load(documentId);
-			} catch (Exception e) {
-				logger.log(Level.SEVERE, String.format(
-						"failed to load the document: %s caused by %s",
-						documentId, e.getMessage()));
-				continue;
-			}
+			ParsedDocument document = new ParsedDocumentImpl(documentId);
+
 			try {
 				List<RelationInfo> relationInfoList = filename2relations
 						.get(filename);
@@ -67,17 +60,14 @@ public abstract class AbstractRelationAnalyzer {
 				logger.log(Level.SEVERE, String.format(
 						"failed to process the document: %s caused by %s",
 						documentId, e.getMessage()));
-			} finally {
-				getGateDocumentDAO().release(document);
-				document = null;
-			}
 
+			}
 		}
 		return processedInfoList;
 	}
 
-	protected abstract RelationInfo processRelationInfo(Document document,
-			RelationInfo info);
+	protected abstract RelationInfo processRelationInfo(
+			ParsedDocument document, RelationInfo info);
 
 	public StructuralElementSearcher getStructuralElementSearcher() {
 		return structuralElementSearcher;

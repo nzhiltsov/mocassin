@@ -19,7 +19,9 @@ public class CollectionUtil {
 		Iterator<T> it = iterable.iterator();
 		while (it.hasNext()) {
 			T element = it.next();
-			list.add(element);
+			if (element != null) {
+				list.add(element);
+			}
 		}
 		return list;
 	}
@@ -44,6 +46,7 @@ public class CollectionUtil {
 		}
 		return sublist;
 	}
+
 	/**
 	 * 
 	 * @param names

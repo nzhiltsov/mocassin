@@ -45,7 +45,7 @@ public class NodeImpl implements Node {
 
 	@Override
 	public String toString() {
-		return getName();
+		return this.id;
 	}
 
 	@Override

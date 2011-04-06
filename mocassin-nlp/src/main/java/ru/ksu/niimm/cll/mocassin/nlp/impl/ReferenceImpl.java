@@ -6,6 +6,7 @@ import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.nlp.Token;
+import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
 
 public class ReferenceImpl implements Reference {
 	private final int id;
@@ -14,6 +15,7 @@ public class ReferenceImpl implements Reference {
 	private final ParsedDocument document;
 	private final String additionalRefid;
 	private List<Token> sentenceTokens;
+	private MocassinOntologyRelations relation;
 
 	public static class Builder {
 		private final int id;
@@ -89,6 +91,16 @@ public class ReferenceImpl implements Reference {
 	}
 
 	@Override
+	public MocassinOntologyRelations getPredictedRelation() {
+		return relation;
+	}
+
+	@Override
+	public void setPredictedRelation(MocassinOntologyRelations relation) {
+		this.relation = relation;
+	}
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -119,8 +131,8 @@ public class ReferenceImpl implements Reference {
 
 	@Override
 	public String toString() {
-		return String.format("%s %s %s", document.getFilename().substring(0,
-				document.getFilename().indexOf(".")), id, additionalRefid);
+		return String.format("%s %s | %s", from.getPredictedClass(), to
+				.getPredictedClass(), relation);
 	}
 
 }

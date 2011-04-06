@@ -6,6 +6,10 @@ public class ParsedDocumentImpl implements ParsedDocument {
 	private String filename;
 	private long size;
 
+	public ParsedDocumentImpl(String filename) {
+		this.filename = filename;
+	}
+
 	public ParsedDocumentImpl(String filename, long size) {
 		this.filename = filename;
 		this.size = size;

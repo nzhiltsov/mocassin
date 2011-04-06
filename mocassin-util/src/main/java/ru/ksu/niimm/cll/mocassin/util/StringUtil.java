@@ -4,7 +4,6 @@ import java.rmi.server.UID;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class StringUtil {
 	private StringUtil() {

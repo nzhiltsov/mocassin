@@ -8,7 +8,21 @@ package ru.ksu.niimm.cll.mocassin.ontology;
  * 
  */
 public enum MocassinOntologyRelations {
-	HAS_CONSEQUENCE, EXEMPLIFIES;
+
+	HAS_PART("http://cll.niimm.ksu.ru/ontologies/mocassin#hasPart"), REFERS_TO(
+			"http://cll.niimm.ksu.ru/ontologies/mocassin#refersTo"), HAS_CONSEQUENCE(
+			"http://cll.niimm.ksu.ru/ontologies/mocassin#hasConsequence"), EXEMPLIFIES(
+			"http://cll.niimm.ksu.ru/ontologies/mocassin#exemplifies");
+
+	private String uri;
+
+	private MocassinOntologyRelations(String uri) {
+		this.uri = uri;
+	}
+
+	public String getUri() {
+		return uri;
+	}
 
 	public static MocassinOntologyClasses[] getValidRanges(
 			MocassinOntologyRelations relation) {

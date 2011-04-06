@@ -3,14 +3,14 @@ package ru.ksu.niimm.cll.mocassin.ui.viewer.server;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.inject.Inject;
-
 import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.arxiv.Author;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.ArticleInfo;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.ViewerService;
 import ru.ksu.niimm.ose.ontology.OntologyResource;
 import ru.ksu.niimm.ose.ontology.OntologyResourceFacade;
+
+import com.google.inject.Inject;
 
 public class ViewerServiceImpl implements ViewerService {
 	@Inject

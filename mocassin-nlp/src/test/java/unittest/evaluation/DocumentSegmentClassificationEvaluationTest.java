@@ -74,7 +74,22 @@ public class DocumentSegmentClassificationEvaluationTest {
 					.predict(element);
 			table.put(predictedClassByAlgorithm, element.getPredictedClass());
 		}
+		printContingencyTable();
 		printEvaluationTable();
+	}
+
+	private void printContingencyTable() throws IOException {
+		int n = table.matrix.length;
+		FileWriter writer = new FileWriter("/tmp/segment-contingency-table.csv");
+		for (int i = 0; i < n; i++) {
+			StringBuffer sb = new StringBuffer();
+			for (int j = 0; j < n; j++) {
+				sb.append(String.format("%04d ", table.matrix[i][j]));
+			}
+			writer.write(sb.toString() + "\n");
+		}
+		writer.flush();
+		writer.close();
 	}
 
 	private float computeAvgFMeasure() {
@@ -107,29 +122,39 @@ public class DocumentSegmentClassificationEvaluationTest {
 		int n = table.matrix.length;
 		float avgFmeasure = 0;
 		for (MocassinOntologyClasses clazz : MocassinOntologyClasses.values()) {
-			int i = clazz.ordinal();
-			int rowSum = 0;
-			for (int k = 0; k < n; k++) {
-				rowSum += table.matrix[i][k];
-			}
-			int columnSum = 0;
-			for (int k = 0; k < n; k++) {
-				columnSum += table.matrix[k][i];
-			}
-			float precision = ((float) table.matrix[i][i]) / rowSum;
-			float recall = ((float) table.matrix[i][i]) / columnSum;
-			float fmeasure = 2 * (precision * recall) / (precision + recall);
+			float fmeasure = writeMeasures(writer, n, clazz);
 
 			avgFmeasure += fmeasure;
-
-			writer.write(String.format("%s %f %f %f\n", clazz.toString(),
-					precision, recall, fmeasure));
 		}
+		float fmeasure = writeMeasures(writer, n, null);
+
+		avgFmeasure += fmeasure;
 
 		writer.write(String.format("%f", avgFmeasure
-				/ MocassinOntologyClasses.values().length));
+				/ MocassinOntologyClasses.values().length + 1));
 
 		writer.flush();
 		writer.close();
+	}
+
+	private float writeMeasures(FileWriter writer, int n,
+			MocassinOntologyClasses clazz) throws IOException {
+		int i = clazz != null ? clazz.ordinal() : n - 1;
+		String clazzString = clazz != null ? clazz.toString() : "other";
+		int rowSum = 0;
+		for (int k = 0; k < n; k++) {
+			rowSum += table.matrix[i][k];
+		}
+		int columnSum = 0;
+		for (int k = 0; k < n; k++) {
+			columnSum += table.matrix[k][i];
+		}
+		float precision = ((float) table.matrix[i][i]) / rowSum;
+		float recall = ((float) table.matrix[i][i]) / columnSum;
+		float fmeasure = 2 * (precision * recall) / (precision + recall);
+
+		writer.write(String.format("%s %f %f %f\n", clazzString,
+				precision, recall, fmeasure));
+		return fmeasure;
 	}
 }

@@ -1,5 +1,7 @@
 package ru.ksu.niimm.cll.mocassin.arxiv;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import junit.framework.Assert;
@@ -38,5 +40,14 @@ public class ArxivDAOFacadeTest {
 		}
 		Assert.assertNotNull(pdfLink);
 		Assert.assertEquals("http://arxiv.org/pdf/math/0205003v1", pdfLink);
+	}
+
+	@Test
+	public void testLoad() throws IOException {
+		ArticleMetadata metadata = new ArticleMetadata();
+		metadata.setId("http://arxiv.org/abs/math/0205003v1");
+		InputStream inputStream = arxivDAOFacade.loadSource(metadata);
+		Assert.assertNotNull(inputStream);
+		inputStream.close();
 	}
 }

@@ -26,10 +26,15 @@ import ru.ksu.niimm.cll.mocassin.parser.latex.builder.Builder;
  * 
  */
 public class StructureBuilder implements Builder {
+	private static final String NODE_ID_FORMAT = "%d_%d";
 	private LatexDocumentModel model;
 
-	/* (non-Javadoc)
-	 * @see ru.ksu.niimm.cll.mocassin.parser.latex.builder.impl.Builder#analyze(ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * ru.ksu.niimm.cll.mocassin.parser.latex.builder.impl.Builder#analyze(ru
+	 * .ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel)
 	 */
 	@Override
 	public List<Edge<Node, Node>> analyze(LatexDocumentModel model) {
@@ -45,8 +50,9 @@ public class StructureBuilder implements Builder {
 			stack.push(treeItem);
 
 			Node documentRootNode = new NodeImpl(String
-					.format("%d:%d", documentRoot.getBeginLine(), documentRoot
-							.getOffsetOnLine()), documentRoot.getName());
+					.format(NODE_ID_FORMAT, documentRoot.getBeginLine(),
+							documentRoot.getOffsetOnLine()), documentRoot
+					.getName());
 			Edge<Node, Node> edge = makeEdge(documentRootNode, treeItem,
 					EdgeType.CONTAINS);
 			edges.add(edge);
@@ -57,8 +63,8 @@ public class StructureBuilder implements Builder {
 			ArrayList<OutlineNode> children = node.getChildren();
 
 			if (children != null) {
-				String nodeId = String.format("%d:%d", node.getBeginLine(),
-						node.getOffsetOnLine());
+				String nodeId = String.format(NODE_ID_FORMAT, node
+						.getBeginLine(), node.getOffsetOnLine());
 				Node from = new NodeImpl(nodeId, node.getName());
 				for (OutlineNode child : children) {
 					if (child.getType() == OutlineNode.TYPE_LABEL) {
@@ -83,9 +89,10 @@ public class StructureBuilder implements Builder {
 	private Edge<Node, Node> makeEdge(Node from, OutlineNode toNode,
 			EdgeType edgeType) {
 		Edge<Node, Node> edge = new EdgeImpl();
-		String childId = String.format("%d:%d", toNode.getBeginLine(), toNode
-				.getOffsetOnLine());
-		Node to = new NodeImpl(childId, toNode.getName());
+		String childId = String.format(NODE_ID_FORMAT, toNode.getBeginLine(),
+				toNode.getOffsetOnLine());
+		String nodeName = extractName(toNode);
+		Node to = new NodeImpl(childId, nodeName);
 		String labelText = getLabelText(toNode);
 		to.setLabelText(labelText);
 		EdgeContext context = new EdgeContextImpl(edgeType);
@@ -93,12 +100,27 @@ public class StructureBuilder implements Builder {
 		return edge;
 	}
 
+	private String extractName(OutlineNode toNode) {
+		String nodeName;
+		if (toNode.getType() == OutlineNode.TYPE_SECTION) {
+			nodeName = "section";
+		} else if (toNode.getType() == OutlineNode.TYPE_SUBSECTION) {
+			nodeName = "subsection";
+		} else if (toNode.getType() == OutlineNode.TYPE_SUBSUBSECTION) {
+			nodeName = "subsubsection";
+		} else {
+			nodeName = toNode.getName();
+		}
+		return nodeName;
+	}
+
 	private Edge<Node, Node> makeInverseEdge(OutlineNode fromNode, Node to,
 			EdgeType edgeType) {
 		Edge<Node, Node> edge = new EdgeImpl();
-		String childId = String.format("%d:%d", fromNode.getBeginLine(),
+		String childId = String.format(NODE_ID_FORMAT, fromNode.getBeginLine(),
 				fromNode.getOffsetOnLine());
-		Node from = new NodeImpl(childId, fromNode.getName());
+		String nodeName = extractName(fromNode);
+		Node from = new NodeImpl(childId, nodeName);
 		String labelText = getLabelText(fromNode);
 		from.setLabelText(labelText);
 		EdgeContext context = new EdgeContextImpl(edgeType);
