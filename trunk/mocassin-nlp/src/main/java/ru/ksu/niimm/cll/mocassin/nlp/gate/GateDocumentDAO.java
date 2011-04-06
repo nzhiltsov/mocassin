@@ -27,7 +27,8 @@ public interface GateDocumentDAO {
 	Document load(String documentId) throws AccessGateDocumentException;
 
 	/**
-	 * releases resources connected with given document
+	 * releases resources connected with given document. <br/>
+	 * If the document is null, nothing will be done
 	 * 
 	 * @param document
 	 */

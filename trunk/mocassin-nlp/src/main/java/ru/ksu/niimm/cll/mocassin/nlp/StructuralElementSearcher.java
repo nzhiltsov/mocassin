@@ -1,14 +1,12 @@
 package ru.ksu.niimm.cll.mocassin.nlp;
 
-import gate.Document;
-
 import java.util.List;
 
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
 
 /**
- * Goal of the interface to represent a functionality of searching the
- * structural elements in GATE documents
+ * Represents a functionality of searching the structural elements in parsed
+ * documents
  * 
  * @author nzhiltsov
  * 
@@ -20,7 +18,7 @@ public interface StructuralElementSearcher {
 	 * @param document
 	 * @return
 	 */
-	List<StructuralElement> retrieve(Document document);
+	List<StructuralElement> retrieveElements(ParsedDocument document);
 
 	/**
 	 * returns element by id for a given document
@@ -29,7 +27,7 @@ public interface StructuralElementSearcher {
 	 * @param id
 	 * @return
 	 */
-	StructuralElement findById(Document document, int id);
+	StructuralElement findById(ParsedDocument document, int id);
 
 	/**
 	 * returns the closest predecessor of element with given id, filtering by
@@ -40,6 +38,6 @@ public interface StructuralElementSearcher {
 	 * @param filterTypes
 	 * @return
 	 */
-	StructuralElement findClosestPredecessor(Document document, int id,
+	StructuralElement findClosestPredecessor(ParsedDocument document, int id,
 			MocassinOntologyClasses... filterPredecessorTypes);
 }

@@ -1,11 +1,10 @@
 package ru.ksu.niimm.cll.mocassin.nlp.impl;
 
-import gate.Document;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import ru.ksu.niimm.cll.mocassin.nlp.FeatureExtractor;
+import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.ReferenceSearcher;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
@@ -34,19 +33,13 @@ public class FeatureExtractorImpl implements FeatureExtractor {
 	public void processReferences(int count) throws Exception {
 
 		List<String> documentIds = getGateDocumentDAO().getDocumentIds();
-		List<String> selectedDocumentIds = count == 0 ? documentIds : CollectionUtil
-				.sampleRandomSublist(documentIds, count);
+		List<String> selectedDocumentIds = count == 0 ? documentIds
+				: CollectionUtil.sampleRandomSublist(documentIds, count);
 		for (String id : selectedDocumentIds) {
-			Document document = getGateDocumentDAO().load(id);
-			try {
-				List<Reference> references = getReferenceSearcher().retrieve(
-						document);
-				fireReferenceFinishEvent(document, references);
-			} catch (Exception e) {
-				if (document != null) {
-					getGateDocumentDAO().release(document);
-				}
-			}
+			ParsedDocument document = new ParsedDocumentImpl(id);
+			List<Reference> references = getReferenceSearcher().retrieveReferences(
+					document);
+			fireReferenceFinishEvent(document, references);
 
 		}
 
@@ -68,7 +61,7 @@ public class FeatureExtractorImpl implements FeatureExtractor {
 		return listeners;
 	}
 
-	private void fireReferenceFinishEvent(Document document,
+	private void fireReferenceFinishEvent(ParsedDocument document,
 			List<Reference> references) {
 		for (ReferenceProcessListener listener : getListeners()) {
 			listener.onReferenceFinish(document, references);

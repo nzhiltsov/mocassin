@@ -1,8 +1,8 @@
 package ru.ksu.niimm.cll.mocassin.analyzer.relation.impl;
 
-import gate.Document;
 import ru.ksu.niimm.cll.mocassin.analyzer.relation.HasConsequenceRelationAnalyzer;
 import ru.ksu.niimm.cll.mocassin.analyzer.relation.RelationInfo;
+import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
@@ -16,7 +16,7 @@ public class HasConsequenceRelationAnalyzerImpl extends AbstractRelationAnalyzer
 	 * @param document
 	 * @param info
 	 */
-	public RelationInfo processRelationInfo(Document document,
+	public RelationInfo processRelationInfo(ParsedDocument document,
 			RelationInfo info) {
 		StructuralElement rangeElement = getStructuralElementSearcher()
 				.findById(document, info.getRangeId());

@@ -6,7 +6,7 @@ import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.parser.arxmliv.xpath.impl.ArxmlivStructureElementTypes;
 
 /**
- * Structural element is an element that belongs to rhetorical structure
+ * Structural element is an element that belongs to the rhetorical structure
  * (section, subsection) or mathematical structure (theorem, proof) of a
  * document
  * 
@@ -21,6 +21,11 @@ public interface StructuralElement {
 	 * @return identifier
 	 */
 	int getId();
+	/**
+	 * 
+	 * @return URI
+	 */
+	String getUri();
 
 	/**
 	 * 

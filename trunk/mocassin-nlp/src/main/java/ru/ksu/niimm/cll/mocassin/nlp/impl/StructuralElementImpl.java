@@ -8,6 +8,7 @@ import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
 
 public class StructuralElementImpl implements StructuralElement {
 	private final int id;
+	private final String uri;
 	private final long start;
 	private final long end;
 	private final String name;
@@ -18,12 +19,18 @@ public class StructuralElementImpl implements StructuralElement {
 	public static class Builder {
 		private final int id;
 
+		private String uri;
 		private long start;
 		private long end;
 		private String name;
 
 		public Builder(int id) {
 			this.id = id;
+		}
+
+		public Builder uri(String uri) {
+			this.uri = uri;
+			return this;
 		}
 
 		public Builder start(long start) {
@@ -48,6 +55,7 @@ public class StructuralElementImpl implements StructuralElement {
 
 	public StructuralElementImpl(Builder builder) {
 		this.id = builder.id;
+		this.uri = builder.uri;
 		this.start = builder.start;
 		this.end = builder.end;
 		this.name = builder.name;
@@ -71,6 +79,10 @@ public class StructuralElementImpl implements StructuralElement {
 
 	public int getId() {
 		return id;
+	}
+
+	public String getUri() {
+		return uri;
 	}
 
 	public long getStart() {
@@ -105,6 +117,6 @@ public class StructuralElementImpl implements StructuralElement {
 
 	@Override
 	public String toString() {
-		return String.format("%d; %s; %s", id, name, toTitleString());
+		return String.format("%s; %s", uri, predictedClass);
 	}
 }

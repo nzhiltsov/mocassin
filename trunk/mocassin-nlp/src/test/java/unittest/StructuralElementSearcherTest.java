@@ -1,7 +1,5 @@
 package unittest;
 
-import gate.Document;
-
 import java.util.List;
 
 import org.junit.Assert;
@@ -10,9 +8,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ru.ksu.niimm.cll.mocassin.nlp.NlpModule;
+import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElementSearcher;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
+import ru.ksu.niimm.cll.mocassin.nlp.impl.ParsedDocumentImpl;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
 
@@ -30,7 +30,7 @@ public class StructuralElementSearcherTest {
 	@Inject
 	private GateDocumentDAO gateDocumentDAO;
 
-	private Document testDocument;
+	private ParsedDocument parsedDocument;
 
 	@Before
 	public void init() throws Exception {
@@ -43,16 +43,14 @@ public class StructuralElementSearcherTest {
 			}
 		}
 		Assert.assertNotNull(foundId);
-		testDocument = getGateDocumentDAO().load(foundId);
-
+		this.parsedDocument = new ParsedDocumentImpl(foundId);
 	}
 
 	@Test
 	public void testFindById() throws Exception {
 
 		StructuralElement foundElement = getStructuralElementSearcher()
-				.findById(testDocument, 11808);
-		getGateDocumentDAO().release(testDocument);
+				.findById(parsedDocument, 11808);
 		System.out.println(foundElement);
 	}
 
@@ -61,7 +59,7 @@ public class StructuralElementSearcherTest {
 		MocassinOntologyClasses[] hasConsequenceDomains = MocassinOntologyRelations
 				.getValidDomains(MocassinOntologyRelations.HAS_CONSEQUENCE);
 		StructuralElement predecessor = getStructuralElementSearcher()
-				.findClosestPredecessor(testDocument, 11808,
+				.findClosestPredecessor(parsedDocument, 11808,
 						hasConsequenceDomains);
 		System.out.println(predecessor);
 	}

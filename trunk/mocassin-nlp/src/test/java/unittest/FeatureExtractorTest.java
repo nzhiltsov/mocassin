@@ -1,7 +1,5 @@
 package unittest;
 
-import gate.Document;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,6 +13,7 @@ import org.junit.runner.RunWith;
 
 import ru.ksu.niimm.cll.mocassin.nlp.FeatureExtractor;
 import ru.ksu.niimm.cll.mocassin.nlp.NlpModule;
+import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.ReferenceProcessListener;
 import ru.ksu.niimm.cll.mocassin.nlp.util.ReferenceXStream;
@@ -54,14 +53,14 @@ public class FeatureExtractorTest implements ReferenceProcessListener {
 	}
 
 	@Override
-	public void onReferenceFinish(Document document, List<Reference> references) {
+	public void onReferenceFinish(ParsedDocument document, List<Reference> references) {
 		XStream xstream = new ReferenceXStream();
 
 		ObjectOutputStream out;
 		try {
 			out = xstream
 					.createObjectOutputStream(new FileWriter(String.format(
-							"/tmp/refcontexts-data/%s.xml", document.getName())));
+							"/tmp/refcontexts-data/%s.xml", document.getFilename())));
 			for (Reference ref : references) {
 				out.writeObject(ref);
 			}

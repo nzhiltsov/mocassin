@@ -83,7 +83,9 @@ public class GateDocumentDAOImpl implements GateDocumentDAO {
 
 	@Override
 	public void release(Document document) {
-		Factory.deleteResource(document);
+		if (document != null) {
+			Factory.deleteResource(document);
+		}
 	}
 
 	public NlpModulePropertiesLoader getNlpModulePropertiesLoader() {

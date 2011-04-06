@@ -20,10 +20,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ru.ksu.niimm.cll.mocassin.parser.Edge;
+import ru.ksu.niimm.cll.mocassin.parser.EdgeType;
 import ru.ksu.niimm.cll.mocassin.parser.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.parser.Node;
 import ru.ksu.niimm.cll.mocassin.parser.Parser;
+import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
@@ -36,7 +40,7 @@ public class LatexParserTest {
 
 	private static final String COLLECTION_STATS_OUTPUT_FILE = "/tmp/collection-stats.txt";
 
-	private static final String DOCUMENT_COLLECTION_INPUT_DIR = "<enter dir name here>";
+	private static final String DOCUMENT_COLLECTION_INPUT_DIR = "/OTHER_DATA/Izvestiya_vuzov/IzvestiyaVuzov-tex";
 
 	@Inject
 	private Parser parser;
@@ -47,7 +51,8 @@ public class LatexParserTest {
 
 	@Before
 	public void init() throws FileNotFoundException {
-		this.in = this.getClass().getResourceAsStream("/example.tex");
+//		this.in = this.getClass().getResourceAsStream("/example.tex");
+		this.in = new FileInputStream("/OTHER_DATA/arxiv_papers/BaezDuarte.tex");
 
 		initializeFileList();
 
@@ -62,11 +67,50 @@ public class LatexParserTest {
 	}
 
 	@Test
+	public void testGetReferenceCount() throws IOException {
+		List<Document> docs = new ArrayList<Document>();
+		for (File file : getFiles()) {
+			int referenceCount = 0;
+			List<Edge<Node, Node>> edges = null;
+			try {
+				InputStream inputStream = new FileInputStream(file);
+				getParser().load(inputStream);
+				edges = getParser().getGraph();
+			} catch (Throwable e) {
+				logger.log(Level.SEVERE, String.format(
+						"parsing of the file failed: %s", file
+								.getAbsolutePath()));
+				continue;
+			}
+
+			if (edges == null) {
+				continue;
+			} else {
+				Predicate<Edge<Node, Node>> filterRefersTo = new Predicate<Edge<Node, Node>>() {
+
+					@Override
+					public boolean apply(Edge<Node, Node> edge) {
+						return edge.getContext().getEdgeType() == EdgeType.REFERS_TO;
+					}
+				};
+				referenceCount = CollectionUtil.asList(
+						Iterables.filter(edges, filterRefersTo)).size();
+			}
+
+			Document doc = new Document(file.getName(), file.length(),
+					referenceCount);
+			docs.add(doc);
+		}
+		printDocs(docs);
+	}
+
+	@Test
 	public void testGetNodes() throws Exception {
 		List<Node> nodes = new ArrayList<Node>();
 		for (File file : getFiles()) {
-			InputStream inputStream = new FileInputStream(file);
+
 			try {
+				InputStream inputStream = new FileInputStream(file);
 				getParser().load(inputStream);
 			} catch (Throwable e) {
 				logger.log(Level.SEVERE, String.format(
@@ -109,20 +153,48 @@ public class LatexParserTest {
 		}
 
 		FileWriter writer = new FileWriter(file);
-		writer.write("element count\n");
-		for (String nodeName : node2count.keySet()) {
-			Integer value = node2count.get(nodeName);
-			writer.write(String.format("%s %d\n", nodeName, value));
+		try {
+			writer.write("element count\n");
+			for (String nodeName : node2count.keySet()) {
+				Integer value = node2count.get(nodeName);
+				writer.write(String.format("%s %d\n", nodeName, value));
+			}
+		} finally {
+			writer.flush();
+			writer.close();
 		}
-		writer.flush();
-		writer.close();
 
 	}
 
+	private void printDocs(List<Document> docs) throws IOException {
+		FileWriter writer = new FileWriter(new File("/tmp/reference-stats.txt"));
+		try {
+			writer.write("filename size count\n");
+			for (Document doc : docs) {
+				writer.write(String.format("%s %s %s\n", doc.filename,
+						doc.size, doc.referenceCount));
+			}
+		} finally {
+			writer.flush();
+			writer.close();
+		}
+	}
+
 	private void print(List<Edge<Node, Node>> graph) {
+		
+		List<Node> nodes = new ArrayList<Node>();
 		for (Edge<Node, Node> edge : graph) {
+			Node from = edge.getFrom();
+			Node to = edge.getTo();
+			if (!nodes.contains(from)) nodes.add(from);
+			if (!nodes.contains(to)) nodes.add(to);
 			System.out.println(edge);
 		}
+		System.out.println("***");
+		for (Node node : nodes) {
+			System.out.println(node.getId() + " $ " + node.getName() + " $ " + node.getLabelText());
+		}
+		System.out.println("***");
 		System.out.println(graph.size());
 	}
 
@@ -143,4 +215,16 @@ public class LatexParserTest {
 		}
 	}
 
+	class Document {
+		String filename;
+		long size;
+		int referenceCount;
+
+		Document(String filename, long size, int referenceCount) {
+			this.filename = filename;
+			this.size = size;
+			this.referenceCount = referenceCount;
+		}
+
+	}
 }

@@ -1,7 +1,5 @@
 package unittest;
 
-import gate.Document;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,10 +13,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ru.ksu.niimm.cll.mocassin.nlp.NlpModule;
+import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.ReferenceSearcher;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateDocumentException;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
+import ru.ksu.niimm.cll.mocassin.nlp.impl.ParsedDocumentImpl;
 import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
 
 import com.google.inject.Inject;
@@ -43,29 +43,27 @@ public class ReferenceSearcherTest {
 		List<String> ids = CollectionUtil.sampleRandomSublist(gateDocumentDAO
 				.getDocumentIds(), 30);
 		for (String id : ids) {
-			Document document = null;
+			ParsedDocument document = new ParsedDocumentImpl(id);
 			try {
-				document = gateDocumentDAO.load(id);
+
 				List<Reference> references = referenceSearcher
-						.retrieve(document);
-				data.add(new DocumentData(document.getName(), document
-						.getContent().size(), references.size()));
+						.retrieveReferences(document);
+				if (!references.isEmpty()) {
+					String filename = references.get(0).getDocument()
+							.getFilename();
+					long size = references.get(0).getDocument().getSize();
+					data
+							.add(new DocumentData(filename, size, references
+									.size()));
+				}
 				logger.log(Level.INFO, String.format(
 						"the document '%s' was processed successfully", id));
-			} catch (AccessGateDocumentException e) {
-				logger.log(Level.SEVERE, String.format(
-						"failed to load the document: %s", id));
 			} catch (RuntimeException ex) {
 				logger.log(Level.SEVERE, String.format(
 						"failed to retrieve references from the document: %s",
 						id));
-			} finally {
-				if (document != null) {
-					gateDocumentDAO.release(document);
-					document = null;
-				}
-			}
 
+			}
 		}
 		printDocs(data);
 	}

@@ -1,4 +1,4 @@
-package ru.ksu.niimm.cll.mocassin.nlp.impl;
+package ru.ksu.niimm.cll.mocassin.nlp.gate;
 
 import gate.Annotation;
 import gate.AnnotationSet;
@@ -14,7 +14,9 @@ import ru.ksu.niimm.cll.mocassin.nlp.ReferenceSearcher;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElementSearcher;
 import ru.ksu.niimm.cll.mocassin.nlp.Token;
-import ru.ksu.niimm.cll.mocassin.nlp.gate.GateFormatConstants;
+import ru.ksu.niimm.cll.mocassin.nlp.impl.NotInMathPredicate;
+import ru.ksu.niimm.cll.mocassin.nlp.impl.ParsedDocumentImpl;
+import ru.ksu.niimm.cll.mocassin.nlp.impl.ReferenceImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.util.AnnotationUtil;
 import ru.ksu.niimm.cll.mocassin.nlp.util.NlpModulePropertiesLoader;
 import ru.ksu.niimm.cll.mocassin.parser.arxmliv.xpath.impl.ArxmlivFormatConstants;
@@ -24,7 +26,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 
-public class ReferenceSearcherImpl implements ReferenceSearcher {
+public class GateReferenceSearcher implements ReferenceSearcher {
 	@Inject
 	private Logger logger;
 	@Inject
@@ -34,32 +36,45 @@ public class ReferenceSearcherImpl implements ReferenceSearcher {
 	@Inject
 	private AnnotationUtil annotationUtil;
 
+	@Inject
+	private GateDocumentDAO gateDocumentDAO;
+
 	private List<StructuralElement> structuralElements;
 
 	private Document document;
 
 	@Override
-	public List<Reference> retrieve(Document document) {
-		setDocument(document);
-		loadStructuralElements();
+	public List<Reference> retrieveReferences(ParsedDocument parsedDocument) {
+		try {
+			setDocument(gateDocumentDAO.load(parsedDocument.getFilename()));
 
-		AnnotationSet refAnnotations = document
-				.getAnnotations(
-						getProperty(GateFormatConstants.ARXMLIV_MARKUP_NAME_PROPERTY_KEY))
-				.get(
-						getProperty(GateFormatConstants.ARXMLIV_REF_ANNOTATION_PROPERTY_KEY));
-		Iterable<Annotation> filteredRefAnnotations = Iterables.filter(
-				refAnnotations, new NotInMathPredicate(
-						getNlpModulePropertiesLoader(), getDocument()));
+			loadStructuralElements(parsedDocument);
 
-		Iterable<Reference> referenceIterable = Iterables.transform(
-				filteredRefAnnotations, new ExtractFunction());
-		return CollectionUtil.asList(referenceIterable);
+			AnnotationSet refAnnotations = document
+					.getAnnotations(
+							getProperty(GateFormatConstants.ARXMLIV_MARKUP_NAME_PROPERTY_KEY))
+					.get(
+							getProperty(GateFormatConstants.ARXMLIV_REF_ANNOTATION_PROPERTY_KEY));
+			Iterable<Annotation> filteredRefAnnotations = Iterables.filter(
+					refAnnotations, new NotInMathPredicate(
+							getNlpModulePropertiesLoader(), getDocument()));
+
+			Iterable<Reference> referenceIterable = Iterables.transform(
+					filteredRefAnnotations, new ExtractFunction());
+			return CollectionUtil.asList(referenceIterable);
+		} catch (AccessGateDocumentException e) {
+			logger.log(Level.SEVERE, String.format(
+					"failed to load the document: %s", parsedDocument
+							.getFilename()));
+			throw new RuntimeException(e);
+		} finally {
+			gateDocumentDAO.release(getDocument());
+		}
 	}
 
-	private void loadStructuralElements() {
-		setStructuralElements(getStructuralElementSearcher().retrieve(
-				getDocument()));
+	private void loadStructuralElements(ParsedDocument parsedDocument) {
+		setStructuralElements(getStructuralElementSearcher().retrieveElements(
+				parsedDocument));
 	}
 
 	public StructuralElementSearcher getStructuralElementSearcher() {

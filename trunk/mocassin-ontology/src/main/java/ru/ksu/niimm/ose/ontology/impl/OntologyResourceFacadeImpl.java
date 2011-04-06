@@ -2,6 +2,7 @@ package ru.ksu.niimm.ose.ontology.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.arxiv.Author;
@@ -19,7 +20,6 @@ import com.google.inject.name.Named;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.QuerySolution;
-import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 
 public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
@@ -80,9 +80,10 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 	}
 
 	@Override
-	public void insert(ArticleMetadata articleMetadata) {
+	public void insert(ArticleMetadata articleMetadata, Set<RDFTriple> data) {
 		List<RDFTriple> triples = ArxivMetadataUtil
 				.convertToTriples(articleMetadata);
+		triples.addAll(data);
 		getVirtuosoDAO().insert(triples, getSearchGraph());
 	}
 

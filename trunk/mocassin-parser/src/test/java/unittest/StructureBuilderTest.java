@@ -1,5 +1,6 @@
 package unittest;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -25,7 +26,7 @@ import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext( { LatexParserModule.class})
+@GuiceContext( { LatexParserModule.class })
 public class StructureBuilderTest {
 	@Inject
 	private Builder structureAnalyzer;
@@ -36,9 +37,12 @@ public class StructureBuilderTest {
 
 	@Before
 	public void init() throws LexerException, IOException {
-		 InputStream in = this.getClass().getResourceAsStream("/example.tex");
+		// InputStream in = this.getClass().getResourceAsStream("/example.tex");
+		InputStream in = new FileInputStream(
+				"/OTHER_DATA/arxiv_papers/1103.2935v1.tex");
 		InputStreamReader reader = new InputStreamReader(in, "utf8");
 		this.model = this.treeParser.parseTree(reader);
+		this.model.setDocId("http://arxiv.org/abs/1103.2935v1");
 	}
 
 	@Test
@@ -49,9 +53,12 @@ public class StructureBuilderTest {
 		for (Edge<Node, Node> edge : edges) {
 			if (edge.getContext().getEdgeType() == EdgeType.REFERS_TO) {
 				count++;
-				System.out.println(edge);
+
 			}
-			
+			String docId = getModel().getDocId();
+			System.out.println(String.format("%s/%s | %s/%s | %s", docId, edge
+					.getFrom().getId(), docId, edge.getTo().getId(), edge
+					.getContext().getEdgeType()));
 		}
 		Assert.assertEquals(getModel().getReferences().size(), count);
 	}

@@ -1,5 +1,7 @@
 package ru.ksu.niimm.cll.mocassin.arxiv;
 
+import java.io.InputStream;
+
 /**
  * Facade that retrieves article metadata and loads the contents of an article
  * with a given arXiv identifier
@@ -15,4 +17,14 @@ public interface ArxivDAOFacade {
 	 * @return
 	 */
 	ArticleMetadata retrieve(String arxivId);
+
+	/**
+	 * loads the source of an article with given metadata
+	 * 
+	 * !!! WARNING calling method should close the returned input stream on its own
+	 * 
+	 * @param metadata
+	 * @return
+	 */
+	InputStream loadSource(ArticleMetadata metadata);
 }

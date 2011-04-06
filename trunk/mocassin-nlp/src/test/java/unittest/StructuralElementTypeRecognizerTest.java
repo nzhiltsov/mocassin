@@ -1,7 +1,5 @@
 package unittest;
 
-import gate.Document;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
@@ -18,9 +16,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ru.ksu.niimm.cll.mocassin.nlp.NlpModule;
+import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElementSearcher;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
+import ru.ksu.niimm.cll.mocassin.nlp.impl.ParsedDocumentImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.recognizer.StructuralElementTypeRecognizer;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
@@ -63,9 +63,8 @@ public class StructuralElementTypeRecognizerTest {
 			}
 		}
 		Assert.assertNotNull(foundId);
-		Document document = gateDocumentDAO.load(foundId);
+		ParsedDocument document = new ParsedDocumentImpl(foundId);
 		testElement = structuralElementSearcher.findById(document, 3747);
-		gateDocumentDAO.release(document);
 
 		makeRootDir(CORPUS_ELEMENT_INDEX_OUTPUT_DIR);
 		makeRootDir(PREDICTED_ELEMENTS_OUTPUT_DIR);
@@ -82,23 +81,20 @@ public class StructuralElementTypeRecognizerTest {
 
 	@Test
 	public void testPredictForCorpus() throws Exception {
-		List<String> sample = CollectionUtil.sampleRandomSublist(documentIds, 30);
+		List<String> sample = CollectionUtil.sampleRandomSublist(documentIds,
+				30);
 		for (String id : sample) {
-			Document doc = null;
 			try {
-				doc = getGateDocumentDAO().load(id);
+				ParsedDocument doc = new ParsedDocumentImpl(id);
 				List<StructuralElement> elements = getStructuralElementSearcher()
-						.retrieve(doc);
+						.retrieveElements(doc);
 				process(elements, id);
 
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, String.format(
 						"couldn't load the document: %s", id));
 			}
-			if (doc != null) {
-				getGateDocumentDAO().release(doc);
-				doc = null;
-			}
+
 		}
 	}
 
