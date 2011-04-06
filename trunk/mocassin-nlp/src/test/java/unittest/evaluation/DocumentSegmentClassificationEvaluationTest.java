@@ -18,6 +18,9 @@ import ru.ksu.niimm.cll.mocassin.nlp.impl.StructuralElementImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.TokenImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.recognizer.StructuralElementTypeRecognizer;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
+import ru.ksu.niimm.cll.mocassin.parser.LatexParserModule;
+import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
+import ru.ksu.niimm.ose.ontology.OntologyModule;
 
 import com.csvreader.CsvReader;
 import com.google.inject.Inject;
@@ -25,7 +28,8 @@ import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext(NlpModule.class)
+@GuiceContext( { NlpModule.class, OntologyModule.class, VirtuosoModule.class,
+		LatexParserModule.class })
 public class DocumentSegmentClassificationEvaluationTest {
 	private static final String TEST_DATA_FILEPATH = "/tmp/arxmliv-element-training-data.csv";
 	private static final String EVALUATION_RESULTS_OUTPUT_FILENAME = "/tmp/arxmliv-element-recognition-results.txt";
@@ -153,8 +157,8 @@ public class DocumentSegmentClassificationEvaluationTest {
 		float recall = ((float) table.matrix[i][i]) / columnSum;
 		float fmeasure = 2 * (precision * recall) / (precision + recall);
 
-		writer.write(String.format("%s %f %f %f\n", clazzString,
-				precision, recall, fmeasure));
+		writer.write(String.format("%s %f %f %f\n", clazzString, precision,
+				recall, fmeasure));
 		return fmeasure;
 	}
 }
