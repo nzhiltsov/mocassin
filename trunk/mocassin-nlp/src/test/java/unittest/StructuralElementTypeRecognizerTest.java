@@ -23,7 +23,10 @@ import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.ParsedDocumentImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.recognizer.StructuralElementTypeRecognizer;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
+import ru.ksu.niimm.cll.mocassin.parser.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
+import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
+import ru.ksu.niimm.ose.ontology.OntologyModule;
 
 import com.google.inject.Inject;
 import com.google.inject.internal.Maps;
@@ -31,7 +34,8 @@ import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext(NlpModule.class)
+@GuiceContext( { NlpModule.class, OntologyModule.class, VirtuosoModule.class,
+		LatexParserModule.class })
 public class StructuralElementTypeRecognizerTest {
 	private static final String CORPUS_ELEMENT_INDEX_OUTPUT_DIR = "/tmp/corpus-element-index";
 	private static final String PREDICTED_ELEMENTS_OUTPUT_DIR = String.format(
