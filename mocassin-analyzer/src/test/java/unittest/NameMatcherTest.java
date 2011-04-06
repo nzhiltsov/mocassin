@@ -1,6 +1,5 @@
 package unittest;
 
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Comparator;
 import java.util.List;
@@ -37,9 +36,8 @@ public class NameMatcherTest {
 
 	@Before
 	public void init() throws Exception {
-//		 InputStream in = this.getClass().getResourceAsStream("/example.tex");
-		InputStream in = new FileInputStream(
-		"/OTHER_DATA/arxiv_papers/1103.2935v1.tex");
+		 InputStream in = this.getClass().getResourceAsStream("/example.tex");
+		
 		getParser().load(in);
 		graph = getParser().getGraph();
 	}
