@@ -37,9 +37,8 @@ public class StructureBuilderTest {
 
 	@Before
 	public void init() throws LexerException, IOException {
-		// InputStream in = this.getClass().getResourceAsStream("/example.tex");
-		InputStream in = new FileInputStream(
-				"/OTHER_DATA/arxiv_papers/1103.2935v1.tex");
+		InputStream in = this.getClass().getResourceAsStream("/example.tex");
+
 		InputStreamReader reader = new InputStreamReader(in, "utf8");
 		this.model = this.treeParser.parseTree(reader);
 		this.model.setDocId("http://arxiv.org/abs/1103.2935v1");
