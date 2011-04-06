@@ -51,8 +51,7 @@ public class LatexParserTest {
 
 	@Before
 	public void init() throws FileNotFoundException {
-//		this.in = this.getClass().getResourceAsStream("/example.tex");
-		this.in = new FileInputStream("/OTHER_DATA/arxiv_papers/BaezDuarte.tex");
+		this.in = this.getClass().getResourceAsStream("/example.tex");
 
 		initializeFileList();
 
