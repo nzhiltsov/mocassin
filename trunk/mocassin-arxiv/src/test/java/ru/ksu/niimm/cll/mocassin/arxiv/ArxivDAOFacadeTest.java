@@ -2,10 +2,14 @@ package ru.ksu.niimm.cll.mocassin.arxiv;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
 import java.util.List;
+import java.util.zip.GZIPInputStream;
 
 import junit.framework.Assert;
 
+import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -48,6 +52,11 @@ public class ArxivDAOFacadeTest {
 		metadata.setId("http://arxiv.org/abs/math/0205003v1");
 		InputStream inputStream = arxivDAOFacade.loadSource(metadata);
 		Assert.assertNotNull(inputStream);
+		StringWriter writer = new StringWriter();
+		IOUtils.copy(inputStream, writer, "utf8");
+		String contents = writer.toString();
+		Assert.assertTrue(contents.contains("A strengthening of the Nyman"));
+		
 		inputStream.close();
 	}
 }
