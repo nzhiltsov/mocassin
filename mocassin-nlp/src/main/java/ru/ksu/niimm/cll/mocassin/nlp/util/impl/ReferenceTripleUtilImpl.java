@@ -20,12 +20,12 @@ public class ReferenceTripleUtilImpl implements ReferenceTripleUtil {
 		for (Reference ref : references) {
 			StructuralElement from = ref.getFrom();
 			StructuralElement to = ref.getTo();
-			triples.add(createTriple("<%s> <%s> <%s>", from.getUri(),
+			triples.add(createTriple("<%s> <%s> <%s> .", from.getUri(),
 					RDFS_TYPE, MocassinOntologyClasses.getUri(from
 							.getPredictedClass())));
-			triples.add(createTriple("<%s> <%s> <%s>", to.getUri(), RDFS_TYPE,
+			triples.add(createTriple("<%s> <%s> <%s> .", to.getUri(), RDFS_TYPE,
 					MocassinOntologyClasses.getUri(to.getPredictedClass())));
-			triples.add(createTriple("<%s> <%s> <%s>", from.getUri(), ref
+			triples.add(createTriple("<%s> <%s> <%s> .", from.getUri(), ref
 					.getPredictedRelation().getUri(), to.getUri()));
 		}
 		return triples;

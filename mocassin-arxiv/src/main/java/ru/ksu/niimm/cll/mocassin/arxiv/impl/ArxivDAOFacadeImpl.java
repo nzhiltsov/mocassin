@@ -12,6 +12,7 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.GZIPInputStream;
 
 import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.arxiv.ArxivDAOFacade;
@@ -98,7 +99,7 @@ public class ArxivDAOFacadeImpl implements ArxivDAOFacade {
 		InputStream inputStream = null;
 		try {
 			URL sourceUrl = new URL(sourceLink);
-			inputStream = loadFromUrl(sourceUrl, TXT_CONTENT_TYPE);
+			inputStream = new GZIPInputStream(loadFromUrl(sourceUrl, TXT_CONTENT_TYPE));
 		} catch (MalformedURLException e) {
 			logger.log(Level.SEVERE, String.format(
 					"failed to prepare source URL from: %s", sourceLink));
