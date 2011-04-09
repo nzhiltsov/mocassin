@@ -1,5 +1,7 @@
 package unittest;
 
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,6 +10,7 @@ import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
 import ru.ksu.niimm.ose.ontology.OntologyResource;
 import ru.ksu.niimm.ose.ontology.OntologyResourceFacade;
+import ru.ksu.niimm.ose.ontology.OntologyTriple;
 import unittest.util.OntologyTestModule;
 
 import com.google.inject.Inject;
@@ -20,7 +23,7 @@ public class OntologyResourceFacadeTest {
 	@Inject
 	private OntologyResourceFacade omdocResourceFacade;
 
-	public OntologyResourceFacade getOmdocResourceFacade() {
+	public OntologyResourceFacade getOntologyResourceFacade() {
 		return omdocResourceFacade;
 	}
 
@@ -28,7 +31,7 @@ public class OntologyResourceFacadeTest {
 	public void testLoadArticleMetadataResource() {
 		OntologyResource resource = new OntologyResource(
 				"http://arxiv.org/abs/math/0205001v1");
-		ArticleMetadata articleMetadata = getOmdocResourceFacade().load(
+		ArticleMetadata articleMetadata = getOntologyResourceFacade().load(
 				resource);
 		Assert.assertEquals("http://arxiv.org/abs/math/0205001v1",
 				articleMetadata.getId());
@@ -42,5 +45,22 @@ public class OntologyResourceFacadeTest {
 	@Test
 	public void testInsertArticleMetadata() {
 		// TODO: add body of the test
+	}
+
+	public void testRetrieveGraph() {
+		List<OntologyTriple> triples = getOntologyResourceFacade()
+				.retrieveStructureGraph(
+						new OntologyResource("http://arxiv.org/abs/1104.1182v1"));
+		boolean found = false;
+		for (OntologyTriple triple : triples) {
+			found = triple.getSubject().getUri().equals(
+					"http://arxiv.org/abs/1104.1182v1/s1459_1")
+					&& triple.getPredicate().getUri().contains("refersTo")
+					&& triple.getObject().getUri().equals(
+							"http://arxiv.org/abs/1104.1182v1/s1373_1");
+			if (found)
+				break;
+		}
+		Assert.assertTrue(found);
 	}
 }

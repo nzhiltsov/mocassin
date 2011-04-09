@@ -1,0 +1,9 @@
+SELECT DISTINCT ?s ?p ?o  {
+?d <http://cll.niimm.ksu.ru/ontologies/mocassin#hasSegment> ?s . 
+?d <http://cll.niimm.ksu.ru/ontologies/mocassin#hasSegment> ?o .
+?s a <http://cll.niimm.ksu.ru/ontologies/mocassin#DocumentSegment> .
+?o a <http://cll.niimm.ksu.ru/ontologies/mocassin#DocumentSegment> .
+?s ?p ?o .
+FILTER (str(?d) = "%s") .
+FILTER (regex(str(?p), "http://cll.niimm.ksu.ru(:8890)?/ontologies/mocassin*")) .
+}

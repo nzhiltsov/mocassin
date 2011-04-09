@@ -8,7 +8,7 @@ import ru.ksu.niimm.cll.mocassin.virtuoso.RDFTriple;
 
 public interface OntologyResourceFacade {
 	/**
-	 * load OMDoc element info for given resource
+	 * load metadata info for an article with a given resource description
 	 * 
 	 * @param resource
 	 *            resource
@@ -17,6 +17,14 @@ public interface OntologyResourceFacade {
 	ArticleMetadata load(OntologyResource resource);
 
 	List<ArticleMetadata> loadAll();
+
+	/**
+	 * load the structure graph for an article with a given resource description
+	 * 
+	 * @param resource
+	 * @return
+	 */
+	List<OntologyTriple> retrieveStructureGraph(OntologyResource resource);
 
 	void insert(ArticleMetadata articleMetadata, Set<RDFTriple> triples);
 
