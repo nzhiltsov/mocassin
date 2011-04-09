@@ -8,6 +8,7 @@ import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.nlp.util.ReferenceTripleUtil;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
+import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFTriple;
 import ru.ksu.niimm.cll.mocassin.virtuoso.impl.RDFTripleImpl;
 
@@ -23,10 +24,17 @@ public class ReferenceTripleUtilImpl implements ReferenceTripleUtil {
 			triples.add(createTriple("<%s> <%s> <%s> .", from.getUri(),
 					RDFS_TYPE, MocassinOntologyClasses.getUri(from
 							.getPredictedClass())));
-			triples.add(createTriple("<%s> <%s> <%s> .", to.getUri(), RDFS_TYPE,
-					MocassinOntologyClasses.getUri(to.getPredictedClass())));
+			triples.add(createTriple("<%s> <%s> <%s> .", to.getUri(),
+					RDFS_TYPE, MocassinOntologyClasses.getUri(to
+							.getPredictedClass())));
 			triples.add(createTriple("<%s> <%s> <%s> .", from.getUri(), ref
 					.getPredictedRelation().getUri(), to.getUri()));
+			triples.add(createTriple("<%s> <%s> <%s> .", ref.getDocument()
+					.getFilename(), MocassinOntologyRelations.HAS_SEGMENT
+					.getUri(), from.getUri()));
+			triples.add(createTriple("<%s> <%s> <%s> .", ref.getDocument()
+					.getFilename(), MocassinOntologyRelations.HAS_SEGMENT
+					.getUri(), to.getUri()));
 		}
 		return triples;
 	}
