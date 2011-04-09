@@ -35,12 +35,15 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 	private static final String RETRIEVED_LINK_TYPE_ELEMENT_KEY = "?3";
 	private static final String RETRIEVED_LINK_HREF_ELEMENT_KEY = "?4";
 	private static final String RETRIEVED_PUBLICATION_URI_ELEMENT_KEY = "?1";
+	private static final String RULES_SET_ENTRY = "define input:inference \"%s\"";
 	@Inject
 	private VirtuosoDAO virtuosoDAO;
 	@Inject
 	private SparqlQueryLoader sparqlQueryLoader;
 
 	private RDFGraph searchGraph;
+
+	private String ontologyRulesSetName;
 
 	@Inject
 	public OntologyResourceFacadeImpl(
@@ -52,6 +55,7 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 		this.searchGraph = new RDFGraphImpl.Builder(graphIri)
 				.url(connectionUrl).username(username).password(password)
 				.build();
+		this.ontologyRulesSetName = ontologyRuleSet;
 	}
 
 	@Override
@@ -66,8 +70,7 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 		List<OntologyTriple> triples = new ArrayList<OntologyTriple>();
 		String documentUri = parseDocumentUri(resource.getUri());
 		String graphQueryString = generateRetrieveStructureGraphQuery(documentUri);
-		Query query = QueryFactory.create(graphQueryString);
-		List<QuerySolution> solutions = getVirtuosoDAO().get(query,
+		List<QuerySolution> solutions = getVirtuosoDAO().get(graphQueryString,
 				getSearchGraph());
 		for (QuerySolution solution : solutions) {
 			String subjectUri = solution.getResource(
@@ -213,7 +216,11 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 	private String generateRetrieveStructureGraphQuery(String documentUri) {
 		String query = getSparqlQueryLoader().loadQueryByName(
 				"GetStructureGraph");
-		return String.format(query, documentUri);
+		StringBuffer sb = new StringBuffer(String.format(RULES_SET_ENTRY,
+				this.ontologyRulesSetName));
+		sb.append("\n");
+		sb.append(String.format(query, documentUri));
+		return sb.toString();
 	}
 
 	private RDFGraph getSearchGraph() {

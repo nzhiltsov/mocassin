@@ -46,11 +46,12 @@ public class OntologyResourceFacadeTest {
 	public void testInsertArticleMetadata() {
 		// TODO: add body of the test
 	}
-
+	@Test
 	public void testRetrieveGraph() {
 		List<OntologyTriple> triples = getOntologyResourceFacade()
 				.retrieveStructureGraph(
 						new OntologyResource("http://arxiv.org/abs/1104.1182v1"));
+		Assert.assertTrue(!triples.isEmpty());
 		boolean found = false;
 		for (OntologyTriple triple : triples) {
 			found = triple.getSubject().getUri().equals(
