@@ -6,6 +6,7 @@ import java.util.List;
 import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.arxiv.Author;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.ArticleInfo;
+import ru.ksu.niimm.cll.mocassin.ui.viewer.client.Graph;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.ViewerService;
 import ru.ksu.niimm.ose.ontology.OntologyResource;
 import ru.ksu.niimm.ose.ontology.OntologyResourceFacade;
@@ -30,6 +31,12 @@ public class ViewerServiceImpl implements ViewerService {
 		}
 		info.setAuthors(authorNames);
 		return info;
+	}
+
+	@Override
+	public Graph retrieveGraph(String uri) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

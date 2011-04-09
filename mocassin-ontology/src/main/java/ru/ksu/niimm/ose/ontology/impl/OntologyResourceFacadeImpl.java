@@ -11,8 +11,11 @@ import ru.ksu.niimm.cll.mocassin.virtuoso.RDFGraph;
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFTriple;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoDAO;
 import ru.ksu.niimm.cll.mocassin.virtuoso.impl.RDFGraphImpl;
+import ru.ksu.niimm.ose.ontology.OntologyConcept;
+import ru.ksu.niimm.ose.ontology.OntologyElement;
 import ru.ksu.niimm.ose.ontology.OntologyResource;
 import ru.ksu.niimm.ose.ontology.OntologyResourceFacade;
+import ru.ksu.niimm.ose.ontology.OntologyTriple;
 import ru.ksu.niimm.ose.ontology.loader.SparqlQueryLoader;
 
 import com.google.inject.Inject;
@@ -23,6 +26,9 @@ import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.rdf.model.Resource;
 
 public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
+	private static final String RETRIEVED_OBJECT_GRAPH_NODE = "?o";
+	private static final String RETRIEVED_PREDICATE_GRAPH_NODE = "?p";
+	private static final String RETRIEVED_SUBJECT_GRAPH_NODE = "?s";
 	private static final String RETRIEVED_TITLE_ELEMENT_KEY = "?3";
 	private static final String DELIMITER = "#";
 	private static final String RETRIEVED_AUTHOR_NAME_ELEMENT_KEY = "?3";
@@ -55,17 +61,28 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 		return load(documentUri);
 	}
 
-	private ArticleMetadata load(String documentUri) {
-		String title = retrieveTitle(documentUri);
-		List<Author> authors = retrieveAuthors(documentUri);
-		List<Link> links = retrieveLinks(documentUri);
-
-		ArticleMetadata articleMetadata = new ArticleMetadata();
-		articleMetadata.setId(documentUri);
-		articleMetadata.setTitle(title);
-		articleMetadata.setAuthors(authors);
-		articleMetadata.setLinks(links);
-		return articleMetadata;
+	@Override
+	public List<OntologyTriple> retrieveStructureGraph(OntologyResource resource) {
+		List<OntologyTriple> triples = new ArrayList<OntologyTriple>();
+		String documentUri = parseDocumentUri(resource.getUri());
+		String graphQueryString = generateRetrieveStructureGraphQuery(documentUri);
+		Query query = QueryFactory.create(graphQueryString);
+		List<QuerySolution> solutions = getVirtuosoDAO().get(query,
+				getSearchGraph());
+		for (QuerySolution solution : solutions) {
+			String subjectUri = solution.getResource(
+					RETRIEVED_SUBJECT_GRAPH_NODE).toString();
+			String predicateUri = solution.getResource(
+					RETRIEVED_PREDICATE_GRAPH_NODE).toString();
+			String objectUri = solution
+					.getResource(RETRIEVED_OBJECT_GRAPH_NODE).toString();
+			// TODO : retrieve titles of segments
+			OntologyTriple triple = new OntologyTriple(new OntologyConcept(
+					subjectUri, ""), new OntologyElement(predicateUri, ""),
+					new OntologyElement(objectUri, ""));
+			triples.add(triple);
+		}
+		return triples;
 	}
 
 	@Override
@@ -85,6 +102,19 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 				.convertToTriples(articleMetadata);
 		triples.addAll(data);
 		getVirtuosoDAO().insert(triples, getSearchGraph());
+	}
+
+	private ArticleMetadata load(String documentUri) {
+		String title = retrieveTitle(documentUri);
+		List<Author> authors = retrieveAuthors(documentUri);
+		List<Link> links = retrieveLinks(documentUri);
+
+		ArticleMetadata articleMetadata = new ArticleMetadata();
+		articleMetadata.setId(documentUri);
+		articleMetadata.setTitle(title);
+		articleMetadata.setAuthors(authors);
+		articleMetadata.setLinks(links);
+		return articleMetadata;
 	}
 
 	private List<String> retrievePublications() {
@@ -178,6 +208,12 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 
 	private String generatePubQuery() {
 		return getSparqlQueryLoader().loadQueryByName("GetPublications");
+	}
+
+	private String generateRetrieveStructureGraphQuery(String documentUri) {
+		String query = getSparqlQueryLoader().loadQueryByName(
+				"GetStructureGraph");
+		return String.format(query, documentUri);
 	}
 
 	private RDFGraph getSearchGraph() {

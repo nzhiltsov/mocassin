@@ -15,17 +15,21 @@ import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsFunction;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
 
-import ru.ksu.niimm.cll.mocassin.ui.viewer.client.GraphStub.DocumentSegment;
+import ru.ksu.niimm.cll.mocassin.ui.viewer.client.Node.NovelCharacterNodeAdapter;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.protovis.PVBehavior2;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.protovis.PVForceLayout;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.protovis.PVLayout;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.protovis.PVNode;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Widget;
 
 public class DocumentStructureGraph extends ProtovisWidget {
+	private final ViewerServiceAsync viewerService = GWT
+	.create(ViewerService.class);
+	
 	private Frame frame;
 
 	public Frame getFrame() {
@@ -41,14 +45,14 @@ public class DocumentStructureGraph extends ProtovisWidget {
 		return this;
 	}
 
-	private void createVisualization(DocumentSegment[] nodes, Link[] links) {
+	private void createVisualization(Node[] nodes, Link[] links) {
 		final PVOrdinalScale colors = PVColors.category19();
 		PVPanel vis = getPVPanel().width(280).height(350).fillStyle("white")
 				.event(PVEventType.MOUSEDOWN, PVBehavior2.pan()).event(
 						"mousewheel", PVBehavior2.zoom());
 
 		PVForceLayout force = vis.add(PVLayout.Force()).nodes(
-				new GraphStub.NovelCharacterNodeAdapter(), nodes).links(links);
+				new NovelCharacterNodeAdapter(), nodes).links(links);
 
 		force.link().add(PV.Line);
 
@@ -61,7 +65,7 @@ public class DocumentStructureGraph extends ProtovisWidget {
 		}).fillStyle(new JsFunction<PVColor>() {
 			public PVColor f(JsArgs args) {
 				PVNode d = args.getObject();
-				PVColor color = colors.fcolor(d.<DocumentSegment> object()
+				PVColor color = colors.fcolor(d.<Node> object()
 						.getType().getCode());
 
 				return color;
@@ -80,7 +84,7 @@ public class DocumentStructureGraph extends ProtovisWidget {
 			public void onEvent(Event e, String pvEventType, JsArgs args) {
 				PVNode d = args.getObject();
 
-				String numPage = Integer.toString(d.<DocumentSegment> object()
+				String numPage = Integer.toString(d.<Node> object()
 						.getNumPage() - 1);
 				getFrame()
 						.setUrl(
@@ -94,11 +98,9 @@ public class DocumentStructureGraph extends ProtovisWidget {
 	protected void onAttach() {
 		super.onAttach();
 		initPVPanel();
+		
 		createVisualization(GraphStub.CHARACTERS, GraphStub.LINKS);
 		getPVPanel().render();
 	}
 
-	public String toString() {
-		return "Arc Diagram";
-	}
 }
