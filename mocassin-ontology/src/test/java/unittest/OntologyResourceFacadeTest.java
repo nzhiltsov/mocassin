@@ -30,12 +30,12 @@ public class OntologyResourceFacadeTest {
 	@Test
 	public void testLoadArticleMetadataResource() {
 		OntologyResource resource = new OntologyResource(
-				"http://arxiv.org/abs/math/0205001v1");
+				"http://arxiv.org/abs/1104.1326v1");
 		ArticleMetadata articleMetadata = getOntologyResourceFacade().load(
 				resource);
-		Assert.assertEquals("http://arxiv.org/abs/math/0205001v1",
+		Assert.assertEquals("http://arxiv.org/abs/1104.1326v1",
 				articleMetadata.getId());
-		boolean titleEquals = "A note on the Gurov-Reshetnyak condition"
+		boolean titleEquals = "On images of Mori dream spaces"
 				.equals(articleMetadata.getTitle());
 
 		Assert.assertTrue(titleEquals);
@@ -50,15 +50,15 @@ public class OntologyResourceFacadeTest {
 	public void testRetrieveGraph() {
 		List<OntologyTriple> triples = getOntologyResourceFacade()
 				.retrieveStructureGraph(
-						new OntologyResource("http://arxiv.org/abs/1104.1182v1"));
+						new OntologyResource("http://arxiv.org/abs/1104.1326v1"));
 		Assert.assertTrue(!triples.isEmpty());
 		boolean found = false;
 		for (OntologyTriple triple : triples) {
 			found = triple.getSubject().getUri().equals(
-					"http://arxiv.org/abs/1104.1182v1/s1459_1")
+					"http://arxiv.org/abs/1104.1326v1/s1918_1")
 					&& triple.getPredicate().getUri().contains("refersTo")
 					&& triple.getObject().getUri().equals(
-							"http://arxiv.org/abs/1104.1182v1/s1373_1");
+							"http://arxiv.org/abs/1104.1326v1/s612_1");
 			if (found)
 				break;
 		}

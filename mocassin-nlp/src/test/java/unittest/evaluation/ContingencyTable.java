@@ -41,8 +41,8 @@ public class ContingencyTable {
 
 	public void put(MocassinOntologyClasses prediction,
 			MocassinOntologyClasses real) {
-		int predIndex = prediction != null ? prediction.ordinal() : n - 1;
-		int realIndex = real != null ? real.ordinal() : n - 1;
+		int predIndex = prediction != MocassinOntologyClasses.UNRECOGNIZED_DOCUMENT_SEGMENT ? prediction.ordinal() : n - 1;
+		int realIndex = real != MocassinOntologyClasses.UNRECOGNIZED_DOCUMENT_SEGMENT ? real.ordinal() : n - 1;
 		matrix[predIndex][realIndex] = matrix[predIndex][realIndex] + 1;
 	}
 
