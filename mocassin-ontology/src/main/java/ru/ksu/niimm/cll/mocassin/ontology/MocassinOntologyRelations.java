@@ -9,20 +9,41 @@ package ru.ksu.niimm.cll.mocassin.ontology;
  */
 public enum MocassinOntologyRelations {
 
-	HAS_PART("http://cll.niimm.ksu.ru/ontologies/mocassin#hasPart"), REFERS_TO(
-			"http://cll.niimm.ksu.ru/ontologies/mocassin#refersTo"), HAS_CONSEQUENCE(
-			"http://cll.niimm.ksu.ru/ontologies/mocassin#hasConsequence"), EXEMPLIFIES(
-			"http://cll.niimm.ksu.ru/ontologies/mocassin#exemplifies"), HAS_SEGMENT(
-			"http://cll.niimm.ksu.ru/ontologies/mocassin#hasSegment");
+	HAS_PART("http://cll.niimm.ksu.ru/ontologies/mocassin#hasPart", 0), REFERS_TO(
+			"http://cll.niimm.ksu.ru/ontologies/mocassin#refersTo", 1), HAS_CONSEQUENCE(
+			"http://cll.niimm.ksu.ru/ontologies/mocassin#hasConsequence", 2), EXEMPLIFIES(
+			"http://cll.niimm.ksu.ru/ontologies/mocassin#exemplifies", 3), HAS_SEGMENT(
+			"http://cll.niimm.ksu.ru/ontologies/mocassin#hasSegment", 4);
 
 	private String uri;
+	/**
+	 * surrogate unique integer code
+	 */
+	private int code;
 
-	private MocassinOntologyRelations(String uri) {
+	private MocassinOntologyRelations(String uri, int code) {
 		this.uri = uri;
+		this.code = code;
+	}
+
+	public int getCode() {
+		return code;
 	}
 
 	public String getUri() {
 		return uri;
+	}
+
+	public static MocassinOntologyRelations fromUri(String uri) {
+		for (MocassinOntologyRelations rel : MocassinOntologyRelations.values()) {
+			if (rel.getUri().equals(uri)) {
+				return rel;
+			}
+		}
+		throw new RuntimeException(
+				String.format(
+						"couldn't find Mocassin Ontology relation with a given URI: %s",
+						uri));
 	}
 
 	public static MocassinOntologyClasses[] getValidRanges(

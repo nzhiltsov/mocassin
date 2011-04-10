@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 
@@ -17,16 +18,26 @@ import com.google.common.collect.Maps;
  * 
  */
 public enum MocassinOntologyClasses {
-	AXIOM("axiom"), CLAIM("claim", "assertion", "statement"), CONJECTURE(
-			"conjecture", "hypothesis"), COROLLARY("corollary"), DEFINITION(
-			"definition"), EQUATION("equation", "equationgroup"), EXAMPLE(
-			"example"), FIGURE("figure"), LEMMA("lemma"), PROOF("proof"), PROPOSITION(
-			"proposition"), REMARK("remark", "note", "comment"), SECTION(
-			"section", "subsection"), THEOREM("theorem");
+	AXIOM(0, "axiom"), CLAIM(1, "claim", "assertion", "statement"), CONJECTURE(
+			2, "conjecture", "hypothesis"), COROLLARY(3, "corollary"), DEFINITION(
+			4, "definition"), EQUATION(5, "equation", "equationgroup"), EXAMPLE(
+			6, "example"), FIGURE(7, "figure"), LEMMA(8, "lemma"), PROOF(9,
+			"proof"), PROPOSITION(10, "proposition"), REMARK(11, "remark",
+			"note", "comment"), SECTION(12, "section", "subsection"), THEOREM(
+			13, "theorem");
 
 	private String[] labels;
+	/**
+	 * surrogate unique integer code
+	 */
+	private int code;
 
-	private static ImmutableMap<MocassinOntologyClasses, String> class2Uri = ImmutableMap
+	private MocassinOntologyClasses(int code, String... labels) {
+		this.code = code;
+		this.labels = labels;
+	}
+
+	private static ImmutableBiMap<MocassinOntologyClasses, String> class2Uri = ImmutableBiMap
 			.<MocassinOntologyClasses, String> builder()
 			.put(AXIOM, "http://cll.niimm.ksu.ru/ontologies/mocassin#Axiom")
 			.put(CLAIM, "http://cll.niimm.ksu.ru/ontologies/mocassin#Claim")
@@ -51,12 +62,12 @@ public enum MocassinOntologyClasses {
 			.put(THEOREM, "http://cll.niimm.ksu.ru/ontologies/mocassin#Theorem")
 			.build();
 
-	private MocassinOntologyClasses(String... labels) {
-		this.labels = labels;
-	}
-
 	public String[] getLabels() {
 		return labels;
+	}
+
+	public int getCode() {
+		return code;
 	}
 
 	public static String getUri(MocassinOntologyClasses clazz) {
@@ -71,7 +82,11 @@ public enum MocassinOntologyClasses {
 		return typeSet;
 	}
 
-	public static MocassinOntologyClasses fromString(String label) {
+	public static MocassinOntologyClasses fromUri(String uri) {
+		return class2Uri.inverse().get(uri);
+	}
+
+	public static MocassinOntologyClasses fromLabel(String label) {
 		for (MocassinOntologyClasses clazz : MocassinOntologyClasses.values()) {
 			List<String> clazzLabels = Arrays.asList(clazz.getLabels());
 			if (clazzLabels.contains(label)) {

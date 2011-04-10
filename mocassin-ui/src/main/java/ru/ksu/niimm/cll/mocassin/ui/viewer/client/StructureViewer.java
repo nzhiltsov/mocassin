@@ -28,11 +28,11 @@ public class StructureViewer implements EntryPoint {
 			return;
 
 		RootPanel rootPanel = RootPanel.get();
-		rootPanel.setSize("1024", "768");
+		rootPanel.setSize("1440", "900");
 
 		VerticalPanel documentPanel = new VerticalPanel();
 		rootPanel.add(documentPanel, 0, 0);
-		documentPanel.setSize("700", "100%");
+		documentPanel.setSize("800", "100%");
 
 		final Frame frame = new Frame("http://docs.google.com/viewer?url="
 				+ pdfUri + "&embedded=true");
@@ -41,8 +41,8 @@ public class StructureViewer implements EntryPoint {
 
 		VerticalPanel structurePanel = new VerticalPanel();
 		structurePanel.setSpacing(5);
-		rootPanel.add(structurePanel, 706, 0);
-		structurePanel.setSize("280px", "100%");
+		rootPanel.add(structurePanel, 806, 0);
+		structurePanel.setSize("500", "100%");
 
 		metadataCaptionPanel = new CaptionPanel();
 		metadataCaptionPanel.setCaptionText("Metadata");
@@ -54,8 +54,8 @@ public class StructureViewer implements EntryPoint {
 				.setCaptionText("Graph of the Document Structure");
 		structurePanel.add(documentStructureGraphPanel);
 
-		DocumentStructureGraph documentStructureGraph = new DocumentStructureGraph();
-		documentStructureGraph.setHeight("350");
+		DocumentStructureGraph documentStructureGraph = new DocumentStructureGraph(resourceUri, pdfUri);
+		documentStructureGraph.setHeight("450");
 		documentStructureGraphPanel.add(documentStructureGraph.asWidget());
 		documentStructureGraph.setFrame(frame);
 
@@ -74,7 +74,7 @@ public class StructureViewer implements EntryPoint {
 			VerticalPanel metadataPanel = new VerticalPanel();
 			metadataPanel.setSpacing(5);
 
-			metadataPanel.setSize("100%", "150");
+			metadataPanel.setSize("100%", "180");
 
 			String key = result.getKey() != null ? result.getKey() : "";
 			Label lblNewLabel = new Label("arXiv:" + key);

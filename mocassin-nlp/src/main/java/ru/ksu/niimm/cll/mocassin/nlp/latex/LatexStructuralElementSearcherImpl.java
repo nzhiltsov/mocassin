@@ -99,7 +99,7 @@ public class LatexStructuralElementSearcherImpl implements
 
 		@Override
 		public StructuralElement apply(Node node) {
-			String uri = String.format("%s/%s", model.getDocId(), node.getId());
+			String uri = String.format("%s/s%s", model.getDocId(), node.getId());
 			StructuralElement element = new StructuralElementImpl.Builder(uri
 					.hashCode()).uri(uri).name(node.getName()).build();
 			List<String> labels = new ArrayList<String>();

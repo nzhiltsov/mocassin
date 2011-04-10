@@ -1,10 +1,14 @@
 package ru.ksu.niimm.cll.mocassin.ui.viewer.client;
 
-public class Graph {
+import java.io.Serializable;
+
+@SuppressWarnings("serial")
+public class Graph implements Serializable {
 	private Node[] nodes;
 	private Link[] links;
+	public Graph() {}
 
-	private Graph(Node[] nodes, Link[] links) {
+	public Graph(Node[] nodes, Link[] links) {
 		this.nodes = nodes;
 		this.links = links;
 	}

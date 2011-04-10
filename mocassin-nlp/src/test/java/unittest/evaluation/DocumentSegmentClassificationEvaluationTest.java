@@ -51,7 +51,7 @@ public class DocumentSegmentClassificationEvaluationTest {
 			String name = reader.get("name");
 			String title = reader.get("title");
 			MocassinOntologyClasses predictedClass = prediction.equals("null") ? null
-					: MocassinOntologyClasses.fromString(prediction);
+					: MocassinOntologyClasses.fromLabel(prediction);
 			int id = Integer.parseInt(reader.get("id"));
 			StructuralElement element = new StructuralElementImpl.Builder(id)
 					.name(name).build();
