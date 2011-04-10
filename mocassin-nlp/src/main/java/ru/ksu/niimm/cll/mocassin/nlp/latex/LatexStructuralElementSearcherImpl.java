@@ -134,9 +134,6 @@ public class LatexStructuralElementSearcherImpl implements
 		public Reference apply(Edge<Node, Node> edge) {
 			StructuralElement from = node2ElementFunction.apply(edge.getFrom());
 			StructuralElement to = node2ElementFunction.apply(edge.getTo());
-			if (from.getPredictedClass() == null
-					|| to.getPredictedClass() == null)
-				return null;
 			Reference ref = new ReferenceImpl.Builder(++count).document(
 					document).from(from).to(to).build();
 			if (edge.getContext().getEdgeType() == EdgeType.CONTAINS) {

@@ -143,7 +143,7 @@ public class DocumentSegmentClassificationEvaluationTest {
 
 	private float writeMeasures(FileWriter writer, int n,
 			MocassinOntologyClasses clazz) throws IOException {
-		int i = clazz != null ? clazz.ordinal() : n - 1;
+		int i = clazz != MocassinOntologyClasses.UNRECOGNIZED_DOCUMENT_SEGMENT ? clazz.ordinal() : n - 1;
 		String clazzString = clazz != null ? clazz.toString() : "other";
 		int rowSum = 0;
 		for (int k = 0; k < n; k++) {

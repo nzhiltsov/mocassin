@@ -109,7 +109,7 @@ public class StructuralElementTypeRecognizerTest {
 		for (StructuralElement element : elements) {
 			MocassinOntologyClasses predictedClass = getStructuralElementTypeRecognizer()
 					.predict(element);
-			if (predictedClass != null) {
+			if (predictedClass != MocassinOntologyClasses.UNRECOGNIZED_DOCUMENT_SEGMENT) {
 				predictedMap.put(element, predictedClass);
 			} else {
 				unpredictedElements.add(element);
