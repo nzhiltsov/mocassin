@@ -8,14 +8,18 @@ import ru.ksu.niimm.cll.mocassin.arxiv.Author;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.ArticleInfo;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.Graph;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.ViewerService;
+import ru.ksu.niimm.cll.mocassin.ui.viewer.server.util.OntologyElementConverter;
 import ru.ksu.niimm.ose.ontology.OntologyResource;
 import ru.ksu.niimm.ose.ontology.OntologyResourceFacade;
+import ru.ksu.niimm.ose.ontology.OntologyTriple;
 
 import com.google.inject.Inject;
 
 public class ViewerServiceImpl implements ViewerService {
 	@Inject
 	private OntologyResourceFacade ontologyResourceFacade;
+	@Inject
+	private OntologyElementConverter ontologyElementConverter;
 
 	@Override
 	public ArticleInfo load(String uri) {
@@ -35,8 +39,9 @@ public class ViewerServiceImpl implements ViewerService {
 
 	@Override
 	public Graph retrieveGraph(String uri) {
-		// TODO Auto-generated method stub
-		return null;
+		List<OntologyTriple> triples = this.ontologyResourceFacade
+				.retrieveStructureGraph(new OntologyResource(uri));
+		return this.ontologyElementConverter.convert(triples);
 	}
 
 }

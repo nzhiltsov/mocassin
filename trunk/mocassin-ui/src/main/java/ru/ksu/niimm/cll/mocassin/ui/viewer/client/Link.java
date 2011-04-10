@@ -1,10 +1,9 @@
 package ru.ksu.niimm.cll.mocassin.ui.viewer.client;
 
-public class Link {
+import java.io.Serializable;
 
-	public enum RelationTypes {
-		PROVES, REFERS_TO, DEPENDS_ON, HAS_CONSEQUENCE
-	}
+@SuppressWarnings("serial")
+public class Link implements Serializable{
 
 	private static final int DEFAULT_VALUE = 1;
 
@@ -14,22 +13,24 @@ public class Link {
 
 	private double value;
 
-	private RelationTypes type;
+	private int typeCode;
+	
+	public Link() {}
 
 	private Link(int source, int target) {
 		this.source = source;
 		this.target = target;
 	}
 
-	public Link(int source, int target, RelationTypes type) {
+	public Link(int source, int target, int type) {
 		this(source, target);
-		this.type = type;
+		this.typeCode = type;
 		this.value = DEFAULT_VALUE;
 	}
 
-	public Link(int source, int target, double value, RelationTypes type) {
+	public Link(int source, int target, double value, int type) {
 		this(source, target);
-		this.type = type;
+		this.typeCode = type;
 		this.value = value;
 	}
 
@@ -45,8 +46,8 @@ public class Link {
 		return value;
 	}
 
-	public RelationTypes getType() {
-		return type;
+	public int getTypeCode() {
+		return typeCode;
 	}
 
 }

@@ -65,7 +65,7 @@ public class StructuralElementTypeRecognizerImpl implements
 			throw new RuntimeException(
 					"list of structural element types is empty");
 		return maxValue >= threshold ? MocassinOntologyClasses
-				.fromString(maxName) : null;
+				.fromLabel(maxName) : null;
 	}
 
 	private SortedMap<String, Float> computeSimilarityVector(String name) {
