@@ -50,7 +50,7 @@ public class DocumentSegmentClassificationEvaluationTest {
 			String prediction = reader.get("prediction");
 			String name = reader.get("name");
 			String title = reader.get("title");
-			MocassinOntologyClasses predictedClass = prediction.equals("null") ? null
+			MocassinOntologyClasses predictedClass = prediction.equals("null") ? MocassinOntologyClasses.UNRECOGNIZED_DOCUMENT_SEGMENT
 					: MocassinOntologyClasses.fromLabel(prediction);
 			int id = Integer.parseInt(reader.get("id"));
 			StructuralElement element = new StructuralElementImpl.Builder(id)
@@ -130,7 +130,7 @@ public class DocumentSegmentClassificationEvaluationTest {
 
 			avgFmeasure += fmeasure;
 		}
-		float fmeasure = writeMeasures(writer, n, null);
+		float fmeasure = writeMeasures(writer, n, MocassinOntologyClasses.UNRECOGNIZED_DOCUMENT_SEGMENT);
 
 		avgFmeasure += fmeasure;
 
@@ -144,7 +144,7 @@ public class DocumentSegmentClassificationEvaluationTest {
 	private float writeMeasures(FileWriter writer, int n,
 			MocassinOntologyClasses clazz) throws IOException {
 		int i = clazz != MocassinOntologyClasses.UNRECOGNIZED_DOCUMENT_SEGMENT ? clazz.ordinal() : n - 1;
-		String clazzString = clazz != null ? clazz.toString() : "other";
+		String clazzString = clazz.toString();
 		int rowSum = 0;
 		for (int k = 0; k < n; k++) {
 			rowSum += table.matrix[i][k];

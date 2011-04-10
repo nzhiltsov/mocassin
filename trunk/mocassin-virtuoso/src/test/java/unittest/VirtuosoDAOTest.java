@@ -61,14 +61,14 @@ public class VirtuosoDAOTest extends AbstractTest {
 	public void testDescribe() {
 		Model model = getVirtuosoDAO()
 				.describe(
-						"<http://arxiv.org/abs/math/0205001v1>",
+						"<http://arxiv.org/abs/1104.1326v1>",
 						getGraph());
 		Graph describeGraph = model.getGraph();
 		ExtendedIterator<Triple> foundIt = describeGraph.find(Node.ANY,
 				Node.ANY, Node.ANY);
 		boolean contains = false;
 		Node subject = Node
-				.createURI("http://arxiv.org/abs/math/0205001v1");
+				.createURI("http://arxiv.org/abs/1104.1326v1");
 		Node predicate = Node.createURI("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
 		Node object = Node
 				.createURI("http://salt.semanticauthoring.org/ontologies/sdo#Publication");
