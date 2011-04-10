@@ -24,7 +24,7 @@ public enum MocassinOntologyClasses {
 			6, "example"), FIGURE(7, "figure"), LEMMA(8, "lemma"), PROOF(9,
 			"proof"), PROPOSITION(10, "proposition"), REMARK(11, "remark",
 			"note", "comment"), SECTION(12, "section", "subsection"), THEOREM(
-			13, "theorem");
+			13, "theorem"), UNRECOGNIZED_DOCUMENT_SEGMENT(14, "");
 
 	private String[] labels;
 	/**
@@ -60,6 +60,7 @@ public enum MocassinOntologyClasses {
 			.put(SECTION,
 					"http://salt.semanticauthoring.org/ontologies/sdo#Section")
 			.put(THEOREM, "http://cll.niimm.ksu.ru/ontologies/mocassin#Theorem")
+			.put(UNRECOGNIZED_DOCUMENT_SEGMENT, "http://cll.niimm.ksu.ru/ontologies/mocassin#DocumentSegment")
 			.build();
 
 	public String[] getLabels() {
