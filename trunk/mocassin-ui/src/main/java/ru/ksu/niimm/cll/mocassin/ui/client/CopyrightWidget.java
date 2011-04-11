@@ -23,7 +23,7 @@ public class CopyrightWidget extends Composite {
 	public CopyrightWidget() {
 		HorizontalPanel panel = uiBinder.createAndBindUi(this);
 		initWidget(panel);
-		message.setHTML(constants.authorName() + "&nbsp;©2010 Mocassin:&nbsp;"
+		message.setHTML(constants.authorName() + "&nbsp;©2010-2011 Mocassin:&nbsp;"
 				+ constants.version());
 	}
 
