@@ -7,12 +7,17 @@ import java.util.Set;
 import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.arxiv.Author;
 import ru.ksu.niimm.cll.mocassin.arxiv.impl.Link;
+import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
+import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFGraph;
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFTriple;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoDAO;
 import ru.ksu.niimm.cll.mocassin.virtuoso.impl.RDFGraphImpl;
+import ru.ksu.niimm.ose.ontology.ABoxTriple;
 import ru.ksu.niimm.ose.ontology.OntologyConcept;
 import ru.ksu.niimm.ose.ontology.OntologyElement;
+import ru.ksu.niimm.ose.ontology.OntologyFacade;
+import ru.ksu.niimm.ose.ontology.OntologyIndividual;
 import ru.ksu.niimm.ose.ontology.OntologyResource;
 import ru.ksu.niimm.ose.ontology.OntologyResourceFacade;
 import ru.ksu.niimm.ose.ontology.OntologyTriple;
@@ -26,6 +31,7 @@ import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.rdf.model.Resource;
 
 public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
+	private static final String RETRIEVED_TYPE = "?t";
 	private static final String RETRIEVED_OBJECT_GRAPH_NODE = "?o";
 	private static final String RETRIEVED_PREDICATE_GRAPH_NODE = "?p";
 	private static final String RETRIEVED_SUBJECT_GRAPH_NODE = "?s";
@@ -40,6 +46,8 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 	private VirtuosoDAO virtuosoDAO;
 	@Inject
 	private SparqlQueryLoader sparqlQueryLoader;
+	@Inject
+	private OntologyFacade ontologyFacade;
 
 	private RDFGraph searchGraph;
 
@@ -66,8 +74,8 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 	}
 
 	@Override
-	public List<OntologyTriple> retrieveStructureGraph(OntologyResource resource) {
-		List<OntologyTriple> triples = new ArrayList<OntologyTriple>();
+	public List<ABoxTriple> retrieveStructureGraph(OntologyResource resource) {
+		List<ABoxTriple> triples = new ArrayList<ABoxTriple>();
 		String documentUri = parseDocumentUri(resource.getUri());
 		String graphQueryString = generateRetrieveStructureGraphQuery(documentUri);
 		List<QuerySolution> solutions = getVirtuosoDAO().get(graphQueryString,
@@ -80,12 +88,30 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 			String objectUri = solution
 					.getResource(RETRIEVED_OBJECT_GRAPH_NODE).toString();
 			// TODO : retrieve titles of segments
-			OntologyTriple triple = new OntologyTriple(new OntologyConcept(
-					subjectUri, ""), new OntologyElement(predicateUri, ""),
-					new OntologyElement(objectUri, ""));
+			MocassinOntologyClasses subjectType = retrieveType(subjectUri);
+			MocassinOntologyClasses objectType = retrieveType(subjectUri);
+			OntologyIndividual subject = new OntologyIndividual(subjectUri, "");
+			subject.setType(subjectType);
+			OntologyIndividual object = new OntologyIndividual(objectUri, "");
+			object.setType(objectType);
+			ABoxTriple triple = new ABoxTriple(subject,
+					MocassinOntologyRelations.fromUri(predicateUri), object);
 			triples.add(triple);
 		}
 		return triples;
+	}
+
+	private MocassinOntologyClasses retrieveType(String uri) {
+		List<MocassinOntologyClasses> classList = new ArrayList<MocassinOntologyClasses>();
+		String typeQuery = generateTypeQuery(uri);
+		List<QuerySolution> solutions = getVirtuosoDAO().get(typeQuery,
+				getSearchGraph());
+		for (QuerySolution solution : solutions) {
+			MocassinOntologyClasses clazz = MocassinOntologyClasses
+					.fromUri(solution.getResource(RETRIEVED_TYPE).toString());
+			classList.add(clazz);
+		}
+		return this.ontologyFacade.getMostSpecific(classList);
 	}
 
 	@Override
@@ -211,6 +237,11 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 
 	private String generatePubQuery() {
 		return getSparqlQueryLoader().loadQueryByName("GetPublications");
+	}
+
+	private String generateTypeQuery(String uri) {
+		String query = getSparqlQueryLoader().loadQueryByName("GetTypes");
+		return String.format(query, uri);
 	}
 
 	private String generateRetrieveStructureGraphQuery(String documentUri) {

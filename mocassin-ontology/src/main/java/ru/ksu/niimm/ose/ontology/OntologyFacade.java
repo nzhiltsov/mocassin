@@ -2,6 +2,8 @@ package ru.ksu.niimm.ose.ontology;
 
 import java.util.List;
 
+import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
+
 public interface OntologyFacade {
 	/**
 	 * receive list of all ontology concepts
@@ -28,5 +30,14 @@ public interface OntologyFacade {
 	 * @return
 	 */
 	List<OntologyConcept> getOntPropertyRangeList(OntologyRelation relation);
+
+	/**
+	 * For a given hierarchy of classes as a list returns the most specific class.
+	 * Throws {@link IllegalArgumentException}, if given classes don't form a
+	 * hierarchy.
+	 * 
+	 * @return
+	 */
+	MocassinOntologyClasses getMostSpecific(List<MocassinOntologyClasses> hierarchy);
 
 }

@@ -1,18 +1,18 @@
 package ru.ksu.niimm.ose.ontology;
 
 public class OntologyTriple {
-	private OntologyConcept subject;
+	private OntologyElement subject;
 	private OntologyElement predicate;
 	private OntologyElement object;
 
-	public OntologyTriple(OntologyConcept subject, OntologyElement predicate,
+	public OntologyTriple(OntologyElement subject, OntologyElement predicate,
 			OntologyElement object) {
 		this.subject = subject;
 		this.predicate = predicate;
 		this.object = object;
 	}
 
-	public OntologyConcept getSubject() {
+	public OntologyElement getSubject() {
 		return subject;
 	}
 

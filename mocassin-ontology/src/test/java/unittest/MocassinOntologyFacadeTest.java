@@ -1,5 +1,6 @@
 package unittest;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
 import ru.ksu.niimm.ose.ontology.OntologyConcept;
 import ru.ksu.niimm.ose.ontology.OntologyFacade;
@@ -19,7 +21,7 @@ import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext( { OntologyTestModule.class, VirtuosoModule.class })
+@GuiceContext({ OntologyTestModule.class, VirtuosoModule.class })
 public class MocassinOntologyFacadeTest {
 	@Inject
 	private OntologyFacade ontologyFacade;
@@ -86,5 +88,16 @@ public class MocassinOntologyFacadeTest {
 		}
 
 		Assert.assertTrue(containsDefinition);
+	}
+
+	@Test
+	public void testGetMostSpecific() {
+
+		List<MocassinOntologyClasses> hierarchy = new ArrayList<MocassinOntologyClasses>();
+		hierarchy.add(MocassinOntologyClasses.UNRECOGNIZED_DOCUMENT_SEGMENT);
+		hierarchy.add(MocassinOntologyClasses.SECTION);
+		MocassinOntologyClasses specificClass = this.ontologyFacade
+				.getMostSpecific(hierarchy);
+		Assert.assertEquals(MocassinOntologyClasses.SECTION, specificClass);
 	}
 }

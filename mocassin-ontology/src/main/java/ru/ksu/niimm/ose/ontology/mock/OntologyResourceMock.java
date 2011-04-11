@@ -8,6 +8,7 @@ import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.arxiv.Author;
 import ru.ksu.niimm.cll.mocassin.arxiv.impl.Link;
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFTriple;
+import ru.ksu.niimm.ose.ontology.ABoxTriple;
 import ru.ksu.niimm.ose.ontology.OntologyResource;
 import ru.ksu.niimm.ose.ontology.OntologyResourceFacade;
 import ru.ksu.niimm.ose.ontology.OntologyTriple;
@@ -34,7 +35,7 @@ public class OntologyResourceMock implements OntologyResourceFacade {
 	}
 
 	@Override
-	public List<OntologyTriple> retrieveStructureGraph(OntologyResource resource) {
+	public List<ABoxTriple> retrieveStructureGraph(OntologyResource resource) {
 		throw new UnsupportedOperationException("this is a mock implementation");
 	}
 

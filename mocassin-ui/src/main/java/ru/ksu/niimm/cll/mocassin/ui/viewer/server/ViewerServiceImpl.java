@@ -9,6 +9,7 @@ import ru.ksu.niimm.cll.mocassin.ui.viewer.client.ArticleInfo;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.Graph;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.ViewerService;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.server.util.OntologyElementConverter;
+import ru.ksu.niimm.ose.ontology.ABoxTriple;
 import ru.ksu.niimm.ose.ontology.OntologyResource;
 import ru.ksu.niimm.ose.ontology.OntologyResourceFacade;
 import ru.ksu.niimm.ose.ontology.OntologyTriple;
@@ -39,7 +40,7 @@ public class ViewerServiceImpl implements ViewerService {
 
 	@Override
 	public Graph retrieveGraph(String uri) {
-		List<OntologyTriple> triples = this.ontologyResourceFacade
+		List<ABoxTriple> triples = this.ontologyResourceFacade
 				.retrieveStructureGraph(new OntologyResource(uri));
 		return this.ontologyElementConverter.convert(triples);
 	}

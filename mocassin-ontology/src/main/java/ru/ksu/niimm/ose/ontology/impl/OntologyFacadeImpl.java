@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.ose.ontology.OntologyConcept;
 import ru.ksu.niimm.ose.ontology.OntologyFacade;
 import ru.ksu.niimm.ose.ontology.OntologyRelation;
@@ -23,7 +24,7 @@ public class OntologyFacadeImpl implements OntologyFacade {
 	private OntologyLoader ontologyLoader;
 
 	private String ontologyUri;
-	
+
 	private String ontologyLabelLocale;
 
 	@Inject
@@ -39,8 +40,7 @@ public class OntologyFacadeImpl implements OntologyFacade {
 	 * @see ru.ksu.niimm.ose.ontology.OMDocOntologyLoader#getClassNamesList()
 	 */
 	public List<OntologyConcept> getOntClassList() {
-		ExtendedIterator<OntClass> iterator = getOmdocOntology()
-				.listNamedClasses();
+		ExtendedIterator<OntClass> iterator = getOntology().listNamedClasses();
 		List<OntologyConcept> classNamesList = new ArrayList<OntologyConcept>();
 		List<OntClass> iteratorAsList = iterator.toList();
 		for (OntClass ontClass : iteratorAsList) {
@@ -55,6 +55,27 @@ public class OntologyFacadeImpl implements OntologyFacade {
 		return classNamesList;
 	}
 
+	@Override
+	public MocassinOntologyClasses getMostSpecific(
+			List<MocassinOntologyClasses> hierarchy) {
+		if (hierarchy.isEmpty())
+			throw new IllegalArgumentException("hierarchy cannon be empty");
+		if (hierarchy.size() == 1)
+			return hierarchy.get(0);
+		int minChildCount = Integer.MAX_VALUE;
+		MocassinOntologyClasses minClass = null;
+		for (MocassinOntologyClasses concept : hierarchy) {
+			OntClass ontClass = getOntology().getOntClass(
+					MocassinOntologyClasses.getUri(concept));
+			int childCount = ontClass.listSubClasses().toSet().size();
+			if (childCount < minChildCount) {
+				minChildCount = childCount;
+				minClass = concept;
+			}
+		}
+		return minClass;
+	}
+
 	private String getLocale() {
 		return this.ontologyLabelLocale;
 	}
@@ -63,7 +84,7 @@ public class OntologyFacadeImpl implements OntologyFacade {
 	public List<OntologyRelation> getOntPropertyList(
 			OntologyConcept ontologyConcept) {
 		String conceptUri = ontologyConcept.getUri();
-		OntClass ontClass = getOmdocOntology().getOntClass(conceptUri);
+		OntClass ontClass = getOntology().getOntClass(conceptUri);
 		ExtendedIterator<OntProperty> propertiesIterator = ontClass
 				.listDeclaredProperties();
 		List<OntologyRelation> relations = new ArrayList<OntologyRelation>();
@@ -111,8 +132,8 @@ public class OntologyFacadeImpl implements OntologyFacade {
 		for (OntClass currentClass : set) {
 			String uri = currentClass.getURI();
 			if (uri != null) {
-				OntologyConcept concept = new OntologyConcept(uri, currentClass
-						.getLabel(getLocale()));
+				OntologyConcept concept = new OntologyConcept(uri,
+						currentClass.getLabel(getLocale()));
 				concepts.add(concept);
 			}
 
@@ -123,13 +144,13 @@ public class OntologyFacadeImpl implements OntologyFacade {
 	private ExtendedIterator<? extends OntResource> getRangeClassesList(
 			OntologyRelation relation) {
 		String uri = relation.getUri();
-		OntProperty ontProperty = getOmdocOntology().getOntProperty(uri);
+		OntProperty ontProperty = getOntology().getOntProperty(uri);
 		ExtendedIterator<? extends OntResource> rangeIterator = ontProperty
 				.listRange();
 		return rangeIterator;
 	}
 
-	public OntModel getOmdocOntology() {
+	public OntModel getOntology() {
 		return getOntologyLoader().getOntology();
 	}
 
