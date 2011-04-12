@@ -2,13 +2,17 @@ package ru.ksu.niimm.cll.mocassin.ui.viewer.client;
 
 import java.io.Serializable;
 
+import ru.ksu.niimm.cll.mocassin.ui.viewer.client.protovis.LinkAdapter;
+
 @SuppressWarnings("serial")
 public class Graph implements Serializable {
 	private Node[] nodes;
-	private Link[] links;
-	public Graph() {}
+	private LinkAdapter[] links;
 
-	public Graph(Node[] nodes, Link[] links) {
+	public Graph() {
+	}
+
+	public Graph(Node[] nodes, LinkAdapter[] links) {
 		this.nodes = nodes;
 		this.links = links;
 	}
@@ -17,9 +21,8 @@ public class Graph implements Serializable {
 		return nodes;
 	}
 
-	public Link[] getLinks() {
+	public LinkAdapter[] getLinks() {
 		return links;
 	}
-	
 
 }
