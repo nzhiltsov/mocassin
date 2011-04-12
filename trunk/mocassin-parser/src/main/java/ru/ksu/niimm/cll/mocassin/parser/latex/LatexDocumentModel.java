@@ -5,6 +5,7 @@ import java.util.List;
 import net.sourceforge.texlipse.model.DocumentReference;
 import net.sourceforge.texlipse.model.OutlineNode;
 import net.sourceforge.texlipse.model.ReferenceEntry;
+import net.sourceforge.texlipse.model.TexCommandEntry;
 
 public class LatexDocumentModel {
 	private OutlineNode documentRoot;
@@ -18,6 +19,8 @@ public class LatexDocumentModel {
 	 * list of labels ordered by their position (beginLine/offset) values
 	 */
 	private List<ReferenceEntry> labels;
+
+	private List<TexCommandEntry> commands;
 
 	public LatexDocumentModel(List<OutlineNode> tree) {
 		this.tree = tree;
@@ -61,6 +64,14 @@ public class LatexDocumentModel {
 
 	public void setDocId(String docId) {
 		this.docId = docId;
+	}
+
+	public List<TexCommandEntry> getCommands() {
+		return commands;
+	}
+
+	public void setCommands(List<TexCommandEntry> commands) {
+		this.commands = commands;
 	}
 
 }
