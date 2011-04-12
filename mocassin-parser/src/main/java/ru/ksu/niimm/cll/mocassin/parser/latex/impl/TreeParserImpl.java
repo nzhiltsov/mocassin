@@ -38,6 +38,7 @@ public class TreeParserImpl implements TreeParser {
 		model.setReferences(references);
 		model.setLabels(getLatexParser().getLabels());
 		model.setDocumentRoot(getLatexParser().getDocumentEnv());
+		model.setCommands(getLatexParser().getCommands());
 		return model;
 	}
 

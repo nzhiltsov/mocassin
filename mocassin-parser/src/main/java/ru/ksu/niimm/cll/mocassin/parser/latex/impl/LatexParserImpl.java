@@ -1,11 +1,20 @@
 package ru.ksu.niimm.cll.mocassin.parser.latex.impl;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.codehaus.swizzle.stream.FixedTokenReplacementInputStream;
+import org.codehaus.swizzle.stream.ReplaceStringInputStream;
 
 import net.sourceforge.texlipse.model.OutlineNode;
 import ru.ksu.niimm.cll.mocassin.parser.Edge;
@@ -100,10 +109,41 @@ public class LatexParserImpl implements Parser {
 	}
 
 	@Override
-	public void load(InputStream inputStream) throws Exception {
-		Reader reader = new InputStreamReader(inputStream);
-		LatexDocumentModel parsedModel = getTreeParser().parseTree(reader);
-		setModel(parsedModel);
+	public void load(final InputStream inputStream) throws Exception {
+
+		final PipedOutputStream out = new PipedOutputStream();
+		PipedInputStream in = new PipedInputStream(out);
+
+		new Thread(new Runnable() {
+			public void run() {
+				try {
+					InputStream replaceInputStream = new ReplaceStringInputStream(
+							inputStream, "\\newtheorem{", "\\newcommand{\\");
+					try {
+						int b;
+						while ((b = replaceInputStream.read()) != -1) {
+							out.write(b);
+						}
+					} finally {
+						out.flush();
+						out.close();
+					}
+
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}).start();
+
+		try {
+			Reader reader = new InputStreamReader(in);
+			LatexDocumentModel parsedModel = getTreeParser().parseTree(reader);
+			setModel(parsedModel);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			in.close();
+		}
 	}
 
 	private LatexDocumentModel getModel() {
