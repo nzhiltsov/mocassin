@@ -39,5 +39,7 @@ public interface OntologyFacade {
 	 * @return
 	 */
 	MocassinOntologyClasses getMostSpecific(List<MocassinOntologyClasses> hierarchy);
+	
+	MocassinOntologyClasses getMoreSpecific(MocassinOntologyClasses first, MocassinOntologyClasses second);
 
 }
