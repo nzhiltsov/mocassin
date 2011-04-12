@@ -1,7 +1,10 @@
-SELECT DISTINCT ?s ?p ?o  {
+SELECT DISTINCT ?sclass ?s ?p ?o ?oclass {
 ?d <http://cll.niimm.ksu.ru/ontologies/mocassin#hasSegment> ?s . 
 ?d <http://cll.niimm.ksu.ru/ontologies/mocassin#hasSegment> ?o .
 ?s ?p ?o .
+?s a ?sclass .
+?o a ?oclass .
 FILTER (STR(?d) = "%s") 
 FILTER (REGEX(STR(?p), 'ontologies/mocassin'))
 }
+ORDER BY ?s ?p ?o

@@ -56,6 +56,19 @@ public class OntologyFacadeImpl implements OntologyFacade {
 	}
 
 	@Override
+	public MocassinOntologyClasses getMoreSpecific(
+			MocassinOntologyClasses first, MocassinOntologyClasses second) {
+		if (first.equals(second))
+			return first;
+		OntClass firstOntClass = getOntology().getOntClass(
+				MocassinOntologyClasses.getUri(first));
+		OntClass secondOntClass = getOntology().getOntClass(
+				MocassinOntologyClasses.getUri(second));
+		return firstOntClass.listSubClasses().toSet().size() < secondOntClass
+				.listSubClasses().toSet().size() ? first : second;
+	}
+
+	@Override
 	public MocassinOntologyClasses getMostSpecific(
 			List<MocassinOntologyClasses> hierarchy) {
 		if (hierarchy.isEmpty())
@@ -132,8 +145,8 @@ public class OntologyFacadeImpl implements OntologyFacade {
 		for (OntClass currentClass : set) {
 			String uri = currentClass.getURI();
 			if (uri != null) {
-				OntologyConcept concept = new OntologyConcept(uri,
-						currentClass.getLabel(getLocale()));
+				OntologyConcept concept = new OntologyConcept(uri, currentClass
+						.getLabel(getLocale()));
 				concepts.add(concept);
 			}
 

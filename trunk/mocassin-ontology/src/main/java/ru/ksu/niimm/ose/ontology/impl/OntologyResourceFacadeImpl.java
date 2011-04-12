@@ -1,6 +1,7 @@
 package ru.ksu.niimm.ose.ontology.impl;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -23,6 +24,7 @@ import ru.ksu.niimm.ose.ontology.OntologyResourceFacade;
 import ru.ksu.niimm.ose.ontology.OntologyTriple;
 import ru.ksu.niimm.ose.ontology.loader.SparqlQueryLoader;
 
+import com.google.common.base.Function;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import com.hp.hpl.jena.query.Query;
@@ -31,6 +33,8 @@ import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.rdf.model.Resource;
 
 public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
+	private static final String RETRIEVED_OBJECT_CLASS = "?oclass";
+	private static final String RETRIEVED_SUBJECT_CLASS = "?sclass";
 	private static final String RETRIEVED_TYPE = "?t";
 	private static final String RETRIEVED_OBJECT_GRAPH_NODE = "?o";
 	private static final String RETRIEVED_PREDICATE_GRAPH_NODE = "?p";
@@ -78,40 +82,41 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 		List<ABoxTriple> triples = new ArrayList<ABoxTriple>();
 		String documentUri = parseDocumentUri(resource.getUri());
 		String graphQueryString = generateRetrieveStructureGraphQuery(documentUri);
-		List<QuerySolution> solutions = getVirtuosoDAO().get(graphQueryString,
-				getSearchGraph());
-		for (QuerySolution solution : solutions) {
-			String subjectUri = solution.getResource(
-					RETRIEVED_SUBJECT_GRAPH_NODE).toString();
-			String predicateUri = solution.getResource(
-					RETRIEVED_PREDICATE_GRAPH_NODE).toString();
-			String objectUri = solution
-					.getResource(RETRIEVED_OBJECT_GRAPH_NODE).toString();
-			// TODO : retrieve titles of segments
-			MocassinOntologyClasses subjectType = retrieveType(subjectUri);
-			MocassinOntologyClasses objectType = retrieveType(subjectUri);
-			OntologyIndividual subject = new OntologyIndividual(subjectUri, "");
-			subject.setType(subjectType);
-			OntologyIndividual object = new OntologyIndividual(objectUri, "");
-			object.setType(objectType);
-			ABoxTriple triple = new ABoxTriple(subject,
-					MocassinOntologyRelations.fromUri(predicateUri), object);
-			triples.add(triple);
-		}
-		return triples;
-	}
+		Iterator<QuerySolution> solutionIt = getVirtuosoDAO().get(
+				graphQueryString, getSearchGraph()).iterator();
+		if (!solutionIt.hasNext())
+			return triples;
+		Function<QuerySolution, ABoxTriple> function = new SolutionFunction();
+		ABoxTriple curTriple = function.apply(solutionIt.next());
 
-	private MocassinOntologyClasses retrieveType(String uri) {
-		List<MocassinOntologyClasses> classList = new ArrayList<MocassinOntologyClasses>();
-		String typeQuery = generateTypeQuery(uri);
-		List<QuerySolution> solutions = getVirtuosoDAO().get(typeQuery,
-				getSearchGraph());
-		for (QuerySolution solution : solutions) {
-			MocassinOntologyClasses clazz = MocassinOntologyClasses
-					.fromUri(solution.getResource(RETRIEVED_TYPE).toString());
-			classList.add(clazz);
+		while (solutionIt.hasNext()) {
+			ABoxTriple aboxTriple = function.apply(solutionIt.next());
+			if (aboxTriple.equals(curTriple)) {
+				MocassinOntologyClasses curSubjectType = curTriple.getSubject()
+						.getType();
+				MocassinOntologyClasses curObjectType = curTriple.getObject()
+						.getType();
+				MocassinOntologyClasses subjectType = aboxTriple.getSubject()
+						.getType();
+				MocassinOntologyClasses objectType = aboxTriple.getObject()
+						.getType();
+				boolean isMoreSpecificSubject = subjectType
+						.equals(this.ontologyFacade.getMoreSpecific(
+								curSubjectType, subjectType));
+				boolean isMoreSpecificObject = objectType
+						.equals(this.ontologyFacade.getMoreSpecific(
+								curObjectType, objectType));
+				if (isMoreSpecificSubject && isMoreSpecificObject) {
+					curTriple = aboxTriple;
+				}
+			} else {
+				triples.add(curTriple);
+				curTriple = aboxTriple;
+			}
 		}
-		return this.ontologyFacade.getMostSpecific(classList);
+		if (!triples.contains(curTriple))
+			triples.add(curTriple);
+		return triples;
 	}
 
 	@Override
@@ -266,4 +271,34 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 		return sparqlQueryLoader;
 	}
 
+	private static class SolutionFunction implements
+			Function<QuerySolution, ABoxTriple> {
+
+		@Override
+		public ABoxTriple apply(QuerySolution solution) {
+			String subjectUri = solution.getResource(
+					RETRIEVED_SUBJECT_GRAPH_NODE).toString();
+			String predicateUri = solution.getResource(
+					RETRIEVED_PREDICATE_GRAPH_NODE).toString();
+			String objectUri = solution
+					.getResource(RETRIEVED_OBJECT_GRAPH_NODE).toString();
+			// TODO : retrieve titles of segments
+			String subjectClass = solution.getResource(RETRIEVED_SUBJECT_CLASS)
+					.toString();
+			String objectClass = solution.getResource(RETRIEVED_OBJECT_CLASS)
+					.toString();
+			MocassinOntologyClasses subjectType = MocassinOntologyClasses
+					.fromUri(subjectClass);
+			MocassinOntologyClasses objectType = MocassinOntologyClasses
+					.fromUri(objectClass);
+			OntologyIndividual subject = new OntologyIndividual(subjectUri, "");
+			subject.setType(subjectType);
+			OntologyIndividual object = new OntologyIndividual(objectUri, "");
+			object.setType(objectType);
+			ABoxTriple triple = new ABoxTriple(subject,
+					MocassinOntologyRelations.fromUri(predicateUri), object);
+			return triple;
+		}
+
+	}
 }
