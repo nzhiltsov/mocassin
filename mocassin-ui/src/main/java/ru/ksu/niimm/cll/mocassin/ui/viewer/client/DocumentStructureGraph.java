@@ -1,12 +1,13 @@
 package ru.ksu.niimm.cll.mocassin.ui.viewer.client;
 
+
+import org.thechiselgroup.choosel.protovis.client.Link;
 import org.thechiselgroup.choosel.protovis.client.PV;
 import org.thechiselgroup.choosel.protovis.client.PVColor;
-import org.thechiselgroup.choosel.protovis.client.PVColors;
 import org.thechiselgroup.choosel.protovis.client.PVDot;
-import org.thechiselgroup.choosel.protovis.client.PVEventHandler;
-import org.thechiselgroup.choosel.protovis.client.PVEventType;
+import org.thechiselgroup.choosel.protovis.client.PVForceLayout;
 import org.thechiselgroup.choosel.protovis.client.PVMark;
+import org.thechiselgroup.choosel.protovis.client.PVNode;
 import org.thechiselgroup.choosel.protovis.client.PVOrdinalScale;
 import org.thechiselgroup.choosel.protovis.client.PVPanel;
 import org.thechiselgroup.choosel.protovis.client.ProtovisWidget;
@@ -16,13 +17,9 @@ import org.thechiselgroup.choosel.protovis.client.jsutil.JsFunction;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
 
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.Node.NovelCharacterNodeAdapter;
-import ru.ksu.niimm.cll.mocassin.ui.viewer.client.protovis.PVBehavior2;
-import ru.ksu.niimm.cll.mocassin.ui.viewer.client.protovis.PVForceLayout;
-import ru.ksu.niimm.cll.mocassin.ui.viewer.client.protovis.PVLayout;
-import ru.ksu.niimm.cll.mocassin.ui.viewer.client.protovis.PVNode;
+import ru.ksu.niimm.cll.mocassin.ui.viewer.client.protovis.LinkAdapter;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Frame;
@@ -35,8 +32,15 @@ public class DocumentStructureGraph extends ProtovisWidget {
 	private Frame frame;
 
 	private String resourceUri;
-	
+
 	private String pdfUri;
+/*
+	private static final PVColor[] code2color = { PV.color("red"),
+			PV.color("orange"), PV.color("fuchsia"), PV.color("teal"),
+			PV.color("navy"), PV.color("gray"), PV.color("purple"),
+			PV.color("maroon"), PV.color("lime"), PV.color("yellow"),
+			PV.color("violet"), PV.color("aqua"), PV.color("blue"), PV.color("green"),
+			PV.color("black") }; */
 
 	public DocumentStructureGraph(String resourceUri, String pdfUri) {
 		super();
@@ -58,50 +62,57 @@ public class DocumentStructureGraph extends ProtovisWidget {
 	}
 
 	private void createVisualization(Node[] nodes, Link[] links) {
-		final PVOrdinalScale colors = PVColors.category19();
 		PVPanel vis = getPVPanel().width(450).height(450).fillStyle("white")
-				.event(PVEventType.MOUSEDOWN, PVBehavior2.pan())
-				.event("mousewheel", PVBehavior2.zoom());
+				.event(PV.Event.MOUSEDOWN, PV.Behavior.pan())
+				.event(PV.Event.MOUSEWHEEL, PV.Behavior.zoom());
 
-		PVForceLayout force = vis.add(PVLayout.Force())
+		PVForceLayout force = vis.add(PV.Layout.Force())
 				.nodes(new NovelCharacterNodeAdapter(), nodes).links(links);
 
 		force.link().add(PV.Line);
 
-		force.node().add(PV.Dot).size(new JsDoubleFunction() {
-			public double f(JsArgs args) {
-				PVNode d = args.getObject();
-				return (20 * d.linkDegree() + 4)
-						* (Math.pow(args.<PVMark> getThis().scale(), -1.5));
-			}
-		}).fillStyle(new JsFunction<PVColor>() {
-			public PVColor f(JsArgs args) {
-				PVNode d = args.getObject();
-				PVColor color = colors.fcolor(d.<Node> object().getNodeType());
+		force.node()
+				.add(PV.Dot)
+				.size(new JsDoubleFunction() {
+					public double f(JsArgs args) {
+						PVNode d = args.getObject();
+						return (20 * d.linkDegree() + 4)
+								* (Math.pow(args.<PVMark> getThis().scale(),
+										-1.5));
+					}
+				})
+				.fillStyle(new JsFunction<PVColor>() {
+					private PVOrdinalScale colors = PV.Colors.category19();
+					public PVColor f(JsArgs args) {
+						PVNode d = args.getObject();
+						if (d.fix()) {
+							return PV.color("brown");
+						}
+						PVColor color = colors.fcolor(d.<Node> object()
+								.getNodeType());
 
-				return color;
-			}
-		}).strokeStyle(new JsFunction<PVColor>() {
-			public PVColor f(JsArgs args) {
-				PVDot _this = args.getThis();
-				return _this.fillStyle().darker();
-			}
-		}).lineWidth(1).title(new JsStringFunction() {
-			public String f(JsArgs args) {
-				PVNode d = args.getObject();
-				return d.nodeName();
-			}
-		}).event("mousedown", new PVEventHandler() {
-			public void onEvent(Event e, String pvEventType, JsArgs args) {
-				PVNode d = args.getObject();
-
-				String numPage = Integer.toString(d.<Node> object()
-						.getNumPage() - 1);
-				getFrame().setUrl(
-						"http://docs.google.com/viewer?url=" + pdfUri
-								+ "&embedded=true#:0.page." + numPage);
-			}
-		});
+						return color;
+					}
+				}).strokeStyle(new JsFunction<PVColor>() {
+					public PVColor f(JsArgs args) {
+						PVDot _this = args.getThis();
+						return _this.fillStyle().darker();
+					}
+				}).lineWidth(1).title(new JsStringFunction() {
+					public String f(JsArgs args) {
+						PVNode d = args.getObject();
+						return d.nodeName();
+					}
+				}).event(PV.Event.MOUSEDOWN, PV.Behavior.drag())
+				.event(PV.Event.DRAG, force);
+		/*
+		 * new PVEventHandler() { public void onEvent(Event e, String
+		 * pvEventType, JsArgs args) { PVNode d = args.getObject();
+		 * 
+		 * String numPage = Integer.toString(d.<Node> object() .getNumPage() -
+		 * 1); getFrame().setUrl( "http://docs.google.com/viewer?url=" + pdfUri
+		 * + "&embedded=true#:0.page." + numPage); }
+		 */
 
 	}
 
@@ -112,7 +123,13 @@ public class DocumentStructureGraph extends ProtovisWidget {
 
 			@Override
 			public void onSuccess(Graph result) {
-				createVisualization(result.getNodes(), result.getLinks());
+				LinkAdapter[] l = result.getLinks();
+				Link[] links = new Link[l.length];
+				for (int i = 0; i < l.length; i++) {
+					links[i] = new Link(l[i].getSource(), l[i].getTarget(),
+							l[i].getValue());
+				}
+				createVisualization(result.getNodes(), links);
 				getPVPanel().render();
 			}
 

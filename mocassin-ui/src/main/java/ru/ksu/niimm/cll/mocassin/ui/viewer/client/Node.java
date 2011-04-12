@@ -2,10 +2,10 @@ package ru.ksu.niimm.cll.mocassin.ui.viewer.client;
 
 import java.io.Serializable;
 
-import ru.ksu.niimm.cll.mocassin.ui.viewer.client.protovis.PVNodeAdapter;
+import org.thechiselgroup.choosel.protovis.client.PVNodeAdapter;
 
 @SuppressWarnings("serial")
-public class Node implements Serializable{
+public class Node implements Serializable {
 	private String uri;
 
 	private String name;
@@ -13,8 +13,9 @@ public class Node implements Serializable{
 	private int nodeType;
 
 	private int numPage;
-	
-	public Node() {}
+
+	public Node() {
+	}
 
 	public Node(String uri, String name, int type, int numPage) {
 		this.uri = uri;
@@ -72,7 +73,7 @@ public class Node implements Serializable{
 		}
 
 		public Object getNodeValue(Node t) {
-			return null;
+			return t.getNodeType();
 		}
 	}
 

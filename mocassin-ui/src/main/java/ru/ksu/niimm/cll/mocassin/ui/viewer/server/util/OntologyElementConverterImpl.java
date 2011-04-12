@@ -5,8 +5,8 @@ import java.util.List;
 
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.Graph;
-import ru.ksu.niimm.cll.mocassin.ui.viewer.client.Link;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.Node;
+import ru.ksu.niimm.cll.mocassin.ui.viewer.client.protovis.LinkAdapter;
 import ru.ksu.niimm.ose.ontology.ABoxTriple;
 import ru.ksu.niimm.ose.ontology.OntologyIndividual;
 
@@ -17,7 +17,7 @@ public class OntologyElementConverterImpl implements OntologyElementConverter {
 	@Override
 	public Graph convert(List<ABoxTriple> triples) {
 		List<Node> nodes = new ArrayList<Node>();
-		Link[] links = new Link[triples.size()];
+		LinkAdapter[] links = new LinkAdapter[triples.size()];
 		int i = 0;
 		for (ABoxTriple triple : triples) {
 			OntologyIndividual subject = triple.getSubject();
@@ -33,8 +33,8 @@ public class OntologyElementConverterImpl implements OntologyElementConverter {
 
 			MocassinOntologyRelations predicate = triple.getPredicate();
 			int predicateCode = predicate.getCode();
-			Link link = new Link(nodes.indexOf(subjectNode),
-					nodes.indexOf(objectNode), predicateCode);
+			LinkAdapter link = new LinkAdapter(nodes.indexOf(subjectNode),
+					nodes.indexOf(objectNode), 1, predicateCode);
 			links[i] = link;
 			i++;
 		}
