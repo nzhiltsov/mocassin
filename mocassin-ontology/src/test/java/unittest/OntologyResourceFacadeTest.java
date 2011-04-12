@@ -10,6 +10,7 @@ import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
 import ru.ksu.niimm.ose.ontology.ABoxTriple;
+import ru.ksu.niimm.ose.ontology.OntologyModule;
 import ru.ksu.niimm.ose.ontology.OntologyResource;
 import ru.ksu.niimm.ose.ontology.OntologyResourceFacade;
 import ru.ksu.niimm.ose.ontology.OntologyTriple;
@@ -20,7 +21,7 @@ import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext({ OntologyTestModule.class, VirtuosoModule.class })
+@GuiceContext({ OntologyModule.class, VirtuosoModule.class })
 public class OntologyResourceFacadeTest {
 	@Inject
 	private OntologyResourceFacade omdocResourceFacade;
