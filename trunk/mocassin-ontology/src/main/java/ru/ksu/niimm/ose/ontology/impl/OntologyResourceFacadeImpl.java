@@ -35,7 +35,6 @@ import com.hp.hpl.jena.rdf.model.Resource;
 public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 	private static final String RETRIEVED_OBJECT_CLASS = "?oclass";
 	private static final String RETRIEVED_SUBJECT_CLASS = "?sclass";
-	private static final String RETRIEVED_TYPE = "?t";
 	private static final String RETRIEVED_OBJECT_GRAPH_NODE = "?o";
 	private static final String RETRIEVED_PREDICATE_GRAPH_NODE = "?p";
 	private static final String RETRIEVED_SUBJECT_GRAPH_NODE = "?s";
