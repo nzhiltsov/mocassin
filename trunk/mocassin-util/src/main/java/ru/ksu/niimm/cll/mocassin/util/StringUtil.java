@@ -38,4 +38,7 @@ public class StringUtil {
 		return String.format("_:bnode%d", new UID().hashCode());
 	}
 
+	public static String takeoutMarkup(String str) {
+		return str.replaceAll("\\\\[a-z]+", "").trim();
+	}
 }
