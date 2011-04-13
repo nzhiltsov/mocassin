@@ -12,9 +12,9 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.google.inject.Inject;
-
 import ru.ksu.niimm.ose.ontology.loader.SparqlQueryLoader;
+
+import com.google.inject.Inject;
 
 public class SparqlQueryLoaderImpl implements SparqlQueryLoader {
 	private Logger logger;

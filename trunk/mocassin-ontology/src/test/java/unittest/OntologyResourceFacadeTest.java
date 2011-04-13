@@ -13,8 +13,6 @@ import ru.ksu.niimm.ose.ontology.ABoxTriple;
 import ru.ksu.niimm.ose.ontology.OntologyModule;
 import ru.ksu.niimm.ose.ontology.OntologyResource;
 import ru.ksu.niimm.ose.ontology.OntologyResourceFacade;
-import ru.ksu.niimm.ose.ontology.OntologyTriple;
-import unittest.util.OntologyTestModule;
 
 import com.google.inject.Inject;
 import com.mycila.testing.junit.MycilaJunitRunner;

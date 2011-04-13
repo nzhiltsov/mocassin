@@ -8,7 +8,6 @@ import org.junit.Test;
 import ru.ksu.niimm.cll.mocassin.parser.Edge;
 import ru.ksu.niimm.cll.mocassin.parser.EdgeType;
 import ru.ksu.niimm.cll.mocassin.parser.Node;
-import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
@@ -17,7 +16,7 @@ public class ImportantNodeServiceTest extends AbstractRankingTest {
 
 	@Test
 	public void testComputeRanks() {
-		for (LatexDocumentModel model : getModels()) {
+		for (List<Edge<Node, Node>> model : getModels()) {
 			Map<Node, Float> node2score = computeNodeRanks(model);
 			printScores(node2score);
 		}
@@ -31,9 +30,7 @@ public class ImportantNodeServiceTest extends AbstractRankingTest {
 	 * @param documentModel
 	 * @return
 	 */
-	protected Map<Node, Float> computeNodeRanks(LatexDocumentModel documentModel) {
-		List<Edge<Node, Node>> edges = getStructureAnalyzer().analyze(
-				documentModel);
+	protected Map<Node, Float> computeNodeRanks(List<Edge<Node, Node>> edges) {
 		Predicate<Edge<Node, Node>> predicate = new Predicate<Edge<Node, Node>>() {
 
 			@Override

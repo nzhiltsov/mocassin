@@ -15,13 +15,10 @@ import ru.ksu.niimm.cll.mocassin.virtuoso.RDFTriple;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoDAO;
 import ru.ksu.niimm.cll.mocassin.virtuoso.impl.RDFGraphImpl;
 import ru.ksu.niimm.ose.ontology.ABoxTriple;
-import ru.ksu.niimm.ose.ontology.OntologyConcept;
-import ru.ksu.niimm.ose.ontology.OntologyElement;
 import ru.ksu.niimm.ose.ontology.OntologyFacade;
 import ru.ksu.niimm.ose.ontology.OntologyIndividual;
 import ru.ksu.niimm.ose.ontology.OntologyResource;
 import ru.ksu.niimm.ose.ontology.OntologyResourceFacade;
-import ru.ksu.niimm.ose.ontology.OntologyTriple;
 import ru.ksu.niimm.ose.ontology.loader.SparqlQueryLoader;
 
 import com.google.common.base.Function;

@@ -11,7 +11,6 @@ import ru.ksu.niimm.cll.mocassin.virtuoso.RDFTriple;
 import ru.ksu.niimm.ose.ontology.ABoxTriple;
 import ru.ksu.niimm.ose.ontology.OntologyResource;
 import ru.ksu.niimm.ose.ontology.OntologyResourceFacade;
-import ru.ksu.niimm.ose.ontology.OntologyTriple;
 
 public class OntologyResourceMock implements OntologyResourceFacade {
 

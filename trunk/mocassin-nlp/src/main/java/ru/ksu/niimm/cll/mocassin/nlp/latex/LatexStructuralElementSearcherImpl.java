@@ -1,12 +1,9 @@
 package ru.ksu.niimm.cll.mocassin.nlp.latex;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sourceforge.texlipse.texparser.lexer.LexerException;
 import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
@@ -19,9 +16,7 @@ import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
 import ru.ksu.niimm.cll.mocassin.parser.Edge;
 import ru.ksu.niimm.cll.mocassin.parser.EdgeType;
 import ru.ksu.niimm.cll.mocassin.parser.Node;
-import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
-import ru.ksu.niimm.cll.mocassin.parser.latex.TreeParser;
-import ru.ksu.niimm.cll.mocassin.parser.latex.builder.Builder;
+import ru.ksu.niimm.cll.mocassin.parser.latex.builder.StructureBuilder;
 import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
 
 import com.google.common.base.Function;
@@ -31,24 +26,20 @@ import com.google.inject.Inject;
 public class LatexStructuralElementSearcherImpl implements
 		LatexStructuralElementSearcher {
 	@Inject
-	private Builder structureAnalyzer;
-	@Inject
-	private TreeParser treeParser;
+	private StructureBuilder structureBuilder;
 	@Inject
 	private StructuralElementTypeRecognizer structuralElementTypeRecognizer;
 
 	private List<Edge<Node, Node>> edges;
 
-	private LatexDocumentModel model;
+	private ParsedDocument parsedDocument;
 
 	@Override
 	public void parse(InputStream stream, ParsedDocument parsedDocument)
 			throws LatexSearcherParseException {
+		this.parsedDocument = parsedDocument;
 		try {
-			InputStreamReader reader = new InputStreamReader(stream, "utf8");
-			this.model = this.treeParser.parseTree(reader);
-			this.model.setDocId(parsedDocument.getFilename());
-			this.edges = this.structureAnalyzer.analyze(model);
+			this.edges = this.structureBuilder.buildStructureGraph(stream);
 		} catch (Exception e) {
 			throw new LatexSearcherParseException(e.getCause());
 		}
@@ -99,7 +90,8 @@ public class LatexStructuralElementSearcherImpl implements
 
 		@Override
 		public StructuralElement apply(Node node) {
-			String uri = String.format("%s/s%s", model.getDocId(), node.getId());
+			String uri = String.format("%s/s%s", parsedDocument.getFilename(),
+					node.getId());
 			StructuralElement element = new StructuralElementImpl.Builder(uri
 					.hashCode()).uri(uri).name(node.getName()).build();
 			List<String> labels = new ArrayList<String>();

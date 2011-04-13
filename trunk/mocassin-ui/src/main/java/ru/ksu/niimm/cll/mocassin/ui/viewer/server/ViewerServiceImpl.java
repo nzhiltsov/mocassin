@@ -12,7 +12,6 @@ import ru.ksu.niimm.cll.mocassin.ui.viewer.server.util.OntologyElementConverter;
 import ru.ksu.niimm.ose.ontology.ABoxTriple;
 import ru.ksu.niimm.ose.ontology.OntologyResource;
 import ru.ksu.niimm.ose.ontology.OntologyResourceFacade;
-import ru.ksu.niimm.ose.ontology.OntologyTriple;
 
 import com.google.inject.Inject;
 

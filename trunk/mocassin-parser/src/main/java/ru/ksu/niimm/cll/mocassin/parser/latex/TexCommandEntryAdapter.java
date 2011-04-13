@@ -1,10 +1,10 @@
 package ru.ksu.niimm.cll.mocassin.parser.latex;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-
 import net.sourceforge.texlipse.model.TexCommandEntry;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
+
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
 
 public class TexCommandEntryAdapter {
 	private TexCommandEntry entry;

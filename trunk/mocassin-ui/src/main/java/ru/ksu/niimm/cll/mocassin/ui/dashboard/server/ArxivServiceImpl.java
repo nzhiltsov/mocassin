@@ -1,14 +1,10 @@
 package ru.ksu.niimm.cll.mocassin.ui.dashboard.server;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import net.sourceforge.texlipse.texparser.lexer.LexerException;
 
 import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.arxiv.ArxivDAOFacade;
