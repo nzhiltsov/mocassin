@@ -2,8 +2,6 @@ package ru.ksu.niimm.cll.mocassin.parser.arxmliv;
 
 import java.io.InputStream;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Stack;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -24,7 +22,6 @@ import ru.ksu.niimm.cll.mocassin.parser.Edge;
 import ru.ksu.niimm.cll.mocassin.parser.EdgeContext;
 import ru.ksu.niimm.cll.mocassin.parser.EdgeType;
 import ru.ksu.niimm.cll.mocassin.parser.Node;
-import ru.ksu.niimm.cll.mocassin.parser.Parser;
 import ru.ksu.niimm.cll.mocassin.parser.arxmliv.xpath.XPathSearcher;
 import ru.ksu.niimm.cll.mocassin.parser.arxmliv.xpath.impl.ArxmlivFormatConstants;
 import ru.ksu.niimm.cll.mocassin.parser.arxmliv.xpath.impl.ArxmlivStructureElementTypes;
@@ -34,7 +31,8 @@ import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl;
 
 import com.google.inject.Inject;
 
-public class ArxmlivParserImpl implements Parser {
+@Deprecated
+public class ArxmlivParserImpl {
 
 	private DocumentBuilder documentBuilder;
 	@Inject
@@ -51,38 +49,6 @@ public class ArxmlivParserImpl implements Parser {
 		this.documentBuilder = factory.newDocumentBuilder();
 	}
 
-	@Override
-	public List<Edge<Node, Node>> getGraph() throws Exception {
-		List<Edge<Node, Node>> graph = new ArrayList<Edge<Node, Node>>();
-		for (int i = 0; i < getReferenceNodes().getLength(); i++) {
-			org.w3c.dom.Node refNode = getReferenceNodes().item(i);
-			org.w3c.dom.Node labelAttr = refNode.getAttributes().getNamedItem(
-					ArxmlivFormatConstants.LABEL_REF_ATTRIBUTE_NAME);
-			org.w3c.dom.Node toNode = findStructureNodeByLabel(labelAttr
-					.getTextContent());
-			if (toNode == null)
-				continue;
-			org.w3c.dom.Node fromNode = findEnclosingStructureNode(refNode);
-			if (fromNode == null)
-				continue;
-			Edge<Node, Node> edge = createEdge(fromNode, toNode, refNode);
-			graph.add(edge);
-		}
-		return graph;
-	}
-
-	@Override
-	public List<Node> getNodes() {
-		List<Node> nodes = new ArrayList<Node>();
-		for (int i = 0; i < getStructureNodes().getLength(); i++) {
-			org.w3c.dom.Node node = getStructureNodes().item(i);
-			Node graphNode = convertNode(node);
-			nodes.add(graphNode);
-		}
-		return nodes;
-	}
-
-	@Override
 	public void load(InputStream inputStream) throws Exception {
 		Document doc = getDocumentBuilder().parse(inputStream);
 		this.structureNodes = getXpathSearcher().findStructureNodes(doc);

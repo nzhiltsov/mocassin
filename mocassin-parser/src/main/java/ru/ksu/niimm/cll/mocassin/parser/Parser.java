@@ -1,7 +1,8 @@
 package ru.ksu.niimm.cll.mocassin.parser;
 
 import java.io.InputStream;
-import java.util.List;
+
+import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
 
 /**
  * Parser that analyzes a document and build the graph model for that
@@ -10,9 +11,5 @@ import java.util.List;
  * 
  */
 public interface Parser {
-	void load(InputStream inputStream) throws Exception;
-
-	List<Edge<Node, Node>> getGraph() throws Exception;
-
-	List<Node> getNodes();
+	LatexDocumentModel parse(InputStream inputStream);
 }

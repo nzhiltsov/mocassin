@@ -3,12 +3,9 @@ package ru.ksu.niimm.cll.mocassin.ontology;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import com.google.common.collect.ImmutableBiMap;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 
 /**
  * Mocassin Ontology classes with their synonyms and classes imported from SALT

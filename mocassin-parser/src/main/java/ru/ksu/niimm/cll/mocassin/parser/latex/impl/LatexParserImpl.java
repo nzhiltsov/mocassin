@@ -3,116 +3,52 @@ package ru.ksu.niimm.cll.mocassin.parser.latex.impl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
+import java.io.PushbackReader;
 import java.io.Reader;
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.output.ByteArrayOutputStream;
-import org.codehaus.swizzle.stream.FixedTokenReplacementInputStream;
+import net.sourceforge.texlipse.model.DocumentReference;
+import net.sourceforge.texlipse.model.TexCommandEntry;
+import net.sourceforge.texlipse.texparser.LatexLexer;
+import net.sourceforge.texlipse.texparser.LatexParser;
+import net.sourceforge.texlipse.texparser.lexer.LexerException;
+
 import org.codehaus.swizzle.stream.ReplaceStringInputStream;
 
-import net.sourceforge.texlipse.model.OutlineNode;
-import ru.ksu.niimm.cll.mocassin.parser.Edge;
-import ru.ksu.niimm.cll.mocassin.parser.Node;
 import ru.ksu.niimm.cll.mocassin.parser.Parser;
-import ru.ksu.niimm.cll.mocassin.parser.arxmliv.xpath.impl.ArxmlivStructureElementTypes;
-import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
-import ru.ksu.niimm.cll.mocassin.parser.latex.TreeParser;
-import ru.ksu.niimm.cll.mocassin.parser.latex.builder.Builder;
-import ru.ksu.niimm.cll.mocassin.parser.latex.builder.BuildersProvider;
+import ru.ksu.niimm.cll.mocassin.parser.latex.TexCommandEntryAdapter;
 
 import com.google.inject.Inject;
 
 public class LatexParserImpl implements Parser {
 	@Inject
-	private TreeParser treeParser;
-	@Inject
-	private BuildersProvider analyzersProvider;
+	private Logger logger;
 
-	private LatexDocumentModel model;
+	private LatexParser latexParser = new LatexParser();
 
-	@Override
-	public List<Edge<Node, Node>> getGraph() {
-		List<Edge<Node, Node>> graph = new ArrayList<Edge<Node, Node>>();
-		for (Builder analyzer : getAnalyzers()) {
-			List<Edge<Node, Node>> edges = analyzer.analyze(getModel());
-			merge(graph, edges);
-		}
-		return graph;
-	}
+	private LatexLexer latexLexer;
 
 	@Override
-	public List<Node> getNodes() {
-		List<Node> graphNodes = new ArrayList<Node>();
-
-		List<OutlineNode> tree = getModel().getTree();
-
-		LinkedList<OutlineNode> queue = new LinkedList<OutlineNode>();
-		queue.addAll(tree);
-		while (!queue.isEmpty()) {
-			OutlineNode node = queue.pop();
-			if (node.getType() == OutlineNode.TYPE_LABEL)
-				continue;
-			String nodeId = String.format("%d:%d", node.getBeginLine(), node
-					.getOffsetOnLine());
-
-			String treeNodeName = generateNodeName(node);
-
-			Node treeNode = new NodeImpl(nodeId, treeNodeName);
-			if (!graphNodes.contains(treeNode)) {
-				graphNodes.add(treeNode);
-			}
-
-			ArrayList<OutlineNode> children = node.getChildren();
-
-			if (children != null) {
-
-				for (OutlineNode child : children) {
-					queue.add(child);
-				}
-			}
-		}
-		return graphNodes;
-	}
-
-	private String generateNodeName(OutlineNode node) {
-		String treeNodeName;
-		switch (node.getType()) {
-		case OutlineNode.TYPE_SECTION:
-			treeNodeName = ArxmlivStructureElementTypes.SECTION.toString();
-			break;
-		case OutlineNode.TYPE_SUBSECTION:
-			treeNodeName = ArxmlivStructureElementTypes.SUBSECTION.toString();
-			break;
-		default:
-			treeNodeName = node.getName();
-		}
-		return treeNodeName;
-	}
-
-	/**
-	 * merge graph with given edges list
-	 * 
-	 * @param graph
-	 * @param edges
-	 */
-	private void merge(List<Edge<Node, Node>> graph,
-			List<Edge<Node, Node>> edges) {
-		// TODO : implement merge process
-		graph.addAll(edges);
-	}
-
-	@Override
-	public void load(final InputStream inputStream) throws Exception {
+	public LatexDocumentModel parse(final InputStream inputStream) {
 
 		final PipedOutputStream out = new PipedOutputStream();
-		PipedInputStream in = new PipedInputStream(out);
+		PipedInputStream in = null;
+		try {
+			in = new PipedInputStream(out);
+		} catch (IOException error) {
+			logger.log(Level.SEVERE,
+					"failed to create a piped input stream due to"
+							+ error.getMessage());
+			return null;
+		}
 
 		new Thread(new Runnable() {
 			public void run() {
@@ -130,40 +66,79 @@ public class LatexParserImpl implements Parser {
 					}
 
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.log(Level.SEVERE,
+							"failed to replace strings in a stream due to:"
+									+ e.getMessage());
 				}
 			}
 		}).start();
 
 		try {
 			Reader reader = new InputStreamReader(in);
-			LatexDocumentModel parsedModel = getTreeParser().parseTree(reader);
-			setModel(parsedModel);
+			LatexDocumentModel parsedModel = parseTree(reader);
+			if (in != null)
+				in.close();
+			return parsedModel;
 		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			in.close();
+			logger.log(Level.SEVERE, "failed to parse a document model due to:"
+					+ e.getMessage());
+			return null;
 		}
 	}
 
-	private LatexDocumentModel getModel() {
+	private LatexDocumentModel parseTree(Reader reader) throws LexerException,
+			IOException {
+		PushbackReader in = new PushbackReader(reader, 1024);
+		setLatexLexer(new LatexLexer(in));
+
+		getLatexParser().parse(getLatexLexer(), false);
+
+		LatexDocumentModel model = fillModel();
+
 		return model;
 	}
 
-	private void setModel(LatexDocumentModel model) {
-		this.model = model;
+	private LatexDocumentModel fillModel() {
+		List<DocumentReference> references = getLatexParser().getRefs();
+		Collections.sort(references, new DocumentReferenceComparator());
+		LatexDocumentModel model = new LatexDocumentModel(getLatexParser()
+				.getOutlineTree());
+		model.setReferences(references);
+		model.setLabels(getLatexParser().getLabels());
+		model.setDocumentRoot(getLatexParser().getDocumentEnv());
+
+		List<TexCommandEntry> entries = getLatexParser().getCommands();
+		List<TexCommandEntryAdapter> commands = new ArrayList<TexCommandEntryAdapter>();
+		for (TexCommandEntry entry : entries) {
+			commands.add(new TexCommandEntryAdapter(entry));
+		}
+		model.setCommands(commands);
+		return model;
 	}
 
-	private TreeParser getTreeParser() {
-		return treeParser;
+	private LatexParser getLatexParser() {
+		return latexParser;
 	}
 
-	private BuildersProvider getAnalyzersProvider() {
-		return analyzersProvider;
+	private LatexLexer getLatexLexer() {
+		return latexLexer;
 	}
 
-	public List<Builder> getAnalyzers() {
-		return getAnalyzersProvider().get();
+	private void setLatexLexer(LatexLexer latexLexer) {
+		this.latexLexer = latexLexer;
+	}
+
+	private class DocumentReferenceComparator implements
+			Comparator<DocumentReference> {
+
+		@Override
+		public int compare(DocumentReference firstRef,
+				DocumentReference secondRef) {
+			if (firstRef == null || secondRef == null)
+				return 0;
+			return firstRef.getKey().compareTo(secondRef.getKey());
+		}
+
 	}
 
 }

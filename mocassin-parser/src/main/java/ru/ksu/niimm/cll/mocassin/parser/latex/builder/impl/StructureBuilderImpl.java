@@ -1,9 +1,12 @@
 package ru.ksu.niimm.cll.mocassin.parser.latex.builder.impl;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import net.sourceforge.texlipse.model.DocumentReference;
 import net.sourceforge.texlipse.model.OutlineNode;
@@ -12,11 +15,16 @@ import ru.ksu.niimm.cll.mocassin.parser.Edge;
 import ru.ksu.niimm.cll.mocassin.parser.EdgeContext;
 import ru.ksu.niimm.cll.mocassin.parser.EdgeType;
 import ru.ksu.niimm.cll.mocassin.parser.Node;
+import ru.ksu.niimm.cll.mocassin.parser.Parser;
 import ru.ksu.niimm.cll.mocassin.parser.impl.EdgeContextImpl;
 import ru.ksu.niimm.cll.mocassin.parser.impl.EdgeImpl;
 import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
-import ru.ksu.niimm.cll.mocassin.parser.latex.builder.Builder;
+import ru.ksu.niimm.cll.mocassin.parser.latex.TexCommandEntryAdapter;
+import ru.ksu.niimm.cll.mocassin.parser.latex.builder.StructureBuilder;
+
+import com.google.common.collect.Iterables;
+import com.google.inject.Inject;
 
 /**
  * Analyzer that builds graph with labels/references and containment relations
@@ -25,7 +33,12 @@ import ru.ksu.niimm.cll.mocassin.parser.latex.builder.Builder;
  * @author nzhiltsov
  * 
  */
-public class StructureBuilder implements Builder {
+public class StructureBuilderImpl implements StructureBuilder {
+	@Inject
+	private Logger logger;
+	@Inject
+	private Parser parser;
+
 	private static final String NODE_ID_FORMAT = "%d_%d";
 	private LatexDocumentModel model;
 
@@ -37,10 +50,16 @@ public class StructureBuilder implements Builder {
 	 * .ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel)
 	 */
 	@Override
-	public List<Edge<Node, Node>> analyze(LatexDocumentModel model) {
-		prepareAnalysis(model);
-
+	public List<Edge<Node, Node>> buildStructureGraph(InputStream inputStream) {
 		List<Edge<Node, Node>> edges = new ArrayList<Edge<Node, Node>>();
+		LatexDocumentModel parsedModel = this.parser.parse(inputStream);
+		if (parsedModel == null) {
+			logger
+					.log(Level.SEVERE,
+							"The parsed model is null. An empty graph will be returned");
+			return edges;
+		}
+		setModel(parsedModel);
 
 		Stack<OutlineNode> stack = new Stack<OutlineNode>();
 		List<OutlineNode> tree = getModel().getTree();
@@ -110,6 +129,12 @@ public class StructureBuilder implements Builder {
 			nodeName = "subsubsection";
 		} else {
 			nodeName = toNode.getName();
+			TexCommandEntryAdapter foundCommand = Iterables.find(getModel()
+					.getCommands(), new TexCommandEntryAdapter.KeyPredicate(
+					nodeName), null);
+			if (foundCommand != null) {
+				nodeName = foundCommand.getTitle();
+			}
 		}
 		return nodeName;
 	}
@@ -205,10 +230,6 @@ public class StructureBuilder implements Builder {
 			return documentRoot;
 		}
 		return null; // then the reference is outer
-	}
-
-	private void prepareAnalysis(LatexDocumentModel model) {
-		setModel(model);
 	}
 
 	private List<DocumentReference> getReferencesForLabel(OutlineNode child) {

@@ -2,7 +2,6 @@ package unittest;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -21,11 +20,10 @@ import org.junit.runner.RunWith;
 import ru.ksu.niimm.cll.mocassin.analyzer.AnalyzerModule;
 import ru.ksu.niimm.cll.mocassin.analyzer.importance.ImportantNodeService;
 import ru.ksu.niimm.cll.mocassin.nlp.NlpModule;
+import ru.ksu.niimm.cll.mocassin.parser.Edge;
 import ru.ksu.niimm.cll.mocassin.parser.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.parser.Node;
-import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
-import ru.ksu.niimm.cll.mocassin.parser.latex.TreeParser;
-import ru.ksu.niimm.cll.mocassin.parser.latex.builder.Builder;
+import ru.ksu.niimm.cll.mocassin.parser.latex.builder.StructureBuilder;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
 import ru.ksu.niimm.ose.ontology.OntologyModule;
 
@@ -39,21 +37,17 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 @Ignore
 public class AbstractRankingTest {
 	@Inject
-	private Builder structureAnalyzer;
+	private StructureBuilder structureBuilder;
 	@Inject
 	private ImportantNodeService importantNodeService;
-	@Inject
-	private TreeParser treeParser;
 
-	private List<LatexDocumentModel> models = new LinkedList<LatexDocumentModel>();
+	private List<List<Edge<Node, Node>>> models = new LinkedList<List<Edge<Node, Node>>>();
 
 	@Before
 	public void init() throws LexerException, IOException {
 		InputStream in = this.getClass().getResourceAsStream("/example.tex");
-		InputStreamReader reader = new InputStreamReader(in, "utf8");
-		LatexDocumentModel model = this.treeParser.parseTree(reader);
-		model.setDocId("example.tex");
-		this.models.add(model);
+
+		this.models.add(this.structureBuilder.buildStructureGraph(in));
 
 	}
 
@@ -83,19 +77,11 @@ public class AbstractRankingTest {
 		return result;
 	}
 
-	public Builder getStructureAnalyzer() {
-		return structureAnalyzer;
-	}
-
 	public ImportantNodeService getImportantNodeService() {
 		return importantNodeService;
 	}
 
-	public TreeParser getTreeParser() {
-		return treeParser;
-	}
-
-	public List<LatexDocumentModel> getModels() {
+	public List<List<Edge<Node, Node>>> getModels() {
 		return models;
 	}
 }
