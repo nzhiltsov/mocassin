@@ -20,7 +20,7 @@ import ru.ksu.niimm.cll.mocassin.parser.impl.EdgeContextImpl;
 import ru.ksu.niimm.cll.mocassin.parser.impl.EdgeImpl;
 import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
-import ru.ksu.niimm.cll.mocassin.parser.latex.TexCommandEntryAdapter;
+import ru.ksu.niimm.cll.mocassin.parser.latex.NewtheoremCommand;
 import ru.ksu.niimm.cll.mocassin.parser.latex.builder.StructureBuilder;
 
 import com.google.common.collect.Iterables;
@@ -54,9 +54,8 @@ public class StructureBuilderImpl implements StructureBuilder {
 		List<Edge<Node, Node>> edges = new ArrayList<Edge<Node, Node>>();
 		LatexDocumentModel parsedModel = this.parser.parse(inputStream);
 		if (parsedModel == null) {
-			logger
-					.log(Level.SEVERE,
-							"The parsed model is null. An empty graph will be returned");
+			logger.log(Level.SEVERE,
+					"The parsed model is null. An empty graph will be returned");
 			return edges;
 		}
 		setModel(parsedModel);
@@ -68,10 +67,10 @@ public class StructureBuilderImpl implements StructureBuilder {
 			OutlineNode treeItem = tree.get(i);
 			stack.push(treeItem);
 
-			Node documentRootNode = new NodeImpl(String
-					.format(NODE_ID_FORMAT, documentRoot.getBeginLine(),
-							documentRoot.getOffsetOnLine()), documentRoot
-					.getName());
+			Node documentRootNode = new NodeImpl(
+					String.format(NODE_ID_FORMAT, documentRoot.getBeginLine(),
+							documentRoot.getOffsetOnLine()),
+					documentRoot.getName());
 			Edge<Node, Node> edge = makeEdge(documentRootNode, treeItem,
 					EdgeType.CONTAINS);
 			edges.add(edge);
@@ -82,9 +81,9 @@ public class StructureBuilderImpl implements StructureBuilder {
 			ArrayList<OutlineNode> children = node.getChildren();
 
 			if (children != null) {
-				String nodeId = String.format(NODE_ID_FORMAT, node
-						.getBeginLine(), node.getOffsetOnLine());
-				Node from = new NodeImpl(nodeId, node.getName());
+				String nodeId = String.format(NODE_ID_FORMAT,
+						node.getBeginLine(), node.getOffsetOnLine());
+				Node from = new NodeImpl(nodeId, extractName(node));
 				for (OutlineNode child : children) {
 					if (child.getType() == OutlineNode.TYPE_LABEL) {
 						from.setLabelText(child.getName());
@@ -129,8 +128,8 @@ public class StructureBuilderImpl implements StructureBuilder {
 			nodeName = "subsubsection";
 		} else {
 			nodeName = toNode.getName();
-			TexCommandEntryAdapter foundCommand = Iterables.find(getModel()
-					.getCommands(), new TexCommandEntryAdapter.KeyPredicate(
+			NewtheoremCommand foundCommand = Iterables.find(getModel()
+					.getNewtheorems(), new NewtheoremCommand.KeyPredicate(
 					nodeName), null);
 			if (foundCommand != null) {
 				nodeName = foundCommand.getTitle();

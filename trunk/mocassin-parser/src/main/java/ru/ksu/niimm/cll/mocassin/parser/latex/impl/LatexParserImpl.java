@@ -1,34 +1,37 @@
 package ru.ksu.niimm.cll.mocassin.parser.latex.impl;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
 import java.io.PushbackReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 import net.sourceforge.texlipse.model.DocumentReference;
-import net.sourceforge.texlipse.model.TexCommandEntry;
 import net.sourceforge.texlipse.texparser.LatexLexer;
 import net.sourceforge.texlipse.texparser.LatexParser;
 import net.sourceforge.texlipse.texparser.lexer.LexerException;
-
-import org.codehaus.swizzle.stream.ReplaceStringInputStream;
-
 import ru.ksu.niimm.cll.mocassin.parser.Parser;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
-import ru.ksu.niimm.cll.mocassin.parser.latex.TexCommandEntryAdapter;
+import ru.ksu.niimm.cll.mocassin.parser.latex.NewtheoremCommand;
+import ru.ksu.niimm.cll.mocassin.util.StringUtil;
 
 import com.google.inject.Inject;
 
 public class LatexParserImpl implements Parser {
+	/**
+	 * buffer size while reading the preamble of a document
+	 */
+	private static final int PREAMBLE_MAX_SIZE = 1024 * 1024;
+
 	@Inject
 	private Logger logger;
 
@@ -38,46 +41,45 @@ public class LatexParserImpl implements Parser {
 
 	@Override
 	public LatexDocumentModel parse(final InputStream inputStream) {
+		InputStream parsingInputStream;
+		if (!inputStream.markSupported()) {
+			parsingInputStream = new BufferedInputStream(inputStream);
+		} else {
+			parsingInputStream = inputStream;
+		}
+		parsingInputStream.mark(PREAMBLE_MAX_SIZE);
 
-		final PipedOutputStream out = new PipedOutputStream();
-		PipedInputStream in = null;
-		try {
-			in = new PipedInputStream(out);
-		} catch (IOException error) {
-			logger.log(Level.SEVERE,
-					"failed to create a piped input stream due to"
-							+ error.getMessage());
-			return null;
+		List<NewtheoremCommand> newtheorems = new ArrayList<NewtheoremCommand>();
+		Scanner scanner = new Scanner(parsingInputStream, "utf8");
+		Pattern newtheoremPattern = Pattern
+				.compile("\\\\newtheorem(\\*)?\\{.+\\}(\\[.+\\])?\\{.+\\}");
+		while (scanner.hasNextLine()) {
+			String newtheoremCommand = scanner.findInLine(newtheoremPattern);
+			if (newtheoremCommand != null) {
+				int firstLeftBrace = newtheoremCommand.indexOf("{") + 1;
+				int firstRightBrace = newtheoremCommand.indexOf("}",
+						firstLeftBrace);
+				String key = newtheoremCommand.substring(firstLeftBrace,
+						firstRightBrace);
+				int secondLeftBrace = newtheoremCommand.indexOf("{",
+						firstRightBrace) + 1;
+				String dirtyTitle = newtheoremCommand.substring(
+						secondLeftBrace,
+						newtheoremCommand.indexOf("}", secondLeftBrace));
+				String title = StringUtil.takeoutMarkup(dirtyTitle);
+				newtheorems.add(new NewtheoremCommand(key, title));
+			}
+			scanner.nextLine();
+
 		}
 
-		new Thread(new Runnable() {
-			public void run() {
-				try {
-					InputStream replaceInputStream = new ReplaceStringInputStream(
-							inputStream, "\\newtheorem{", "\\newcommand{\\");
-					try {
-						int b;
-						while ((b = replaceInputStream.read()) != -1) {
-							out.write(b);
-						}
-					} finally {
-						out.flush();
-						out.close();
-					}
-
-				} catch (IOException e) {
-					logger.log(Level.SEVERE,
-							"failed to replace strings in a stream due to:"
-									+ e.getMessage());
-				}
-			}
-		}).start();
-
 		try {
-			Reader reader = new InputStreamReader(in);
+			parsingInputStream.reset();
+			Reader reader = new InputStreamReader(parsingInputStream);
 			LatexDocumentModel parsedModel = parseTree(reader);
-			if (in != null)
-				in.close();
+			parsedModel.setNewtheorems(newtheorems);
+			scanner.close();
+			parsingInputStream.close();
 			return parsedModel;
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, "failed to parse a document model due to:"
@@ -107,12 +109,7 @@ public class LatexParserImpl implements Parser {
 		model.setLabels(getLatexParser().getLabels());
 		model.setDocumentRoot(getLatexParser().getDocumentEnv());
 
-		List<TexCommandEntry> entries = getLatexParser().getCommands();
-		List<TexCommandEntryAdapter> commands = new ArrayList<TexCommandEntryAdapter>();
-		for (TexCommandEntry entry : entries) {
-			commands.add(new TexCommandEntryAdapter(entry));
-		}
-		model.setCommands(commands);
+		model.setCommands(getLatexParser().getCommands());
 		return model;
 	}
 

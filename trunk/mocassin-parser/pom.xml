@@ -132,12 +132,5 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-io</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.codehaus.swizzle</groupId>
-			<artifactId>swizzle-stream</artifactId>
-			<version>1.6.1</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
 	</dependencies>
 </project>
