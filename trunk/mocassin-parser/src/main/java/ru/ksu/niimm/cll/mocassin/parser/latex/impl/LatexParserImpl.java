@@ -30,7 +30,11 @@ public class LatexParserImpl implements Parser {
 	/**
 	 * buffer size while reading the preamble of a document
 	 */
-	private static final int PREAMBLE_MAX_SIZE = 1024 * 1024;
+	private static final int PREAMBLE_MAX_SIZE = 10*1024 * 1024;
+	private static final Pattern NEW_THEOREM_PATTERN = Pattern
+			.compile("\\\\newtheorem(\\*)?\\{.+\\}(\\[.+\\])?\\{.+\\}");
+	private static final Pattern BEGIN_DOCUMENT_PATTERN = Pattern
+			.compile("\\\\begin\\{document\\}");
 
 	@Inject
 	private Logger logger;
@@ -51,10 +55,9 @@ public class LatexParserImpl implements Parser {
 
 		List<NewtheoremCommand> newtheorems = new ArrayList<NewtheoremCommand>();
 		Scanner scanner = new Scanner(parsingInputStream, "utf8");
-		Pattern newtheoremPattern = Pattern
-				.compile("\\\\newtheorem(\\*)?\\{.+\\}(\\[.+\\])?\\{.+\\}");
+
 		while (scanner.hasNextLine()) {
-			String newtheoremCommand = scanner.findInLine(newtheoremPattern);
+			String newtheoremCommand = scanner.findInLine(NEW_THEOREM_PATTERN);
 			if (newtheoremCommand != null) {
 				int firstLeftBrace = newtheoremCommand.indexOf("{") + 1;
 				int firstRightBrace = newtheoremCommand.indexOf("}",
@@ -69,6 +72,13 @@ public class LatexParserImpl implements Parser {
 				String title = StringUtil.takeoutMarkup(dirtyTitle);
 				newtheorems.add(new NewtheoremCommand(key, title));
 			}
+
+			boolean isEndOfPreamble = scanner
+					.findInLine(BEGIN_DOCUMENT_PATTERN) != null;
+			if (isEndOfPreamble) {
+				break;
+			}
+
 			scanner.nextLine();
 
 		}
