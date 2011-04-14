@@ -3,6 +3,7 @@ package unittest.relations;
 import java.io.IOException;
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -19,8 +20,9 @@ import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext( { AnalyzerModule.class, NlpModule.class,
-		LatexParserModule.class, OntologyModule.class, VirtuosoModule.class })
+@GuiceContext({ AnalyzerModule.class, NlpModule.class, LatexParserModule.class,
+		OntologyModule.class, VirtuosoModule.class })
+@Ignore("it's necessary to switch from GATE-based implementation")
 public class ExemplifiesRelationAnalyzerTest extends
 		AbstractRelationAnalyzerTest {
 	@Inject
