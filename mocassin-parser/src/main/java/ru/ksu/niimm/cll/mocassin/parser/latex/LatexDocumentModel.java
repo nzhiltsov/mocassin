@@ -5,6 +5,7 @@ import java.util.List;
 import net.sourceforge.texlipse.model.DocumentReference;
 import net.sourceforge.texlipse.model.OutlineNode;
 import net.sourceforge.texlipse.model.ReferenceEntry;
+import net.sourceforge.texlipse.model.TexCommandEntry;
 
 public class LatexDocumentModel {
 	private OutlineNode documentRoot;
@@ -19,7 +20,9 @@ public class LatexDocumentModel {
 	 */
 	private List<ReferenceEntry> labels;
 
-	private List<TexCommandEntryAdapter> commands;
+	private List<TexCommandEntry> commands;
+
+	private List<NewtheoremCommand> newtheorems;
 
 	public LatexDocumentModel(List<OutlineNode> tree) {
 		this.tree = tree;
@@ -65,12 +68,20 @@ public class LatexDocumentModel {
 		this.docId = docId;
 	}
 
-	public List<TexCommandEntryAdapter> getCommands() {
+	public List<TexCommandEntry> getCommands() {
 		return commands;
 	}
 
-	public void setCommands(List<TexCommandEntryAdapter> commands) {
+	public void setCommands(List<TexCommandEntry> commands) {
 		this.commands = commands;
+	}
+
+	public List<NewtheoremCommand> getNewtheorems() {
+		return newtheorems;
+	}
+
+	public void setNewtheorems(List<NewtheoremCommand> newtheorems) {
+		this.newtheorems = newtheorems;
 	}
 
 }
