@@ -132,6 +132,12 @@
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
+		<dependency>
+			<groupId>ru.ksu.niimm.cll.mocassin</groupId>
+			<artifactId>mocassin-fulltext</artifactId>
+			<version>1.0.0.5-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
 	</dependencies>
 	<properties>
 		<gwt.version>2.2.0</gwt.version>
