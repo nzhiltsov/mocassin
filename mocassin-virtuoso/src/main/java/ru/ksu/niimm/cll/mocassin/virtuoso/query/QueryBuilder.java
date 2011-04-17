@@ -97,7 +97,7 @@ public class QueryBuilder {
 			query = buildDescribeQuery();
 			break;
 		default:
-			new UnsupportedOperationException(String.format(
+			throw new UnsupportedOperationException(String.format(
 					"this operation isn't supported: %s", getType()));
 		}
 		return query;

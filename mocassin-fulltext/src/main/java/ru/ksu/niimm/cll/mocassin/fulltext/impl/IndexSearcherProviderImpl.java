@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.store.Directory;
 
-import ru.ksu.niimm.cll.mocassin.fulltext.IndexSearcherProvider;
+import ru.ksu.niimm.cll.mocassin.fulltext.providers.IndexSearcherProvider;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;

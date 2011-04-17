@@ -25,4 +25,20 @@ public interface Node {
 	String getLabelText();
 
 	void setLabelText(String labelText);
+
+	String getContents();
+
+	void setContents(String contents);
+
+	void setBeginLine(int beginLine);
+
+	int getBeginLine();
+
+	int getEndLine();
+
+	void setEndLine(int endLine);
+
+	int getOffset();
+
+	void setOffset(int offset);
 }

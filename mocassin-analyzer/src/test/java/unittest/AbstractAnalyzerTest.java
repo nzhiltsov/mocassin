@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -63,8 +64,8 @@ public abstract class AbstractAnalyzerTest {
 		if (header != null) {
 			writer.write(String.format("%s\n", header));
 		}
-		for (T t : map.keySet()) {
-			Vector vector = map.get(t);
+		for (Entry<T, Vector> t : map.entrySet()) {
+			Vector vector = t.getValue();
 			String vectorStr = convertToString(vector);
 			writer.write(String.format("%s %s\n", t.toString(), vectorStr));
 		}
@@ -85,8 +86,8 @@ public abstract class AbstractAnalyzerTest {
 
 	protected String convertToString(SortedMap<String, Float> map) {
 		StringBuilder sb = new StringBuilder();
-		for (String key : map.keySet()) {
-			float value = map.get(key);
+		for (Entry<String, Float> entry : map.entrySet()) {
+			float value = entry.getValue();
 			sb.append((float) Math.round(value * 1000) / 1000);
 			sb.append(" ");
 		}

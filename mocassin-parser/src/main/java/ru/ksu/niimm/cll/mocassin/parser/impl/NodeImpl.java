@@ -1,5 +1,8 @@
 package ru.ksu.niimm.cll.mocassin.parser.impl;
 
+import java.io.Serializable;
+import java.util.Comparator;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -14,6 +17,10 @@ public class NodeImpl implements Node {
 	private String id;
 	@XmlElement
 	private String name;
+	private String contents;
+	private int beginLine;
+	private int endLine;
+	private int offset;
 	@XmlTransient
 	private String labelText;
 
@@ -36,6 +43,38 @@ public class NodeImpl implements Node {
 
 	public String getId() {
 		return id;
+	}
+
+	public String getContents() {
+		return contents;
+	}
+
+	public void setContents(String contents) {
+		this.contents = contents;
+	}
+
+	public int getBeginLine() {
+		return beginLine;
+	}
+
+	public void setBeginLine(int beginLine) {
+		this.beginLine = beginLine;
+	}
+
+	public int getEndLine() {
+		return endLine;
+	}
+
+	public void setEndLine(int endLine) {
+		this.endLine = endLine;
+	}
+
+	public int getOffset() {
+		return offset;
+	}
+
+	public void setOffset(int offset) {
+		this.offset = offset;
 	}
 
 	@Override
@@ -79,4 +118,21 @@ public class NodeImpl implements Node {
 		return true;
 	}
 
+	@SuppressWarnings("serial")
+	public static class NodePositionComparator implements Serializable,
+			Comparator<Node> {
+
+		@Override
+		public int compare(Node first, Node second) {
+			if (first.getBeginLine() < second.getBeginLine())
+				return -1;
+			if (first.getBeginLine() > second.getBeginLine())
+				return 1;
+			if (first.getOffset() < second.getOffset())
+				return -1;
+			if (first.getOffset() > second.getOffset())
+				return 1;
+			return 0;
+		}
+	}
 }

@@ -13,7 +13,9 @@ import ru.ksu.niimm.cll.mocassin.virtuoso.RDFTriple;
 import ru.ksu.niimm.cll.mocassin.virtuoso.impl.RDFTripleImpl;
 
 public class ReferenceTripleUtilImpl implements ReferenceTripleUtil {
+	private static final String TRIPLE_PATTERN = "<%s> <%s> <%s> .";
 	private static final String RDFS_TYPE = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
+	private static final String INTEGER_PATTERN = "<%s> <%s> \"%d\"^^<http://www.w3.org/2001/XMLSchema#integer>";
 
 	@Override
 	public Set<RDFTriple> convert(List<Reference> references) {
@@ -21,26 +23,35 @@ public class ReferenceTripleUtilImpl implements ReferenceTripleUtil {
 		for (Reference ref : references) {
 			StructuralElement from = ref.getFrom();
 			StructuralElement to = ref.getTo();
-			triples.add(createTriple("<%s> <%s> <%s> .", from.getUri(),
-					RDFS_TYPE, MocassinOntologyClasses.getUri(from
-							.getPredictedClass())));
-			triples.add(createTriple("<%s> <%s> <%s> .", to.getUri(),
-					RDFS_TYPE, MocassinOntologyClasses.getUri(to
-							.getPredictedClass())));
-			triples.add(createTriple("<%s> <%s> <%s> .", from.getUri(), ref
-					.getPredictedRelation().getUri(), to.getUri()));
-			triples.add(createTriple("<%s> <%s> <%s> .", ref.getDocument()
-					.getFilename(), MocassinOntologyRelations.HAS_SEGMENT
-					.getUri(), from.getUri()));
-			triples.add(createTriple("<%s> <%s> <%s> .", ref.getDocument()
-					.getFilename(), MocassinOntologyRelations.HAS_SEGMENT
+			triples.add(createTypeTriple(from));
+			triples.add(createTypeTriple(to));
+			triples.add(createPageNumberTriple(from));
+			triples.add(createPageNumberTriple(to));
+			triples.add(createTriple(from.getUri(), ref.getPredictedRelation()
 					.getUri(), to.getUri()));
+			triples.add(createTriple(ref.getDocument().getFilename(),
+					MocassinOntologyRelations.HAS_SEGMENT.getUri(), from
+							.getUri()));
+			triples
+					.add(createTriple(ref.getDocument().getFilename(),
+							MocassinOntologyRelations.HAS_SEGMENT.getUri(), to
+									.getUri()));
 		}
 		return triples;
 	}
 
-	private static RDFTriple createTriple(String pattern, Object... args) {
-		return new RDFTripleImpl(String.format(pattern, args));
+	private static RDFTriple createTriple(Object... args) {
+		return new RDFTripleImpl(String.format(TRIPLE_PATTERN, args));
 	}
 
+	private static RDFTriple createTypeTriple(StructuralElement element) {
+		return createTriple(element.getUri(), RDFS_TYPE,
+				MocassinOntologyClasses.getUri(element.getPredictedClass()));
+	}
+
+	private static RDFTriple createPageNumberTriple(StructuralElement element) {
+		return new RDFTripleImpl(String.format(INTEGER_PATTERN, element
+				.getUri(), MocassinOntologyRelations.HAS_START_PAGE_NUMBER.getUri(),
+				element.getStartPageNumber()));
+	}
 }

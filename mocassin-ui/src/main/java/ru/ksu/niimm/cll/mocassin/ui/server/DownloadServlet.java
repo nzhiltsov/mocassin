@@ -34,7 +34,7 @@ public class DownloadServlet extends HttpServlet {
 	private String parseFileName(String string) {
 		// TODO : bad implementation, need more accurate parse file name string
 		String clearedString = string.startsWith(FILE_URI_PREFIX) ? string
-				.replaceFirst(FILE_URI_PREFIX, "") : new String(string);
+				.replaceFirst(FILE_URI_PREFIX, "") : string;
 		return clearedString.startsWith("/") ? clearedString : String.format(
 				"/%s", clearedString);
 

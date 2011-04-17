@@ -23,10 +23,10 @@ import org.apache.pdfbox.util.PDFTextStripper;
 import org.apache.pdfbox.util.Splitter;
 
 import ru.ksu.niimm.cll.mocassin.fulltext.EmptyResultException;
-import ru.ksu.niimm.cll.mocassin.fulltext.IndexSearcherProvider;
-import ru.ksu.niimm.cll.mocassin.fulltext.IndexWriterProvider;
 import ru.ksu.niimm.cll.mocassin.fulltext.PDFIndexer;
 import ru.ksu.niimm.cll.mocassin.fulltext.PersistingDocumentException;
+import ru.ksu.niimm.cll.mocassin.fulltext.providers.IndexSearcherProvider;
+import ru.ksu.niimm.cll.mocassin.fulltext.providers.IndexWriterProvider;
 
 import com.google.inject.Inject;
 

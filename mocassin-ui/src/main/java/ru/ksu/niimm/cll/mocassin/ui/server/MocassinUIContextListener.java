@@ -1,10 +1,10 @@
 package ru.ksu.niimm.cll.mocassin.ui.server;
 
+import gate.creole.annic.apache.lucene.index.IndexWriter;
+
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import gate.creole.annic.apache.lucene.index.IndexWriter;
 
 import javax.servlet.ServletContextEvent;
 

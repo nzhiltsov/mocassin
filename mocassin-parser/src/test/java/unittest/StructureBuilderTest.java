@@ -36,7 +36,7 @@ public class StructureBuilderTest {
 	@Test
 	public void testAnalyze() {
 		List<Edge<Node, Node>> edges = getStructureAnalyzer()
-				.buildStructureGraph(this.in);
+				.buildStructureGraph(this.in, true);
 		for (Edge<Node, Node> edge : edges) {
 
 			System.out.println(String.format("%s | %s | %s", edge.getFrom()

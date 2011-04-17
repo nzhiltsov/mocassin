@@ -13,6 +13,8 @@ import org.apache.lucene.store.FSDirectory;
 import ru.ksu.niimm.cll.mocassin.fulltext.impl.IndexSearcherProviderImpl;
 import ru.ksu.niimm.cll.mocassin.fulltext.impl.IndexWriterProviderImpl;
 import ru.ksu.niimm.cll.mocassin.fulltext.impl.PDFLuceneIndexer;
+import ru.ksu.niimm.cll.mocassin.fulltext.providers.IndexSearcherProvider;
+import ru.ksu.niimm.cll.mocassin.fulltext.providers.IndexWriterProvider;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;

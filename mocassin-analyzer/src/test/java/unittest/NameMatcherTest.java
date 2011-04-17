@@ -39,7 +39,7 @@ public class NameMatcherTest {
 	public void init() throws Exception {
 		InputStream in = this.getClass().getResourceAsStream("/example.tex");
 
-		graph = this.structureBuilder.buildStructureGraph(in);
+		graph = this.structureBuilder.buildStructureGraph(in, true);
 	}
 
 	@Test

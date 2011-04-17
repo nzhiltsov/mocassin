@@ -10,6 +10,8 @@ public class OntologyElement {
 	 * 'id' is used when one builds query tree; it starts with 1
 	 */
 	protected int id;
+	
+	protected OntologyElement() {}
 
 	public OntologyElement(String uri, String label) {
 		this.label = label;
@@ -49,6 +51,7 @@ public class OntologyElement {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + id;
 		result = prime * result + ((uri == null) ? 0 : uri.hashCode());
 		return result;
 	}
@@ -62,6 +65,8 @@ public class OntologyElement {
 		if (getClass() != obj.getClass())
 			return false;
 		OntologyElement other = (OntologyElement) obj;
+		if (id != other.id)
+			return false;
 		if (uri == null) {
 			if (other.uri != null)
 				return false;

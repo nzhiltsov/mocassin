@@ -29,8 +29,10 @@ public class XmlUtils {
 		File dirPerDocument = new File(String
 				.format("%s/%s", rootDir, filename));
 
-		dirPerDocument.mkdir();
-
+		if (!dirPerDocument.mkdir()) {
+			throw new RuntimeException(String.format(
+					"couldn't create folder per document:%s", dirPerDocument.toString()));
+		}
 		for (Edge<Node, Node> edge : graphContainer.getGraph()) {
 
 			String fromStr = edge.getFrom().getName();

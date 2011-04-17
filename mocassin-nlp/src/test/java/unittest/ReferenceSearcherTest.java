@@ -82,7 +82,7 @@ public class ReferenceSearcherTest {
 		}
 	}
 
-	class DocumentData {
+	static class DocumentData {
 		String filename;
 		long size;
 		int referenceCount;

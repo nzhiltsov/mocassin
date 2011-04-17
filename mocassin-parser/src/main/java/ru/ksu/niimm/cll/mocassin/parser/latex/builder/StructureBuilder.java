@@ -8,6 +8,6 @@ import ru.ksu.niimm.cll.mocassin.parser.Node;
 
 public interface StructureBuilder {
 
-	List<Edge<Node, Node>> buildStructureGraph(InputStream inputStream);
+	List<Edge<Node, Node>> buildStructureGraph(InputStream inputStream, boolean closeStream);
 
 }

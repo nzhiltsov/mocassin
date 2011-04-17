@@ -5,7 +5,7 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriter.MaxFieldLength;
 import org.apache.lucene.store.Directory;
 
-import ru.ksu.niimm.cll.mocassin.fulltext.IndexWriterProvider;
+import ru.ksu.niimm.cll.mocassin.fulltext.providers.IndexWriterProvider;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;

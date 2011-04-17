@@ -1,8 +1,18 @@
 package ru.ksu.niimm.cll.mocassin.nlp.latex;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
@@ -16,6 +26,7 @@ import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
 import ru.ksu.niimm.cll.mocassin.parser.Edge;
 import ru.ksu.niimm.cll.mocassin.parser.EdgeType;
 import ru.ksu.niimm.cll.mocassin.parser.Node;
+import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl.NodePositionComparator;
 import ru.ksu.niimm.cll.mocassin.parser.latex.builder.StructureBuilder;
 import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
 
@@ -25,6 +36,7 @@ import com.google.inject.Inject;
 
 public class LatexStructuralElementSearcherImpl implements
 		LatexStructuralElementSearcher {
+	private static final int DOCUMENT_MAX_SIZE = 50 * 1024 * 1024;
 	@Inject
 	private StructureBuilder structureBuilder;
 	@Inject
@@ -35,13 +47,57 @@ public class LatexStructuralElementSearcherImpl implements
 	private ParsedDocument parsedDocument;
 
 	@Override
-	public void parse(InputStream stream, ParsedDocument parsedDocument)
-			throws LatexSearcherParseException {
+	public void parse(InputStream inputStream, ParsedDocument parsedDocument,
+			boolean closeStream) throws LatexSearcherParseException {
 		this.parsedDocument = parsedDocument;
 		try {
-			this.edges = this.structureBuilder.buildStructureGraph(stream);
+			InputStream parsingInputStream;
+			if (!inputStream.markSupported()) {
+				parsingInputStream = new BufferedInputStream(inputStream);
+			} else {
+				parsingInputStream = inputStream;
+			}
+			parsingInputStream.mark(DOCUMENT_MAX_SIZE);
+			this.edges = this.structureBuilder.buildStructureGraph(
+					parsingInputStream, false);
+			extractTextContents(parsingInputStream);
+
+			if (closeStream) {
+				parsingInputStream.close();
+			}
 		} catch (Exception e) {
 			throw new LatexSearcherParseException(e.getCause());
+		}
+	}
+
+	private void extractTextContents(InputStream parsingInputStream)
+			throws IOException {
+
+		SortedSet<Node> nodes = new TreeSet<Node>(new NodePositionComparator());
+		for (Edge<Node, Node> edge : this.edges) {
+			nodes.add(edge.getFrom());
+			nodes.add(edge.getTo());
+		}
+		parsingInputStream.reset();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(
+				parsingInputStream));
+
+		int currentNodeNumber = 1;
+		int nodesCount = nodes.size();
+		Iterator<Node> iterator = nodes.iterator();
+		Node currentNode = iterator.next();
+		int currentLineNumber = 0;
+		String line;
+		States state = States.NORMAL;
+		while ((line = reader.readLine()) != null
+				&& currentNodeNumber <= nodesCount) {
+			currentLineNumber++;
+			if (currentLineNumber == currentNode.getBeginLine()) {
+				state = States.WAITING_FOR_END;
+				throw new UnsupportedOperationException("not implemented yet"); // TODO
+
+			}
+
 		}
 	}
 
@@ -83,6 +139,10 @@ public class LatexStructuralElementSearcherImpl implements
 
 	public StructuralElementTypeRecognizer getStructuralElementTypeRecognizer() {
 		return structuralElementTypeRecognizer;
+	}
+
+	enum States {
+		NORMAL, WAITING_FOR_END
 	}
 
 	private class Node2ElementFunction implements

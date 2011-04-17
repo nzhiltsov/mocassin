@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PushbackReader;
 import java.io.Reader;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -30,7 +31,7 @@ public class LatexParserImpl implements Parser {
 	/**
 	 * buffer size while reading the preamble of a document
 	 */
-	private static final int PREAMBLE_MAX_SIZE = 10*1024 * 1024;
+	private static final int PREAMBLE_MAX_SIZE = 10 * 1024 * 1024;
 	private static final Pattern NEW_THEOREM_PATTERN = Pattern
 			.compile("\\\\newtheorem(\\*)?\\{.+\\}(\\[.+\\])?\\{.+\\}");
 	private static final Pattern BEGIN_DOCUMENT_PATTERN = Pattern
@@ -44,7 +45,8 @@ public class LatexParserImpl implements Parser {
 	private LatexLexer latexLexer;
 
 	@Override
-	public LatexDocumentModel parse(final InputStream inputStream) {
+	public LatexDocumentModel parse(final InputStream inputStream,
+			boolean closeStream) {
 		InputStream parsingInputStream;
 		if (!inputStream.markSupported()) {
 			parsingInputStream = new BufferedInputStream(inputStream);
@@ -67,8 +69,8 @@ public class LatexParserImpl implements Parser {
 				int secondLeftBrace = newtheoremCommand.indexOf("{",
 						firstRightBrace) + 1;
 				String dirtyTitle = newtheoremCommand.substring(
-						secondLeftBrace,
-						newtheoremCommand.indexOf("}", secondLeftBrace));
+						secondLeftBrace, newtheoremCommand.indexOf("}",
+								secondLeftBrace));
 				String title = StringUtil.takeoutMarkup(dirtyTitle);
 				newtheorems.add(new NewtheoremCommand(key, title));
 			}
@@ -88,8 +90,10 @@ public class LatexParserImpl implements Parser {
 			Reader reader = new InputStreamReader(parsingInputStream);
 			LatexDocumentModel parsedModel = parseTree(reader);
 			parsedModel.setNewtheorems(newtheorems);
-			scanner.close();
-			parsingInputStream.close();
+			if (closeStream) {
+				scanner.close();
+				parsingInputStream.close();
+			}
 			return parsedModel;
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, "failed to parse a document model due to:"
@@ -135,7 +139,8 @@ public class LatexParserImpl implements Parser {
 		this.latexLexer = latexLexer;
 	}
 
-	private class DocumentReferenceComparator implements
+	@SuppressWarnings("serial")
+	private static class DocumentReferenceComparator implements Serializable,
 			Comparator<DocumentReference> {
 
 		@Override

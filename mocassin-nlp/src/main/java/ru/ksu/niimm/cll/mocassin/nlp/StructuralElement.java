@@ -18,9 +18,10 @@ import ru.ksu.niimm.cll.mocassin.parser.arxmliv.xpath.impl.ArxmlivStructureEleme
 public interface StructuralElement {
 	/**
 	 * 
-	 * @return identifier
+	 * @return identifier (added for compatibility with GATE)
 	 */
 	int getId();
+
 	/**
 	 * 
 	 * @return URI
@@ -56,6 +57,14 @@ public interface StructuralElement {
 
 	/**
 	 * 
+	 * @return tokens of the segment contents
+	 */
+	List<Token> getContentTokens();
+
+	void setContentTokens(List<Token> contentTokens);
+
+	/**
+	 * 
 	 * @return tokens of a title (e.g. 'Introduction', 'Theorem 1.1'), return
 	 *         null if the title is absent
 	 */
@@ -67,9 +76,20 @@ public interface StructuralElement {
 	 */
 	String toTitleString();
 
-	void setTitleTokens(List<Token> title);
+	void setTitleTokens(List<Token> titleTokens);
 
 	void setPredictedClass(MocassinOntologyClasses clazz);
 
 	MocassinOntologyClasses getPredictedClass();
+
+	/**
+	 * returns the number of the page where the beginning of a segment is
+	 * located; the value starts from 1.
+	 * 
+	 * 
+	 * @return
+	 */
+	int getStartPageNumber();
+
+	void setStartPageNumber(int startPageNumber);
 }
