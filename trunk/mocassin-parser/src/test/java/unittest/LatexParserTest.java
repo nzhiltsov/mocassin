@@ -32,7 +32,7 @@ public class LatexParserTest {
 
 	@Test
 	public void testGetGraph() throws Exception {
-		LatexDocumentModel model = getParser().parse(getInputStream());
+		LatexDocumentModel model = getParser().parse(getInputStream(), true);
 		Assert.assertTrue(model.getReferences().size() > 0);
 	}
 

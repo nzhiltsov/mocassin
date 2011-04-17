@@ -13,7 +13,8 @@ public enum MocassinOntologyRelations {
 			"http://cll.niimm.ksu.ru/ontologies/mocassin#refersTo", 1), HAS_CONSEQUENCE(
 			"http://cll.niimm.ksu.ru/ontologies/mocassin#hasConsequence", 2), EXEMPLIFIES(
 			"http://cll.niimm.ksu.ru/ontologies/mocassin#exemplifies", 3), HAS_SEGMENT(
-			"http://cll.niimm.ksu.ru/ontologies/mocassin#hasSegment", 4);
+			"http://cll.niimm.ksu.ru/ontologies/mocassin#hasSegment", 4), HAS_START_PAGE_NUMBER(
+			"http://cll.niimm.ksu.ru/ontologies/mocassin#hasStartPageNumber", 5);
 
 	private String uri;
 	/**
@@ -41,9 +42,10 @@ public enum MocassinOntologyRelations {
 			}
 		}
 		throw new RuntimeException(
-				String.format(
-						"couldn't find Mocassin Ontology relation with a given URI: %s",
-						uri));
+				String
+						.format(
+								"couldn't find Mocassin Ontology relation with a given URI: %s",
+								uri));
 	}
 
 	public static MocassinOntologyClasses[] getValidRanges(

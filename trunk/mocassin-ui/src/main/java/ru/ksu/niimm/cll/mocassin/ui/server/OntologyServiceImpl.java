@@ -19,7 +19,7 @@ import com.google.inject.Inject;
  */
 public class OntologyServiceImpl implements OntologyService {
 
-	private OntologyFacade omdocOntologyFacade;
+	private final OntologyFacade omdocOntologyFacade;
 
 	@Inject
 	public OntologyServiceImpl(OntologyFacade omdocOntologyFacade) {

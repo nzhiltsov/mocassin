@@ -1,10 +1,12 @@
 package unittest.util;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 import ru.ksu.niimm.ose.ontology.OntologyConcept;
 
-public class OntologyConceptComparator implements Comparator<OntologyConcept> {
+@SuppressWarnings("serial")
+public class OntologyConceptComparator implements Serializable, Comparator<OntologyConcept> {
 
 	@Override
 	public int compare(OntologyConcept o1, OntologyConcept o2) {

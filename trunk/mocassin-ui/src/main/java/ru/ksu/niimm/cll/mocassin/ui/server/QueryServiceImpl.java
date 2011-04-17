@@ -33,8 +33,8 @@ import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 
 public class QueryServiceImpl implements QueryService {
-	private QueryManagerFacade queryManager;
-	private OntologyResourceFacade ontologyResourceFacade;
+	private final QueryManagerFacade queryManager;
+	private final OntologyResourceFacade ontologyResourceFacade;
 
 	@Inject
 	public QueryServiceImpl(QueryManagerFacade queryManagerFacade,

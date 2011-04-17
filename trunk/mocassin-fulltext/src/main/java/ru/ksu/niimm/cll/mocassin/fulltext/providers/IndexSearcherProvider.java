@@ -1,4 +1,4 @@
-package ru.ksu.niimm.cll.mocassin.fulltext;
+package ru.ksu.niimm.cll.mocassin.fulltext.providers;
 
 import java.io.IOException;
 

@@ -50,12 +50,15 @@ public class StructureBuilderImpl implements StructureBuilder {
 	 * .ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel)
 	 */
 	@Override
-	public List<Edge<Node, Node>> buildStructureGraph(InputStream inputStream) {
+	public List<Edge<Node, Node>> buildStructureGraph(InputStream inputStream,
+			boolean closeStream) {
 		List<Edge<Node, Node>> edges = new ArrayList<Edge<Node, Node>>();
-		LatexDocumentModel parsedModel = this.parser.parse(inputStream);
+		LatexDocumentModel parsedModel = this.parser.parse(inputStream,
+				closeStream);
 		if (parsedModel == null) {
-			logger.log(Level.SEVERE,
-					"The parsed model is null. An empty graph will be returned");
+			logger
+					.log(Level.SEVERE,
+							"The parsed model is null. An empty graph will be returned");
 			return edges;
 		}
 		setModel(parsedModel);
@@ -67,10 +70,13 @@ public class StructureBuilderImpl implements StructureBuilder {
 			OutlineNode treeItem = tree.get(i);
 			stack.push(treeItem);
 
-			Node documentRootNode = new NodeImpl(
-					String.format(NODE_ID_FORMAT, documentRoot.getBeginLine(),
-							documentRoot.getOffsetOnLine()),
-					documentRoot.getName());
+			Node documentRootNode = new NodeImpl(String
+					.format(NODE_ID_FORMAT, documentRoot.getBeginLine(),
+							documentRoot.getOffsetOnLine()), documentRoot
+					.getName());
+			documentRootNode.setBeginLine(documentRoot.getBeginLine());
+			documentRootNode.setEndLine(documentRoot.getEndLine());
+			documentRootNode.setOffset(documentRoot.getOffsetOnLine());
 			Edge<Node, Node> edge = makeEdge(documentRootNode, treeItem,
 					EdgeType.CONTAINS);
 			edges.add(edge);
@@ -81,9 +87,12 @@ public class StructureBuilderImpl implements StructureBuilder {
 			ArrayList<OutlineNode> children = node.getChildren();
 
 			if (children != null) {
-				String nodeId = String.format(NODE_ID_FORMAT,
-						node.getBeginLine(), node.getOffsetOnLine());
+				String nodeId = String.format(NODE_ID_FORMAT, node
+						.getBeginLine(), node.getOffsetOnLine());
 				Node from = new NodeImpl(nodeId, extractName(node));
+				from.setBeginLine(node.getBeginLine());
+				from.setEndLine(node.getEndLine());
+				from.setOffset(node.getOffsetOnLine());
 				for (OutlineNode child : children) {
 					if (child.getType() == OutlineNode.TYPE_LABEL) {
 						from.setLabelText(child.getName());
@@ -111,6 +120,9 @@ public class StructureBuilderImpl implements StructureBuilder {
 				toNode.getOffsetOnLine());
 		String nodeName = extractName(toNode);
 		Node to = new NodeImpl(childId, nodeName);
+		to.setBeginLine(toNode.getBeginLine());
+		to.setEndLine(toNode.getEndLine());
+		to.setOffset(toNode.getOffsetOnLine());
 		String labelText = getLabelText(toNode);
 		to.setLabelText(labelText);
 		EdgeContext context = new EdgeContextImpl(edgeType);
@@ -118,16 +130,14 @@ public class StructureBuilderImpl implements StructureBuilder {
 		return edge;
 	}
 
-	private String extractName(OutlineNode toNode) {
+	private String extractName(OutlineNode node) {
 		String nodeName;
-		if (toNode.getType() == OutlineNode.TYPE_SECTION) {
+		if (node.getType() == OutlineNode.TYPE_SECTION
+				|| node.getType() == OutlineNode.TYPE_SUBSECTION
+				|| node.getType() == OutlineNode.TYPE_SUBSUBSECTION) {
 			nodeName = "section";
-		} else if (toNode.getType() == OutlineNode.TYPE_SUBSECTION) {
-			nodeName = "subsection";
-		} else if (toNode.getType() == OutlineNode.TYPE_SUBSUBSECTION) {
-			nodeName = "subsubsection";
 		} else {
-			nodeName = toNode.getName();
+			nodeName = node.getName();
 			NewtheoremCommand foundCommand = Iterables.find(getModel()
 					.getNewtheorems(), new NewtheoremCommand.KeyPredicate(
 					nodeName), null);
@@ -145,6 +155,9 @@ public class StructureBuilderImpl implements StructureBuilder {
 				fromNode.getOffsetOnLine());
 		String nodeName = extractName(fromNode);
 		Node from = new NodeImpl(childId, nodeName);
+		from.setBeginLine(fromNode.getBeginLine());
+		from.setEndLine(fromNode.getEndLine());
+		from.setOffset(fromNode.getOffsetOnLine());
 		String labelText = getLabelText(fromNode);
 		from.setLabelText(labelText);
 		EdgeContext context = new EdgeContextImpl(edgeType);

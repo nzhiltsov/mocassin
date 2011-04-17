@@ -47,14 +47,14 @@ public class AbstractRankingTest {
 	public void init() throws LexerException, IOException {
 		InputStream in = this.getClass().getResourceAsStream("/example.tex");
 
-		this.models.add(this.structureBuilder.buildStructureGraph(in));
+		this.models.add(this.structureBuilder.buildStructureGraph(in, true));
 
 	}
 
 	protected void printScores(Map<Node, Float> node2score) {
-		for (Node node : node2score.keySet()) {
+		for (Entry<Node, Float> node : node2score.entrySet()) {
 			System.out.println(String.format("%s: %f", node.toString(),
-					node2score.get(node)));
+					node2score.get(node.getValue())));
 		}
 	}
 

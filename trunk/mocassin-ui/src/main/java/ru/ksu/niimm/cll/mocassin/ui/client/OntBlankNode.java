@@ -7,4 +7,9 @@ public class OntBlankNode extends OntElement {
 		super();
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		return obj instanceof OntBlankNode ? true : false;
+	}
+
 }

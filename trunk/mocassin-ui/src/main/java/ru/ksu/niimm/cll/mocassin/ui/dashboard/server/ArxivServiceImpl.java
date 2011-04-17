@@ -43,7 +43,7 @@ public class ArxivServiceImpl implements ArxivService {
 			InputStream sourceStream = arxivDAOFacade.loadSource(metadata);
 			ParsedDocumentImpl document = new ParsedDocumentImpl(metadata
 					.getId());
-			latexStructuralElementSearcher.parse(sourceStream, document);
+			latexStructuralElementSearcher.parse(sourceStream, document, true);
 			List<Reference> references = latexStructuralElementSearcher.retrieveReferences(document);
 			Set<RDFTriple> triples = referenceTripleUtil.convert(references);
 			ontologyResourceFacade.insert(metadata, triples);
