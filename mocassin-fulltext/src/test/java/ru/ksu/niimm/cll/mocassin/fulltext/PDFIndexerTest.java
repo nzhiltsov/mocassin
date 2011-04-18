@@ -13,7 +13,7 @@ import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext( { TestFullTextModule.class })
+@GuiceContext( { FullTextTestModule.class })
 public class PDFIndexerTest {
 	@Inject
 	private PDFIndexer pdfIndexer;
