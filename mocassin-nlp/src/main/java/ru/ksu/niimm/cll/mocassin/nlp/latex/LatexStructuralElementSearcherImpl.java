@@ -92,10 +92,14 @@ public class LatexStructuralElementSearcherImpl implements
 		while ((line = reader.readLine()) != null
 				&& currentNodeNumber <= nodesCount) {
 			currentLineNumber++;
-			if (currentLineNumber == currentNode.getBeginLine()) {
-				state = States.WAITING_FOR_END;
-				throw new UnsupportedOperationException("not implemented yet"); // TODO
-
+			if (state == States.NORMAL) {
+				if (currentLineNumber == currentNode.getBeginLine()) {
+					state = States.WAITING_FOR_END;
+				}
+			} else if (state == States.WAITING_FOR_END) {
+				if (currentLineNumber < currentNode.getEndLine() - 1) {
+					
+				}
 			}
 
 		}
