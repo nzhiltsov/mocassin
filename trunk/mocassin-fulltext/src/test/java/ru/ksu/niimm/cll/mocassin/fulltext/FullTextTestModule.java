@@ -5,7 +5,7 @@ import org.apache.lucene.store.RAMDirectory;
 
 import com.google.inject.name.Names;
 
-public class TestFullTextModule extends FullTextModule {
+public class FullTextTestModule extends FullTextModule {
 
 	@Override
 	protected void bindDirectory() {

@@ -89,11 +89,13 @@ public class LatexStructuralElementSearcherImpl implements
 		int currentLineNumber = 0;
 		String line;
 		States state = States.NORMAL;
+		StringBuffer currentContents = new StringBuffer();
 		while ((line = reader.readLine()) != null
 				&& currentNodeNumber <= nodesCount) {
 			currentLineNumber++;
 			if (state == States.NORMAL) {
 				if (currentLineNumber == currentNode.getBeginLine()) {
+					currentContents.append(line);
 					state = States.WAITING_FOR_END;
 				}
 			} else if (state == States.WAITING_FOR_END) {

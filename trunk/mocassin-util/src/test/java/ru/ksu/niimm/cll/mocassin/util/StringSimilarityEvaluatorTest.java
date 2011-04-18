@@ -1,3 +1,4 @@
+package ru.ksu.niimm.cll.mocassin.util;
 import java.util.List;
 
 import org.junit.Test;

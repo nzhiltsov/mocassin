@@ -4,8 +4,15 @@ import java.rmi.server.UID;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.commons.lang.StringEscapeUtils;
 
 public class StringUtil {
+	private static final String DOLLAR_PATTERN = "\\$.[^$]*\\$";
+	private static final String BACKSLASH_PATTERN = "\\\\[a-z]+";
+
 	private StringUtil() {
 	}
 
@@ -38,7 +45,24 @@ public class StringUtil {
 		return String.format("_:bnode%d", new UID().hashCode());
 	}
 
+	/**
+	 * remove simple LaTeX constructs e.g. \noindent from a given string
+	 * 
+	 * @param str
+	 * @return
+	 */
 	public static String takeoutMarkup(String str) {
-		return str.replaceAll("\\\\[a-z]+", "").trim();
+		return str.replaceAll(BACKSLASH_PATTERN, "").trim();
+	}
+
+	public static String stripLatexMarkup(String str) {
+		String escaped = StringEscapeUtils.escapeJava(str);
+		String processed = escaped.replaceAll(DOLLAR_PATTERN, "");
+		Matcher styleMatcher = Pattern.compile("\\\\[a-zA-Z]+\\{([^}]*)\\}")
+				.matcher(processed);
+		if (styleMatcher.find()) {
+			return styleMatcher.replaceAll(styleMatcher.group(1));
+		}
+		return processed;
 	}
 }
