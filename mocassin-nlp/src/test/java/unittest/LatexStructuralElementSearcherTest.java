@@ -24,7 +24,7 @@ import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext( { NlpModule.class, LatexParserModule.class })
+@GuiceContext({ NlpModule.class, LatexParserModule.class })
 public class LatexStructuralElementSearcherTest {
 	@Inject
 	private LatexStructuralElementSearcher latexStructuralElementSearcher;
@@ -35,7 +35,7 @@ public class LatexStructuralElementSearcherTest {
 
 	@Before
 	public void init() throws Exception {
-		 this.in = this.getClass().getResourceAsStream("/example.tex");
+		this.in = this.getClass().getResourceAsStream("/example.tex");
 		parsedDocument = new ParsedDocumentImpl("http://somehost.com/doc");
 		latexStructuralElementSearcher.parse(this.in, parsedDocument, true);
 	}
@@ -46,9 +46,14 @@ public class LatexStructuralElementSearcherTest {
 
 		List<StructuralElement> elements = latexStructuralElementSearcher
 				.retrieveElements(parsedDocument);
+		int i = 0;
 		for (StructuralElement element : elements) {
-			System.out.println(element);
+			if (element.getContents() != null) {
+				i++;
+				System.out.println(element);
+			}
 		}
+		System.out.println(i);
 	}
 
 	@Test

@@ -9,6 +9,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
+import com.google.common.base.Predicate;
+
 import ru.ksu.niimm.cll.mocassin.parser.Node;
 
 @XmlType
@@ -17,10 +19,11 @@ public class NodeImpl implements Node {
 	private String id;
 	@XmlElement
 	private String name;
-	private String contents;
+	private StringBuffer contents = new StringBuffer();
 	private int beginLine;
 	private int endLine;
 	private int offset;
+	private boolean isEnvironment;
 	@XmlTransient
 	private String labelText;
 
@@ -46,11 +49,11 @@ public class NodeImpl implements Node {
 	}
 
 	public String getContents() {
-		return contents;
+		return contents.toString();
 	}
 
-	public void setContents(String contents) {
-		this.contents = contents;
+	public void addContents(String text) {
+		this.contents.append(text);
 	}
 
 	public int getBeginLine() {
@@ -75,6 +78,14 @@ public class NodeImpl implements Node {
 
 	public void setOffset(int offset) {
 		this.offset = offset;
+	}
+
+	public boolean isEnvironment() {
+		return isEnvironment;
+	}
+
+	public void setEnvironment(boolean isEnvironment) {
+		this.isEnvironment = isEnvironment;
 	}
 
 	@Override
@@ -134,5 +145,35 @@ public class NodeImpl implements Node {
 				return 1;
 			return 0;
 		}
+	}
+
+	public static class EnclosingNodePredicate implements Predicate<Node> {
+		private int lineNumber;
+
+		public EnclosingNodePredicate(int lineNumber) {
+			this.lineNumber = lineNumber;
+		}
+
+		@Override
+		public boolean apply(Node node) {
+			return node.getBeginLine() < this.lineNumber
+					&& node.getEndLine() > this.lineNumber + 1;
+		}
+
+	}
+
+	public static class NodePositionPredicate implements Predicate<Node> {
+		private int lineNumber;
+
+		public NodePositionPredicate(int lineNumber) {
+			this.lineNumber = lineNumber;
+		}
+
+		@Override
+		public boolean apply(Node node) {
+			return node.getBeginLine() == this.lineNumber
+					|| node.getEndLine() - 1 == this.lineNumber;
+		}
+
 	}
 }

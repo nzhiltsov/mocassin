@@ -56,9 +56,8 @@ public class StructureBuilderImpl implements StructureBuilder {
 		LatexDocumentModel parsedModel = this.parser.parse(inputStream,
 				closeStream);
 		if (parsedModel == null) {
-			logger
-					.log(Level.SEVERE,
-							"The parsed model is null. An empty graph will be returned");
+			logger.log(Level.SEVERE,
+					"The parsed model is null. An empty graph will be returned");
 			return edges;
 		}
 		setModel(parsedModel);
@@ -70,13 +69,14 @@ public class StructureBuilderImpl implements StructureBuilder {
 			OutlineNode treeItem = tree.get(i);
 			stack.push(treeItem);
 
-			Node documentRootNode = new NodeImpl(String
-					.format(NODE_ID_FORMAT, documentRoot.getBeginLine(),
-							documentRoot.getOffsetOnLine()), documentRoot
-					.getName());
+			Node documentRootNode = new NodeImpl(
+					String.format(NODE_ID_FORMAT, documentRoot.getBeginLine(),
+							documentRoot.getOffsetOnLine()),
+					documentRoot.getName());
 			documentRootNode.setBeginLine(documentRoot.getBeginLine());
 			documentRootNode.setEndLine(documentRoot.getEndLine());
 			documentRootNode.setOffset(documentRoot.getOffsetOnLine());
+			documentRootNode.setEnvironment(false);
 			Edge<Node, Node> edge = makeEdge(documentRootNode, treeItem,
 					EdgeType.CONTAINS);
 			edges.add(edge);
@@ -87,12 +87,13 @@ public class StructureBuilderImpl implements StructureBuilder {
 			ArrayList<OutlineNode> children = node.getChildren();
 
 			if (children != null) {
-				String nodeId = String.format(NODE_ID_FORMAT, node
-						.getBeginLine(), node.getOffsetOnLine());
+				String nodeId = String.format(NODE_ID_FORMAT,
+						node.getBeginLine(), node.getOffsetOnLine());
 				Node from = new NodeImpl(nodeId, extractName(node));
 				from.setBeginLine(node.getBeginLine());
 				from.setEndLine(node.getEndLine());
 				from.setOffset(node.getOffsetOnLine());
+				from.setEnvironment(node.getType() == OutlineNode.TYPE_ENVIRONMENT);
 				for (OutlineNode child : children) {
 					if (child.getType() == OutlineNode.TYPE_LABEL) {
 						from.setLabelText(child.getName());
@@ -123,6 +124,7 @@ public class StructureBuilderImpl implements StructureBuilder {
 		to.setBeginLine(toNode.getBeginLine());
 		to.setEndLine(toNode.getEndLine());
 		to.setOffset(toNode.getOffsetOnLine());
+		to.setEnvironment(toNode.getType() == OutlineNode.TYPE_ENVIRONMENT);
 		String labelText = getLabelText(toNode);
 		to.setLabelText(labelText);
 		EdgeContext context = new EdgeContextImpl(edgeType);
@@ -158,6 +160,7 @@ public class StructureBuilderImpl implements StructureBuilder {
 		from.setBeginLine(fromNode.getBeginLine());
 		from.setEndLine(fromNode.getEndLine());
 		from.setOffset(fromNode.getOffsetOnLine());
+		from.setEnvironment(fromNode.getType() == OutlineNode.TYPE_ENVIRONMENT);
 		String labelText = getLabelText(fromNode);
 		from.setLabelText(labelText);
 		EdgeContext context = new EdgeContextImpl(edgeType);

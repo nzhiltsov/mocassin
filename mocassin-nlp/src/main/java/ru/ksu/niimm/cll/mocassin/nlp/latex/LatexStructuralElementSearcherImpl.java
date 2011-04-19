@@ -27,8 +27,12 @@ import ru.ksu.niimm.cll.mocassin.parser.Edge;
 import ru.ksu.niimm.cll.mocassin.parser.EdgeType;
 import ru.ksu.niimm.cll.mocassin.parser.Node;
 import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl.NodePositionComparator;
+import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl.EnclosingNodePredicate;
+import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl.NodePositionPredicate;
 import ru.ksu.niimm.cll.mocassin.parser.latex.builder.StructureBuilder;
+import ru.ksu.niimm.cll.mocassin.parser.util.StandardEnvironments;
 import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
+import ru.ksu.niimm.cll.mocassin.util.StringUtil;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
@@ -36,6 +40,7 @@ import com.google.inject.Inject;
 
 public class LatexStructuralElementSearcherImpl implements
 		LatexStructuralElementSearcher {
+	private static final String EQUATION_ENVIRONMENT_NAME = "equation";
 	private static final int DOCUMENT_MAX_SIZE = 50 * 1024 * 1024;
 	@Inject
 	private StructureBuilder structureBuilder;
@@ -60,6 +65,7 @@ public class LatexStructuralElementSearcherImpl implements
 			parsingInputStream.mark(DOCUMENT_MAX_SIZE);
 			this.edges = this.structureBuilder.buildStructureGraph(
 					parsingInputStream, false);
+			parsingInputStream.reset();
 			extractTextContents(parsingInputStream);
 
 			if (closeStream) {
@@ -73,35 +79,47 @@ public class LatexStructuralElementSearcherImpl implements
 	private void extractTextContents(InputStream parsingInputStream)
 			throws IOException {
 
-		SortedSet<Node> nodes = new TreeSet<Node>(new NodePositionComparator());
+		SortedSet<Node> indexingNodes = new TreeSet<Node>(
+				new NodePositionComparator());
+		Set<Node> nodes = new HashSet<Node>();
 		for (Edge<Node, Node> edge : this.edges) {
-			nodes.add(edge.getFrom());
-			nodes.add(edge.getTo());
+			Node from = edge.getFrom();
+
+			String fromName = from.getName();
+			if (from.isEnvironment()
+					&& !fromName.equals(EQUATION_ENVIRONMENT_NAME)
+					&& !StandardEnvironments.contains(fromName)) {
+				indexingNodes.add(from);
+			}
+			Node to = edge.getTo();
+			String toName = to.getName();
+			if (to.isEnvironment() && !toName.equals(EQUATION_ENVIRONMENT_NAME)
+					&& !StandardEnvironments.contains(toName)) {
+				indexingNodes.add(to);
+			}
+
+			nodes.add(from);
+			nodes.add(to);
 		}
-		parsingInputStream.reset();
+
 		BufferedReader reader = new BufferedReader(new InputStreamReader(
 				parsingInputStream));
 
-		int currentNodeNumber = 1;
-		int nodesCount = nodes.size();
-		Iterator<Node> iterator = nodes.iterator();
-		Node currentNode = iterator.next();
 		int currentLineNumber = 0;
 		String line;
-		States state = States.NORMAL;
-		StringBuffer currentContents = new StringBuffer();
-		while ((line = reader.readLine()) != null
-				&& currentNodeNumber <= nodesCount) {
+		while ((line = reader.readLine()) != null) {
 			currentLineNumber++;
-			if (state == States.NORMAL) {
-				if (currentLineNumber == currentNode.getBeginLine()) {
-					currentContents.append(line);
-					state = States.WAITING_FOR_END;
-				}
-			} else if (state == States.WAITING_FOR_END) {
-				if (currentLineNumber < currentNode.getEndLine() - 1) {
-					
-				}
+			/**
+			 * TODO: skip the border of a segment
+			 */
+			if (Iterables.find(nodes, new NodePositionPredicate(
+					currentLineNumber), null) != null) {
+				continue;
+			}
+			Iterable<Node> enclosingNodes = Iterables.filter(indexingNodes,
+					new EnclosingNodePredicate(currentLineNumber));
+			for (Node enclosingNode : enclosingNodes) {
+				enclosingNode.addContents(StringUtil.stripLatexMarkup(line));
 			}
 
 		}
@@ -128,16 +146,13 @@ public class LatexStructuralElementSearcherImpl implements
 
 	@Override
 	public List<StructuralElement> retrieveElements(ParsedDocument document) {
-		List<Node> nodes = new ArrayList<Node>();
+		Set<Node> nodes = new HashSet<Node>();
 		for (Edge<Node, Node> edge : this.edges) {
 			Node from = edge.getFrom();
-			if (!nodes.contains(from)) {
-				nodes.add(from);
-			}
+
+			nodes.add(from);
 			Node to = edge.getTo();
-			if (!nodes.contains(to)) {
-				nodes.add(to);
-			}
+			nodes.add(to);
 		}
 		return CollectionUtil.asList(Iterables.transform(nodes,
 				new Node2ElementFunction()));
@@ -147,10 +162,6 @@ public class LatexStructuralElementSearcherImpl implements
 		return structuralElementTypeRecognizer;
 	}
 
-	enum States {
-		NORMAL, WAITING_FOR_END
-	}
-
 	private class Node2ElementFunction implements
 			Function<Node, StructuralElement> {
 
@@ -158,11 +169,12 @@ public class LatexStructuralElementSearcherImpl implements
 		public StructuralElement apply(Node node) {
 			String uri = String.format("%s/s%s", parsedDocument.getFilename(),
 					node.getId());
-			StructuralElement element = new StructuralElementImpl.Builder(uri
-					.hashCode()).uri(uri).name(node.getName()).build();
+			StructuralElement element = new StructuralElementImpl.Builder(
+					uri.hashCode()).uri(uri).name(node.getName()).build();
 			List<String> labels = new ArrayList<String>();
 			labels.add(node.getLabelText());
 			element.setLabels(labels);
+			element.setContents(node.getContents());
 			/**
 			 * TODO : extract tokens from LaTeX
 			 */
@@ -176,6 +188,12 @@ public class LatexStructuralElementSearcherImpl implements
 
 	}
 
+	/**
+	 * Stub implementation; genuine analysis is required
+	 * 
+	 * @author linglab
+	 * 
+	 */
 	private class Edge2ReferenceFunction implements
 			Function<Edge<Node, Node>, Reference> {
 		private int count;
@@ -192,8 +210,8 @@ public class LatexStructuralElementSearcherImpl implements
 		public Reference apply(Edge<Node, Node> edge) {
 			StructuralElement from = node2ElementFunction.apply(edge.getFrom());
 			StructuralElement to = node2ElementFunction.apply(edge.getTo());
-			Reference ref = new ReferenceImpl.Builder(++count).document(
-					document).from(from).to(to).build();
+			Reference ref = new ReferenceImpl.Builder(++count)
+					.document(document).from(from).to(to).build();
 			if (edge.getContext().getEdgeType() == EdgeType.CONTAINS) {
 				ref.setPredictedRelation(MocassinOntologyRelations.HAS_PART);
 			} else if (edge.getContext().getEdgeType() == EdgeType.REFERS_TO) {
