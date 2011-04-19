@@ -28,7 +28,7 @@ public interface Node {
 
 	String getContents();
 
-	void setContents(String contents);
+	void addContents(String text);
 
 	void setBeginLine(int beginLine);
 
@@ -41,4 +41,8 @@ public interface Node {
 	int getOffset();
 
 	void setOffset(int offset);
+	
+	boolean isEnvironment();
+	
+	void setEnvironment(boolean isEnvironment);
 }

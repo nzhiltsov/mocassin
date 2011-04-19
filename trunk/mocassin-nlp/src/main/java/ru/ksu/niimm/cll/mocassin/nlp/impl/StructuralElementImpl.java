@@ -13,7 +13,7 @@ public class StructuralElementImpl implements StructuralElement {
 	private final long end;
 	private final String name;
 	private List<String> labels;
-	private List<Token> contentTokens;
+	private String contents;
 	private List<Token> titleTokens;
 	private int startPageNumber;
 	private MocassinOntologyClasses predictedClass;
@@ -107,12 +107,12 @@ public class StructuralElementImpl implements StructuralElement {
 		this.predictedClass = predictedClass;
 	}
 
-	public List<Token> getContentTokens() {
-		return contentTokens;
+	public String getContents() {
+		return contents;
 	}
 
-	public void setContentTokens(List<Token> contentTokens) {
-		this.contentTokens = contentTokens;
+	public void setContents(String contents) {
+		this.contents = contents;
 	}
 
 	public int getStartPageNumber() {

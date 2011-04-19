@@ -55,13 +55,9 @@ public interface StructuralElement {
 	 */
 	String getName();
 
-	/**
-	 * 
-	 * @return tokens of the segment contents
-	 */
-	List<Token> getContentTokens();
+	String getContents();
 
-	void setContentTokens(List<Token> contentTokens);
+	void setContents(String contents);
 
 	/**
 	 * 

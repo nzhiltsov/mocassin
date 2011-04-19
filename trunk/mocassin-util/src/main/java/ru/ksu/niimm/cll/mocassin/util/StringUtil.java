@@ -17,7 +17,7 @@ public class StringUtil {
 	}
 
 	/**
-	 * returns list of tokens (substrings separated by space) for a given
+	 * returns a list of tokens (substrings separated by space) for a given
 	 * string; if the string is empty or null, this returns empty list
 	 * 
 	 * @param str
