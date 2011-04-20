@@ -15,6 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ru.ksu.niimm.cll.mocassin.fulltext.FullTextModule;
 import ru.ksu.niimm.cll.mocassin.nlp.NlpModule;
 import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
@@ -35,7 +36,7 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext( { NlpModule.class, OntologyModule.class, VirtuosoModule.class,
-		LatexParserModule.class })
+		LatexParserModule.class, FullTextModule.class})
 public class StructuralElementTypeRecognizerTest {
 	private static final String CORPUS_ELEMENT_INDEX_OUTPUT_DIR = "/tmp/corpus-element-index";
 	private static final String PREDICTED_ELEMENTS_OUTPUT_DIR = String.format(
