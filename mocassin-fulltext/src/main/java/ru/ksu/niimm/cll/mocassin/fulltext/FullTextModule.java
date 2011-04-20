@@ -1,5 +1,6 @@
 package ru.ksu.niimm.cll.mocassin.fulltext;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -36,12 +37,12 @@ public class FullTextModule extends AbstractModule {
 
 	protected void bindInjections() {
 		bind(PDFIndexer.class).to(PDFLuceneIndexer.class);
-		ThrowingProviderBinder.create(binder()).bind(IndexWriterProvider.class,
-				IndexWriter.class).to(IndexWriterProviderImpl.class).in(
-				Singleton.class);
-		ThrowingProviderBinder.create(binder()).bind(
-				IndexSearcherProvider.class, IndexSearcher.class).to(
-				IndexSearcherProviderImpl.class).in(Singleton.class);
+		ThrowingProviderBinder.create(binder())
+				.bind(IndexWriterProvider.class, IndexWriter.class)
+				.to(IndexWriterProviderImpl.class).in(Singleton.class);
+		ThrowingProviderBinder.create(binder())
+				.bind(IndexSearcherProvider.class, IndexSearcher.class)
+				.to(IndexSearcherProviderImpl.class).in(Singleton.class);
 	}
 
 	protected void bindDirectory() {
@@ -52,10 +53,11 @@ public class FullTextModule extends AbstractModule {
 			Names.bindProperties(binder(), properties);
 			bind(Directory.class).annotatedWith(
 					Names.named(LUCENE_DIRECTORY_PARAMETER_NAME)).toInstance(
-					FSDirectory.getDirectory(properties
-							.getProperty(LUCENE_DIRECTORY_PARAMETER_NAME)));
+					FSDirectory.open(new File(properties
+							.getProperty(LUCENE_DIRECTORY_PARAMETER_NAME))));
 		} catch (IOException e) {
-			logger.log(Level.SEVERE,
+			logger.log(
+					Level.SEVERE,
 					"failed to initialize the index directory due to: "
 							+ e.getMessage());
 			throw new RuntimeException();

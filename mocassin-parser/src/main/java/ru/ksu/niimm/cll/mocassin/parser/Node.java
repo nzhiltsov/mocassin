@@ -1,5 +1,7 @@
 package ru.ksu.niimm.cll.mocassin.parser;
 
+import java.util.List;
+
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import ru.ksu.niimm.cll.mocassin.parser.impl.adapters.NodeAdapter;
@@ -26,9 +28,9 @@ public interface Node {
 
 	void setLabelText(String labelText);
 
-	String getContents();
+	List<String> getContents();
 
-	void addContents(String text);
+	void addContents(String... text);
 
 	void setBeginLine(int beginLine);
 
@@ -41,8 +43,8 @@ public interface Node {
 	int getOffset();
 
 	void setOffset(int offset);
-	
+
 	boolean isEnvironment();
-	
+
 	void setEnvironment(boolean isEnvironment);
 }
