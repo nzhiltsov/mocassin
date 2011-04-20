@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -23,6 +24,7 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext( { NlpModule.class, OntologyModule.class, VirtuosoModule.class,
 		LatexParserModule.class })
+@Ignore("Gate facilities is out of use now")
 public class GateDocumentDAOTest {
 	@Inject
 	private Logger logger;

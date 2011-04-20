@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ru.ksu.niimm.cll.mocassin.fulltext.FullTextModule;
 import ru.ksu.niimm.cll.mocassin.nlp.NlpModule;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.nlp.Token;
@@ -29,7 +30,7 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext( { NlpModule.class, OntologyModule.class, VirtuosoModule.class,
-		LatexParserModule.class })
+		LatexParserModule.class, FullTextModule.class })
 public class DocumentSegmentClassificationEvaluationTest {
 	private static final String TEST_DATA_FILEPATH = "/tmp/arxmliv-element-training-data.csv";
 	private static final String EVALUATION_RESULTS_OUTPUT_FILENAME = "/tmp/arxmliv-element-recognition-results.txt";
