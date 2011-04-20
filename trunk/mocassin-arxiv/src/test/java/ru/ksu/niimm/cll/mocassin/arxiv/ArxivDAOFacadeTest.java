@@ -45,7 +45,7 @@ public class ArxivDAOFacadeTest {
 	}
 
 	@Test
-	public void testLoad() throws IOException {
+	public void testLoadSource() throws IOException {
 		ArticleMetadata metadata = new ArticleMetadata();
 		metadata.setId("http://arxiv.org/abs/math/0205003v1");
 		InputStream inputStream = arxivDAOFacade.loadSource(metadata);
@@ -57,4 +57,5 @@ public class ArxivDAOFacadeTest {
 		
 		inputStream.close();
 	}
+		
 }

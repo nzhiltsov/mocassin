@@ -16,8 +16,10 @@ import java.util.zip.GZIPInputStream;
 
 import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.arxiv.ArxivDAOFacade;
+import ru.ksu.niimm.cll.mocassin.arxiv.impl.Link.PdfLinkPredicate;
 import ru.ksu.niimm.cll.mocassin.arxiv.impl.util.ArticleMetadataReader;
 
+import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
@@ -27,6 +29,8 @@ public class ArxivDAOFacadeImpl implements ArxivDAOFacade {
 	private static final String XML_CONTENT_TYPE = "application/xml";
 
 	private static final String TXT_CONTENT_TYPE = "application/txt";
+
+	private static final String PDF_CONTENT_TYPE = "application/pdf";
 
 	private static final String SOURCE_PREFIX = "e-print";
 
@@ -99,7 +103,8 @@ public class ArxivDAOFacadeImpl implements ArxivDAOFacade {
 		InputStream inputStream = null;
 		try {
 			URL sourceUrl = new URL(sourceLink);
-			inputStream = new GZIPInputStream(loadFromUrl(sourceUrl, TXT_CONTENT_TYPE));
+			inputStream = new GZIPInputStream(loadFromUrl(sourceUrl,
+					TXT_CONTENT_TYPE));
 		} catch (MalformedURLException e) {
 			logger.log(Level.SEVERE, String.format(
 					"failed to prepare source URL from: %s", sourceLink));
@@ -107,6 +112,41 @@ public class ArxivDAOFacadeImpl implements ArxivDAOFacade {
 			logger.log(Level.SEVERE, String.format(
 					"failed to get the source of %s due to: %s", id, e
 							.getMessage()));
+		}
+		if (isUseProxy) {
+			Authenticator.setDefault(null);
+		}
+		return inputStream;
+	}
+
+	@Override
+	public InputStream loadPDF(ArticleMetadata metadata) {
+		Link pdfLink = Iterables.find(metadata.getLinks(),
+				new PdfLinkPredicate(), null);
+		if (pdfLink == null
+				|| (pdfLink.getHref() == null || pdfLink.getHref().length() == 0)) {
+			logger
+					.log(
+							Level.SEVERE,
+							String
+									.format(
+											"article metadata with id='%s' doesn't include PDF link; empty stream will be returned",
+											metadata.getId()));
+			return null;
+		}
+		InputStream inputStream = null;
+		try {
+			URL sourceUrl = new URL(pdfLink.getHref());
+			inputStream = loadFromUrl(sourceUrl, PDF_CONTENT_TYPE);
+		} catch (MalformedURLException e) {
+			logger
+					.log(Level.SEVERE, String.format(
+							"failed to prepare source URL from: %s", pdfLink
+									.getHref()));
+		} catch (IOException e) {
+			logger.log(Level.SEVERE, String.format(
+					"failed to get the source of %s due to: %s", metadata
+							.getId(), e.getMessage()));
 		}
 		if (isUseProxy) {
 			Authenticator.setDefault(null);

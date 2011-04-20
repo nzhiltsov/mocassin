@@ -21,10 +21,19 @@ public interface ArxivDAOFacade {
 	/**
 	 * loads the source of an article with given metadata
 	 * 
-	 * !!! WARNING calling method should close the returned input stream on its own
+	 * !!! WARNING calling method should close the returned input stream on its
+	 * own
 	 * 
 	 * @param metadata
 	 * @return
 	 */
 	InputStream loadSource(ArticleMetadata metadata);
+
+	/**
+	 * loads PDF representation of an article with given metadata
+	 * 
+	 * @param metadata
+	 * @return
+	 */
+	InputStream loadPDF(ArticleMetadata metadata) throws LoadingPdfException;
 }

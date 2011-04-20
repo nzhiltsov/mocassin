@@ -9,9 +9,9 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
-import com.google.common.base.Predicate;
-
 import ru.ksu.niimm.cll.mocassin.parser.Node;
+
+import com.google.common.base.Predicate;
 
 @XmlType
 @XmlAccessorType(XmlAccessType.FIELD)

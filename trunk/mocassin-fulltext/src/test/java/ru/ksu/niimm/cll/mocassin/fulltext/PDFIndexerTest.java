@@ -4,9 +4,12 @@ import java.io.InputStream;
 
 import junit.framework.Assert;
 
+import org.apache.lucene.index.IndexWriter;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import ru.ksu.niimm.cll.mocassin.fulltext.providers.IndexWriterProvider;
 
 import com.google.inject.Inject;
 import com.mycila.testing.junit.MycilaJunitRunner;
@@ -17,6 +20,8 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 public class PDFIndexerTest {
 	@Inject
 	private PDFIndexer pdfIndexer;
+	@Inject
+	private IndexWriterProvider<IndexWriter> indexWriterProvider;
 
 	private InputStream in;
 
@@ -26,7 +31,7 @@ public class PDFIndexerTest {
 	}
 
 	@Test
-	public void testSaveAndGetPageNumber() throws PersistingDocumentException {
+	public void testSaveAndGetPageNumber() throws Exception {
 		this.pdfIndexer.save("http://localhost/example.pdf", in);
 		int pageNumber = this.pdfIndexer
 				.getPageNumber("http://localhost/example.pdf",
@@ -42,6 +47,7 @@ public class PDFIndexerTest {
 						"http://localhost/example.pdf",
 						"suppose that normal projective variety be effective visitors on such that are klt we consider the case when the cone spanned bt the divisors is a MDR");
 		Assert.assertEquals(33, pageNumber);
+		indexWriterProvider.get().close();
 
 	}
 }

@@ -7,13 +7,16 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.StringTokenizer;
 import java.util.TreeSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import ru.ksu.niimm.cll.mocassin.fulltext.EmptyResultException;
+import ru.ksu.niimm.cll.mocassin.fulltext.PDFIndexer;
 import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
@@ -26,8 +29,8 @@ import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
 import ru.ksu.niimm.cll.mocassin.parser.Edge;
 import ru.ksu.niimm.cll.mocassin.parser.EdgeType;
 import ru.ksu.niimm.cll.mocassin.parser.Node;
-import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl.NodePositionComparator;
 import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl.EnclosingNodePredicate;
+import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl.NodePositionComparator;
 import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl.NodePositionPredicate;
 import ru.ksu.niimm.cll.mocassin.parser.latex.builder.StructureBuilder;
 import ru.ksu.niimm.cll.mocassin.parser.util.StandardEnvironments;
@@ -43,9 +46,13 @@ public class LatexStructuralElementSearcherImpl implements
 	private static final String EQUATION_ENVIRONMENT_NAME = "equation";
 	private static final int DOCUMENT_MAX_SIZE = 50 * 1024 * 1024;
 	@Inject
+	private Logger logger;
+	@Inject
 	private StructureBuilder structureBuilder;
 	@Inject
 	private StructuralElementTypeRecognizer structuralElementTypeRecognizer;
+	@Inject
+	private PDFIndexer pdfIndexer;
 
 	private List<Edge<Node, Node>> edges;
 
@@ -162,19 +169,50 @@ public class LatexStructuralElementSearcherImpl implements
 		return structuralElementTypeRecognizer;
 	}
 
+	private String getPdfUri() {
+		return parsedDocument.getPdfUri();
+	}
+
+	private int getPageNumber(String fullTextQuery) throws EmptyResultException {
+		return pdfIndexer.getPageNumber(getPdfUri(), fullTextQuery);
+	}
+
 	private class Node2ElementFunction implements
 			Function<Node, StructuralElement> {
+
+		private static final int MINIMAL_TOKEN_COUNT = 6;
 
 		@Override
 		public StructuralElement apply(Node node) {
 			String uri = String.format("%s/s%s", parsedDocument.getFilename(),
 					node.getId());
-			StructuralElement element = new StructuralElementImpl.Builder(
-					uri.hashCode()).uri(uri).name(node.getName()).build();
+			StructuralElement element = new StructuralElementImpl.Builder(uri
+					.hashCode()).uri(uri).name(node.getName()).build();
 			List<String> labels = new ArrayList<String>();
 			labels.add(node.getLabelText());
 			element.setLabels(labels);
 			element.setContents(node.getContents());
+			StringTokenizer st = new StringTokenizer(element.getContents());
+			if (st.countTokens() >= MINIMAL_TOKEN_COUNT) {
+				StringBuffer sb = new StringBuffer();
+				for (int i = 1; i <= MINIMAL_TOKEN_COUNT; i++) {
+					sb.append(String.format("%s ", st.nextToken()));
+				}
+				try {
+					int pageNumber = getPageNumber(sb.toString());
+					element.setStartPageNumber(pageNumber);
+				} catch (EmptyResultException e) {
+					logger
+							.log(
+									Level.SEVERE,
+									String
+											.format(
+													"failed to find the page number for a segment %s on PDF: %s",
+													element.getUri(),
+													getPdfUri()));
+				}
+			}
+
 			/**
 			 * TODO : extract tokens from LaTeX
 			 */
@@ -210,8 +248,8 @@ public class LatexStructuralElementSearcherImpl implements
 		public Reference apply(Edge<Node, Node> edge) {
 			StructuralElement from = node2ElementFunction.apply(edge.getFrom());
 			StructuralElement to = node2ElementFunction.apply(edge.getTo());
-			Reference ref = new ReferenceImpl.Builder(++count)
-					.document(document).from(from).to(to).build();
+			Reference ref = new ReferenceImpl.Builder(++count).document(
+					document).from(from).to(to).build();
 			if (edge.getContext().getEdgeType() == EdgeType.CONTAINS) {
 				ref.setPredictedRelation(MocassinOntologyRelations.HAS_PART);
 			} else if (edge.getContext().getEdgeType() == EdgeType.REFERS_TO) {
