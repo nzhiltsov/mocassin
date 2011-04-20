@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -26,6 +27,7 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext( { NlpModule.class, OntologyModule.class, VirtuosoModule.class,
 		LatexParserModule.class })
+@Ignore("Gate facilities is out of use now")
 public class StructuralElementSearcherTest {
 
 	@Inject
