@@ -55,9 +55,9 @@ public interface StructuralElement {
 	 */
 	String getName();
 
-	String getContents();
+	List<String> getContents();
 
-	void setContents(String contents);
+	void setContents(String... contents);
 
 	/**
 	 * 

@@ -15,7 +15,7 @@ import ru.ksu.niimm.cll.mocassin.virtuoso.impl.RDFTripleImpl;
 public class ReferenceTripleUtilImpl implements ReferenceTripleUtil {
 	private static final String TRIPLE_PATTERN = "<%s> <%s> <%s> .";
 	private static final String RDFS_TYPE = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
-	private static final String INTEGER_PATTERN = "<%s> <%s> \"%d\"^^<http://www.w3.org/2001/XMLSchema#integer>";
+	private static final String INTEGER_PATTERN = "<%s> <%s> \"%d\"^^<http://www.w3.org/2001/XMLSchema#integer> .";
 
 	@Override
 	public Set<RDFTriple> convert(List<Reference> references) {
@@ -31,16 +31,14 @@ public class ReferenceTripleUtilImpl implements ReferenceTripleUtil {
 
 			triples.add(createPageNumberTriple(from));
 			triples.add(createPageNumberTriple(to));
-			
+
 			triples.add(createTriple(from.getUri(), ref.getPredictedRelation()
 					.getUri(), to.getUri()));
 			triples.add(createTriple(ref.getDocument().getFilename(),
-					MocassinOntologyRelations.HAS_SEGMENT.getUri(), from
-							.getUri()));
-			triples
-					.add(createTriple(ref.getDocument().getFilename(),
-							MocassinOntologyRelations.HAS_SEGMENT.getUri(), to
-									.getUri()));
+					MocassinOntologyRelations.HAS_SEGMENT.getUri(),
+					from.getUri()));
+			triples.add(createTriple(ref.getDocument().getFilename(),
+					MocassinOntologyRelations.HAS_SEGMENT.getUri(), to.getUri()));
 		}
 		return triples;
 	}
@@ -55,14 +53,21 @@ public class ReferenceTripleUtilImpl implements ReferenceTripleUtil {
 	}
 
 	private static RDFTriple createPageNumberTriple(StructuralElement element) {
-		return new RDFTripleImpl(String.format(INTEGER_PATTERN, element
-				.getUri(), MocassinOntologyRelations.HAS_START_PAGE_NUMBER
-				.getUri(), element.getStartPageNumber()));
+		return new RDFTripleImpl(String.format(INTEGER_PATTERN,
+				element.getUri(),
+				MocassinOntologyRelations.HAS_START_PAGE_NUMBER.getUri(),
+				element.getStartPageNumber()));
 	}
 
 	private static RDFTriple createValueTriple(StructuralElement element) {
-		return new RDFTripleImpl(String.format("<%s> <%s> \"%s\"", element
-				.getUri(), MocassinOntologyRelations.HAS_TEXT.getUri(), element
-				.getContents()));
+		List<String> contents = element.getContents();
+		StringBuffer sb = new StringBuffer();
+		for (String str : contents) {
+			sb.append(str);
+			sb.append(" ");
+		}
+		return new RDFTripleImpl(String.format("<%s> <%s> \"%s\" .",
+				element.getUri(), MocassinOntologyRelations.HAS_TEXT.getUri(),
+				sb.toString()));
 	}
 }

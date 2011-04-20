@@ -1,7 +1,10 @@
 package ru.ksu.niimm.cll.mocassin.parser.impl;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -19,7 +22,7 @@ public class NodeImpl implements Node {
 	private String id;
 	@XmlElement
 	private String name;
-	private StringBuffer contents = new StringBuffer();
+	private List<String> contents = new LinkedList<String>();
 	private int beginLine;
 	private int endLine;
 	private int offset;
@@ -48,12 +51,12 @@ public class NodeImpl implements Node {
 		return id;
 	}
 
-	public String getContents() {
-		return contents.toString();
+	public List<String> getContents() {
+		return contents;
 	}
 
-	public void addContents(String text) {
-		this.contents.append(text);
+	public void addContents(String... tokens) {
+		Collections.addAll(this.contents, tokens);
 	}
 
 	public int getBeginLine() {

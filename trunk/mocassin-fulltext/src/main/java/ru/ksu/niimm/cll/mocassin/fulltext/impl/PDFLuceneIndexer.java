@@ -18,6 +18,7 @@ import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.util.Version;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.util.PDFTextStripper;
 import org.apache.pdfbox.util.Splitter;
@@ -74,8 +75,8 @@ public class PDFLuceneIndexer implements PDFIndexer {
 	@Override
 	public int getPageNumber(String pdfDocumentUri, String fullTextQuery)
 			throws EmptyResultException {
-		QueryParser queryParser = new QueryParser("contents",
-				new StandardAnalyzer());
+		QueryParser queryParser = new QueryParser(Version.LUCENE_31,
+				"contents", new StandardAnalyzer(Version.LUCENE_31));
 		int pageNumber = -1;
 		try {
 			Query query = queryParser.parse(fullTextQuery);
@@ -98,8 +99,6 @@ public class PDFLuceneIndexer implements PDFIndexer {
 		}
 
 		if (pageNumber != -1) {
-			logger.log(Level.INFO, String.format("search '%s' is OK",
-					fullTextQuery));
 			return pageNumber;
 		}
 		throw new EmptyResultException("page number was not found");

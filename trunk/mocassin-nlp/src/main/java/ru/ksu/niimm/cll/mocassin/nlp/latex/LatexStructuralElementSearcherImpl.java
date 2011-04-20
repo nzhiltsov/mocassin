@@ -10,7 +10,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
-import java.util.StringTokenizer;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,6 +23,7 @@ import ru.ksu.niimm.cll.mocassin.nlp.Token;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.ReferenceImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.StructuralElementImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.recognizer.StructuralElementTypeRecognizer;
+import ru.ksu.niimm.cll.mocassin.nlp.util.StopWordLoader;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
 import ru.ksu.niimm.cll.mocassin.parser.Edge;
@@ -38,6 +38,7 @@ import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
 
 import com.google.common.base.Function;
+import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 
@@ -53,6 +54,8 @@ public class LatexStructuralElementSearcherImpl implements
 	private StructuralElementTypeRecognizer structuralElementTypeRecognizer;
 	@Inject
 	private PDFIndexer pdfIndexer;
+	@Inject
+	private StopWordLoader stopWordLoader;
 
 	private List<Edge<Node, Node>> edges;
 
@@ -126,7 +129,12 @@ public class LatexStructuralElementSearcherImpl implements
 			Iterable<Node> enclosingNodes = Iterables.filter(indexingNodes,
 					new EnclosingNodePredicate(currentLineNumber));
 			for (Node enclosingNode : enclosingNodes) {
-				enclosingNode.addContents(StringUtil.stripLatexMarkup(line));
+				List<String> tokens = StringUtil.stripLatexMarkup(line);
+				Iterable<String> tokensForIndex = Iterables.filter(tokens,
+						getNonStopWordPredicate());
+				String[] contents = Iterables.toArray(tokensForIndex,
+						String.class);
+				enclosingNode.addContents(contents);
 			}
 
 		}
@@ -177,6 +185,10 @@ public class LatexStructuralElementSearcherImpl implements
 		return pdfIndexer.getPageNumber(getPdfUri(), fullTextQuery);
 	}
 
+	public Predicate<String> getNonStopWordPredicate() {
+		return stopWordLoader.getNonStopWordPredicate();
+	}
+
 	private class Node2ElementFunction implements
 			Function<Node, StructuralElement> {
 
@@ -186,30 +198,29 @@ public class LatexStructuralElementSearcherImpl implements
 		public StructuralElement apply(Node node) {
 			String uri = String.format("%s/s%s", parsedDocument.getFilename(),
 					node.getId());
-			StructuralElement element = new StructuralElementImpl.Builder(uri
-					.hashCode()).uri(uri).name(node.getName()).build();
+			StructuralElement element = new StructuralElementImpl.Builder(
+					uri.hashCode()).uri(uri).name(node.getName()).build();
 			List<String> labels = new ArrayList<String>();
 			labels.add(node.getLabelText());
 			element.setLabels(labels);
-			element.setContents(node.getContents());
-			StringTokenizer st = new StringTokenizer(element.getContents());
-			if (st.countTokens() >= MINIMAL_TOKEN_COUNT) {
+			String[] contents = node.getContents().toArray(
+					new String[node.getContents().size()]);
+			element.setContents(contents);
+			if (element.getContents().size() >= MINIMAL_TOKEN_COUNT) {
 				StringBuffer sb = new StringBuffer();
-				for (int i = 1; i <= MINIMAL_TOKEN_COUNT; i++) {
-					sb.append(String.format("%s ", st.nextToken()));
+				for (int i = 0; i < MINIMAL_TOKEN_COUNT; i++) {
+					sb.append(String
+							.format("%s ", element.getContents().get(i)));
 				}
 				try {
 					int pageNumber = getPageNumber(sb.toString());
 					element.setStartPageNumber(pageNumber);
 				} catch (EmptyResultException e) {
-					logger
-							.log(
-									Level.SEVERE,
-									String
-											.format(
-													"failed to find the page number for a segment %s on PDF: %s",
-													element.getUri(),
-													getPdfUri()));
+					logger.log(
+							Level.SEVERE,
+							String.format(
+									"failed to find the page number for a segment %s on PDF: %s",
+									element.getUri(), getPdfUri()));
 				}
 			}
 
@@ -248,8 +259,8 @@ public class LatexStructuralElementSearcherImpl implements
 		public Reference apply(Edge<Node, Node> edge) {
 			StructuralElement from = node2ElementFunction.apply(edge.getFrom());
 			StructuralElement to = node2ElementFunction.apply(edge.getTo());
-			Reference ref = new ReferenceImpl.Builder(++count).document(
-					document).from(from).to(to).build();
+			Reference ref = new ReferenceImpl.Builder(++count)
+					.document(document).from(from).to(to).build();
 			if (edge.getContext().getEdgeType() == EdgeType.CONTAINS) {
 				ref.setPredictedRelation(MocassinOntologyRelations.HAS_PART);
 			} else if (edge.getContext().getEdgeType() == EdgeType.REFERS_TO) {

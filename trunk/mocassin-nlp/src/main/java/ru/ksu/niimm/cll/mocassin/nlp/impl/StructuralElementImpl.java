@@ -1,5 +1,7 @@
 package ru.ksu.niimm.cll.mocassin.nlp.impl;
 
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
@@ -13,7 +15,7 @@ public class StructuralElementImpl implements StructuralElement {
 	private final long end;
 	private final String name;
 	private List<String> labels;
-	private String contents;
+	private List<String> contents = new LinkedList<String>();
 	private List<Token> titleTokens;
 	private int startPageNumber;
 	private MocassinOntologyClasses predictedClass;
@@ -107,12 +109,12 @@ public class StructuralElementImpl implements StructuralElement {
 		this.predictedClass = predictedClass;
 	}
 
-	public String getContents() {
+	public List<String> getContents() {
 		return contents;
 	}
 
-	public void setContents(String contents) {
-		this.contents = contents;
+	public void setContents(String... contents) {
+		Collections.addAll(this.contents, contents);
 	}
 
 	public int getStartPageNumber() {

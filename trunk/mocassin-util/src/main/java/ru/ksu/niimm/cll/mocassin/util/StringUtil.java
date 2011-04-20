@@ -2,6 +2,7 @@ package ru.ksu.niimm.cll.mocassin.util;
 
 import java.rmi.server.UID;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
@@ -10,7 +11,12 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang.StringEscapeUtils;
 
 public class StringUtil {
-	private static final String DOLLAR_PATTERN = "\\$.[^$]*\\$";
+	private static final Pattern STYLE_PATTERN = Pattern
+			.compile("\\\\[a-zA-Z]+\\{([^}]*)\\}");
+	private static final Pattern LATIN_TEXT_PATTERN = Pattern
+			.compile("[a-zA-Z]+");
+
+	private static final String DOLLAR_PATTERN_STRING = "\\$.[^$]*\\$";
 	private static final String BACKSLASH_PATTERN = "\\\\[a-z]+";
 
 	private StringUtil() {
@@ -55,14 +61,36 @@ public class StringUtil {
 		return str.replaceAll(BACKSLASH_PATTERN, "").trim();
 	}
 
-	public static String stripLatexMarkup(String str) {
+	/**
+	 * returns a list of tokens extracted from a given Latex text preserving
+	 * initial order
+	 * 
+	 * @param str
+	 * @return
+	 */
+	public static List<String> stripLatexMarkup(String str) {
 		String escaped = StringEscapeUtils.escapeJava(str);
-		String processed = escaped.replaceAll(DOLLAR_PATTERN, "");
-		Matcher styleMatcher = Pattern.compile("\\\\[a-zA-Z]+\\{([^}]*)\\}")
-				.matcher(processed);
-		if (styleMatcher.find()) {
-			return styleMatcher.replaceAll(styleMatcher.group(1));
+		StringTokenizer st = new StringTokenizer(escaped);
+		List<String> list = new LinkedList<String>();
+		while (st.hasMoreTokens()) {
+			String token = st.nextToken().replaceAll(DOLLAR_PATTERN_STRING, "");
+			/**
+			 * ignore references and citations
+			 */
+			if (token.startsWith("\\\\ref{") || token.startsWith("\\\\cite{")) {
+				continue;
+			}
+
+			if (LATIN_TEXT_PATTERN.matcher(token).matches()) {
+				list.add(token);
+			} else {
+				Matcher styleMatcher = STYLE_PATTERN.matcher(token);
+				if (styleMatcher.find()) {
+					list.add(styleMatcher.group(1));
+				}
+			}
 		}
-		return processed;
+
+		return list;
 	}
 }
