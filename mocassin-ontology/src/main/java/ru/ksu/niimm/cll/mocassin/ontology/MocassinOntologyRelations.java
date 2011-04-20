@@ -14,7 +14,8 @@ public enum MocassinOntologyRelations {
 			"http://cll.niimm.ksu.ru/ontologies/mocassin#hasConsequence", 2), EXEMPLIFIES(
 			"http://cll.niimm.ksu.ru/ontologies/mocassin#exemplifies", 3), HAS_SEGMENT(
 			"http://cll.niimm.ksu.ru/ontologies/mocassin#hasSegment", 4), HAS_START_PAGE_NUMBER(
-			"http://cll.niimm.ksu.ru/ontologies/mocassin#hasStartPageNumber", 5);
+			"http://cll.niimm.ksu.ru/ontologies/mocassin#hasStartPageNumber", 5), HAS_TEXT(
+			"http://cll.niimm.ksu.ru/ontologies/mocassin#hasText", 6);
 
 	private String uri;
 	/**

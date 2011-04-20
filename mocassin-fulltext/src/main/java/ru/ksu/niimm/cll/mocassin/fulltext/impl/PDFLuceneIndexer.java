@@ -72,7 +72,8 @@ public class PDFLuceneIndexer implements PDFIndexer {
 	}
 
 	@Override
-	public int getPageNumber(String pdfDocumentUri, String fullTextQuery) {
+	public int getPageNumber(String pdfDocumentUri, String fullTextQuery)
+			throws EmptyResultException {
 		QueryParser queryParser = new QueryParser("contents",
 				new StandardAnalyzer());
 		int pageNumber = -1;
@@ -88,17 +89,20 @@ public class PDFLuceneIndexer implements PDFIndexer {
 		} catch (ParseException e) {
 			logger.log(Level.SEVERE, "failed to parse a given query: "
 					+ fullTextQuery);
-			throw new IllegalArgumentException();
+			throw new EmptyResultException(e);
 		} catch (IOException e) {
-			logger.log(Level.SEVERE, "failed to parse a given query: "
-					+ fullTextQuery);
-			throw new IllegalArgumentException();
+			logger.log(Level.SEVERE, String.format(
+					"failed to search with a given query '%s' due to: %s",
+					fullTextQuery, e.getMessage()));
+			throw new EmptyResultException(e);
 		}
 
 		if (pageNumber != -1) {
+			logger.log(Level.INFO, String.format("search '%s' is OK",
+					fullTextQuery));
 			return pageNumber;
 		}
-		throw new EmptyResultException();
+		throw new EmptyResultException("page number was not found");
 	}
 
 	/**

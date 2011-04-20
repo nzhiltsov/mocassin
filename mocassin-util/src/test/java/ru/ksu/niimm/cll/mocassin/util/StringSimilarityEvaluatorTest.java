@@ -3,7 +3,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import ru.ksu.niimm.cll.mocassin.util.StringSimilarityEvaluator;
 import ru.ksu.niimm.cll.mocassin.util.StringSimilarityEvaluator.SimilarityMetrics;
 
 import com.google.common.collect.ImmutableList;

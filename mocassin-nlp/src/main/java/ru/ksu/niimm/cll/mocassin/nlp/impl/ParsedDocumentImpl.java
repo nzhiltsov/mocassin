@@ -3,32 +3,41 @@ package ru.ksu.niimm.cll.mocassin.nlp.impl;
 import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
 
 public class ParsedDocumentImpl implements ParsedDocument {
-	private String filename;
+	private String uri;
 	private long size;
+	private String pdfUri;
 
-	public ParsedDocumentImpl(String filename) {
-		this.filename = filename;
+	public ParsedDocumentImpl(String uri) {
+		this.uri = uri;
+	}
+
+	public ParsedDocumentImpl(String filename, String pdfUri) {
+		this.uri = filename;
+		this.pdfUri = pdfUri;
 	}
 
 	public ParsedDocumentImpl(String filename, long size) {
-		this.filename = filename;
+		this.uri = filename;
 		this.size = size;
 	}
 
 	public String getFilename() {
-		return filename;
+		return uri;
 	}
 
 	public long getSize() {
 		return size;
 	}
 
+	public String getPdfUri() {
+		return pdfUri;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((filename == null) ? 0 : filename.hashCode());
+		result = prime * result + ((uri == null) ? 0 : uri.hashCode());
 		return result;
 	}
 
@@ -41,10 +50,10 @@ public class ParsedDocumentImpl implements ParsedDocument {
 		if (getClass() != obj.getClass())
 			return false;
 		ParsedDocumentImpl other = (ParsedDocumentImpl) obj;
-		if (filename == null) {
-			if (other.filename != null)
+		if (uri == null) {
+			if (other.uri != null)
 				return false;
-		} else if (!filename.equals(other.filename))
+		} else if (!uri.equals(other.uri))
 			return false;
 		return true;
 	}

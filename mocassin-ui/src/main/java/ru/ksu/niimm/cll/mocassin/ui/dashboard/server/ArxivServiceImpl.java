@@ -8,6 +8,11 @@ import java.util.logging.Logger;
 
 import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.arxiv.ArxivDAOFacade;
+import ru.ksu.niimm.cll.mocassin.arxiv.LoadingPdfException;
+import ru.ksu.niimm.cll.mocassin.arxiv.impl.Link;
+import ru.ksu.niimm.cll.mocassin.arxiv.impl.Link.PdfLinkPredicate;
+import ru.ksu.niimm.cll.mocassin.fulltext.PDFIndexer;
+import ru.ksu.niimm.cll.mocassin.fulltext.PersistingDocumentException;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.ParsedDocumentImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.latex.LatexSearcherParseException;
@@ -34,6 +39,8 @@ public class ArxivServiceImpl implements ArxivService {
 	private LatexStructuralElementSearcher latexStructuralElementSearcher;
 	@Inject
 	private ReferenceTripleUtil referenceTripleUtil;
+	@Inject
+	private PDFIndexer pdfIndexer;
 
 	@Override
 	public void handle(String arxivId) {
@@ -41,16 +48,35 @@ public class ArxivServiceImpl implements ArxivService {
 		try {
 			ArticleMetadata metadata = arxivDAOFacade.retrieve(arxivId);
 			InputStream sourceStream = arxivDAOFacade.loadSource(metadata);
+			InputStream pdfInputStream = arxivDAOFacade.loadPDF(metadata);
+			Link pdfLink = Iterables.find(metadata.getLinks(),
+					new PdfLinkPredicate());
+			pdfIndexer.save(pdfLink.getHref(), pdfInputStream);
 			ParsedDocumentImpl document = new ParsedDocumentImpl(metadata
-					.getId());
+					.getId(), pdfLink.getHref());
 			latexStructuralElementSearcher.parse(sourceStream, document, true);
-			List<Reference> references = latexStructuralElementSearcher.retrieveReferences(document);
+
+			List<Reference> references = latexStructuralElementSearcher
+					.retrieveReferences(document);
 			Set<RDFTriple> triples = referenceTripleUtil.convert(references);
 			ontologyResourceFacade.insert(metadata, triples);
 		} catch (LatexSearcherParseException e) {
 			String message = String.format(
 					"failed to parse the source of the article %s due to: %s",
 					arxivId, e.getMessage());
+			logger.log(Level.SEVERE, message);
+			throw new RuntimeException(message);
+		} catch (PersistingDocumentException e) {
+			String message = String
+					.format(
+							"failed to persist the PDF index of the article %s due to: %s",
+							arxivId, e.getMessage());
+			logger.log(Level.SEVERE, message);
+			throw new RuntimeException(message);
+		} catch (LoadingPdfException e) {
+			String message = String.format(
+					"failed to load PDF of the article %s due to: %s", arxivId,
+					e.getMessage());
 			logger.log(Level.SEVERE, message);
 			throw new RuntimeException(message);
 		}

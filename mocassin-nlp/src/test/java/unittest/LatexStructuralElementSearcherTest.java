@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ru.ksu.niimm.cll.mocassin.fulltext.FullTextModule;
 import ru.ksu.niimm.cll.mocassin.nlp.NlpModule;
 import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
@@ -24,7 +25,7 @@ import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext({ NlpModule.class, LatexParserModule.class })
+@GuiceContext({ NlpModule.class, LatexParserModule.class, FullTextModule.class })
 public class LatexStructuralElementSearcherTest {
 	@Inject
 	private LatexStructuralElementSearcher latexStructuralElementSearcher;
@@ -36,7 +37,7 @@ public class LatexStructuralElementSearcherTest {
 	@Before
 	public void init() throws Exception {
 		this.in = this.getClass().getResourceAsStream("/example.tex");
-		parsedDocument = new ParsedDocumentImpl("http://somehost.com/doc");
+		parsedDocument = new ParsedDocumentImpl("http://somehost.com/doc", "http://localhost/example.pdf");
 		latexStructuralElementSearcher.parse(this.in, parsedDocument, true);
 	}
 

@@ -25,8 +25,13 @@ public class ReferenceTripleUtilImpl implements ReferenceTripleUtil {
 			StructuralElement to = ref.getTo();
 			triples.add(createTypeTriple(from));
 			triples.add(createTypeTriple(to));
+
+			triples.add(createValueTriple(from));
+			triples.add(createValueTriple(to));
+
 			triples.add(createPageNumberTriple(from));
 			triples.add(createPageNumberTriple(to));
+			
 			triples.add(createTriple(from.getUri(), ref.getPredictedRelation()
 					.getUri(), to.getUri()));
 			triples.add(createTriple(ref.getDocument().getFilename(),
@@ -51,7 +56,13 @@ public class ReferenceTripleUtilImpl implements ReferenceTripleUtil {
 
 	private static RDFTriple createPageNumberTriple(StructuralElement element) {
 		return new RDFTripleImpl(String.format(INTEGER_PATTERN, element
-				.getUri(), MocassinOntologyRelations.HAS_START_PAGE_NUMBER.getUri(),
-				element.getStartPageNumber()));
+				.getUri(), MocassinOntologyRelations.HAS_START_PAGE_NUMBER
+				.getUri(), element.getStartPageNumber()));
+	}
+
+	private static RDFTriple createValueTriple(StructuralElement element) {
+		return new RDFTripleImpl(String.format("<%s> <%s> \"%s\"", element
+				.getUri(), MocassinOntologyRelations.HAS_TEXT.getUri(), element
+				.getContents()));
 	}
 }

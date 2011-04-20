@@ -20,5 +20,5 @@ public interface PDFIndexer {
 	 * @return
 	 * @throws EmptyResultException
 	 */
-	int getPageNumber(String pdfDocumentUri, String fullTextQuery);
+	int getPageNumber(String pdfDocumentUri, String fullTextQuery) throws EmptyResultException;
 }
