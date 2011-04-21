@@ -2,7 +2,6 @@ package ru.ksu.niimm.cll.mocassin.virtuoso.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFGraph;
@@ -72,7 +71,6 @@ public class VirtuosoDAOImpl implements VirtuosoDAO {
 		VirtuosoQueryExecution vqe = VirtuosoQueryExecutionFactory.create(
 				query, virtGraph);
 		ResultSet results = vqe.execSelect();
-		logger.log(Level.INFO, query.toString());
 		while (results.hasNext()) {
 			QuerySolution solution = results.nextSolution();
 			solutions.add(solution);
@@ -90,7 +88,6 @@ public class VirtuosoDAOImpl implements VirtuosoDAO {
 		VirtuosoQueryExecution vqe = VirtuosoQueryExecutionFactory.create(
 				query, virtGraph);
 		ResultSet results = vqe.execSelect();
-		logger.log(Level.INFO, query);
 		while (results.hasNext()) {
 			QuerySolution solution = results.nextSolution();
 			solutions.add(solution);
