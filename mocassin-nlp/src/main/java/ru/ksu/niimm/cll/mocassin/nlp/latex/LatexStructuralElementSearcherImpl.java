@@ -6,8 +6,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -86,11 +88,17 @@ public class LatexStructuralElementSearcherImpl implements
 		}
 	}
 
+	/**
+	 * TODO: traversing a list is non-efficient; refactoring from a list of
+	 * edges to a list of nodes is required!!
+	 * 
+	 * @param parsingInputStream
+	 * @throws IOException
+	 */
 	private void extractTextContents(InputStream parsingInputStream)
 			throws IOException {
 
-		SortedSet<Node> indexingNodes = new TreeSet<Node>(
-				new NodePositionComparator());
+		List<Node> indexingNodes = new ArrayList<Node>();
 		Set<Node> nodes = new HashSet<Node>();
 		for (Edge<Node, Node> edge : this.edges) {
 			Node from = edge.getFrom();
@@ -111,6 +119,7 @@ public class LatexStructuralElementSearcherImpl implements
 			nodes.add(from);
 			nodes.add(to);
 		}
+		Collections.sort(indexingNodes, new NodePositionComparator());
 
 		BufferedReader reader = new BufferedReader(new InputStreamReader(
 				parsingInputStream));
@@ -120,7 +129,7 @@ public class LatexStructuralElementSearcherImpl implements
 		while ((line = reader.readLine()) != null) {
 			currentLineNumber++;
 			/**
-			 * TODO: skip the border of a segment
+			 * TODO: skip the border of a segment in a more accurate way
 			 */
 			if (Iterables.find(nodes, new NodePositionPredicate(
 					currentLineNumber), null) != null) {
@@ -128,12 +137,11 @@ public class LatexStructuralElementSearcherImpl implements
 			}
 			Iterable<Node> enclosingNodes = Iterables.filter(indexingNodes,
 					new EnclosingNodePredicate(currentLineNumber));
+			List<String> tokens = StringUtil.stripLatexMarkup(line);
+			Iterable<String> tokensForIndex = Iterables.filter(tokens,
+					getNonStopWordPredicate());
+			String[] contents = Iterables.toArray(tokensForIndex, String.class);
 			for (Node enclosingNode : enclosingNodes) {
-				List<String> tokens = StringUtil.stripLatexMarkup(line);
-				Iterable<String> tokensForIndex = Iterables.filter(tokens,
-						getNonStopWordPredicate());
-				String[] contents = Iterables.toArray(tokensForIndex,
-						String.class);
 				enclosingNode.addContents(contents);
 			}
 
@@ -206,6 +214,7 @@ public class LatexStructuralElementSearcherImpl implements
 			String[] contents = node.getContents().toArray(
 					new String[node.getContents().size()]);
 			element.setContents(contents);
+
 			if (element.getContents().size() >= MINIMAL_TOKEN_COUNT) {
 				StringBuffer sb = new StringBuffer();
 				for (int i = 0; i < MINIMAL_TOKEN_COUNT; i++) {
@@ -249,7 +258,7 @@ public class LatexStructuralElementSearcherImpl implements
 
 		private ParsedDocument document;
 
-		private Node2ElementFunction node2ElementFunction = new Node2ElementFunction();
+		private final Node2ElementFunction node2ElementFunction = new Node2ElementFunction();
 
 		public Edge2ReferenceFunction(ParsedDocument document) {
 			this.document = document;

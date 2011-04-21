@@ -18,4 +18,5 @@ public interface MocassinConstants extends Constants {
 	String authorName();
 	
 	String inferenceCheckboxLabel();
+	
 }

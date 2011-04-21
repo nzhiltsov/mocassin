@@ -1,7 +1,13 @@
 <module rename-to='viewer'>
-	<inherits name="com.google.gwt.user.User"/>
-	<inherits name="com.google.gwt.user.theme.standard.Standard"/>
-	<inherits name='org.thechiselgroup.choosel.protovis.ProtovisGWT'/>
-	<entry-point class="ru.ksu.niimm.cll.mocassin.ui.viewer.client.StructureViewer"/>
-	<source path='client'/>
+	<inherits name="com.google.gwt.user.User" />
+	<inherits name="com.google.gwt.user.theme.standard.Standard" />
+	<inherits name="com.google.gwt.uibinder.UiBinder" />
+	<inherits name="com.google.gwt.i18n.I18N" />
+	<inherits name='org.thechiselgroup.choosel.protovis.ProtovisGWT' />
+	
+	<extend-property name="locale" values="ru"/>
+	
+	<entry-point
+		class="ru.ksu.niimm.cll.mocassin.ui.viewer.client.StructureViewer" />
+	<source path='client' />
 </module>

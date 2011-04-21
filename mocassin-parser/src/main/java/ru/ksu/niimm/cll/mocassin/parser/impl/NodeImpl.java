@@ -98,7 +98,7 @@ public class NodeImpl implements Node {
 
 	@Override
 	public String toString() {
-		return this.id;
+		return String.format("%s %s", this.id, this.name);
 	}
 
 	@Override
