@@ -4,7 +4,8 @@ import java.util.Map;
 
 import ru.ksu.niimm.cll.mocassin.parser.Edge;
 import ru.ksu.niimm.cll.mocassin.parser.Node;
+import edu.uci.ics.jung.graph.Graph;
 
 public interface ImportantNodeService {
-	Map<Node, Float> computeImportanceRanks(Iterable<Edge<Node, Node>> graph);
+	Map<Node, Float> computeImportanceRanks(Graph<Node, Edge> graph);
 }

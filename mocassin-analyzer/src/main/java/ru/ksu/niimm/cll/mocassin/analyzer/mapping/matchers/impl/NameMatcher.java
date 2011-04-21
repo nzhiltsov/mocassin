@@ -22,6 +22,8 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Ordering;
 import com.google.inject.Inject;
 
+import edu.uci.ics.jung.graph.Graph;
+
 public class NameMatcher implements Matcher {
 	@Inject
 	private OntologyFacade OntologyFacade;
@@ -30,11 +32,11 @@ public class NameMatcher implements Matcher {
 	private static float STRING_SIMILARITY_THRESHOLD = 0.26087f;
 
 	@Override
-	public Mapping doMapping(List<Edge<Node, Node>> graph) {
+	public Mapping doMapping(Graph<Node, Edge> graph) {
 		List<MappingElement> elements = new ArrayList<MappingElement>();
-		for (Edge<Node, Node> edge : graph) {
-			Node from = edge.getFrom();
-			Node to = edge.getTo();
+		for (Edge edge : graph.getEdges()) {
+			Node from = graph.getSource(edge);
+			Node to = graph.getDest(edge);
 			map(elements, from);
 			map(elements, to);
 		}
@@ -99,9 +101,8 @@ public class NameMatcher implements Matcher {
 	private Map<SimilarityMetrics, Float> computeConfidence(Node node,
 			OntologyConcept concept) {
 		Map<SimilarityMetrics, Float> confidences = new HashMap<SimilarityMetrics, Float>();
-		float similarity = StringSimilarityEvaluator.getSimilarity(
-				node.getName(), concept.getLabel(),
-				SimilarityMetrics.N_GRAM);
+		float similarity = StringSimilarityEvaluator.getSimilarity(node
+				.getName(), concept.getLabel(), SimilarityMetrics.N_GRAM);
 		confidences.put(SimilarityMetrics.N_GRAM, similarity);
 		return confidences;
 	}

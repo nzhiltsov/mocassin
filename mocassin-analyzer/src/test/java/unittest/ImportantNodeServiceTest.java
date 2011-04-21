@@ -1,22 +1,21 @@
 package unittest;
 
-import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections15.Predicate;
 import org.junit.Test;
 
 import ru.ksu.niimm.cll.mocassin.parser.Edge;
 import ru.ksu.niimm.cll.mocassin.parser.EdgeType;
 import ru.ksu.niimm.cll.mocassin.parser.Node;
-
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
+import edu.uci.ics.jung.algorithms.filters.EdgePredicateFilter;
+import edu.uci.ics.jung.graph.Graph;
 
 public class ImportantNodeServiceTest extends AbstractRankingTest {
 
 	@Test
 	public void testComputeRanks() {
-		for (List<Edge<Node, Node>> model : getModels()) {
+		for (Graph<Node, Edge> model : getModels()) {
 			Map<Node, Float> node2score = computeNodeRanks(model);
 			printScores(node2score);
 		}
@@ -30,21 +29,24 @@ public class ImportantNodeServiceTest extends AbstractRankingTest {
 	 * @param documentModel
 	 * @return
 	 */
-	protected Map<Node, Float> computeNodeRanks(List<Edge<Node, Node>> edges) {
-		Predicate<Edge<Node, Node>> predicate = new Predicate<Edge<Node, Node>>() {
+	protected Map<Node, Float> computeNodeRanks(Graph<Node, Edge> edges) {
+		Predicate<Edge> predicate = new Predicate<Edge>() {
 
 			@Override
-			public boolean apply(Edge<Node, Node> edge) {
+			public boolean evaluate(Edge edge) {
 				if (edge.getContext().getEdgeType() == EdgeType.REFERS_TO) {
 					return true;
 				}
 				return false;
 			}
+
 		};
-		Iterable<Edge<Node, Node>> hypergraph = Iterables.filter(edges,
+		EdgePredicateFilter<Node, Edge> refersToFilter = new EdgePredicateFilter<Node, Edge>(
 				predicate);
+		Graph<Node, Edge> refersToSubgraph = refersToFilter.transform(edges);
+
 		Map<Node, Float> node2score = getImportantNodeService()
-				.computeImportanceRanks(hypergraph);
+				.computeImportanceRanks(refersToSubgraph);
 		Map<Node, Float> sortedMap = sortByValue(node2score);
 		return sortedMap;
 	}

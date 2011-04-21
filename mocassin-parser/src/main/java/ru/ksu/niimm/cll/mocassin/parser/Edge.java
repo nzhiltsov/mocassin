@@ -11,12 +11,9 @@ import ru.ksu.niimm.cll.mocassin.parser.impl.adapters.EdgeAdapter;
  * 
  */
 @XmlJavaTypeAdapter(EdgeAdapter.class)
-public interface Edge<From extends Node, To extends Node> {
-	void connect(From from, To to, EdgeContext context);
+public interface Edge {
+	void setContext(EdgeContext edgeContext);
 
 	EdgeContext getContext();
 
-	Node getFrom();
-
-	Node getTo();
 }

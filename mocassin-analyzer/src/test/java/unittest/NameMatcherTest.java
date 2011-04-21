@@ -26,15 +26,18 @@ import com.google.inject.Inject;
 import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
+import edu.uci.ics.jung.graph.Graph;
+
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext( { AnalyzerModule.class, NlpModule.class,
-		LatexParserModule.class, OntologyModule.class, VirtuosoModule.class, FullTextModule.class })
+		LatexParserModule.class, OntologyModule.class, VirtuosoModule.class,
+		FullTextModule.class })
 public class NameMatcherTest {
 	@Inject
 	private StructureBuilder structureBuilder;
 	@Inject
 	private Matcher matcher;
-	private List<Edge<Node, Node>> graph;
+	private Graph<Node, Edge> graph;
 
 	@Before
 	public void init() throws Exception {
@@ -83,7 +86,7 @@ public class NameMatcherTest {
 		return matcher;
 	}
 
-	public List<Edge<Node, Node>> getGraph() {
+	public Graph<Node, Edge> getGraph() {
 		return graph;
 	}
 
