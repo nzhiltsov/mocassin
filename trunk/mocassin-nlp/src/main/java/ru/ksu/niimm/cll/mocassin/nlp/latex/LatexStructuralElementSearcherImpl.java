@@ -6,11 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.Collection;
 import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.logging.Level;
@@ -44,6 +41,8 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 
+import edu.uci.ics.jung.graph.Hypergraph;
+
 public class LatexStructuralElementSearcherImpl implements
 		LatexStructuralElementSearcher {
 	private static final String EQUATION_ENVIRONMENT_NAME = "equation";
@@ -59,7 +58,7 @@ public class LatexStructuralElementSearcherImpl implements
 	@Inject
 	private StopWordLoader stopWordLoader;
 
-	private List<Edge<Node, Node>> edges;
+	private Hypergraph<Node, Edge> hypergraph;
 
 	private ParsedDocument parsedDocument;
 
@@ -75,7 +74,7 @@ public class LatexStructuralElementSearcherImpl implements
 				parsingInputStream = inputStream;
 			}
 			parsingInputStream.mark(DOCUMENT_MAX_SIZE);
-			this.edges = this.structureBuilder.buildStructureGraph(
+			this.hypergraph = this.structureBuilder.buildStructureGraph(
 					parsingInputStream, false);
 			parsingInputStream.reset();
 			extractTextContents(parsingInputStream);
@@ -98,28 +97,19 @@ public class LatexStructuralElementSearcherImpl implements
 	private void extractTextContents(InputStream parsingInputStream)
 			throws IOException {
 
-		List<Node> indexingNodes = new ArrayList<Node>();
-		Set<Node> nodes = new HashSet<Node>();
-		for (Edge<Node, Node> edge : this.edges) {
-			Node from = edge.getFrom();
+		SortedSet<Node> indexingNodes = new TreeSet<Node>(
+				new NodePositionComparator());
+		Collection<Node> nodes = this.hypergraph.getVertices();
+		for (Node node : nodes) {
 
-			String fromName = from.getName();
-			if (from.isEnvironment()
+			String fromName = node.getName();
+			if (node.isEnvironment()
 					&& !fromName.equals(EQUATION_ENVIRONMENT_NAME)
 					&& !StandardEnvironments.contains(fromName)) {
-				indexingNodes.add(from);
-			}
-			Node to = edge.getTo();
-			String toName = to.getName();
-			if (to.isEnvironment() && !toName.equals(EQUATION_ENVIRONMENT_NAME)
-					&& !StandardEnvironments.contains(toName)) {
-				indexingNodes.add(to);
+				indexingNodes.add(node);
 			}
 
-			nodes.add(from);
-			nodes.add(to);
 		}
-		Collections.sort(indexingNodes, new NodePositionComparator());
 
 		BufferedReader reader = new BufferedReader(new InputStreamReader(
 				parsingInputStream));
@@ -150,8 +140,8 @@ public class LatexStructuralElementSearcherImpl implements
 
 	@Override
 	public List<Reference> retrieveReferences(ParsedDocument document) {
-		return CollectionUtil.asList(Iterables.transform(this.edges,
-				new Edge2ReferenceFunction(document)));
+		return CollectionUtil.asList(Iterables.transform(this.hypergraph
+				.getEdges(), new Edge2ReferenceFunction(document)));
 	}
 
 	@Override
@@ -169,16 +159,9 @@ public class LatexStructuralElementSearcherImpl implements
 
 	@Override
 	public List<StructuralElement> retrieveElements(ParsedDocument document) {
-		Set<Node> nodes = new HashSet<Node>();
-		for (Edge<Node, Node> edge : this.edges) {
-			Node from = edge.getFrom();
 
-			nodes.add(from);
-			Node to = edge.getTo();
-			nodes.add(to);
-		}
-		return CollectionUtil.asList(Iterables.transform(nodes,
-				new Node2ElementFunction()));
+		return CollectionUtil.asList(Iterables.transform(this.hypergraph
+				.getVertices(), new Node2ElementFunction()));
 	}
 
 	public StructuralElementTypeRecognizer getStructuralElementTypeRecognizer() {
@@ -206,8 +189,8 @@ public class LatexStructuralElementSearcherImpl implements
 		public StructuralElement apply(Node node) {
 			String uri = String.format("%s/s%s", parsedDocument.getFilename(),
 					node.getId());
-			StructuralElement element = new StructuralElementImpl.Builder(
-					uri.hashCode()).uri(uri).name(node.getName()).build();
+			StructuralElement element = new StructuralElementImpl.Builder(uri
+					.hashCode()).uri(uri).name(node.getName()).build();
 			List<String> labels = new ArrayList<String>();
 			labels.add(node.getLabelText());
 			element.setLabels(labels);
@@ -225,11 +208,14 @@ public class LatexStructuralElementSearcherImpl implements
 					int pageNumber = getPageNumber(sb.toString());
 					element.setStartPageNumber(pageNumber);
 				} catch (EmptyResultException e) {
-					logger.log(
-							Level.SEVERE,
-							String.format(
-									"failed to find the page number for a segment %s on PDF: %s",
-									element.getUri(), getPdfUri()));
+					logger
+							.log(
+									Level.SEVERE,
+									String
+											.format(
+													"failed to find the page number for a segment %s on PDF: %s",
+													element.getUri(),
+													getPdfUri()));
 				}
 			}
 
@@ -252,8 +238,7 @@ public class LatexStructuralElementSearcherImpl implements
 	 * @author linglab
 	 * 
 	 */
-	private class Edge2ReferenceFunction implements
-			Function<Edge<Node, Node>, Reference> {
+	private class Edge2ReferenceFunction implements Function<Edge, Reference> {
 		private int count;
 
 		private ParsedDocument document;
@@ -265,11 +250,13 @@ public class LatexStructuralElementSearcherImpl implements
 		}
 
 		@Override
-		public Reference apply(Edge<Node, Node> edge) {
-			StructuralElement from = node2ElementFunction.apply(edge.getFrom());
-			StructuralElement to = node2ElementFunction.apply(edge.getTo());
-			Reference ref = new ReferenceImpl.Builder(++count)
-					.document(document).from(from).to(to).build();
+		public Reference apply(Edge edge) {
+			StructuralElement from = node2ElementFunction.apply(hypergraph
+					.getSource(edge));
+			StructuralElement to = node2ElementFunction.apply(hypergraph
+					.getDest(edge));
+			Reference ref = new ReferenceImpl.Builder(++count).document(
+					document).from(from).to(to).build();
 			if (edge.getContext().getEdgeType() == EdgeType.CONTAINS) {
 				ref.setPredictedRelation(MocassinOntologyRelations.HAS_PART);
 			} else if (edge.getContext().getEdgeType() == EdgeType.REFERS_TO) {

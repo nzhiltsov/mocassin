@@ -26,6 +26,10 @@ import ru.ksu.niimm.cll.mocassin.parser.latex.builder.StructureBuilder;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 
+import edu.uci.ics.jung.graph.DirectedSparseMultigraph;
+import edu.uci.ics.jung.graph.Graph;
+import edu.uci.ics.jung.graph.util.Pair;
+
 /**
  * Analyzer that builds graph with labels/references and containment relations
  * as its edges
@@ -41,6 +45,7 @@ public class StructureBuilderImpl implements StructureBuilder {
 
 	private static final String NODE_ID_FORMAT = "%d_%d";
 	private LatexDocumentModel model;
+	private Graph<Node, Edge> hypergraph;
 
 	/*
 	 * (non-Javadoc)
@@ -50,15 +55,22 @@ public class StructureBuilderImpl implements StructureBuilder {
 	 * .ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel)
 	 */
 	@Override
-	public List<Edge<Node, Node>> buildStructureGraph(InputStream inputStream,
-			boolean closeStream) {
-		List<Edge<Node, Node>> edges = new ArrayList<Edge<Node, Node>>();
+	public synchronized Graph<Node, Edge> buildStructureGraph(
+			InputStream inputStream, boolean closeStream) {
+		/**
+		 * TODO: this method is declared synchronized; this leads to lower
+		 * performance; such a solution should be revised by considering the
+		 * overall application architecture
+		 **/
+
+		this.hypergraph = new DirectedSparseMultigraph<Node, Edge>();
 		LatexDocumentModel parsedModel = this.parser.parse(inputStream,
 				closeStream);
 		if (parsedModel == null) {
-			logger.log(Level.SEVERE,
-					"The parsed model is null. An empty graph will be returned");
-			return edges;
+			logger
+					.log(Level.SEVERE,
+							"The parsed model is null. An empty graph will be returned");
+			return hypergraph;
 		}
 		setModel(parsedModel);
 
@@ -69,17 +81,15 @@ public class StructureBuilderImpl implements StructureBuilder {
 			OutlineNode treeItem = tree.get(i);
 			stack.push(treeItem);
 
-			Node documentRootNode = new NodeImpl(
-					String.format(NODE_ID_FORMAT, documentRoot.getBeginLine(),
-							documentRoot.getOffsetOnLine()),
-					documentRoot.getName());
+			Node documentRootNode = new NodeImpl(String
+					.format(NODE_ID_FORMAT, documentRoot.getBeginLine(),
+							documentRoot.getOffsetOnLine()), documentRoot
+					.getName());
 			documentRootNode.setBeginLine(documentRoot.getBeginLine());
 			documentRootNode.setEndLine(documentRoot.getEndLine());
 			documentRootNode.setOffset(documentRoot.getOffsetOnLine());
 			documentRootNode.setEnvironment(false);
-			Edge<Node, Node> edge = makeEdge(documentRootNode, treeItem,
-					EdgeType.CONTAINS);
-			edges.add(edge);
+			addEdge(documentRootNode, treeItem, EdgeType.CONTAINS);
 		}
 		while (!stack.isEmpty()) {
 			OutlineNode node = stack.pop();
@@ -87,36 +97,32 @@ public class StructureBuilderImpl implements StructureBuilder {
 			ArrayList<OutlineNode> children = node.getChildren();
 
 			if (children != null) {
-				String nodeId = String.format(NODE_ID_FORMAT,
-						node.getBeginLine(), node.getOffsetOnLine());
+				String nodeId = String.format(NODE_ID_FORMAT, node
+						.getBeginLine(), node.getOffsetOnLine());
 				Node from = new NodeImpl(nodeId, extractName(node));
 				from.setBeginLine(node.getBeginLine());
 				from.setEndLine(node.getEndLine());
 				from.setOffset(node.getOffsetOnLine());
-				from.setEnvironment(node.getType() == OutlineNode.TYPE_ENVIRONMENT);
+				from
+						.setEnvironment(node.getType() == OutlineNode.TYPE_ENVIRONMENT);
 				for (OutlineNode child : children) {
 					if (child.getType() == OutlineNode.TYPE_LABEL) {
 						from.setLabelText(child.getName());
 						List<DocumentReference> references = getReferencesForLabel(child);
-						List<Edge<Node, Node>> referenceEdges = getReferenceEdges(
-								references, from);
-						edges.addAll(referenceEdges);
+						addReferenceEdges(references, from);
 					} else {
-						Edge<Node, Node> edge = makeEdge(from, child,
-								EdgeType.CONTAINS);
-						edges.add(edge);
+						addEdge(from, child, EdgeType.CONTAINS);
 						stack.add(child);
 					}
 
 				}
 			}
 		}
-		return edges;
+		return this.hypergraph;
 	}
 
-	private Edge<Node, Node> makeEdge(Node from, OutlineNode toNode,
-			EdgeType edgeType) {
-		Edge<Node, Node> edge = new EdgeImpl();
+	private void addEdge(Node from, OutlineNode toNode, EdgeType edgeType) {
+		Edge edge = new EdgeImpl();
 		String childId = String.format(NODE_ID_FORMAT, toNode.getBeginLine(),
 				toNode.getOffsetOnLine());
 		String nodeName = extractName(toNode);
@@ -128,8 +134,9 @@ public class StructureBuilderImpl implements StructureBuilder {
 		String labelText = getLabelText(toNode);
 		to.setLabelText(labelText);
 		EdgeContext context = new EdgeContextImpl(edgeType);
-		edge.connect(from, to, context);
-		return edge;
+		edge.setContext(context);
+		Pair<Node> pair = new Pair<Node>(from, to);
+		this.hypergraph.addEdge(edge, pair);
 	}
 
 	private String extractName(OutlineNode node) {
@@ -150,9 +157,8 @@ public class StructureBuilderImpl implements StructureBuilder {
 		return nodeName;
 	}
 
-	private Edge<Node, Node> makeInverseEdge(OutlineNode fromNode, Node to,
-			EdgeType edgeType) {
-		Edge<Node, Node> edge = new EdgeImpl();
+	private void addInverseEdge(OutlineNode fromNode, Node to, EdgeType edgeType) {
+		Edge edge = new EdgeImpl();
 		String childId = String.format(NODE_ID_FORMAT, fromNode.getBeginLine(),
 				fromNode.getOffsetOnLine());
 		String nodeName = extractName(fromNode);
@@ -164,8 +170,9 @@ public class StructureBuilderImpl implements StructureBuilder {
 		String labelText = getLabelText(fromNode);
 		from.setLabelText(labelText);
 		EdgeContext context = new EdgeContextImpl(edgeType);
-		edge.connect(from, to, context);
-		return edge;
+		edge.setContext(context);
+		Pair<Node> pair = new Pair<Node>(from, to);
+		this.hypergraph.addEdge(edge, pair);
 	}
 
 	/**
@@ -185,18 +192,13 @@ public class StructureBuilderImpl implements StructureBuilder {
 		return null;
 	}
 
-	private List<Edge<Node, Node>> getReferenceEdges(
-			List<DocumentReference> references, Node to) {
-		List<Edge<Node, Node>> edges = new ArrayList<Edge<Node, Node>>();
+	private void addReferenceEdges(List<DocumentReference> references, Node to) {
 		for (DocumentReference reference : references) {
 			OutlineNode parent = getReferenceParent(reference);
 			if (parent != null) {
-				Edge<Node, Node> edge = makeInverseEdge(parent, to,
-						EdgeType.REFERS_TO);
-				edges.add(edge);
+				addInverseEdge(parent, to, EdgeType.REFERS_TO);
 			}
 		}
-		return edges;
 	}
 
 	/**

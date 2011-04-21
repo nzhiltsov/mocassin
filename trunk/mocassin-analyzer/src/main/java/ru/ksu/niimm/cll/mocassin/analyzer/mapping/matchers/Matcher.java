@@ -1,11 +1,10 @@
 package ru.ksu.niimm.cll.mocassin.analyzer.mapping.matchers;
 
-import java.util.List;
-
 import ru.ksu.niimm.cll.mocassin.analyzer.mapping.Mapping;
 import ru.ksu.niimm.cll.mocassin.parser.Edge;
 import ru.ksu.niimm.cll.mocassin.parser.Node;
+import edu.uci.ics.jung.graph.Graph;
 
 public interface Matcher {
-	Mapping doMapping(List<Edge<Node, Node>> graph);
+	Mapping doMapping(Graph<Node, Edge> graph);
 }

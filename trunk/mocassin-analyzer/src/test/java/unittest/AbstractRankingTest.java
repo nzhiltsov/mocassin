@@ -32,9 +32,12 @@ import com.google.inject.Inject;
 import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
+import edu.uci.ics.jung.graph.Graph;
+
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext( { AnalyzerModule.class, NlpModule.class,
-		LatexParserModule.class, OntologyModule.class, VirtuosoModule.class, FullTextModule.class })
+		LatexParserModule.class, OntologyModule.class, VirtuosoModule.class,
+		FullTextModule.class })
 @Ignore
 public class AbstractRankingTest {
 	@Inject
@@ -42,7 +45,7 @@ public class AbstractRankingTest {
 	@Inject
 	private ImportantNodeService importantNodeService;
 
-	private List<List<Edge<Node, Node>>> models = new LinkedList<List<Edge<Node, Node>>>();
+	private List<Graph<Node, Edge>> models = new LinkedList<Graph<Node, Edge>>();
 
 	@Before
 	public void init() throws LexerException, IOException {
@@ -82,7 +85,7 @@ public class AbstractRankingTest {
 		return importantNodeService;
 	}
 
-	public List<List<Edge<Node, Node>>> getModels() {
+	public List<Graph<Node, Edge>> getModels() {
 		return models;
 	}
 }

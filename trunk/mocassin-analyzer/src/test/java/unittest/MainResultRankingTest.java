@@ -1,6 +1,5 @@
 package unittest;
 
-import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
@@ -8,11 +7,12 @@ import org.junit.Test;
 import ru.ksu.niimm.cll.mocassin.parser.Edge;
 import ru.ksu.niimm.cll.mocassin.parser.Node;
 import unittest.info.RankedNodeInfo;
+import edu.uci.ics.jung.graph.Graph;
 
 public class MainResultRankingTest extends ImportantNodeServiceTest {
 	@Test
 	public void testRankMainResult() {
-		for (List<Edge<Node, Node>> model : getModels()) {
+		for (Graph<Node, Edge> model : getModels()) {
 			Map<Node, Float> node2score = computeNodeRanks(model);
 			int i = 0;
 			for (Node node : node2score.keySet()) {
@@ -34,7 +34,7 @@ public class MainResultRankingTest extends ImportantNodeServiceTest {
 	}
 
 	private RankedNodeInfo fillRankedInfo(Map<Node, Float> node2score, int i,
-			Node node, List<Edge<Node, Node>> model) {
+			Node node, Graph<Node, Edge> model) {
 		RankedNodeInfo info = new RankedNodeInfo();
 		info.setElementId(node.toString());
 		info.setLabelText(node.getLabelText());

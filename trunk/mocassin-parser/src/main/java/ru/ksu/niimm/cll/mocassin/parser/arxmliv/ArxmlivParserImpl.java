@@ -18,15 +18,10 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
-import ru.ksu.niimm.cll.mocassin.parser.Edge;
-import ru.ksu.niimm.cll.mocassin.parser.EdgeContext;
-import ru.ksu.niimm.cll.mocassin.parser.EdgeType;
 import ru.ksu.niimm.cll.mocassin.parser.Node;
 import ru.ksu.niimm.cll.mocassin.parser.arxmliv.xpath.XPathSearcher;
 import ru.ksu.niimm.cll.mocassin.parser.arxmliv.xpath.impl.ArxmlivFormatConstants;
 import ru.ksu.niimm.cll.mocassin.parser.arxmliv.xpath.impl.ArxmlivStructureElementTypes;
-import ru.ksu.niimm.cll.mocassin.parser.impl.EdgeContextImpl;
-import ru.ksu.niimm.cll.mocassin.parser.impl.EdgeImpl;
 import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl;
 
 import com.google.inject.Inject;
@@ -115,22 +110,6 @@ public class ArxmlivParserImpl {
 		}
 		return String.format("%s:%s", sb.toString(), Integer.toHexString(node
 				.hashCode()));
-	}
-
-	private Edge<Node, Node> createEdge(org.w3c.dom.Node fromNode,
-			org.w3c.dom.Node toNode, org.w3c.dom.Node refNode)
-			throws TransformerFactoryConfigurationError, TransformerException {
-		Edge<Node, Node> edge = new EdgeImpl();
-		Node from = convertNode(fromNode);
-		Node to = convertNode(toNode);
-		EdgeContext edgeContext = new EdgeContextImpl(EdgeType.REFERS_TO);
-		String aroundText = extractAroundReferenceText(refNode);
-		edgeContext.setAroundText(aroundText);
-		org.w3c.dom.Node refIdNode = refNode.getAttributes().getNamedItem(
-				ArxmlivFormatConstants.REF_ID_ATTRIBUTE_NAME);
-		edgeContext.setRefId(refIdNode.getTextContent());
-		edge.connect(from, to, edgeContext);
-		return edge;
 	}
 
 	private static String extractAroundReferenceText(org.w3c.dom.Node refNode)
