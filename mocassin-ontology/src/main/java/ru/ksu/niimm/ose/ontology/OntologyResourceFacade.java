@@ -24,7 +24,7 @@ public interface OntologyResourceFacade {
 	 * @param resource
 	 * @return
 	 */
-	List<ABoxTriple> retrieveStructureGraph(OntologyResource resource);
+	List<SGEdge> retrieveStructureGraph(OntologyResource resource);
 
 	void insert(ArticleMetadata articleMetadata, Set<RDFTriple> triples);
 

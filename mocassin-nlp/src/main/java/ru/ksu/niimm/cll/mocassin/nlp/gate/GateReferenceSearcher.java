@@ -1,9 +1,5 @@
 package ru.ksu.niimm.cll.mocassin.nlp.gate;
 
-import gate.Annotation;
-import gate.AnnotationSet;
-import gate.Document;
-
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,11 +16,17 @@ import ru.ksu.niimm.cll.mocassin.nlp.impl.ReferenceImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.util.AnnotationUtil;
 import ru.ksu.niimm.cll.mocassin.nlp.util.NlpModulePropertiesLoader;
 import ru.ksu.niimm.cll.mocassin.parser.arxmliv.xpath.impl.ArxmlivFormatConstants;
-import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
+
+import edu.uci.ics.jung.graph.DirectedSparseMultigraph;
+import edu.uci.ics.jung.graph.Graph;
+import edu.uci.ics.jung.graph.util.Pair;
+import gate.Annotation;
+import gate.AnnotationSet;
+import gate.Document;
 
 public class GateReferenceSearcher implements ReferenceSearcher {
 	@Inject
@@ -41,11 +43,16 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 
 	private List<StructuralElement> structuralElements;
 
+	private Graph<StructuralElement, Reference> graph;
+
 	private Document document;
 
 	@Override
-	public List<Reference> retrieveReferences(ParsedDocument parsedDocument) {
+	public synchronized Graph<StructuralElement, Reference> retrieveReferences(
+			ParsedDocument parsedDocument) {
 		try {
+			this.graph = new DirectedSparseMultigraph<StructuralElement, Reference>();
+			
 			setDocument(gateDocumentDAO.load(parsedDocument.getFilename()));
 
 			loadStructuralElements(parsedDocument);
@@ -53,19 +60,17 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 			AnnotationSet refAnnotations = document
 					.getAnnotations(
 							getProperty(GateFormatConstants.ARXMLIV_MARKUP_NAME_PROPERTY_KEY))
-					.get(
-							getProperty(GateFormatConstants.ARXMLIV_REF_ANNOTATION_PROPERTY_KEY));
+					.get(getProperty(GateFormatConstants.ARXMLIV_REF_ANNOTATION_PROPERTY_KEY));
 			Iterable<Annotation> filteredRefAnnotations = Iterables.filter(
 					refAnnotations, new NotInMathPredicate(
 							getNlpModulePropertiesLoader(), getDocument()));
 
-			Iterable<Reference> referenceIterable = Iterables.transform(
-					filteredRefAnnotations, new ExtractFunction());
-			return CollectionUtil.asList(referenceIterable);
+			Iterables.transform(filteredRefAnnotations, new ExtractFunction());
+			return this.graph;
 		} catch (AccessGateDocumentException e) {
 			logger.log(Level.SEVERE, String.format(
-					"failed to load the document: %s", parsedDocument
-							.getFilename()));
+					"failed to load the document: %s",
+					parsedDocument.getFilename()));
 			throw new RuntimeException(e);
 		} finally {
 			gateDocumentDAO.release(getDocument());
@@ -135,10 +140,11 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 			String additionalRefid = (String) annotation.getFeatures().get(
 					ArxmlivFormatConstants.REF_ID_ATTRIBUTE_NAME);
 
-			Reference reference = new ReferenceImpl.Builder(id).from(from).to(
-					to).document(refDocument).additionalRefid(additionalRefid)
+			Reference reference = new ReferenceImpl.Builder(id)
+					.document(refDocument).additionalRefid(additionalRefid)
 					.build();
 			reference.setSentenceTokens(sentenceTokens);
+			graph.addEdge(reference, new Pair<StructuralElement>(from, to));
 			return reference;
 		}
 
@@ -154,8 +160,7 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 				AnnotationSet allSentences = getDocument()
 						.getAnnotations(
 								GateFormatConstants.DEFAULT_ANNOTATION_SET_NAME)
-						.get(
-								getProperty(GateFormatConstants.SENTENCE_ANNOTATION_NAME_PROPERTY_KEY));
+						.get(getProperty(GateFormatConstants.SENTENCE_ANNOTATION_NAME_PROPERTY_KEY));
 				long distance = Long.MAX_VALUE;
 				Annotation closestSentence = null;
 				for (Annotation sentence : allSentences) {
@@ -173,10 +178,9 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 				}
 				if (closestSentence == null) {
 					throw new RuntimeException(
-							String
-									.format(
-											"couldn't locate sentence for annotation with id='%s'",
-											annotation.getId()));
+							String.format(
+									"couldn't locate sentence for annotation with id='%s'",
+									annotation.getId()));
 				} else {
 					return closestSentence;
 				}
@@ -205,13 +209,11 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 
 			if (closestParentElement == null) {
 				getLogger()
-						.log(
-								Level.INFO,
-								String
-										.format(
-												"parent element for ref with id='%d' in document '%s' not found",
-												annotation.getId(),
-												getDocument().getName()));
+						.log(Level.INFO,
+								String.format(
+										"parent element for ref with id='%d' in document '%s' not found",
+										annotation.getId(), getDocument()
+												.getName()));
 
 			}
 
@@ -231,16 +233,16 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 		}
 	}
 
+	public Logger getLogger() {
+		return logger;
+	}
+
 	public List<StructuralElement> getStructuralElements() {
 		return structuralElements;
 	}
 
 	public void setStructuralElements(List<StructuralElement> structuralElements) {
 		this.structuralElements = structuralElements;
-	}
-
-	public Logger getLogger() {
-		return logger;
 	}
 
 }

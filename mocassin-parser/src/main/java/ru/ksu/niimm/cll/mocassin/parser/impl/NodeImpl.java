@@ -6,28 +6,18 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.XmlType;
-
 import ru.ksu.niimm.cll.mocassin.parser.Node;
 
 import com.google.common.base.Predicate;
 
-@XmlType
-@XmlAccessorType(XmlAccessType.FIELD)
 public class NodeImpl implements Node {
 	private String id;
-	@XmlElement
 	private String name;
 	private List<String> contents = new LinkedList<String>();
 	private int beginLine;
 	private int endLine;
 	private int offset;
 	private boolean isEnvironment;
-	@XmlTransient
 	private String labelText;
 
 	private NodeImpl() {

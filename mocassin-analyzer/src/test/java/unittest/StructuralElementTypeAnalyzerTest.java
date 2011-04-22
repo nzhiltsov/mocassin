@@ -3,6 +3,7 @@ package unittest;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
@@ -10,10 +11,8 @@ import ru.ksu.niimm.cll.mocassin.nlp.recognizer.StructuralElementTypeRecognizer;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
 import unittest.info.PredictedPairInfo;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
-
+@Ignore("references should be read from a store")	
 public class StructuralElementTypeAnalyzerTest extends AbstractAnalyzerTest {
 	private static final String TYPE_OUTPUT_FILENAME = "/tmp/type-predictions.txt";
 	@Inject
@@ -21,7 +20,7 @@ public class StructuralElementTypeAnalyzerTest extends AbstractAnalyzerTest {
 
 	@Test
 	public void testAnalyze() throws IOException {
-		Function<Reference, PredictedPairInfo> function = new Function<Reference, PredictedPairInfo>() {
+		/*Function<Reference, PredictedPairInfo> function = new Function<Reference, PredictedPairInfo>() {
 
 			@Override
 			public PredictedPairInfo apply(Reference reference) {
@@ -39,7 +38,7 @@ public class StructuralElementTypeAnalyzerTest extends AbstractAnalyzerTest {
 		Iterable<PredictedPairInfo> pairs = Iterables.transform(
 				getReferences(), function);
 
-		print(pairs, TYPE_OUTPUT_FILENAME);
+		print(pairs, TYPE_OUTPUT_FILENAME);*/
 	}
 
 	protected void print(Iterable<PredictedPairInfo> locations,

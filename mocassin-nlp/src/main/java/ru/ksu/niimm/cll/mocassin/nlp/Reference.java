@@ -23,10 +23,6 @@ public interface Reference {
 	 */
 	int getId();
 
-	StructuralElement getFrom();
-
-	StructuralElement getTo();
-
 	List<Token> getSentenceTokens();
 
 	void setSentenceTokens(List<Token> sentenceTokens);

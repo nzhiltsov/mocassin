@@ -14,6 +14,7 @@ import ru.ksu.niimm.cll.mocassin.arxiv.impl.Link.PdfLinkPredicate;
 import ru.ksu.niimm.cll.mocassin.fulltext.PDFIndexer;
 import ru.ksu.niimm.cll.mocassin.fulltext.PersistingDocumentException;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
+import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.ParsedDocumentImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.latex.LatexSearcherParseException;
 import ru.ksu.niimm.cll.mocassin.nlp.latex.LatexStructuralElementSearcher;
@@ -27,6 +28,8 @@ import ru.ksu.niimm.ose.ontology.OntologyResourceFacade;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
+
+import edu.uci.ics.jung.graph.Graph;
 
 public class ArxivServiceImpl implements ArxivService {
 	@Inject
@@ -52,13 +55,12 @@ public class ArxivServiceImpl implements ArxivService {
 			Link pdfLink = Iterables.find(metadata.getLinks(),
 					new PdfLinkPredicate());
 			pdfIndexer.save(pdfLink.getHref(), pdfInputStream);
-			ParsedDocumentImpl document = new ParsedDocumentImpl(metadata
-					.getId(), pdfLink.getHref());
-			latexStructuralElementSearcher.parse(sourceStream, document, true);
+			ParsedDocumentImpl document = new ParsedDocumentImpl(
+					metadata.getId(), pdfLink.getHref());
 
-			List<Reference> references = latexStructuralElementSearcher
-					.retrieveReferences(document);
-			Set<RDFTriple> triples = referenceTripleUtil.convert(references);
+			Graph<StructuralElement, Reference> graph = latexStructuralElementSearcher
+					.retrieveGraph(sourceStream, document, true);
+			Set<RDFTriple> triples = referenceTripleUtil.convert(graph);
 			ontologyResourceFacade.insert(metadata, triples);
 		} catch (LatexSearcherParseException e) {
 			String message = String.format(
@@ -68,8 +70,7 @@ public class ArxivServiceImpl implements ArxivService {
 			throw new RuntimeException(message);
 		} catch (PersistingDocumentException e) {
 			String message = String
-					.format(
-							"failed to persist the PDF index of the article %s due to: %s",
+					.format("failed to persist the PDF index of the article %s due to: %s",
 							arxivId, e.getMessage());
 			logger.log(Level.SEVERE, message);
 			throw new RuntimeException(message);
@@ -97,8 +98,8 @@ public class ArxivServiceImpl implements ArxivService {
 
 		@Override
 		public ArxivArticleMetadata apply(ArticleMetadata metadata) {
-			return new ArxivArticleMetadata(metadata.getId(), metadata
-					.getTitle());
+			return new ArxivArticleMetadata(metadata.getId(),
+					metadata.getTitle());
 		}
 
 	}

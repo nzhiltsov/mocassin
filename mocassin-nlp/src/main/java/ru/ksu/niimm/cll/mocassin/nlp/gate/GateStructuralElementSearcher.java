@@ -54,7 +54,8 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 	private AnnotationSet structuralAnnotations;
 
 	@Override
-	public List<StructuralElement> retrieveElements(ParsedDocument parsedDocument) {
+	public List<StructuralElement> retrieveElements(
+			ParsedDocument parsedDocument) {
 		Document document = null;
 		try {
 			document = gateDocumentDAO.load(parsedDocument.getFilename());
@@ -72,8 +73,8 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 			return CollectionUtil.asList(structuralElementIterable);
 		} catch (AccessGateDocumentException e) {
 			logger.log(Level.SEVERE, String.format(
-					"failed to load the document: %s", parsedDocument
-							.getFilename()));
+					"failed to load the document: %s",
+					parsedDocument.getFilename()));
 			throw new RuntimeException(e);
 		} finally {
 			gateDocumentDAO.release(document);
@@ -99,17 +100,16 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 			}
 			if (foundAnnotation == null)
 				throw new RuntimeException(
-						String
-								.format(
-										"there is no structural element with id='%d' in document %s",
-										id, document.getName()));
+						String.format(
+								"there is no structural element with id='%d' in document %s",
+								id, document.getName()));
 			StructuralElement foundElement = new ExtractionFunction(document)
 					.apply(foundAnnotation);
 			return foundElement;
 		} catch (AccessGateDocumentException e) {
 			logger.log(Level.SEVERE, String.format(
-					"failed to load the document: %s", parsedDocument
-							.getFilename()));
+					"failed to load the document: %s",
+					parsedDocument.getFilename()));
 			throw new RuntimeException(e);
 		} finally {
 			gateDocumentDAO.release(document);
@@ -210,16 +210,16 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 			String classFeature = (String) annotation.getFeatures().get(
 					ArxmlivFormatConstants.CLASS_ATTRIBUTE_NAME);
 			String name = classFeature != null ? classFeature : type;
-			StructuralElement element = new StructuralElementImpl.Builder(id)
-					.start(start).end(end).name(name).build();
+			StructuralElement element = new StructuralElementImpl.Builder(id,
+					document.getName() + "/" + id).start(start).end(end)
+					.name(name).build();
 
 			List<String> labels = collectLabels(annotation);
 			element.setLabels(labels);
 			AnnotationSet titleSet = getDocument()
 					.getAnnotations(
 							getProperty(GateFormatConstants.ARXMLIV_MARKUP_NAME_PROPERTY_KEY))
-					.get(
-							getProperty(GateFormatConstants.TITLE_ANNOTATION_NAME_PROPERTY_KEY))
+					.get(getProperty(GateFormatConstants.TITLE_ANNOTATION_NAME_PROPERTY_KEY))
 					.getContained(annotation.getStartNode().getOffset(),
 							annotation.getEndNode().getOffset());
 			List<Annotation> titleList = new ArrayList<Annotation>(titleSet);

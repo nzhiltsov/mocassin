@@ -2,6 +2,7 @@ package ru.ksu.niimm.cll.mocassin.parser.latex.builder.impl;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
@@ -28,7 +29,6 @@ import com.google.inject.Inject;
 
 import edu.uci.ics.jung.graph.DirectedSparseMultigraph;
 import edu.uci.ics.jung.graph.Graph;
-import edu.uci.ics.jung.graph.util.Pair;
 
 /**
  * Analyzer that builds graph with labels/references and containment relations
@@ -67,9 +67,8 @@ public class StructureBuilderImpl implements StructureBuilder {
 		LatexDocumentModel parsedModel = this.parser.parse(inputStream,
 				closeStream);
 		if (parsedModel == null) {
-			logger
-					.log(Level.SEVERE,
-							"The parsed model is null. An empty graph will be returned");
+			logger.log(Level.SEVERE,
+					"The parsed model is null. An empty graph will be returned");
 			return hypergraph;
 		}
 		setModel(parsedModel);
@@ -81,10 +80,10 @@ public class StructureBuilderImpl implements StructureBuilder {
 			OutlineNode treeItem = tree.get(i);
 			stack.push(treeItem);
 
-			Node documentRootNode = new NodeImpl(String
-					.format(NODE_ID_FORMAT, documentRoot.getBeginLine(),
-							documentRoot.getOffsetOnLine()), documentRoot
-					.getName());
+			Node documentRootNode = new NodeImpl(
+					String.format(NODE_ID_FORMAT, documentRoot.getBeginLine(),
+							documentRoot.getOffsetOnLine()),
+					documentRoot.getName());
 			documentRootNode.setBeginLine(documentRoot.getBeginLine());
 			documentRootNode.setEndLine(documentRoot.getEndLine());
 			documentRootNode.setOffset(documentRoot.getOffsetOnLine());
@@ -97,14 +96,13 @@ public class StructureBuilderImpl implements StructureBuilder {
 			ArrayList<OutlineNode> children = node.getChildren();
 
 			if (children != null) {
-				String nodeId = String.format(NODE_ID_FORMAT, node
-						.getBeginLine(), node.getOffsetOnLine());
+				String nodeId = String.format(NODE_ID_FORMAT,
+						node.getBeginLine(), node.getOffsetOnLine());
 				Node from = new NodeImpl(nodeId, extractName(node));
 				from.setBeginLine(node.getBeginLine());
 				from.setEndLine(node.getEndLine());
 				from.setOffset(node.getOffsetOnLine());
-				from
-						.setEnvironment(node.getType() == OutlineNode.TYPE_ENVIRONMENT);
+				from.setEnvironment(node.getType() == OutlineNode.TYPE_ENVIRONMENT);
 				for (OutlineNode child : children) {
 					if (child.getType() == OutlineNode.TYPE_LABEL) {
 						from.setLabelText(child.getName());
@@ -135,8 +133,7 @@ public class StructureBuilderImpl implements StructureBuilder {
 		to.setLabelText(labelText);
 		EdgeContext context = new EdgeContextImpl(edgeType);
 		edge.setContext(context);
-		Pair<Node> pair = new Pair<Node>(from, to);
-		this.hypergraph.addEdge(edge, pair);
+		addEdge(edge, from, to);
 	}
 
 	private String extractName(OutlineNode node) {
@@ -171,8 +168,30 @@ public class StructureBuilderImpl implements StructureBuilder {
 		from.setLabelText(labelText);
 		EdgeContext context = new EdgeContextImpl(edgeType);
 		edge.setContext(context);
-		Pair<Node> pair = new Pair<Node>(from, to);
-		this.hypergraph.addEdge(edge, pair);
+		addEdge(edge, from, to);
+	}
+
+	private void addEdge(Edge edge, final Node from, final Node to) {
+		Node foundFrom = null;
+		Node foundTo = null;
+		if (this.hypergraph.containsVertex(from)) {
+			foundFrom = findVertice(from);
+		}
+		if (this.hypergraph.containsVertex(to)) {
+			foundTo = findVertice(to);
+		}
+		this.hypergraph.addEdge(edge, foundFrom != null ? foundFrom : from,
+				foundTo != null ? foundTo : to);
+	}
+
+	private Node findVertice(Node node) {
+		Collection<Node> vertices = this.hypergraph.getVertices();
+		for (Node cur : vertices) {
+			if (cur.equals(node)) {
+				return cur;
+			}
+		}
+		throw new RuntimeException("node not found: " + node);
 	}
 
 	/**

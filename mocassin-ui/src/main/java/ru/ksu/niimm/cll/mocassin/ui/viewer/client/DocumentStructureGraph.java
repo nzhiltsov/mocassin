@@ -111,8 +111,8 @@ public class DocumentStructureGraph extends ProtovisWidget {
 					@Override
 					public void onEvent(Event e, String pvEventType, JsArgs args) {
 						PVNode d = args.getObject();
-						String numPage = Integer.toString(d.<Node> object()
-								.getNumPage() - 1);
+						int numPage = d.<Node> object()
+								.getNumPage();
 						navigationPopup.setNumPage(numPage);
 						Element node = e.getCurrentTarget();
 						navigationPopup.setPopupPosition(

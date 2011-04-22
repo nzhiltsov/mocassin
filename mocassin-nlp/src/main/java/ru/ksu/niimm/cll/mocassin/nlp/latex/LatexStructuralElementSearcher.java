@@ -3,8 +3,9 @@ package ru.ksu.niimm.cll.mocassin.nlp.latex;
 import java.io.InputStream;
 
 import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
-import ru.ksu.niimm.cll.mocassin.nlp.ReferenceSearcher;
-import ru.ksu.niimm.cll.mocassin.nlp.StructuralElementSearcher;
+import ru.ksu.niimm.cll.mocassin.nlp.Reference;
+import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
+import edu.uci.ics.jung.graph.Graph;
 
 /**
  * Searcher that enriches representation (by extracting the text contents etc.)
@@ -13,8 +14,8 @@ import ru.ksu.niimm.cll.mocassin.nlp.StructuralElementSearcher;
  * @author nzhiltsov
  * 
  */
-public interface LatexStructuralElementSearcher extends
-		StructuralElementSearcher, ReferenceSearcher {
-	void parse(InputStream stream, ParsedDocument parsedDocument, boolean closeStream)
-			throws LatexSearcherParseException;
+public interface LatexStructuralElementSearcher {
+	Graph<StructuralElement, Reference> retrieveGraph(
+			InputStream inputStream, ParsedDocument parsedDocument,
+			boolean closeStream) throws LatexSearcherParseException;
 }

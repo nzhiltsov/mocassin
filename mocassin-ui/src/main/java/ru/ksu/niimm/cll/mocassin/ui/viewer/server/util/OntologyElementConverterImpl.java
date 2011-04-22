@@ -7,31 +7,33 @@ import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.Graph;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.Node;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.protovis.LinkAdapter;
-import ru.ksu.niimm.ose.ontology.ABoxTriple;
 import ru.ksu.niimm.ose.ontology.OntologyIndividual;
+import ru.ksu.niimm.ose.ontology.SGEdge;
 
 import com.google.common.base.Function;
 
 public class OntologyElementConverterImpl implements OntologyElementConverter {
 
 	@Override
-	public Graph convert(List<ABoxTriple> triples) {
+	public Graph convert(List<SGEdge> edges) {
 		List<Node> nodes = new ArrayList<Node>();
-		LinkAdapter[] links = new LinkAdapter[triples.size()];
+		LinkAdapter[] links = new LinkAdapter[edges.size()];
 		int i = 0;
-		for (ABoxTriple triple : triples) {
-			OntologyIndividual subject = triple.getSubject();
+		for (SGEdge edge : edges) {
+			OntologyIndividual subject = edge.getSubject();
 			Node subjectNode = new NodeFunction().apply(subject);
+			subjectNode.setNumPage(edge.getFromNumPage());
 			if (!nodes.contains(subjectNode)) {
 				nodes.add(subjectNode);
 			}
-			OntologyIndividual object = triple.getObject();
+			OntologyIndividual object = edge.getObject();
 			Node objectNode = new NodeFunction().apply(object);
+			objectNode.setNumPage(edge.getToNumPage());
 			if (!nodes.contains(objectNode)) {
 				nodes.add(objectNode);
 			}
 
-			MocassinOntologyRelations predicate = triple.getPredicate();
+			MocassinOntologyRelations predicate = edge.getPredicate();
 			int predicateCode = predicate.getCode();
 			LinkAdapter link = new LinkAdapter(nodes.indexOf(subjectNode),
 					nodes.indexOf(objectNode), 1, predicateCode);
@@ -53,15 +55,7 @@ public class OntologyElementConverterImpl implements OntologyElementConverter {
 			 * .getCode();
 			 */
 			Node node = new Node(element.getUri(),
-					element.getType().toString(), element.getType().getCode(),
-					1);// TODO:
-			// extract
-			// correct
-			// a
-			// code
-			// and
-			// page
-			// numbers
+					element.getType().toString(), element.getType().getCode());
 			return node;
 		}
 
