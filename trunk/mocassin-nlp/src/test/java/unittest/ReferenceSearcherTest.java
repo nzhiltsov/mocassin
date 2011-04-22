@@ -3,9 +3,7 @@ package unittest;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.junit.Ignore;
@@ -13,13 +11,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ru.ksu.niimm.cll.mocassin.nlp.NlpModule;
-import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
-import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.ReferenceSearcher;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateDocumentException;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
-import ru.ksu.niimm.cll.mocassin.nlp.impl.ParsedDocumentImpl;
-import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
 
 import com.google.inject.Inject;
 import com.mycila.testing.junit.MycilaJunitRunner;
@@ -39,22 +33,21 @@ public class ReferenceSearcherTest {
 
 	@Test
 	public void testRetrieve() throws AccessGateDocumentException, IOException {
-		List<DocumentData> data = new ArrayList<DocumentData>();
-		List<String> ids = CollectionUtil.sampleRandomSublist(gateDocumentDAO
-				.getDocumentIds(), 30);
+		/*List<DocumentData> data = new ArrayList<DocumentData>();
+		List<String> ids = CollectionUtil.sampleRandomSublist(
+				gateDocumentDAO.getDocumentIds(), 30);
 		for (String id : ids) {
 			ParsedDocument document = new ParsedDocumentImpl(id);
 			try {
 
-				List<Reference> references = referenceSearcher
+				Graph<StructuralElement, Reference> graph = referenceSearcher
 						.retrieveReferences(document);
+				Collection<Reference> references = graph.getEdges();
 				if (!references.isEmpty()) {
-					String filename = references.get(0).getDocument()
+					String filename = graph.getEdges().getDocument()
 							.getFilename();
 					long size = references.get(0).getDocument().getSize();
-					data
-							.add(new DocumentData(filename, size, references
-									.size()));
+					data.add(new DocumentData(filename, size, references.size()));
 				}
 				logger.log(Level.INFO, String.format(
 						"the document '%s' was processed successfully", id));
@@ -65,7 +58,7 @@ public class ReferenceSearcherTest {
 
 			}
 		}
-		printDocs(data);
+		printDocs(data);*/
 	}
 
 	private void printDocs(List<DocumentData> docs) throws IOException {

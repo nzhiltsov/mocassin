@@ -17,11 +17,10 @@ public class Node implements Serializable {
 	public Node() {
 	}
 
-	public Node(String uri, String name, int type, int numPage) {
+	public Node(String uri, String name, int type) {
 		this.uri = uri;
 		this.name = name;
 		this.nodeType = type;
-		this.numPage = numPage;
 	}
 
 	public String getName() {
@@ -34,6 +33,10 @@ public class Node implements Serializable {
 
 	public int getNumPage() {
 		return numPage;
+	}
+
+	public void setNumPage(int numPage) {
+		this.numPage = numPage;
 	}
 
 	public String getUri() {

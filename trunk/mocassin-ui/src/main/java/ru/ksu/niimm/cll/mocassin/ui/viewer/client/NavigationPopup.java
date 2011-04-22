@@ -20,7 +20,7 @@ public class NavigationPopup extends Composite {
 
 	private Frame frame;
 
-	private String numPage;
+	private int numPage;
 
 	private String pdfUri;
 
@@ -32,13 +32,14 @@ public class NavigationPopup extends Composite {
 	public NavigationPopup(Frame frame, String pdfUri) {
 		initWidget(binder.createAndBindUi(this));
 		this.popup.setAutoHideEnabled(true);
-		goLink.setText(constants.goLink());
+		
 		this.frame = frame;
 		this.pdfUri = pdfUri;
 	}
 
-	public void setNumPage(String numPage) {
+	public void setNumPage(int numPage) {
 		this.numPage = numPage;
+		goLink.setText(constants.goLink() + " " + this.numPage);
 	}
 
 	public void setPopupPosition(int left, int top) {
@@ -46,12 +47,16 @@ public class NavigationPopup extends Composite {
 	}
 
 	public void show() {
-		popup.show();
+		if (this.numPage > 0) {
+			popup.show();
+		}
 	}
 
 	@UiHandler("goLink")
 	void handleClick(ClickEvent event) {
+		int urlNumPage = this.numPage - 1;
 		frame.setUrl("http://docs.google.com/viewer?url=" + pdfUri
-				+ "&embedded=true#:0.page." + numPage);
+				+ "&embedded=true#:0.page." + urlNumPage);
+		popup.hide();
 	}
 }

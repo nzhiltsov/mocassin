@@ -33,7 +33,6 @@ import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl.NodePositionComparator;
 import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl.NodePositionPredicate;
 import ru.ksu.niimm.cll.mocassin.parser.latex.builder.StructureBuilder;
 import ru.ksu.niimm.cll.mocassin.parser.util.StandardEnvironments;
-import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
 
 import com.google.common.base.Function;
@@ -41,7 +40,8 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 
-import edu.uci.ics.jung.graph.Hypergraph;
+import edu.uci.ics.jung.graph.DirectedSparseMultigraph;
+import edu.uci.ics.jung.graph.Graph;
 
 public class LatexStructuralElementSearcherImpl implements
 		LatexStructuralElementSearcher {
@@ -58,14 +58,31 @@ public class LatexStructuralElementSearcherImpl implements
 	@Inject
 	private StopWordLoader stopWordLoader;
 
-	private Hypergraph<Node, Edge> hypergraph;
+	private Graph<Node, Edge> latexNodeGraph;
+
+	private Graph<StructuralElement, Reference> structureGraph;
 
 	private ParsedDocument parsedDocument;
 
+	private int count;
+
+	private final Node2ElementFunction node2ElementFunction = new Node2ElementFunction();
+
 	@Override
-	public void parse(InputStream inputStream, ParsedDocument parsedDocument,
-			boolean closeStream) throws LatexSearcherParseException {
+	public synchronized Graph<StructuralElement, Reference> retrieveGraph(
+			InputStream inputStream, ParsedDocument parsedDocument,
+			boolean shouldCloseStream) throws LatexSearcherParseException {
+		this.count = 0;
 		this.parsedDocument = parsedDocument;
+		this.structureGraph = new DirectedSparseMultigraph<StructuralElement, Reference>();
+		parse(inputStream, shouldCloseStream);
+		fillStructureGraph();
+		return this.structureGraph;
+	}
+
+	private void parse(InputStream inputStream, boolean closeStream)
+			throws LatexSearcherParseException {
+
 		try {
 			InputStream parsingInputStream;
 			if (!inputStream.markSupported()) {
@@ -74,7 +91,7 @@ public class LatexStructuralElementSearcherImpl implements
 				parsingInputStream = inputStream;
 			}
 			parsingInputStream.mark(DOCUMENT_MAX_SIZE);
-			this.hypergraph = this.structureBuilder.buildStructureGraph(
+			this.latexNodeGraph = this.structureBuilder.buildStructureGraph(
 					parsingInputStream, false);
 			parsingInputStream.reset();
 			extractTextContents(parsingInputStream);
@@ -99,7 +116,7 @@ public class LatexStructuralElementSearcherImpl implements
 
 		SortedSet<Node> indexingNodes = new TreeSet<Node>(
 				new NodePositionComparator());
-		Collection<Node> nodes = this.hypergraph.getVertices();
+		Collection<Node> nodes = this.latexNodeGraph.getVertices();
 		for (Node node : nodes) {
 
 			String fromName = node.getName();
@@ -132,36 +149,56 @@ public class LatexStructuralElementSearcherImpl implements
 					getNonStopWordPredicate());
 			String[] contents = Iterables.toArray(tokensForIndex, String.class);
 			for (Node enclosingNode : enclosingNodes) {
+				if (enclosingNode.getBeginLine() == 612) {
+					enclosingNode.getBeginLine();
+				}
 				enclosingNode.addContents(contents);
 			}
-
 		}
 	}
 
-	@Override
-	public List<Reference> retrieveReferences(ParsedDocument document) {
-		return CollectionUtil.asList(Iterables.transform(this.hypergraph
-				.getEdges(), new Edge2ReferenceFunction(document)));
+	private void fillStructureGraph() {
+		Collection<Edge> edges = latexNodeGraph.getEdges();
+		for (Edge edge : edges) {
+			StructuralElement from = node2ElementFunction.apply(latexNodeGraph
+					.getSource(edge));
+			StructuralElement to = node2ElementFunction.apply(latexNodeGraph
+					.getDest(edge));
+			Reference ref = new ReferenceImpl.Builder(++count).document(
+					parsedDocument).build();
+			if (edge.getContext().getEdgeType() == EdgeType.CONTAINS) {
+				ref.setPredictedRelation(MocassinOntologyRelations.HAS_PART);
+			} else if (edge.getContext().getEdgeType() == EdgeType.REFERS_TO) {
+				ref.setPredictedRelation(MocassinOntologyRelations.REFERS_TO);
+			}
+			addEdge(ref, from, to);
+		}
+
 	}
 
-	@Override
-	public StructuralElement findById(ParsedDocument document, int id) {
-		// TODO
-		throw new UnsupportedOperationException("not implemented yet");
+	private void addEdge(Reference edge, final StructuralElement from,
+			final StructuralElement to) {
+		StructuralElement foundFrom = null;
+		StructuralElement foundTo = null;
+		if (this.structureGraph.containsVertex(from)) {
+			foundFrom = findVertice(from);
+		}
+		if (this.structureGraph.containsVertex(to)) {
+			foundTo = findVertice(to);
+		}
+		this.structureGraph.addEdge(edge, foundFrom != null ? foundFrom : from,
+				foundTo != null ? foundTo : to);
 	}
 
-	@Override
-	public StructuralElement findClosestPredecessor(ParsedDocument document,
-			int id, MocassinOntologyClasses... filterPredecessorTypes) {
-		// TODO
-		throw new UnsupportedOperationException("not implemented yet");
-	}
-
-	@Override
-	public List<StructuralElement> retrieveElements(ParsedDocument document) {
-
-		return CollectionUtil.asList(Iterables.transform(this.hypergraph
-				.getVertices(), new Node2ElementFunction()));
+	private StructuralElement findVertice(StructuralElement node) {
+		Collection<StructuralElement> vertices = this.structureGraph
+				.getVertices();
+		for (StructuralElement cur : vertices) {
+			if (cur.equals(node)) {
+				return cur;
+			}
+		}
+		throw new RuntimeException("node not found: " + node);
 	}
 
 	public StructuralElementTypeRecognizer getStructuralElementTypeRecognizer() {
@@ -189,8 +226,8 @@ public class LatexStructuralElementSearcherImpl implements
 		public StructuralElement apply(Node node) {
 			String uri = String.format("%s/s%s", parsedDocument.getFilename(),
 					node.getId());
-			StructuralElement element = new StructuralElementImpl.Builder(uri
-					.hashCode()).uri(uri).name(node.getName()).build();
+			StructuralElement element = new StructuralElementImpl.Builder(
+					uri.hashCode(), uri).name(node.getName()).build();
 			List<String> labels = new ArrayList<String>();
 			labels.add(node.getLabelText());
 			element.setLabels(labels);
@@ -208,14 +245,11 @@ public class LatexStructuralElementSearcherImpl implements
 					int pageNumber = getPageNumber(sb.toString());
 					element.setStartPageNumber(pageNumber);
 				} catch (EmptyResultException e) {
-					logger
-							.log(
-									Level.SEVERE,
-									String
-											.format(
-													"failed to find the page number for a segment %s on PDF: %s",
-													element.getUri(),
-													getPdfUri()));
+					logger.log(
+							Level.SEVERE,
+							String.format(
+									"failed to find the page number for a segment %s on PDF: %s",
+									element.getUri(), getPdfUri()));
 				}
 			}
 
@@ -232,38 +266,4 @@ public class LatexStructuralElementSearcherImpl implements
 
 	}
 
-	/**
-	 * Stub implementation; genuine analysis is required
-	 * 
-	 * @author linglab
-	 * 
-	 */
-	private class Edge2ReferenceFunction implements Function<Edge, Reference> {
-		private int count;
-
-		private ParsedDocument document;
-
-		private final Node2ElementFunction node2ElementFunction = new Node2ElementFunction();
-
-		public Edge2ReferenceFunction(ParsedDocument document) {
-			this.document = document;
-		}
-
-		@Override
-		public Reference apply(Edge edge) {
-			StructuralElement from = node2ElementFunction.apply(hypergraph
-					.getSource(edge));
-			StructuralElement to = node2ElementFunction.apply(hypergraph
-					.getDest(edge));
-			Reference ref = new ReferenceImpl.Builder(++count).document(
-					document).from(from).to(to).build();
-			if (edge.getContext().getEdgeType() == EdgeType.CONTAINS) {
-				ref.setPredictedRelation(MocassinOntologyRelations.HAS_PART);
-			} else if (edge.getContext().getEdgeType() == EdgeType.REFERS_TO) {
-				ref.setPredictedRelation(MocassinOntologyRelations.REFERS_TO);
-			}
-
-			return ref;
-		}
-	}
 }

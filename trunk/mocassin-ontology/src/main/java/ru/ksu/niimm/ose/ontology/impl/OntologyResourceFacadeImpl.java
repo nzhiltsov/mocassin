@@ -19,6 +19,7 @@ import ru.ksu.niimm.ose.ontology.OntologyFacade;
 import ru.ksu.niimm.ose.ontology.OntologyIndividual;
 import ru.ksu.niimm.ose.ontology.OntologyResource;
 import ru.ksu.niimm.ose.ontology.OntologyResourceFacade;
+import ru.ksu.niimm.ose.ontology.SGEdge;
 import ru.ksu.niimm.ose.ontology.loader.SparqlQueryLoader;
 
 import com.google.common.base.Function;
@@ -74,27 +75,27 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 	}
 
 	@Override
-	public List<ABoxTriple> retrieveStructureGraph(OntologyResource resource) {
-		List<ABoxTriple> triples = new ArrayList<ABoxTriple>();
+	public List<SGEdge> retrieveStructureGraph(OntologyResource resource) {
+		List<SGEdge> edges = new ArrayList<SGEdge>();
 		String documentUri = parseDocumentUri(resource.getUri());
 		String graphQueryString = generateRetrieveStructureGraphQuery(documentUri);
 		Iterator<QuerySolution> solutionIt = getVirtuosoDAO().get(
 				graphQueryString, getSearchGraph()).iterator();
 		if (!solutionIt.hasNext())
-			return triples;
-		Function<QuerySolution, ABoxTriple> function = new SolutionFunction();
-		ABoxTriple curTriple = function.apply(solutionIt.next());
+			return edges;
+		final Function<QuerySolution, SGEdge> function = new SolutionFunction();
+		SGEdge curEdge = function.apply(solutionIt.next());
 
 		while (solutionIt.hasNext()) {
-			ABoxTriple aboxTriple = function.apply(solutionIt.next());
-			if (aboxTriple.equals(curTriple)) {
-				MocassinOntologyClasses curSubjectType = curTriple.getSubject()
+			SGEdge nextEdge = function.apply(solutionIt.next());
+			if (nextEdge.equals(curEdge)) {
+				MocassinOntologyClasses curSubjectType = curEdge.getSubject()
 						.getType();
-				MocassinOntologyClasses curObjectType = curTriple.getObject()
+				MocassinOntologyClasses curObjectType = curEdge.getObject()
 						.getType();
-				MocassinOntologyClasses subjectType = aboxTriple.getSubject()
+				MocassinOntologyClasses subjectType = nextEdge.getSubject()
 						.getType();
-				MocassinOntologyClasses objectType = aboxTriple.getObject()
+				MocassinOntologyClasses objectType = nextEdge.getObject()
 						.getType();
 				boolean isMoreSpecificSubject = subjectType
 						.equals(this.ontologyFacade.getMoreSpecific(
@@ -103,16 +104,16 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 						.equals(this.ontologyFacade.getMoreSpecific(
 								curObjectType, objectType));
 				if (isMoreSpecificSubject && isMoreSpecificObject) {
-					curTriple = aboxTriple;
+					curEdge = nextEdge;
 				}
 			} else {
-				triples.add(curTriple);
-				curTriple = aboxTriple;
+				edges.add(curEdge);
+				curEdge = nextEdge;
 			}
 		}
-		if (!triples.contains(curTriple))
-			triples.add(curTriple);
-		return triples;
+		if (!edges.contains(curEdge))
+			edges.add(curEdge);
+		return edges;
 	}
 
 	@Override
@@ -240,11 +241,6 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 		return getSparqlQueryLoader().loadQueryByName("GetPublications");
 	}
 
-	private String generateTypeQuery(String uri) {
-		String query = getSparqlQueryLoader().loadQueryByName("GetTypes");
-		return String.format(query, uri);
-	}
-
 	private String generateRetrieveStructureGraphQuery(String documentUri) {
 		String query = getSparqlQueryLoader().loadQueryByName(
 				"GetStructureGraph");
@@ -268,10 +264,12 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 	}
 
 	private static class SolutionFunction implements
-			Function<QuerySolution, ABoxTriple> {
+			Function<QuerySolution, SGEdge> {
 
 		@Override
-		public ABoxTriple apply(QuerySolution solution) {
+		public SGEdge apply(QuerySolution solution) {
+			int fromNumPage = solution.getLiteral("?snumpage").getInt();
+			int toNumPage = solution.getLiteral("?onumpage").getInt();
 			String subjectUri = solution.getResource(
 					RETRIEVED_SUBJECT_GRAPH_NODE).toString();
 			String predicateUri = solution.getResource(
@@ -293,7 +291,7 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 			object.setType(objectType);
 			ABoxTriple triple = new ABoxTriple(subject,
 					MocassinOntologyRelations.fromUri(predicateUri), object);
-			return triple;
+			return new SGEdge(triple, fromNumPage, toNumPage);
 		}
 
 	}

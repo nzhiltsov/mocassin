@@ -9,6 +9,10 @@ import ru.ksu.niimm.cll.mocassin.nlp.Token;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
 
 public class StructuralElementImpl implements StructuralElement {
+	/**
+	 * added for compatibility; for genuine uniqueness see
+	 * {@link #equals(Object)}, which is used URI field value
+	 */
 	private final int id;
 	private final String uri;
 	private final long start;
@@ -22,19 +26,14 @@ public class StructuralElementImpl implements StructuralElement {
 
 	public static class Builder {
 		private final int id;
-
-		private String uri;
+		private final String uri;
 		private long start;
 		private long end;
 		private String name;
 
-		public Builder(int id) {
+		public Builder(int id, String uri) {
 			this.id = id;
-		}
-
-		public Builder uri(String uri) {
 			this.uri = uri;
-			return this;
 		}
 
 		public Builder start(long start) {
@@ -139,4 +138,30 @@ public class StructuralElementImpl implements StructuralElement {
 	public String toString() {
 		return String.format("%s; %s", uri, predictedClass);
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((uri == null) ? 0 : uri.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		StructuralElementImpl other = (StructuralElementImpl) obj;
+		if (uri == null) {
+			if (other.uri != null)
+				return false;
+		} else if (!uri.equals(other.uri))
+			return false;
+		return true;
+	}
+
 }

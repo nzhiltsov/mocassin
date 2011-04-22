@@ -29,7 +29,7 @@ import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext( { NlpModule.class, OntologyModule.class, VirtuosoModule.class,
+@GuiceContext({ NlpModule.class, OntologyModule.class, VirtuosoModule.class,
 		LatexParserModule.class, FullTextModule.class })
 public class DocumentSegmentClassificationEvaluationTest {
 	private static final String TEST_DATA_FILEPATH = "/tmp/arxmliv-element-training-data.csv";
@@ -54,8 +54,8 @@ public class DocumentSegmentClassificationEvaluationTest {
 			MocassinOntologyClasses predictedClass = prediction.equals("null") ? MocassinOntologyClasses.UNRECOGNIZED_DOCUMENT_SEGMENT
 					: MocassinOntologyClasses.fromLabel(prediction);
 			int id = Integer.parseInt(reader.get("id"));
-			StructuralElement element = new StructuralElementImpl.Builder(id)
-					.name(name).build();
+			StructuralElement element = new StructuralElementImpl.Builder(id,
+					"http://somedocument/s/" + id).name(name).build();
 			element.setPredictedClass(predictedClass);
 			StringTokenizer st = new StringTokenizer(title, " -");
 			List<Token> titleTokens = new ArrayList<Token>();
@@ -131,12 +131,13 @@ public class DocumentSegmentClassificationEvaluationTest {
 
 			avgFmeasure += fmeasure;
 		}
-		float fmeasure = writeMeasures(writer, n, MocassinOntologyClasses.UNRECOGNIZED_DOCUMENT_SEGMENT);
+		float fmeasure = writeMeasures(writer, n,
+				MocassinOntologyClasses.UNRECOGNIZED_DOCUMENT_SEGMENT);
 
 		avgFmeasure += fmeasure;
 
-		writer.write(String.format("%f", avgFmeasure
-				/ MocassinOntologyClasses.values().length + 1));
+		writer.write(String.format("%f",
+				avgFmeasure / MocassinOntologyClasses.values().length + 1));
 
 		writer.flush();
 		writer.close();
@@ -144,7 +145,8 @@ public class DocumentSegmentClassificationEvaluationTest {
 
 	private float writeMeasures(FileWriter writer, int n,
 			MocassinOntologyClasses clazz) throws IOException {
-		int i = clazz != MocassinOntologyClasses.UNRECOGNIZED_DOCUMENT_SEGMENT ? clazz.ordinal() : n - 1;
+		int i = clazz != MocassinOntologyClasses.UNRECOGNIZED_DOCUMENT_SEGMENT ? clazz
+				.ordinal() : n - 1;
 		String clazzString = clazz.toString();
 		int rowSum = 0;
 		for (int k = 0; k < n; k++) {

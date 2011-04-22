@@ -1,16 +1,10 @@
 package ru.ksu.niimm.cll.mocassin.nlp.util;
 
-import java.io.EOFException;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.Reader;
-import java.util.ArrayList;
 import java.util.List;
 
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
-import ru.ksu.niimm.cll.mocassin.nlp.Token;
-
-import com.thoughtworks.xstream.XStream;
 
 public class ReferenceFeatureReader {
 	private ReferenceFeatureReader() {
@@ -18,13 +12,16 @@ public class ReferenceFeatureReader {
 
 	public static List<Reference> read(Reader reader) throws IOException,
 			ClassNotFoundException {
-		XStream xstream = new ReferenceXStream();
+		throw new UnsupportedOperationException(
+				"ReferenceFeatureReader must read from a store");
+		/*XStream xstream = new ReferenceXStream();
 		List<Reference> refs = new ArrayList<Reference>();
 		ObjectInputStream in = xstream.createObjectInputStream(reader);
 		try {
 			while (true) {
 				Reference reference = (Reference) in.readObject();
-				if (reference == null) continue;
+				if (reference == null)
+					continue;
 				if (reference.getTo().getTitleTokens() == null) {
 					reference.getTo().setTitleTokens(new ArrayList<Token>());
 				}
@@ -35,6 +32,6 @@ public class ReferenceFeatureReader {
 			}
 		} catch (EOFException e) {
 			return refs;
-		}
+		}*/
 	}
 }

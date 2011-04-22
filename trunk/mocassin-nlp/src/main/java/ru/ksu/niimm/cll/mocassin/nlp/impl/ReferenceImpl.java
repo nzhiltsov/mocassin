@@ -4,14 +4,11 @@ import java.util.List;
 
 import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
-import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.nlp.Token;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
 
 public class ReferenceImpl implements Reference {
 	private final int id;
-	private final StructuralElement from;
-	private final StructuralElement to;
 	private final ParsedDocument document;
 	private final String additionalRefid;
 	private List<Token> sentenceTokens;
@@ -20,23 +17,11 @@ public class ReferenceImpl implements Reference {
 	public static class Builder {
 		private final int id;
 
-		private StructuralElement from;
-		private StructuralElement to;
 		private ParsedDocument document;
 		private String additionalRefid;
 
 		public Builder(int id) {
 			this.id = id;
-		}
-
-		public Builder from(StructuralElement from) {
-			this.from = from;
-			return this;
-		}
-
-		public Builder to(StructuralElement to) {
-			this.to = to;
-			return this;
 		}
 
 		public Builder document(ParsedDocument document) {
@@ -56,8 +41,6 @@ public class ReferenceImpl implements Reference {
 
 	public ReferenceImpl(Builder builder) {
 		this.id = builder.id;
-		this.from = builder.from;
-		this.to = builder.to;
 		this.document = builder.document;
 		this.additionalRefid = builder.additionalRefid;
 	}
@@ -72,14 +55,6 @@ public class ReferenceImpl implements Reference {
 
 	public int getId() {
 		return id;
-	}
-
-	public StructuralElement getFrom() {
-		return from;
-	}
-
-	public StructuralElement getTo() {
-		return to;
 	}
 
 	public ParsedDocument getDocument() {
@@ -131,8 +106,7 @@ public class ReferenceImpl implements Reference {
 
 	@Override
 	public String toString() {
-		return String.format("%s %s | %s", from.getPredictedClass(), to
-				.getPredictedClass(), relation);
+		return String.format("%d %s", this.id, this.relation);
 	}
 
 }

@@ -1,6 +1,6 @@
 package ru.ksu.niimm.cll.mocassin.nlp;
 
-import java.util.List;
+import edu.uci.ics.jung.graph.Graph;
 
 /**
  * Searcher for references in parsed documents
@@ -9,5 +9,6 @@ import java.util.List;
  * 
  */
 public interface ReferenceSearcher {
-	List<Reference> retrieveReferences(ParsedDocument document);
+	Graph<StructuralElement, Reference> retrieveReferences(
+			ParsedDocument document);
 }

@@ -7,11 +7,14 @@ import ru.ksu.niimm.cll.mocassin.nlp.FeatureExtractor;
 import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.ReferenceSearcher;
+import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
 import ru.ksu.niimm.cll.mocassin.nlp.util.NlpModulePropertiesLoader;
 import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
 
 import com.google.inject.Inject;
+
+import edu.uci.ics.jung.graph.Graph;
 
 public class FeatureExtractorImpl implements FeatureExtractor {
 
@@ -37,8 +40,8 @@ public class FeatureExtractorImpl implements FeatureExtractor {
 				: CollectionUtil.sampleRandomSublist(documentIds, count);
 		for (String id : selectedDocumentIds) {
 			ParsedDocument document = new ParsedDocumentImpl(id);
-			List<Reference> references = getReferenceSearcher().retrieveReferences(
-					document);
+			Graph<StructuralElement, Reference> references = getReferenceSearcher()
+					.retrieveReferences(document);
 			fireReferenceFinishEvent(document, references);
 
 		}
@@ -62,9 +65,9 @@ public class FeatureExtractorImpl implements FeatureExtractor {
 	}
 
 	private void fireReferenceFinishEvent(ParsedDocument document,
-			List<Reference> references) {
+			Graph<StructuralElement, Reference> graph) {
 		for (ReferenceProcessListener listener : getListeners()) {
-			listener.onReferenceFinish(document, references);
+			listener.onReferenceFinish(document, graph);
 		}
 	}
 

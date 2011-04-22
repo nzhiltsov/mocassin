@@ -7,12 +7,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedMap;
 import java.util.Map.Entry;
+import java.util.SortedMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 
 import ru.ksu.niimm.cll.mocassin.analyzer.AnalyzerModule;
@@ -32,6 +33,7 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext( { AnalyzerModule.class, NlpModule.class,
 		LatexParserModule.class, OntologyModule.class, VirtuosoModule.class, FullTextModule.class })
+@Ignore("references should be read from a store")		
 public abstract class AbstractAnalyzerTest {
 	private static final String REF_CONTEXT_DATA_INPUT_FOLDER = "/tmp/refcontexts-data";
 

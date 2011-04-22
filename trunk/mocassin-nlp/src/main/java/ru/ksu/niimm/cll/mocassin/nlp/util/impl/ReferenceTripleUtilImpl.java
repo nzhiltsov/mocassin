@@ -11,6 +11,7 @@ import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFTriple;
 import ru.ksu.niimm.cll.mocassin.virtuoso.impl.RDFTripleImpl;
+import edu.uci.ics.jung.graph.Graph;
 
 public class ReferenceTripleUtilImpl implements ReferenceTripleUtil {
 	private static final String TRIPLE_PATTERN = "<%s> <%s> <%s> .";
@@ -18,11 +19,11 @@ public class ReferenceTripleUtilImpl implements ReferenceTripleUtil {
 	private static final String INTEGER_PATTERN = "<%s> <%s> \"%d\"^^<http://www.w3.org/2001/XMLSchema#integer> .";
 
 	@Override
-	public Set<RDFTriple> convert(List<Reference> references) {
+	public Set<RDFTriple> convert(Graph<StructuralElement, Reference> graph) {
 		Set<RDFTriple> triples = new HashSet<RDFTriple>();
-		for (Reference ref : references) {
-			StructuralElement from = ref.getFrom();
-			StructuralElement to = ref.getTo();
+		for (Reference ref : graph.getEdges()) {
+			StructuralElement from = graph.getSource(ref);
+			StructuralElement to = graph.getDest(ref);
 			triples.add(createTypeTriple(from));
 			triples.add(createTypeTriple(to));
 
