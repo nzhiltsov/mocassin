@@ -206,7 +206,11 @@ public class LatexStructuralElementSearcherImpl implements
 	}
 
 	private String getPdfUri() {
-		return parsedDocument.getPdfUri();
+		return getParsedDocument().getPdfUri();
+	}
+
+	private synchronized ParsedDocument getParsedDocument() {
+		return parsedDocument;
 	}
 
 	private int getPageNumber(String fullTextQuery) throws EmptyResultException {
@@ -223,11 +227,11 @@ public class LatexStructuralElementSearcherImpl implements
 		private static final int MINIMAL_TOKEN_COUNT = 6;
 
 		@Override
-		public StructuralElement apply(Node node) {
-			String uri = String.format("%s/s%s", parsedDocument.getFilename(),
-					node.getId());
-			StructuralElement element = new StructuralElementImpl.Builder(
-					uri.hashCode(), uri).name(node.getName()).build();
+		public synchronized StructuralElement apply(Node node) {
+			String uri = String.format("%s/s%s", getParsedDocument()
+					.getFilename(), node.getId());
+			StructuralElement element = new StructuralElementImpl.Builder(uri
+					.hashCode(), uri).name(node.getName()).build();
 			List<String> labels = new ArrayList<String>();
 			labels.add(node.getLabelText());
 			element.setLabels(labels);
@@ -245,11 +249,14 @@ public class LatexStructuralElementSearcherImpl implements
 					int pageNumber = getPageNumber(sb.toString());
 					element.setStartPageNumber(pageNumber);
 				} catch (EmptyResultException e) {
-					logger.log(
-							Level.SEVERE,
-							String.format(
-									"failed to find the page number for a segment %s on PDF: %s",
-									element.getUri(), getPdfUri()));
+					logger
+							.log(
+									Level.SEVERE,
+									String
+											.format(
+													"failed to find the page number for a segment %s on PDF: %s",
+													element.getUri(),
+													getPdfUri()));
 				}
 			}
 

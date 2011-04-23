@@ -1,5 +1,6 @@
 package ru.ksu.niimm.cll.mocassin.nlp.gate;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -52,7 +53,7 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 			ParsedDocument parsedDocument) {
 		try {
 			this.graph = new DirectedSparseMultigraph<StructuralElement, Reference>();
-			
+
 			setDocument(gateDocumentDAO.load(parsedDocument.getFilename()));
 
 			loadStructuralElements(parsedDocument);
@@ -60,7 +61,8 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 			AnnotationSet refAnnotations = document
 					.getAnnotations(
 							getProperty(GateFormatConstants.ARXMLIV_MARKUP_NAME_PROPERTY_KEY))
-					.get(getProperty(GateFormatConstants.ARXMLIV_REF_ANNOTATION_PROPERTY_KEY));
+					.get(
+							getProperty(GateFormatConstants.ARXMLIV_REF_ANNOTATION_PROPERTY_KEY));
 			Iterable<Annotation> filteredRefAnnotations = Iterables.filter(
 					refAnnotations, new NotInMathPredicate(
 							getNlpModulePropertiesLoader(), getDocument()));
@@ -69,8 +71,8 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 			return this.graph;
 		} catch (AccessGateDocumentException e) {
 			logger.log(Level.SEVERE, String.format(
-					"failed to load the document: %s",
-					parsedDocument.getFilename()));
+					"failed to load the document: %s", parsedDocument
+							.getFilename()));
 			throw new RuntimeException(e);
 		} finally {
 			gateDocumentDAO.release(getDocument());
@@ -112,6 +114,30 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 				getNlpModulePropertiesLoader().useStemming());
 	}
 
+	private void addEdge(Reference edge, final StructuralElement from,
+			final StructuralElement to) {
+		StructuralElement foundFrom = null;
+		StructuralElement foundTo = null;
+		if (this.graph.containsVertex(from)) {
+			foundFrom = findVertice(from);
+		}
+		if (this.graph.containsVertex(to)) {
+			foundTo = findVertice(to);
+		}
+		this.graph.addEdge(edge, foundFrom != null ? foundFrom : from,
+				foundTo != null ? foundTo : to);
+	}
+
+	private StructuralElement findVertice(StructuralElement node) {
+		Collection<StructuralElement> vertices = this.graph.getVertices();
+		for (StructuralElement cur : vertices) {
+			if (cur.equals(node)) {
+				return cur;
+			}
+		}
+		throw new RuntimeException("node not found: " + node);
+	}
+
 	/**
 	 * Transformation from reference annotations to DAOs
 	 * 
@@ -121,7 +147,7 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 	private class ExtractFunction implements Function<Annotation, Reference> {
 
 		@Override
-		public Reference apply(Annotation annotation) {
+		public synchronized Reference apply(Annotation annotation) {
 			int id = annotation.getId();
 			String labelref = (String) annotation.getFeatures().get(
 					ArxmlivFormatConstants.LABEL_REF_ATTRIBUTE_NAME);
@@ -140,11 +166,10 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 			String additionalRefid = (String) annotation.getFeatures().get(
 					ArxmlivFormatConstants.REF_ID_ATTRIBUTE_NAME);
 
-			Reference reference = new ReferenceImpl.Builder(id)
-					.document(refDocument).additionalRefid(additionalRefid)
-					.build();
+			Reference reference = new ReferenceImpl.Builder(id).document(
+					refDocument).additionalRefid(additionalRefid).build();
 			reference.setSentenceTokens(sentenceTokens);
-			graph.addEdge(reference, new Pair<StructuralElement>(from, to));
+			addEdge(reference, from, to);
 			return reference;
 		}
 
@@ -160,7 +185,8 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 				AnnotationSet allSentences = getDocument()
 						.getAnnotations(
 								GateFormatConstants.DEFAULT_ANNOTATION_SET_NAME)
-						.get(getProperty(GateFormatConstants.SENTENCE_ANNOTATION_NAME_PROPERTY_KEY));
+						.get(
+								getProperty(GateFormatConstants.SENTENCE_ANNOTATION_NAME_PROPERTY_KEY));
 				long distance = Long.MAX_VALUE;
 				Annotation closestSentence = null;
 				for (Annotation sentence : allSentences) {
@@ -178,9 +204,10 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 				}
 				if (closestSentence == null) {
 					throw new RuntimeException(
-							String.format(
-									"couldn't locate sentence for annotation with id='%s'",
-									annotation.getId()));
+							String
+									.format(
+											"couldn't locate sentence for annotation with id='%s'",
+											annotation.getId()));
 				} else {
 					return closestSentence;
 				}
@@ -209,11 +236,13 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 
 			if (closestParentElement == null) {
 				getLogger()
-						.log(Level.INFO,
-								String.format(
-										"parent element for ref with id='%d' in document '%s' not found",
-										annotation.getId(), getDocument()
-												.getName()));
+						.log(
+								Level.INFO,
+								String
+										.format(
+												"parent element for ref with id='%d' in document '%s' not found",
+												annotation.getId(),
+												getDocument().getName()));
 
 			}
 
