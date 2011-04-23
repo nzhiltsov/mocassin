@@ -10,12 +10,12 @@
     <!ENTITY owl2xml "http://www.w3.org/2006/12/owl2-xml#" >
     <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
     <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+    <!ENTITY mocassin "http://cll.niimm.ksu.ru/ontologies/mocassin#" >
     <!ENTITY ontologies "http://salt.semanticauthoring.org/ontologies/" >
     <!ENTITY protege "http://protege.stanford.edu/plugins/owl/protege#" >
     <!ENTITY sao "http://salt.semanticauthoring.org/ontologies/sao#" >
     <!ENTITY xsp "http://www.owl-ontologies.com/2005/08/07/xsp.owl#" >
     <!ENTITY sdo "http://salt.semanticauthoring.org/ontologies/sdo#" >
-    <!ENTITY mocassin "http://cll.niimm.ksu.ru/ontologies/mocassin#" >
 ]>
 
 
@@ -171,24 +171,24 @@
 
     <owl:ObjectProperty rdf:about="#hasPart">
         <rdf:type rdf:resource="&owl;TransitiveProperty"/>
-        <rdfs:range>
-            <owl:Class>
-                <owl:unionOf rdf:parseType="Collection">
-                    <rdf:Description rdf:about="&ontologies;Figure"/>
-                    <rdf:Description rdf:about="&ontologies;Table"/>
-                    <rdf:Description rdf:about="&ontologies;sdo#Section"/>
-                    <rdf:Description rdf:about="#DocumentSegment"/>
-                </owl:unionOf>
-            </owl:Class>
-        </rdfs:range>
         <rdfs:domain>
             <owl:Class>
                 <owl:unionOf rdf:parseType="Collection">
-                    <rdf:Description rdf:about="&ontologies;sdo#Section"/>
                     <rdf:Description rdf:about="#DocumentSegment"/>
+                    <rdf:Description rdf:about="&ontologies;sdo#Section"/>
                 </owl:unionOf>
             </owl:Class>
         </rdfs:domain>
+        <rdfs:range>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="#DocumentSegment"/>
+                    <rdf:Description rdf:about="&ontologies;Figure"/>
+                    <rdf:Description rdf:about="&ontologies;Table"/>
+                    <rdf:Description rdf:about="&ontologies;sdo#Section"/>
+                </owl:unionOf>
+            </owl:Class>
+        </rdfs:range>
     </owl:ObjectProperty>
     
 
@@ -201,8 +201,8 @@
             >&#1089;&#1086;&#1076;&#1077;&#1088;&#1078;&#1080;&#1090; &#1082;&#1072;&#1082; &#1089;&#1077;&#1075;&#1084;&#1077;&#1085;&#1090;</rdfs:label>
         <dc:description rdf:datatype="&xsd;string"
             >The relation denotes that a publication contains a segment.</dc:description>
-        <rdfs:domain rdf:resource="&ontologies;sdo#Publication"/>
         <rdfs:range rdf:resource="#DocumentSegment"/>
+        <rdfs:domain rdf:resource="&ontologies;sdo#Publication"/>
     </owl:ObjectProperty>
     
 
@@ -240,9 +240,6 @@
         <rdfs:range>
             <owl:Class>
                 <owl:unionOf rdf:parseType="Collection">
-                    <rdf:Description rdf:about="&ontologies;Figure"/>
-                    <rdf:Description rdf:about="&ontologies;Table"/>
-                    <rdf:Description rdf:about="&ontologies;sdo#Section"/>
                     <rdf:Description rdf:about="#Axiom"/>
                     <rdf:Description rdf:about="#Claim"/>
                     <rdf:Description rdf:about="#Conjecture"/>
@@ -255,13 +252,15 @@
                     <rdf:Description rdf:about="#Proposition"/>
                     <rdf:Description rdf:about="#Remark"/>
                     <rdf:Description rdf:about="#Theorem"/>
+                    <rdf:Description rdf:about="&ontologies;Figure"/>
+                    <rdf:Description rdf:about="&ontologies;Table"/>
+                    <rdf:Description rdf:about="&ontologies;sdo#Section"/>
                 </owl:unionOf>
             </owl:Class>
         </rdfs:range>
         <rdfs:domain>
             <owl:Class>
                 <owl:unionOf rdf:parseType="Collection">
-                    <rdf:Description rdf:about="&ontologies;sdo#Section"/>
                     <rdf:Description rdf:about="#Axiom"/>
                     <rdf:Description rdf:about="#Claim"/>
                     <rdf:Description rdf:about="#Conjecture"/>
@@ -273,10 +272,58 @@
                     <rdf:Description rdf:about="#Proposition"/>
                     <rdf:Description rdf:about="#Remark"/>
                     <rdf:Description rdf:about="#Theorem"/>
+                    <rdf:Description rdf:about="&ontologies;sdo#Section"/>
                 </owl:unionOf>
             </owl:Class>
         </rdfs:domain>
     </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#hasStartPageNumber -->
+
+    <owl:DatatypeProperty rdf:about="#hasStartPageNumber">
+        <rdfs:range rdf:resource="&xsd;integer"/>
+        <rdfs:domain>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="#DocumentSegment"/>
+                    <rdf:Description rdf:about="&ontologies;Figure"/>
+                    <rdf:Description rdf:about="&ontologies;Table"/>
+                    <rdf:Description rdf:about="&ontologies;sdo#Section"/>
+                </owl:unionOf>
+            </owl:Class>
+        </rdfs:domain>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#hasText -->
+
+    <owl:DatatypeProperty rdf:about="#hasText">
+        <rdfs:range rdf:resource="&rdfs;Literal"/>
+        <rdfs:domain>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="#DocumentSegment"/>
+                    <rdf:Description rdf:about="&ontologies;Figure"/>
+                    <rdf:Description rdf:about="&ontologies;Table"/>
+                    <rdf:Description rdf:about="&ontologies;sdo#Section"/>
+                </owl:unionOf>
+            </owl:Class>
+        </rdfs:domain>
+    </owl:DatatypeProperty>
     
 
 
@@ -288,30 +335,6 @@
     ///////////////////////////////////////////////////////////////////////////////////////
      -->
 
-    
-
-
-    <!-- http://salt.semanticauthoring.org/ontologies/Figure -->
-
-    <owl:Class rdf:about="&ontologies;Figure"/>
-    
-
-
-    <!-- http://salt.semanticauthoring.org/ontologies/Table -->
-
-    <owl:Class rdf:about="&ontologies;Table"/>
-    
-
-
-    <!-- http://salt.semanticauthoring.org/ontologies/sdo#Publication -->
-
-    <owl:Class rdf:about="&ontologies;sdo#Publication"/>
-    
-
-
-    <!-- http://salt.semanticauthoring.org/ontologies/sdo#Section -->
-
-    <owl:Class rdf:about="&ontologies;sdo#Section"/>
     
 
 
@@ -469,6 +492,30 @@
         <dc:description rdf:datatype="&xsd;string"
             >Not self-evident statement that usually represents an important theoretical result.</dc:description>
     </owl:Class>
+    
+
+
+    <!-- http://salt.semanticauthoring.org/ontologies/Figure -->
+
+    <owl:Class rdf:about="&ontologies;Figure"/>
+    
+
+
+    <!-- http://salt.semanticauthoring.org/ontologies/Table -->
+
+    <owl:Class rdf:about="&ontologies;Table"/>
+    
+
+
+    <!-- http://salt.semanticauthoring.org/ontologies/sdo#Publication -->
+
+    <owl:Class rdf:about="&ontologies;sdo#Publication"/>
+    
+
+
+    <!-- http://salt.semanticauthoring.org/ontologies/sdo#Section -->
+
+    <owl:Class rdf:about="&ontologies;sdo#Section"/>
     
 
 
