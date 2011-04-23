@@ -31,12 +31,8 @@ public class DocumentStructureGraph extends ProtovisWidget {
 
 	private final ViewerServiceAsync viewerService = GWT
 			.create(ViewerService.class);
-
-	private Frame frame;
-
 	private String resourceUri;
 
-	private String pdfUri;
 	private NavigationPopup navigationPopup;
 
 	/*
@@ -50,9 +46,7 @@ public class DocumentStructureGraph extends ProtovisWidget {
 
 	public DocumentStructureGraph(Frame frame, String resourceUri, String pdfUri) {
 		super();
-		this.frame = frame;
 		this.resourceUri = resourceUri;
-		this.pdfUri = pdfUri;
 		this.navigationPopup = new NavigationPopup(frame, pdfUri);
 	}
 
@@ -63,63 +57,56 @@ public class DocumentStructureGraph extends ProtovisWidget {
 
 	private void createVisualization(Node[] nodes, Link[] links) {
 		PVPanel vis = getPVPanel().width(450).height(450).fillStyle("white")
-				.event(PV.Event.MOUSEDOWN, PV.Behavior.pan())
-				.event(PV.Event.MOUSEWHEEL, PV.Behavior.zoom());
+				.event(PV.Event.MOUSEDOWN, PV.Behavior.pan()).event(
+						PV.Event.MOUSEWHEEL, PV.Behavior.zoom());
 
-		PVForceLayout force = vis.add(PV.Layout.Force())
-				.nodes(new NovelCharacterNodeAdapter(), nodes).links(links);
+		PVForceLayout force = vis.add(PV.Layout.Force()).nodes(
+				new NovelCharacterNodeAdapter(), nodes).links(links);
 
 		force.link().add(PV.Line);
 
-		force.node()
-				.add(PV.Dot)
-				.size(new JsDoubleFunction() {
-					public double f(JsArgs args) {
-						PVNode d = args.getObject();
-						return (20 * d.linkDegree() + 4)
-								* (Math.pow(args.<PVMark> getThis().scale(),
-										-1.5));
-					}
-				})
-				.fillStyle(new JsFunction<PVColor>() {
-					private PVOrdinalScale colors = PV.Colors.category19();
+		force.node().add(PV.Dot).size(new JsDoubleFunction() {
+			public double f(JsArgs args) {
+				PVNode d = args.getObject();
+				return (20 * d.linkDegree() + 4)
+						* (Math.pow(args.<PVMark> getThis().scale(), -1.5));
+			}
+		}).fillStyle(new JsFunction<PVColor>() {
+			private PVOrdinalScale colors = PV.Colors.category19();
 
-					public PVColor f(JsArgs args) {
-						PVNode d = args.getObject();
-						if (d.fix()) {
-							return PV.color("brown");
-						}
-						PVColor color = colors.fcolor(d.<Node> object()
-								.getNodeType());
+			public PVColor f(JsArgs args) {
+				PVNode d = args.getObject();
+				if (d.fix()) {
+					return PV.color("brown");
+				}
+				PVColor color = colors.fcolor(d.<Node> object().getNodeType());
 
-						return color;
-					}
-				}).strokeStyle(new JsFunction<PVColor>() {
-					public PVColor f(JsArgs args) {
-						PVDot _this = args.getThis();
-						return _this.fillStyle().darker();
-					}
-				}).lineWidth(1).title(new JsStringFunction() {
-					public String f(JsArgs args) {
-						PVNode d = args.getObject();
-						return d.nodeName();
-					}
-				}).event(PV.Event.MOUSEDOWN, PV.Behavior.drag())
-				.event(PV.Event.DRAG, force)
-				.event(PV.Event.MOUSEDOWN, new PVEventHandler() {
+				return color;
+			}
+		}).strokeStyle(new JsFunction<PVColor>() {
+			public PVColor f(JsArgs args) {
+				PVDot _this = args.getThis();
+				return _this.fillStyle().darker();
+			}
+		}).lineWidth(1).title(new JsStringFunction() {
+			public String f(JsArgs args) {
+				PVNode d = args.getObject();
+				return d.nodeName();
+			}
+		}).event(PV.Event.MOUSEDOWN, PV.Behavior.drag()).event(PV.Event.DRAG,
+				force).event(PV.Event.MOUSEDOWN, new PVEventHandler() {
 
-					@Override
-					public void onEvent(Event e, String pvEventType, JsArgs args) {
-						PVNode d = args.getObject();
-						int numPage = d.<Node> object()
-								.getNumPage();
-						navigationPopup.setNumPage(numPage);
-						Element node = e.getCurrentTarget();
-						navigationPopup.setPopupPosition(
-								node.getAbsoluteLeft(), node.getAbsoluteTop());
-						navigationPopup.show();
-					}
-				});
+			@Override
+			public void onEvent(Event e, String pvEventType, JsArgs args) {
+				PVNode d = args.getObject();
+				int numPage = d.<Node> object().getNumPage();
+				navigationPopup.setNumPage(numPage);
+				Element node = e.getCurrentTarget();
+				navigationPopup.setPopupPosition(node.getAbsoluteLeft(), node
+						.getAbsoluteTop());
+				navigationPopup.show();
+			}
+		});
 		/*
 		 * new PVEventHandler() { public void onEvent(Event e, String
 		 * pvEventType, JsArgs args) { PVNode d = args.getObject();
