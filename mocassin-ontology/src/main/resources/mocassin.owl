@@ -237,6 +237,24 @@
         <rdfs:label xml:lang="ru">&#1089;&#1089;&#1099;&#1083;&#1072;&#1077;&#1090;&#1089;&#1103; &#1085;&#1072;</rdfs:label>
         <dc:description rdf:datatype="&xsd;string"
             >This relation expresses a reference between segments. An author usually uses this device to point at significant segments of a publication.</dc:description>
+        <rdfs:domain>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="#Axiom"/>
+                    <rdf:Description rdf:about="#Claim"/>
+                    <rdf:Description rdf:about="#Conjecture"/>
+                    <rdf:Description rdf:about="#Corollary"/>
+                    <rdf:Description rdf:about="#Definition"/>
+                    <rdf:Description rdf:about="#Example"/>
+                    <rdf:Description rdf:about="#Lemma"/>
+                    <rdf:Description rdf:about="#Proof"/>
+                    <rdf:Description rdf:about="#Proposition"/>
+                    <rdf:Description rdf:about="#Remark"/>
+                    <rdf:Description rdf:about="#Theorem"/>
+                    <rdf:Description rdf:about="&ontologies;sdo#Section"/>
+                </owl:unionOf>
+            </owl:Class>
+        </rdfs:domain>
         <rdfs:range>
             <owl:Class>
                 <owl:unionOf rdf:parseType="Collection">
@@ -258,24 +276,6 @@
                 </owl:unionOf>
             </owl:Class>
         </rdfs:range>
-        <rdfs:domain>
-            <owl:Class>
-                <owl:unionOf rdf:parseType="Collection">
-                    <rdf:Description rdf:about="#Axiom"/>
-                    <rdf:Description rdf:about="#Claim"/>
-                    <rdf:Description rdf:about="#Conjecture"/>
-                    <rdf:Description rdf:about="#Corollary"/>
-                    <rdf:Description rdf:about="#Definition"/>
-                    <rdf:Description rdf:about="#Example"/>
-                    <rdf:Description rdf:about="#Lemma"/>
-                    <rdf:Description rdf:about="#Proof"/>
-                    <rdf:Description rdf:about="#Proposition"/>
-                    <rdf:Description rdf:about="#Remark"/>
-                    <rdf:Description rdf:about="#Theorem"/>
-                    <rdf:Description rdf:about="&ontologies;sdo#Section"/>
-                </owl:unionOf>
-            </owl:Class>
-        </rdfs:domain>
     </owl:ObjectProperty>
     
 
@@ -294,6 +294,10 @@
     <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#hasStartPageNumber -->
 
     <owl:DatatypeProperty rdf:about="#hasStartPageNumber">
+        <rdfs:label xml:lang="en"
+            >has start page number</rdfs:label>
+        <rdfs:label xml:lang="ru"
+            >&#1085;&#1072;&#1093;&#1086;&#1076;&#1080;&#1090;&#1089;&#1103; &#1085;&#1072; &#1089;&#1090;&#1088;&#1072;&#1085;&#1080;&#1094;&#1077;</rdfs:label>
         <rdfs:range rdf:resource="&xsd;integer"/>
         <rdfs:domain>
             <owl:Class>
@@ -312,6 +316,8 @@
     <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#hasText -->
 
     <owl:DatatypeProperty rdf:about="#hasText">
+        <rdfs:label xml:lang="en">has text</rdfs:label>
+        <rdfs:label xml:lang="ru">&#1089;&#1086;&#1076;&#1077;&#1088;&#1078;&#1080;&#1090; &#1090;&#1077;&#1082;&#1089;&#1090;</rdfs:label>
         <rdfs:range rdf:resource="&rdfs;Literal"/>
         <rdfs:domain>
             <owl:Class>
