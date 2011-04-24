@@ -24,7 +24,6 @@ import com.google.inject.Inject;
 
 import edu.uci.ics.jung.graph.DirectedSparseMultigraph;
 import edu.uci.ics.jung.graph.Graph;
-import edu.uci.ics.jung.graph.util.Pair;
 import gate.Annotation;
 import gate.AnnotationSet;
 import gate.Document;

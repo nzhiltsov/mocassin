@@ -155,10 +155,10 @@ public class NodeImpl implements Node {
 
 	}
 
-	public static class NodePositionPredicate implements Predicate<Node> {
+	public static class NodeBoundaryPredicate implements Predicate<Node> {
 		private int lineNumber;
 
-		public NodePositionPredicate(int lineNumber) {
+		public NodeBoundaryPredicate(int lineNumber) {
 			this.lineNumber = lineNumber;
 		}
 

@@ -13,8 +13,9 @@ import org.apache.commons.lang.StringEscapeUtils;
 public class StringUtil {
 	private static final Pattern STYLE_PATTERN = Pattern
 			.compile("\\\\[a-zA-Z]+\\{([^}]*)\\}");
+	private static final String REFERENCE_PATTERN_STRING = "\\\\(label|ref|cite){1}(\\[[^]]*\\])*\\{([^}]*)\\}";
 	private static final Pattern LATIN_TEXT_PATTERN = Pattern
-			.compile("[a-zA-Z]+");
+			.compile("[a-zA-Z-]+");
 
 	private static final String DOLLAR_PATTERN_STRING = "\\$.[^$]*\\$";
 	private static final String BACKSLASH_PATTERN = "\\\\[a-z]+";
@@ -69,25 +70,24 @@ public class StringUtil {
 	 * @return
 	 */
 	public static List<String> stripLatexMarkup(String str) {
-		String escaped = StringEscapeUtils.escapeJava(str);
-		StringTokenizer st = new StringTokenizer(escaped);
+		String escaped = StringEscapeUtils.escapeJava(str).replaceAll(
+				DOLLAR_PATTERN_STRING, "").replaceAll(REFERENCE_PATTERN_STRING,
+				"");
+
+		StringTokenizer st = new StringTokenizer(escaped, "- \t\n\r\f");
 		List<String> list = new LinkedList<String>();
 		while (st.hasMoreTokens()) {
 			String token = st.nextToken().replaceAll(DOLLAR_PATTERN_STRING, "");
-			/**
-			 * ignore references and citations
-			 */
-			if (token.startsWith("\\\\ref{") || token.startsWith("\\\\cite{")) {
-				continue;
+
+			Matcher styleMatcher = STYLE_PATTERN.matcher(token);
+			if (styleMatcher.find()) {
+				token = styleMatcher.group(1);
 			}
 
-			if (LATIN_TEXT_PATTERN.matcher(token).matches()) {
-				list.add(token);
-			} else {
-				Matcher styleMatcher = STYLE_PATTERN.matcher(token);
-				if (styleMatcher.find()) {
-					list.add(styleMatcher.group(1));
-				}
+			String strippedOffPunctuation = token.replaceAll("\\p{P}+", "");
+
+			if (LATIN_TEXT_PATTERN.matcher(strippedOffPunctuation).matches()) {
+				list.add(strippedOffPunctuation);
 			}
 		}
 

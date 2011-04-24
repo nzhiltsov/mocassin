@@ -63,6 +63,7 @@ public class LatexStructuralElementSearcherTest {
 		Arrays.sort(verticesArray, new UriComparator());
 		for (StructuralElement element : verticesArray) {
 			System.out.println(element);
+			System.out.println(element.getContents());
 		}
 	}
 

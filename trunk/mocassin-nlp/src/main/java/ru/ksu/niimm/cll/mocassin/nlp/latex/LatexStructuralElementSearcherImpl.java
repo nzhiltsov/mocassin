@@ -30,9 +30,10 @@ import ru.ksu.niimm.cll.mocassin.parser.EdgeType;
 import ru.ksu.niimm.cll.mocassin.parser.Node;
 import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl.EnclosingNodePredicate;
 import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl.NodePositionComparator;
-import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl.NodePositionPredicate;
+import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl.NodeBoundaryPredicate;
 import ru.ksu.niimm.cll.mocassin.parser.latex.builder.StructureBuilder;
-import ru.ksu.niimm.cll.mocassin.parser.util.StandardEnvironments;
+import ru.ksu.niimm.cll.mocassin.parser.util.StandardMathEnvironments;
+import ru.ksu.niimm.cll.mocassin.parser.util.StandardStyleEnvironments;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
 
 import com.google.common.base.Function;
@@ -119,10 +120,8 @@ public class LatexStructuralElementSearcherImpl implements
 		Collection<Node> nodes = this.latexNodeGraph.getVertices();
 		for (Node node : nodes) {
 
-			String fromName = node.getName();
-			if (node.isEnvironment()
-					&& !fromName.equals(EQUATION_ENVIRONMENT_NAME)
-					&& !StandardEnvironments.contains(fromName)) {
+			String nodeName = node.getName();
+			if (!StandardStyleEnvironments.contains(nodeName)) {
 				indexingNodes.add(node);
 			}
 
@@ -136,14 +135,26 @@ public class LatexStructuralElementSearcherImpl implements
 		while ((line = reader.readLine()) != null) {
 			currentLineNumber++;
 			/**
-			 * TODO: skip the border of a segment in a more accurate way
+			 * TODO: skip the boundaries of a segment in a more accurate way
 			 */
-			if (Iterables.find(nodes, new NodePositionPredicate(
+			if (Iterables.find(nodes, new NodeBoundaryPredicate(
 					currentLineNumber), null) != null) {
 				continue;
 			}
 			Iterable<Node> enclosingNodes = Iterables.filter(indexingNodes,
 					new EnclosingNodePredicate(currentLineNumber));
+			if (Iterables.isEmpty(enclosingNodes))
+				continue;
+			boolean isContainedByMathEnvironment = false;
+			for (Node node : enclosingNodes) {
+				if (StandardMathEnvironments.contains(node.getName())) {
+					isContainedByMathEnvironment = true;
+					break;
+				}
+			}
+			if (isContainedByMathEnvironment)
+				continue;
+
 			List<String> tokens = StringUtil.stripLatexMarkup(line);
 			Iterable<String> tokensForIndex = Iterables.filter(tokens,
 					getNonStopWordPredicate());
