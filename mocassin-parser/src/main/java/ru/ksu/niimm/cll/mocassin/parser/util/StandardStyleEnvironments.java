@@ -1,9 +1,9 @@
 package ru.ksu.niimm.cll.mocassin.parser.util;
 
 public enum StandardStyleEnvironments {
-	ITEMIZE("itemize"), ENUMERATE("enumerate"), BIBLIOGRAPHY("thebibliography");
+	ITEMIZE("itemize"), ENUMERATE("enumerate");
 
-	private String name;
+	private final String name;
 
 	private StandardStyleEnvironments(String name) {
 		this.name = name;
@@ -19,6 +19,10 @@ public enum StandardStyleEnvironments {
 			}
 		}
 		return false;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 }

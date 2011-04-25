@@ -33,6 +33,7 @@ import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl.NodePositionComparator;
 import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl.NodeBoundaryPredicate;
 import ru.ksu.niimm.cll.mocassin.parser.latex.builder.StructureBuilder;
 import ru.ksu.niimm.cll.mocassin.parser.util.StandardMathEnvironments;
+import ru.ksu.niimm.cll.mocassin.parser.util.StandardMetadataEnvironments;
 import ru.ksu.niimm.cll.mocassin.parser.util.StandardStyleEnvironments;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
 
@@ -46,7 +47,6 @@ import edu.uci.ics.jung.graph.Graph;
 
 public class LatexStructuralElementSearcherImpl implements
 		LatexStructuralElementSearcher {
-	private static final String EQUATION_ENVIRONMENT_NAME = "equation";
 	private static final int DOCUMENT_MAX_SIZE = 50 * 1024 * 1024;
 	@Inject
 	private Logger logger;
@@ -106,8 +106,6 @@ public class LatexStructuralElementSearcherImpl implements
 	}
 
 	/**
-	 * TODO: traversing a list is non-efficient; refactoring from a list of
-	 * edges to a list of nodes is required!!
 	 * 
 	 * @param parsingInputStream
 	 * @throws IOException
@@ -145,14 +143,15 @@ public class LatexStructuralElementSearcherImpl implements
 					new EnclosingNodePredicate(currentLineNumber));
 			if (Iterables.isEmpty(enclosingNodes))
 				continue;
-			boolean isContainedByMathEnvironment = false;
+			boolean shouldSkip = false;
 			for (Node node : enclosingNodes) {
-				if (StandardMathEnvironments.contains(node.getName())) {
-					isContainedByMathEnvironment = true;
+				if (StandardMetadataEnvironments.contains(node.getName())
+						|| StandardMathEnvironments.contains(node.getName())) {
+					shouldSkip = true;
 					break;
 				}
 			}
-			if (isContainedByMathEnvironment)
+			if (shouldSkip)
 				continue;
 
 			List<String> tokens = StringUtil.stripLatexMarkup(line);
@@ -160,9 +159,6 @@ public class LatexStructuralElementSearcherImpl implements
 					getNonStopWordPredicate());
 			String[] contents = Iterables.toArray(tokensForIndex, String.class);
 			for (Node enclosingNode : enclosingNodes) {
-				if (enclosingNode.getBeginLine() == 612) {
-					enclosingNode.getBeginLine();
-				}
 				enclosingNode.addContents(contents);
 			}
 		}
@@ -241,8 +237,8 @@ public class LatexStructuralElementSearcherImpl implements
 		public synchronized StructuralElement apply(Node node) {
 			String uri = String.format("%s/s%s", getParsedDocument()
 					.getFilename(), node.getId());
-			StructuralElement element = new StructuralElementImpl.Builder(uri
-					.hashCode(), uri).name(node.getName()).build();
+			StructuralElement element = new StructuralElementImpl.Builder(
+					uri.hashCode(), uri).name(node.getName()).build();
 			List<String> labels = new ArrayList<String>();
 			labels.add(node.getLabelText());
 			element.setLabels(labels);
@@ -260,14 +256,11 @@ public class LatexStructuralElementSearcherImpl implements
 					int pageNumber = getPageNumber(sb.toString());
 					element.setStartPageNumber(pageNumber);
 				} catch (EmptyResultException e) {
-					logger
-							.log(
-									Level.SEVERE,
-									String
-											.format(
-													"failed to find the page number for a segment %s on PDF: %s",
-													element.getUri(),
-													getPdfUri()));
+					logger.log(
+							Level.SEVERE,
+							String.format(
+									"failed to find the page number for a segment %s on PDF: %s",
+									element.getUri(), getPdfUri()));
 				}
 			}
 
