@@ -231,7 +231,7 @@ public class LatexStructuralElementSearcherImpl implements
 	private class Node2ElementFunction implements
 			Function<Node, StructuralElement> {
 
-		private static final int MINIMAL_TOKEN_COUNT = 6;
+		private static final int MINIMAL_TOKEN_COUNT = 4;
 
 		@Override
 		public synchronized StructuralElement apply(Node node) {
@@ -246,22 +246,29 @@ public class LatexStructuralElementSearcherImpl implements
 					new String[node.getContents().size()]);
 			element.setContents(contents);
 
-			if (element.getContents().size() >= MINIMAL_TOKEN_COUNT) {
-				StringBuffer sb = new StringBuffer();
-				for (int i = 0; i < MINIMAL_TOKEN_COUNT; i++) {
-					sb.append(String
-							.format("%s ", element.getContents().get(i)));
+			StringBuffer sb = new StringBuffer();
+			int i = 0;
+			int j = 0;
+			int contentSize = element.getContents().size();
+			while (i < MINIMAL_TOKEN_COUNT && j < contentSize) {
+				String token = element.getContents().get(i);
+				if (token.length() > 3 && sb.indexOf(token) == -1) {
+					sb.append(String.format("%s ", token));
+					i++;
 				}
-				try {
+				j++;
+			}
+			try {
+				if (i == MINIMAL_TOKEN_COUNT) {
 					int pageNumber = getPageNumber(sb.toString());
 					element.setStartPageNumber(pageNumber);
-				} catch (EmptyResultException e) {
-					logger.log(
-							Level.SEVERE,
-							String.format(
-									"failed to find the page number for a segment %s on PDF: %s",
-									element.getUri(), getPdfUri()));
 				}
+			} catch (EmptyResultException e) {
+				logger.log(
+						Level.SEVERE,
+						String.format(
+								"failed to find the page number for a segment %s on PDF: %s",
+								element.getUri(), getPdfUri()));
 			}
 
 			/**
