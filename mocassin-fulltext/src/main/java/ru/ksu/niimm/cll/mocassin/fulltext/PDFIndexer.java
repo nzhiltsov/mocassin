@@ -3,12 +3,16 @@ package ru.ksu.niimm.cll.mocassin.fulltext;
 import java.io.InputStream;
 
 public interface PDFIndexer {
+	String BLANK_QUERY_PATTERN = "\"%s\"";
+
 	/**
 	 * parse a given PDF stream and save into the index
 	 * 
 	 * @param pdfInputStream
 	 */
-	void save(String pdfDocumentUri, InputStream pdfInputStream) throws PersistingDocumentException;
+	void save(String pdfDocumentUri, InputStream pdfInputStream)
+			throws PersistingDocumentException;
+
 	/**
 	 * 
 	 * returns the number of a page that contains a segment corresponding a
@@ -20,5 +24,6 @@ public interface PDFIndexer {
 	 * @return
 	 * @throws EmptyResultException
 	 */
-	int getPageNumber(String pdfDocumentUri, String fullTextQuery) throws EmptyResultException;
+	int getPageNumber(String pdfDocumentUri, String fullTextQuery)
+			throws EmptyResultException;
 }

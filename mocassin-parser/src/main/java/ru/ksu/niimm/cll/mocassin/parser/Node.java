@@ -32,19 +32,18 @@ public interface Node {
 
 	void addContents(String... text);
 
-	void setBeginLine(int beginLine);
-
 	int getBeginLine();
 
 	int getEndLine();
 
-	void setEndLine(int endLine);
-
 	int getOffset();
-
-	void setOffset(int offset);
 
 	boolean isEnvironment();
 
-	void setEnvironment(boolean isEnvironment);
+	String getTitle();
+
+	void setTitle(String title);
+	
+	boolean isNumbered();
+	
 }

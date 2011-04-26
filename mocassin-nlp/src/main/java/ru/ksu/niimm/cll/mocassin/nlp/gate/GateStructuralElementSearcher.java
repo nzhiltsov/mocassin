@@ -8,6 +8,7 @@ import gate.util.OffsetComparator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -73,8 +74,8 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 			return CollectionUtil.asList(structuralElementIterable);
 		} catch (AccessGateDocumentException e) {
 			logger.log(Level.SEVERE, String.format(
-					"failed to load the document: %s",
-					parsedDocument.getFilename()));
+					"failed to load the document: %s", parsedDocument
+							.getFilename()));
 			throw new RuntimeException(e);
 		} finally {
 			gateDocumentDAO.release(document);
@@ -100,16 +101,17 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 			}
 			if (foundAnnotation == null)
 				throw new RuntimeException(
-						String.format(
-								"there is no structural element with id='%d' in document %s",
-								id, document.getName()));
+						String
+								.format(
+										"there is no structural element with id='%d' in document %s",
+										id, document.getName()));
 			StructuralElement foundElement = new ExtractionFunction(document)
 					.apply(foundAnnotation);
 			return foundElement;
 		} catch (AccessGateDocumentException e) {
 			logger.log(Level.SEVERE, String.format(
-					"failed to load the document: %s",
-					parsedDocument.getFilename()));
+					"failed to load the document: %s", parsedDocument
+							.getFilename()));
 			throw new RuntimeException(e);
 		} finally {
 			gateDocumentDAO.release(document);
@@ -210,16 +212,14 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 			String classFeature = (String) annotation.getFeatures().get(
 					ArxmlivFormatConstants.CLASS_ATTRIBUTE_NAME);
 			String name = classFeature != null ? classFeature : type;
-			StructuralElement element = new StructuralElementImpl.Builder(id,
-					document.getName() + "/" + id).start(start).end(end)
-					.name(name).build();
 
 			List<String> labels = collectLabels(annotation);
-			element.setLabels(labels);
+
 			AnnotationSet titleSet = getDocument()
 					.getAnnotations(
 							getProperty(GateFormatConstants.ARXMLIV_MARKUP_NAME_PROPERTY_KEY))
-					.get(getProperty(GateFormatConstants.TITLE_ANNOTATION_NAME_PROPERTY_KEY))
+					.get(
+							getProperty(GateFormatConstants.TITLE_ANNOTATION_NAME_PROPERTY_KEY))
 					.getContained(annotation.getStartNode().getOffset(),
 							annotation.getEndNode().getOffset());
 			List<Annotation> titleList = new ArrayList<Annotation>(titleSet);
@@ -229,9 +229,19 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 				Annotation title = titleList.get(0);
 				titleTokens = getTokensForAnnotation(getDocument(), title);
 			}
-
-			element.setTitleTokens(titleTokens != null ? titleTokens
-					: new ArrayList<Token>());
+			StringBuffer sb = new StringBuffer();
+			Iterator<Token> iterator = titleTokens.iterator();
+			while (iterator.hasNext()) {
+				sb.append(iterator.next().getValue());
+				if (iterator.hasNext()) {
+					sb.append(" ");
+				}
+			}
+			String title = sb.toString();
+			StructuralElement element = new StructuralElementImpl.Builder(id,
+					document.getName() + "/" + id).start(start).end(end).name(
+					name).title(title).build();
+			element.setLabels(labels);
 			return element;
 		}
 

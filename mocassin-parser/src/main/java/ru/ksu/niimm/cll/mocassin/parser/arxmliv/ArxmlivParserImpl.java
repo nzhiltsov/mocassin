@@ -135,12 +135,13 @@ public class ArxmlivParserImpl {
 			localName = classAttr.getTextContent();
 		}
 
-		Node n = new NodeImpl(id, localName);
 		org.w3c.dom.Node labelAttr = node.getAttributes().getNamedItem(
 				ArxmlivFormatConstants.LABEL_ATTRIBUTE_NAME);
-		if (labelAttr != null) {
-			n.setLabelText(labelAttr.getTextContent());
-		}
+
+		String labelText = labelAttr != null ? labelAttr.getTextContent()
+				: null;
+		Node n = new NodeImpl.Builder(id, localName).labelText(labelText)
+				.build();
 		return n;
 	}
 }

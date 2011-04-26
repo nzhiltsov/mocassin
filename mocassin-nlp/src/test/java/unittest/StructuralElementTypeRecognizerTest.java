@@ -146,7 +146,7 @@ public class StructuralElementTypeRecognizerTest {
 			writer.write("id|title|name|prediction\n");
 			for (StructuralElement element : elements) {
 				writer.write(String.format("%d|%s|%s|null\n", element.getId(),
-						element.toTitleString(), element.getName()));
+						element.getTitle(), element.getName()));
 			}
 			writer.flush();
 			writer.close();
@@ -168,7 +168,7 @@ public class StructuralElementTypeRecognizerTest {
 				StructuralElement element = entry.getKey();
 				MocassinOntologyClasses prediction = entry.getValue();
 				writer.write(String.format("%d|%s|%s|%s\n", element.getId(),
-						element.toTitleString(), element.getName(), prediction
+						element.getTitle(), element.getName(), prediction
 								.toString()));
 			}
 			writer.flush();

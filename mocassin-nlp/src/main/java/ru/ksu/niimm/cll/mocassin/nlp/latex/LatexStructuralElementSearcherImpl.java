@@ -18,7 +18,6 @@ import ru.ksu.niimm.cll.mocassin.fulltext.PDFIndexer;
 import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
-import ru.ksu.niimm.cll.mocassin.nlp.Token;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.ReferenceImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.StructuralElementImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.recognizer.StructuralElementTypeRecognizer;
@@ -29,8 +28,8 @@ import ru.ksu.niimm.cll.mocassin.parser.Edge;
 import ru.ksu.niimm.cll.mocassin.parser.EdgeType;
 import ru.ksu.niimm.cll.mocassin.parser.Node;
 import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl.EnclosingNodePredicate;
-import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl.NodePositionComparator;
 import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl.NodeBoundaryPredicate;
+import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl.NodePositionComparator;
 import ru.ksu.niimm.cll.mocassin.parser.latex.builder.StructureBuilder;
 import ru.ksu.niimm.cll.mocassin.parser.util.StandardMathEnvironments;
 import ru.ksu.niimm.cll.mocassin.parser.util.StandardMetadataEnvironments;
@@ -237,8 +236,9 @@ public class LatexStructuralElementSearcherImpl implements
 		public synchronized StructuralElement apply(Node node) {
 			String uri = String.format("%s/s%s", getParsedDocument()
 					.getFilename(), node.getId());
-			StructuralElement element = new StructuralElementImpl.Builder(
-					uri.hashCode(), uri).name(node.getName()).build();
+			StructuralElement element = new StructuralElementImpl.Builder(uri
+					.hashCode(), uri).name(node.getName()).title(
+					node.getTitle()).build();
 			List<String> labels = new ArrayList<String>();
 			labels.add(node.getLabelText());
 			element.setLabels(labels);
@@ -251,37 +251,44 @@ public class LatexStructuralElementSearcherImpl implements
 			int j = 0;
 			int contentSize = element.getContents().size();
 			while (i < MINIMAL_TOKEN_COUNT && j < contentSize) {
-				String token = element.getContents().get(i);
-				if (token.length() > 3 && sb.indexOf(token) == -1) {
+				String token = element.getContents().get(j);
+				if (token.length() > 3) {
 					sb.append(String.format("%s ", token));
 					i++;
 				}
 				j++;
 			}
-			try {
-				if (i == MINIMAL_TOKEN_COUNT) {
-					int pageNumber = getPageNumber(sb.toString());
-					element.setStartPageNumber(pageNumber);
+
+			if (i == MINIMAL_TOKEN_COUNT) {
+				String fullTextQuery;
+				if (element.getTitle() == null) {
+					fullTextQuery = sb.toString();
+				} else {
+					fullTextQuery = String.format("\"%s\" %s", element
+							.getTitle(), sb.toString());
 				}
-			} catch (EmptyResultException e) {
-				logger.log(
-						Level.SEVERE,
-						String.format(
-								"failed to find the page number for a segment %s on PDF: %s",
-								element.getUri(), getPdfUri()));
+				try {
+					int pageNumber = getPageNumber(fullTextQuery);
+					element.setStartPageNumber(pageNumber);
+				} catch (EmptyResultException e) {
+					logger
+							.log(
+									Level.SEVERE,
+									String
+											.format(
+													"failed to find the page number for a segment %s using a query \"%s\" on PDF: %s",
+													element.getUri(),
+													fullTextQuery, getPdfUri()));
+				}
+
 			}
 
-			/**
-			 * TODO : extract tokens from LaTeX
-			 */
-			element.setTitleTokens(new ArrayList<Token>());
 			MocassinOntologyClasses predictedClass = getStructuralElementTypeRecognizer()
 					.predict(element);
 			element.setPredictedClass(predictedClass);
 
 			return element;
 		}
-
 	}
 
 }

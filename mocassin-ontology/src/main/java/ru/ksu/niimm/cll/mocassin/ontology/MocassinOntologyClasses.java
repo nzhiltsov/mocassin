@@ -20,7 +20,7 @@ public enum MocassinOntologyClasses {
 			4, "definition"), EQUATION(5, "equation", "equationgroup"), EXAMPLE(
 			6, "example"), FIGURE(7, "figure"), LEMMA(8, "lemma"), PROOF(9,
 			"proof"), PROPOSITION(10, "proposition"), REMARK(11, "remark",
-			"note", "comment"), SECTION(12, "section", "subsection"), THEOREM(
+			"note", "comment"), SECTION(12, "section", "subsection", "subsubsection"), THEOREM(
 			13, "theorem"), UNRECOGNIZED_DOCUMENT_SEGMENT(14, "");
 
 	private String[] labels;

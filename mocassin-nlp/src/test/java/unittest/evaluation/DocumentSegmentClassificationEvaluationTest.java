@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,9 +13,7 @@ import org.junit.runner.RunWith;
 import ru.ksu.niimm.cll.mocassin.fulltext.FullTextModule;
 import ru.ksu.niimm.cll.mocassin.nlp.NlpModule;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
-import ru.ksu.niimm.cll.mocassin.nlp.Token;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.StructuralElementImpl;
-import ru.ksu.niimm.cll.mocassin.nlp.impl.TokenImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.recognizer.StructuralElementTypeRecognizer;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.parser.LatexParserModule;
@@ -29,7 +26,7 @@ import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext({ NlpModule.class, OntologyModule.class, VirtuosoModule.class,
+@GuiceContext( { NlpModule.class, OntologyModule.class, VirtuosoModule.class,
 		LatexParserModule.class, FullTextModule.class })
 public class DocumentSegmentClassificationEvaluationTest {
 	private static final String TEST_DATA_FILEPATH = "/tmp/arxmliv-element-training-data.csv";
@@ -55,16 +52,10 @@ public class DocumentSegmentClassificationEvaluationTest {
 					: MocassinOntologyClasses.fromLabel(prediction);
 			int id = Integer.parseInt(reader.get("id"));
 			StructuralElement element = new StructuralElementImpl.Builder(id,
-					"http://somedocument/s/" + id).name(name).build();
+					"http://somedocument/s/" + id).name(name).title(title)
+					.build();
 			element.setPredictedClass(predictedClass);
-			StringTokenizer st = new StringTokenizer(title, " -");
-			List<Token> titleTokens = new ArrayList<Token>();
-			while (st.hasMoreTokens()) {
-				String token = st.nextToken();
-				Token titleToken = new TokenImpl(token, null);
-				titleTokens.add(titleToken);
-			}
-			element.setTitleTokens(titleTokens);
+
 			list.add(element);
 		}
 		this.testRecords = Collections.unmodifiableList(list);
@@ -136,8 +127,8 @@ public class DocumentSegmentClassificationEvaluationTest {
 
 		avgFmeasure += fmeasure;
 
-		writer.write(String.format("%f",
-				avgFmeasure / MocassinOntologyClasses.values().length + 1));
+		writer.write(String.format("%f", avgFmeasure
+				/ MocassinOntologyClasses.values().length + 1));
 
 		writer.flush();
 		writer.close();
@@ -146,7 +137,8 @@ public class DocumentSegmentClassificationEvaluationTest {
 	private float writeMeasures(FileWriter writer, int n,
 			MocassinOntologyClasses clazz) throws IOException {
 		int i = clazz != MocassinOntologyClasses.UNRECOGNIZED_DOCUMENT_SEGMENT ? clazz
-				.ordinal() : n - 1;
+				.ordinal()
+				: n - 1;
 		String clazzString = clazz.toString();
 		int rowSum = 0;
 		for (int k = 0; k < n; k++) {

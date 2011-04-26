@@ -32,22 +32,24 @@ public class PDFIndexerTest {
 
 	@Test
 	public void testSaveAndGetPageNumber() throws Exception {
-		this.pdfIndexer.save("http://localhost/example.pdf", in);
-		int pageNumber = this.pdfIndexer
-				.getPageNumber("http://localhost/example.pdf",
-						"Let be normal projective varieties surjective morphism Mori dream space");
-		Assert.assertEquals(2, pageNumber);
+		try {
+			this.pdfIndexer.save("http://localhost/example.pdf", in);
 
-		pageNumber = this.pdfIndexer.getPageNumber(
-				"http://localhost/example.pdf",
-				"the quote the results on VGIT from the paper");
-		Assert.assertEquals(20, pageNumber);
-		pageNumber = this.pdfIndexer
-				.getPageNumber(
-						"http://localhost/example.pdf",
-						"suppose that normal projective variety be effective visitors on such that are klt we consider the case when the cone spanned bt the divisors is a MDR");
-		Assert.assertEquals(33, pageNumber);
-		indexWriterProvider.get().close();
+			int pageNumber = this.pdfIndexer.getPageNumber(
+					"http://localhost/example.pdf", "\"Example 10.11\"");
+			Assert.assertEquals(33, pageNumber);
+
+			pageNumber = this.pdfIndexer.getPageNumber(
+					"http://localhost/example.pdf", "\"Definition 7.4\"");
+			Assert.assertEquals(22, pageNumber);
+
+			pageNumber = this.pdfIndexer.getPageNumber(
+					"http://localhost/example.pdf",
+					"\"3. FINITE GENERATION OF MULTI-SECTION RINGS ON MDS\"");
+			Assert.assertEquals(10, pageNumber);
+		} finally {
+			indexWriterProvider.get().close();
+		}
 
 	}
 }
