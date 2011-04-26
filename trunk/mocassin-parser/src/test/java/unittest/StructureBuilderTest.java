@@ -2,6 +2,8 @@ package unittest;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import junit.framework.Assert;
 import net.sourceforge.texlipse.texparser.lexer.LexerException;
@@ -13,6 +15,7 @@ import org.junit.runner.RunWith;
 import ru.ksu.niimm.cll.mocassin.parser.Edge;
 import ru.ksu.niimm.cll.mocassin.parser.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.parser.Node;
+import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl.NodePositionComparator;
 import ru.ksu.niimm.cll.mocassin.parser.latex.builder.StructureBuilder;
 
 import com.google.inject.Inject;
@@ -55,8 +58,12 @@ public class StructureBuilderTest {
 				.buildStructureGraph(this.in, true);
 		Assert.assertTrue(graph.getVertexCount() > 0);
 
-		for (Node node : graph.getVertices()) {
-			System.out.println(node);
+		SortedSet<Node> sortedNodes = new TreeSet<Node>(
+				new NodePositionComparator());
+		sortedNodes.addAll(graph.getVertices());
+		for (Node node : sortedNodes) {
+			System.out.println(String.format("%s \"%s\"", node,
+					node.getTitle() != null ? node.getTitle() : ""));
 		}
 
 		System.out.println("***");

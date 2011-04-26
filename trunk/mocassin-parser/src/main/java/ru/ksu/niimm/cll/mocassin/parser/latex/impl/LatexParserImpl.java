@@ -32,8 +32,10 @@ public class LatexParserImpl implements Parser {
 	 * buffer size while reading the preamble of a document
 	 */
 	private static final int PREAMBLE_MAX_SIZE = 10 * 1024 * 1024;
-	private static final Pattern NEW_THEOREM_PATTERN = Pattern
-			.compile("\\\\newtheorem(\\*)?\\{.+\\}(\\[.+\\])?\\{.+\\}");
+	private static final Pattern UNNUMBERED_NEW_THEOREM_PATTERN = Pattern
+			.compile("\\\\newtheorem(\\*){1}\\{.+\\}(\\[.+\\])?\\{.+\\}");
+	private static final Pattern NUMBERED_NEW_THEOREM_PATTERN = Pattern
+			.compile("\\\\newtheorem\\{.+\\}(\\[.+\\])?\\{.+\\}");
 	private static final Pattern BEGIN_DOCUMENT_PATTERN = Pattern
 			.compile("\\\\begin\\{document\\}");
 
@@ -59,7 +61,19 @@ public class LatexParserImpl implements Parser {
 		Scanner scanner = new Scanner(parsingInputStream, "utf8");
 
 		while (scanner.hasNextLine()) {
-			String newtheoremCommand = scanner.findInLine(NEW_THEOREM_PATTERN);
+
+			String unnumberedNewtheoremCommand = scanner
+					.findInLine(UNNUMBERED_NEW_THEOREM_PATTERN);
+			String numberedNewtheoremCommand = scanner
+					.findInLine(NUMBERED_NEW_THEOREM_PATTERN);
+			String newtheoremCommand = null;
+			boolean isNumbered = false;
+			if (numberedNewtheoremCommand != null) {
+				newtheoremCommand = numberedNewtheoremCommand;
+				isNumbered = true;
+			} else if (unnumberedNewtheoremCommand != null) {
+				newtheoremCommand = unnumberedNewtheoremCommand;
+			}
 			if (newtheoremCommand != null) {
 				int firstLeftBrace = newtheoremCommand.indexOf("{") + 1;
 				int firstRightBrace = newtheoremCommand.indexOf("}",
@@ -72,7 +86,7 @@ public class LatexParserImpl implements Parser {
 						secondLeftBrace, newtheoremCommand.indexOf("}",
 								secondLeftBrace));
 				String title = StringUtil.takeoutMarkup(dirtyTitle);
-				newtheorems.add(new NewtheoremCommand(key, title));
+				newtheorems.add(new NewtheoremCommand(key, title, isNumbered));
 			}
 
 			boolean isEndOfPreamble = scanner

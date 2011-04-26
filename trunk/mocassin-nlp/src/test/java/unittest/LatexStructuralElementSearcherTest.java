@@ -29,7 +29,7 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 import edu.uci.ics.jung.graph.Graph;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext({ NlpModule.class, LatexParserModule.class, FullTextModule.class })
+@GuiceContext( { NlpModule.class, LatexParserModule.class, FullTextModule.class })
 public class LatexStructuralElementSearcherTest {
 	@Inject
 	private LatexStructuralElementSearcher latexStructuralElementSearcher;
@@ -51,10 +51,10 @@ public class LatexStructuralElementSearcherTest {
 				.retrieveGraph(this.in, this.parsedDocument, true);
 		Collection<Reference> edges = graph.getEdges();
 		Assert.assertTrue(edges.size() > 0);
-		for (Reference ref : edges) {
-			System.out.println(graph.getSource(ref) + " -> "
-					+ graph.getDest(ref) + ": " + ref);
-		}
+		/*
+		 * for (Reference ref : edges) { System.out.println(graph.getSource(ref)
+		 * + " -> " + graph.getDest(ref) + ": " + ref); }
+		 */
 		System.out.println("***");
 
 		Collection<StructuralElement> vertices = graph.getVertices();
@@ -62,7 +62,8 @@ public class LatexStructuralElementSearcherTest {
 				StructuralElement.class);
 		Arrays.sort(verticesArray, new UriComparator());
 		for (StructuralElement element : verticesArray) {
-			System.out.println(element + " " + element.getStartPageNumber());
+			System.out.println(String.format("%s \"%s\" %d", element, element
+					.getTitle(), element.getStartPageNumber()));
 		}
 	}
 

@@ -11,30 +11,93 @@ import ru.ksu.niimm.cll.mocassin.parser.Node;
 import com.google.common.base.Predicate;
 
 public class NodeImpl implements Node {
-	private String id;
-	private String name;
-	private List<String> contents = new LinkedList<String>();
-	private int beginLine;
-	private int endLine;
-	private int offset;
-	private boolean isEnvironment;
+	private final String id;
+	private final String name;
+	private final List<String> contents = new LinkedList<String>();
+	private final int beginLine;
+	private final int endLine;
+	private final int offset;
+	private final boolean isEnvironment;
+	private final boolean isNumbered;
 	private String labelText;
+	private String title;
 
-	private NodeImpl() {
+	public static class Builder {
+		private final String id;
+		private final String name;
+		private boolean isNumbered;
+
+		private int beginLine;
+		private int endLine;
+		private int offset;
+		private boolean isEnvironment;
+		private String labelText;
+		private String title;
+
+		public Builder(String id, String name) {
+			this.id = id;
+			if (name.endsWith("*")) {
+				this.name = name.substring(0, name.length() - 1);
+			} else {
+				this.name = name;
+			}
+
+		}
+
+		public Builder beginLine(int beginLine) {
+			this.beginLine = beginLine;
+			return this;
+		}
+
+		public Builder endLine(int endLine) {
+			this.endLine = endLine;
+			return this;
+		}
+
+		public Builder offset(int offset) {
+			this.offset = offset;
+			return this;
+		}
+
+		public Builder isEnvironment(boolean isEnvironment) {
+			this.isEnvironment = isEnvironment;
+			return this;
+		}
+
+		public Builder numbered(boolean isNumbered) {
+			this.isNumbered = isNumbered;
+			return this;
+		}
+
+		public Builder labelText(String labelText) {
+			this.labelText = labelText;
+			return this;
+		}
+
+		public Builder title(String title) {
+			this.title = title;
+			return this;
+		}
+
+		public Node build() {
+			return new NodeImpl(this);
+		}
 	}
 
-	public NodeImpl(String id, String name) {
-		this.id = id;
-		this.name = name.endsWith("*") ? name.substring(0, name.length() - 1)
-				: name;
+	private NodeImpl(Builder builder) {
+		this.id = builder.id;
+		this.name = builder.name;
+		this.isNumbered = builder.isNumbered;
+		this.beginLine = builder.beginLine;
+		this.endLine = builder.endLine;
+		this.offset = builder.offset;
+		this.isEnvironment = builder.isEnvironment;
+		this.labelText = builder.labelText;
+		this.title = builder.title;
 	}
 
 	public String getLabelText() {
 		return labelText;
-	}
-
-	public void setLabelText(String labelText) {
-		this.labelText = labelText;
 	}
 
 	public String getId() {
@@ -53,37 +116,37 @@ public class NodeImpl implements Node {
 		return beginLine;
 	}
 
-	public void setBeginLine(int beginLine) {
-		this.beginLine = beginLine;
-	}
-
 	public int getEndLine() {
 		return endLine;
-	}
-
-	public void setEndLine(int endLine) {
-		this.endLine = endLine;
 	}
 
 	public int getOffset() {
 		return offset;
 	}
 
-	public void setOffset(int offset) {
-		this.offset = offset;
-	}
-
 	public boolean isEnvironment() {
 		return isEnvironment;
 	}
 
-	public void setEnvironment(boolean isEnvironment) {
-		this.isEnvironment = isEnvironment;
+	public String getName() {
+		return this.name;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setLabelText(String labelText) {
+		this.labelText = labelText;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	@Override
-	public String getName() {
-		return this.name;
+	public boolean isNumbered() {
+		return this.isNumbered;
 	}
 
 	@Override

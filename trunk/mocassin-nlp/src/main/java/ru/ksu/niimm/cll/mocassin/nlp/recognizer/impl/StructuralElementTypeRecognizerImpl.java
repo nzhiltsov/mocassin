@@ -2,14 +2,13 @@ package ru.ksu.niimm.cll.mocassin.nlp.recognizer.impl;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.StringTokenizer;
 import java.util.TreeMap;
 
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
-import ru.ksu.niimm.cll.mocassin.nlp.Token;
 import ru.ksu.niimm.cll.mocassin.nlp.recognizer.StructuralElementTypeRecognizer;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.util.StringSimilarityEvaluator;
@@ -36,9 +35,9 @@ public class StructuralElementTypeRecognizerImpl implements
 			return MocassinOntologyClasses.SECTION;
 		}
 
-		List<Token> titleTokens = structuralElement.getTitleTokens();
-		String name = titleTokens.isEmpty() ? structuralElement.getName()
-				: titleTokens.get(0).getValue();
+		String name = structuralElement.getTitle() == null ? structuralElement
+				.getName() : new StringTokenizer(structuralElement.getTitle())
+				.nextToken();
 		SortedMap<String, Float> similarityVector = computeSimilarityVector(name);
 		float maxValue = Float.NEGATIVE_INFINITY;
 		String maxName = null;

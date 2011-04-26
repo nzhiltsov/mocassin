@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
-import ru.ksu.niimm.cll.mocassin.nlp.Token;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
 
 public class StructuralElementImpl implements StructuralElement {
@@ -19,8 +18,9 @@ public class StructuralElementImpl implements StructuralElement {
 	private final long end;
 	private final String name;
 	private List<String> labels;
+	private final String title;
 	private List<String> contents = new LinkedList<String>();
-	private List<Token> titleTokens;
+
 	private int startPageNumber;
 	private MocassinOntologyClasses predictedClass;
 
@@ -30,6 +30,7 @@ public class StructuralElementImpl implements StructuralElement {
 		private long start;
 		private long end;
 		private String name;
+		private String title;
 
 		public Builder(int id, String uri) {
 			this.id = id;
@@ -51,9 +52,15 @@ public class StructuralElementImpl implements StructuralElement {
 			return this;
 		}
 
+		public Builder title(String title) {
+			this.title = title;
+			return this;
+		}
+
 		public StructuralElement build() {
 			return new StructuralElementImpl(this);
 		}
+
 	}
 
 	public StructuralElementImpl(Builder builder) {
@@ -62,6 +69,7 @@ public class StructuralElementImpl implements StructuralElement {
 		this.start = builder.start;
 		this.end = builder.end;
 		this.name = builder.name;
+		this.title = builder.title;
 	}
 
 	public List<String> getLabels() {
@@ -72,12 +80,8 @@ public class StructuralElementImpl implements StructuralElement {
 		this.labels = labels;
 	}
 
-	public List<Token> getTitleTokens() {
-		return titleTokens;
-	}
-
-	public void setTitleTokens(List<Token> titleTokens) {
-		this.titleTokens = titleTokens;
+	public String getTitle() {
+		return title;
 	}
 
 	public int getId() {
@@ -122,16 +126,6 @@ public class StructuralElementImpl implements StructuralElement {
 
 	public void setStartPageNumber(int startPageNumber) {
 		this.startPageNumber = startPageNumber;
-	}
-
-	@Override
-	public String toTitleString() {
-		StringBuilder sb = new StringBuilder();
-		for (Token token : titleTokens) {
-			sb.append(token.toString());
-			sb.append(" ");
-		}
-		return sb.toString();
 	}
 
 	@Override

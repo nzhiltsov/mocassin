@@ -64,15 +64,7 @@ public interface StructuralElement {
 	 * @return tokens of a title (e.g. 'Introduction', 'Theorem 1.1'), return
 	 *         null if the title is absent
 	 */
-	List<Token> getTitleTokens();
-
-	/**
-	 * 
-	 * @return title tokens as a string
-	 */
-	String toTitleString();
-
-	void setTitleTokens(List<Token> titleTokens);
+	String getTitle();
 
 	void setPredictedClass(MocassinOntologyClasses clazz);
 

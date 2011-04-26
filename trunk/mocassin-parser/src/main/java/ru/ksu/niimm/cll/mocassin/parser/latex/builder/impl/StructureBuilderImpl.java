@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.SortedSet;
 import java.util.Stack;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,9 +22,13 @@ import ru.ksu.niimm.cll.mocassin.parser.Parser;
 import ru.ksu.niimm.cll.mocassin.parser.impl.EdgeContextImpl;
 import ru.ksu.niimm.cll.mocassin.parser.impl.EdgeImpl;
 import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl;
+import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl.NodePositionComparator;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
 import ru.ksu.niimm.cll.mocassin.parser.latex.NewtheoremCommand;
 import ru.ksu.niimm.cll.mocassin.parser.latex.builder.StructureBuilder;
+import ru.ksu.niimm.cll.mocassin.parser.util.StandardMathEnvironments;
+import ru.ksu.niimm.cll.mocassin.parser.util.StandardMetadataEnvironments;
+import ru.ksu.niimm.cll.mocassin.parser.util.StandardStyleEnvironments;
 
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
@@ -67,8 +73,9 @@ public class StructureBuilderImpl implements StructureBuilder {
 		LatexDocumentModel parsedModel = this.parser.parse(inputStream,
 				closeStream);
 		if (parsedModel == null) {
-			logger.log(Level.SEVERE,
-					"The parsed model is null. An empty graph will be returned");
+			logger
+					.log(Level.SEVERE,
+							"The parsed model is null. An empty graph will be returned");
 			return hypergraph;
 		}
 		setModel(parsedModel);
@@ -80,14 +87,14 @@ public class StructureBuilderImpl implements StructureBuilder {
 			OutlineNode treeItem = tree.get(i);
 			stack.push(treeItem);
 
-			Node documentRootNode = new NodeImpl(
-					String.format(NODE_ID_FORMAT, documentRoot.getBeginLine(),
-							documentRoot.getOffsetOnLine()),
-					documentRoot.getName());
-			documentRootNode.setBeginLine(documentRoot.getBeginLine());
-			documentRootNode.setEndLine(documentRoot.getEndLine());
-			documentRootNode.setOffset(documentRoot.getOffsetOnLine());
-			documentRootNode.setEnvironment(false);
+			String documentNodeId = String.format(NODE_ID_FORMAT, documentRoot
+					.getBeginLine(), documentRoot.getOffsetOnLine());
+			String documentNodeName = documentRoot.getName();
+			Node documentRootNode = new NodeImpl.Builder(documentNodeId,
+					documentNodeName).beginLine(documentRoot.getBeginLine())
+					.endLine(documentRoot.getEndLine()).offset(
+							documentRoot.getOffsetOnLine())
+					.isEnvironment(false).numbered(false).build();
 			addEdge(documentRootNode, treeItem, EdgeType.CONTAINS);
 		}
 		while (!stack.isEmpty()) {
@@ -96,13 +103,16 @@ public class StructureBuilderImpl implements StructureBuilder {
 			ArrayList<OutlineNode> children = node.getChildren();
 
 			if (children != null) {
-				String nodeId = String.format(NODE_ID_FORMAT,
-						node.getBeginLine(), node.getOffsetOnLine());
-				Node from = new NodeImpl(nodeId, extractName(node));
-				from.setBeginLine(node.getBeginLine());
-				from.setEndLine(node.getEndLine());
-				from.setOffset(node.getOffsetOnLine());
-				from.setEnvironment(node.getType() == OutlineNode.TYPE_ENVIRONMENT);
+				String nodeId = String.format(NODE_ID_FORMAT, node
+						.getBeginLine(), node.getOffsetOnLine());
+				String nodeTitle = extractTitle(node);
+				boolean isNumbered = getNumberedProperty(node);
+				Node from = new NodeImpl.Builder(nodeId, extractName(node))
+						.beginLine(node.getBeginLine()).endLine(
+								node.getEndLine()).offset(
+								node.getOffsetOnLine()).isEnvironment(
+								node.getType() == OutlineNode.TYPE_ENVIRONMENT)
+						.title(nodeTitle).numbered(isNumbered).build();
 				for (OutlineNode child : children) {
 					if (child.getType() == OutlineNode.TYPE_LABEL) {
 						from.setLabelText(child.getName());
@@ -116,21 +126,57 @@ public class StructureBuilderImpl implements StructureBuilder {
 				}
 			}
 		}
+		extractTitles();
 		return this.hypergraph;
+	}
+
+	private void extractTitles() {
+		SortedSet<Node> sortedNodes = new TreeSet<Node>(
+				new NodePositionComparator());
+		sortedNodes.addAll(this.hypergraph.getVertices());
+		int currentSectionNumber = 0;
+		int currentEnvironmentNumber = 0;
+		int currentSubsectionNumber = 0;
+		for (Node node : sortedNodes) {
+			String nodeName = node.getName();
+			if (!node.isNumbered()
+					|| StandardMetadataEnvironments.contains(nodeName)
+					|| StandardMathEnvironments.contains(nodeName)
+					|| StandardStyleEnvironments.contains(nodeName)
+					|| nodeName.equals("proof") || nodeName.equals("document")
+					|| nodeName.equals("abstract"))
+				continue;
+			if (nodeName.equals("section")) {
+				currentSectionNumber++;
+				node.setTitle(String.format("%d. %s", currentSectionNumber,
+						node.getTitle()));
+				currentEnvironmentNumber = 0;
+				currentSubsectionNumber = 0;
+			} else if (nodeName.equals("subsection")) {
+				currentSubsectionNumber++;
+				node.setTitle(String.format("%d.%d. %s", currentSectionNumber,
+						currentSubsectionNumber, node.getTitle()));
+			} else {
+				currentEnvironmentNumber++;
+				node.setTitle(String.format("%s %d.%d", node.getTitle(),
+						currentSectionNumber, currentEnvironmentNumber));
+			}
+		}
 	}
 
 	private void addEdge(Node from, OutlineNode toNode, EdgeType edgeType) {
 		Edge edge = new EdgeImpl();
 		String childId = String.format(NODE_ID_FORMAT, toNode.getBeginLine(),
 				toNode.getOffsetOnLine());
-		String nodeName = extractName(toNode);
-		Node to = new NodeImpl(childId, nodeName);
-		to.setBeginLine(toNode.getBeginLine());
-		to.setEndLine(toNode.getEndLine());
-		to.setOffset(toNode.getOffsetOnLine());
-		to.setEnvironment(toNode.getType() == OutlineNode.TYPE_ENVIRONMENT);
 		String labelText = getLabelText(toNode);
-		to.setLabelText(labelText);
+		String nodeName = extractName(toNode);
+		String nodeTitle = extractTitle(toNode);
+		boolean isNumbered = getNumberedProperty(toNode);
+		Node to = new NodeImpl.Builder(childId, nodeName).beginLine(
+				toNode.getBeginLine()).endLine(toNode.getEndLine()).offset(
+				toNode.getOffsetOnLine()).isEnvironment(
+				toNode.getType() == OutlineNode.TYPE_ENVIRONMENT).labelText(
+				labelText).title(nodeTitle).numbered(isNumbered).build();
 		EdgeContext context = new EdgeContextImpl(edgeType);
 		edge.setContext(context);
 		addEdge(edge, from, to);
@@ -138,11 +184,17 @@ public class StructureBuilderImpl implements StructureBuilder {
 
 	private String extractName(OutlineNode node) {
 		String nodeName;
-		if (node.getType() == OutlineNode.TYPE_SECTION
-				|| node.getType() == OutlineNode.TYPE_SUBSECTION
-				|| node.getType() == OutlineNode.TYPE_SUBSUBSECTION) {
+		switch (node.getType()) {
+		case OutlineNode.TYPE_SECTION:
 			nodeName = "section";
-		} else {
+			break;
+		case OutlineNode.TYPE_SUBSECTION:
+			nodeName = "subsection";
+			break;
+		case OutlineNode.TYPE_SUBSUBSECTION:
+			nodeName = "subsubsection";
+			break;
+		default: {
 			nodeName = node.getName();
 			NewtheoremCommand foundCommand = Iterables.find(getModel()
 					.getNewtheorems(), new NewtheoremCommand.KeyPredicate(
@@ -151,7 +203,47 @@ public class StructureBuilderImpl implements StructureBuilder {
 				nodeName = foundCommand.getTitle();
 			}
 		}
+		}
 		return nodeName;
+	}
+
+	private String extractTitle(OutlineNode node) {
+		int nodeType = node.getType();
+		String nodeName = node.getName();
+		String nodeTitle = null;
+		if (nodeType == OutlineNode.TYPE_SECTION
+				|| nodeType == OutlineNode.TYPE_SUBSECTION
+				|| nodeType == OutlineNode.TYPE_SUBSUBSECTION) {
+
+			nodeTitle = nodeName;
+		} else {
+			NewtheoremCommand foundCommand = Iterables.find(getModel()
+					.getNewtheorems(), new NewtheoremCommand.KeyPredicate(
+					nodeName), null);
+			if (foundCommand != null) {
+				nodeTitle = foundCommand.getTitle();
+			}
+		}
+		return nodeTitle;
+	}
+
+	private boolean getNumberedProperty(OutlineNode node) {
+		int nodeType = node.getType();
+		if (nodeType == OutlineNode.TYPE_SECTION
+				|| nodeType == OutlineNode.TYPE_SUBSECTION
+				|| nodeType == OutlineNode.TYPE_SUBSUBSECTION)
+			return true; // TODO: not accurate!!
+
+		String nodeName = node.getName();
+		if (nodeName.endsWith("*"))
+			return false;
+		NewtheoremCommand foundCommand = Iterables.find(getModel()
+				.getNewtheorems(),
+				new NewtheoremCommand.KeyPredicate(nodeName), null);
+		if (foundCommand != null) {
+			return foundCommand.isNumbered();
+		}
+		return true;
 	}
 
 	private void addInverseEdge(OutlineNode fromNode, Node to, EdgeType edgeType) {
@@ -159,13 +251,14 @@ public class StructureBuilderImpl implements StructureBuilder {
 		String childId = String.format(NODE_ID_FORMAT, fromNode.getBeginLine(),
 				fromNode.getOffsetOnLine());
 		String nodeName = extractName(fromNode);
-		Node from = new NodeImpl(childId, nodeName);
-		from.setBeginLine(fromNode.getBeginLine());
-		from.setEndLine(fromNode.getEndLine());
-		from.setOffset(fromNode.getOffsetOnLine());
-		from.setEnvironment(fromNode.getType() == OutlineNode.TYPE_ENVIRONMENT);
 		String labelText = getLabelText(fromNode);
-		from.setLabelText(labelText);
+		String nodeTitle = extractTitle(fromNode);
+		boolean isNumbered = getNumberedProperty(fromNode);
+		Node from = new NodeImpl.Builder(childId, nodeName).beginLine(
+				fromNode.getBeginLine()).endLine(fromNode.getEndLine()).offset(
+				fromNode.getOffsetOnLine()).isEnvironment(
+				fromNode.getType() == OutlineNode.TYPE_ENVIRONMENT).labelText(
+				labelText).title(nodeTitle).numbered(isNumbered).build();
 		EdgeContext context = new EdgeContextImpl(edgeType);
 		edge.setContext(context);
 		addEdge(edge, from, to);

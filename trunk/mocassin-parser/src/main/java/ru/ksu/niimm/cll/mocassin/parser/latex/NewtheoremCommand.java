@@ -3,12 +3,14 @@ package ru.ksu.niimm.cll.mocassin.parser.latex;
 import com.google.common.base.Predicate;
 
 public class NewtheoremCommand {
-	private String key;
-	private String title;
+	private final String key;
+	private final String title;
+	private final boolean isNumbered;
 
-	public NewtheoremCommand(String key, String title) {
+	public NewtheoremCommand(String key, String title, boolean isNumbered) {
 		this.key = key;
-		this.title = title.toLowerCase();
+		this.title = title;
+		this.isNumbered = isNumbered;
 	}
 
 	public String getKey() {
@@ -17,6 +19,10 @@ public class NewtheoremCommand {
 
 	public String getTitle() {
 		return title;
+	}
+
+	public boolean isNumbered() {
+		return isNumbered;
 	}
 
 	public static class KeyPredicate implements Predicate<NewtheoremCommand> {

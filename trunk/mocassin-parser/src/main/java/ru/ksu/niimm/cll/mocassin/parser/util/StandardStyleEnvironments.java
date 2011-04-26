@@ -14,7 +14,8 @@ public enum StandardStyleEnvironments {
 			throw new IllegalArgumentException(
 					"a standard style name cannot be null");
 		for (StandardStyleEnvironments e : StandardStyleEnvironments.values()) {
-			if (e.name.equals(name)) {
+			String canonicalName = name.toLowerCase();
+			if (e.name.equals(canonicalName)) {
 				return true;
 			}
 		}
