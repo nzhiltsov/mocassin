@@ -1,4 +1,4 @@
-SELECT DISTINCT ?snumpage ?sclass ?s ?p ?o ?oclass ?onumpage {
+SELECT DISTINCT ?snumpage ?stitle ?sclass ?s ?p ?o ?oclass ?otitle ?onumpage {
 ?d <http://cll.niimm.ksu.ru/ontologies/mocassin#hasSegment> ?s . 
 ?d <http://cll.niimm.ksu.ru/ontologies/mocassin#hasSegment> ?o .
 ?s ?p ?o .
@@ -6,6 +6,8 @@ SELECT DISTINCT ?snumpage ?sclass ?s ?p ?o ?oclass ?onumpage {
 ?o a ?oclass .
 ?s <http://cll.niimm.ksu.ru/ontologies/mocassin#hasStartPageNumber> ?snumpage .
 ?o <http://cll.niimm.ksu.ru/ontologies/mocassin#hasStartPageNumber> ?onumpage .
+?s <http://cll.niimm.ksu.ru/ontologies/mocassin#hasTitle> ?stitle .
+?o <http://cll.niimm.ksu.ru/ontologies/mocassin#hasTitle> ?otitle .
 FILTER (STR(?d) = "%s") 
 FILTER (REGEX(STR(?p), 'ontologies/mocassin'))
 }

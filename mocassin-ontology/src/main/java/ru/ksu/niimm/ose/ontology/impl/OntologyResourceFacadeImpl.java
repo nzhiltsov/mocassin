@@ -270,6 +270,8 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 		public SGEdge apply(QuerySolution solution) {
 			int fromNumPage = solution.getLiteral("?snumpage").getInt();
 			int toNumPage = solution.getLiteral("?onumpage").getInt();
+			String fromTitle = solution.getLiteral("?stitle").getString();
+			String toTitle = solution.getLiteral("?otitle").getString();
 			String subjectUri = solution.getResource(
 					RETRIEVED_SUBJECT_GRAPH_NODE).toString();
 			String predicateUri = solution.getResource(
@@ -291,7 +293,8 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 			object.setType(objectType);
 			ABoxTriple triple = new ABoxTriple(subject,
 					MocassinOntologyRelations.fromUri(predicateUri), object);
-			return new SGEdge(triple, fromNumPage, toNumPage);
+			return new SGEdge(triple, fromNumPage, toNumPage, fromTitle,
+					toTitle);
 		}
 
 	}
