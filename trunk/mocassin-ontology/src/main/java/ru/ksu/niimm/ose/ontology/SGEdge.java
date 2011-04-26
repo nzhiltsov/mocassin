@@ -6,12 +6,17 @@ public class SGEdge {
 
 	private final int fromNumPage;
 	private final int toNumPage;
+	private final String fromTitle;
+	private final String toTitle;
 	private final ABoxTriple triple;
 
-	public SGEdge(ABoxTriple triple, int fromNumPage, int toNumPage) {
+	public SGEdge(ABoxTriple triple, int fromNumPage, int toNumPage,
+			String fromTitle, String toTitle) {
 		this.triple = triple;
 		this.fromNumPage = fromNumPage;
 		this.toNumPage = toNumPage;
+		this.fromTitle = fromTitle;
+		this.toTitle = toTitle;
 	}
 
 	public int getFromNumPage() {
@@ -24,6 +29,14 @@ public class SGEdge {
 
 	public ABoxTriple getTriple() {
 		return triple;
+	}
+
+	public String getFromTitle() {
+		return fromTitle;
+	}
+
+	public String getToTitle() {
+		return toTitle;
 	}
 
 	public OntologyIndividual getSubject() {
