@@ -80,11 +80,15 @@ public class PDFLuceneIndexer implements PDFIndexer {
 		int pageNumber = -1;
 		try {
 			Query query = queryParser.parse(fullTextQuery);
-			TopDocs docs = indexSearcherProvider.get().search(query, 1);
-			if (docs.scoreDocs.length == 1) {
+			TopDocs docs = indexSearcherProvider.get().search(query, 10);
+			for (int i = 0; i < docs.scoreDocs.length; i++) {
 				Document foundDoc = indexSearcherProvider.get().doc(
-						docs.scoreDocs[0].doc);
-				pageNumber = Integer.parseInt(foundDoc.get("numberpage"));
+						docs.scoreDocs[i].doc);
+				if (foundDoc.get("filename").startsWith(pdfDocumentUri)) {
+					pageNumber = Integer.parseInt(foundDoc.get("numberpage"));
+					break;
+				}
+
 			}
 
 		} catch (ParseException e) {

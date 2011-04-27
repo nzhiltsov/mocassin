@@ -25,9 +25,12 @@ public class PDFIndexerTest {
 
 	private InputStream in;
 
+	private InputStream in2;
+
 	@Before
 	public void init() {
 		this.in = this.getClass().getResourceAsStream("/example.pdf");
+		this.in2 = this.getClass().getResourceAsStream("/example2.pdf");
 	}
 
 	@Test
@@ -43,11 +46,19 @@ public class PDFIndexerTest {
 					"http://localhost/example.pdf", "\"Definition 7.4\"");
 			Assert.assertEquals(22, pageNumber);
 
-			pageNumber = this.pdfIndexer.getPageNumber(
-					"http://localhost/example.pdf",
-					"\"3. FINITE GENERATION OF MULTI-SECTION RINGS ON MDS\"");
+			pageNumber = this.pdfIndexer
+					.getPageNumber("http://localhost/example.pdf",
+							"\"3. FINITE GENERATION OF MULTI-SECTION RINGS ON MDS\" first prepare notation");
 			Assert.assertEquals(10, pageNumber);
+			// example2.pdf
+			this.pdfIndexer.save("http://localhost/example2.pdf", in2);
+			pageNumber = this.pdfIndexer.getPageNumber(
+					"http://localhost/example2.pdf",
+					"Corollary 3 self-adjoint only where");
+			Assert.assertEquals(3, pageNumber);
 		} finally {
+			this.in.close();
+			this.in2.close();
 			indexWriterProvider.get().close();
 		}
 

@@ -44,14 +44,23 @@ import edu.uci.ics.jung.graph.Graph;
  * 
  */
 public class StructureBuilderImpl implements StructureBuilder {
+	private static final String NODE_ID_FORMAT = "%d_%d";
 	@Inject
 	private Logger logger;
-	@Inject
-	private Parser parser;
 
-	private static final String NODE_ID_FORMAT = "%d_%d";
+	private final Parser parser;
+
+	private final NumberingProcessor numberingProcessor;
+
 	private LatexDocumentModel model;
 	private Graph<Node, Edge> hypergraph;
+
+	@Inject
+	private StructureBuilderImpl(Parser parser,
+			NumberingProcessor numberingProcessor) {
+		this.parser = parser;
+		this.numberingProcessor = numberingProcessor;
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -134,33 +143,10 @@ public class StructureBuilderImpl implements StructureBuilder {
 		SortedSet<Node> sortedNodes = new TreeSet<Node>(
 				new NodePositionComparator());
 		sortedNodes.addAll(this.hypergraph.getVertices());
-		int currentSectionNumber = 0;
-		int currentEnvironmentNumber = 0;
-		int currentSubsectionNumber = 0;
-		for (Node node : sortedNodes) {
-			String nodeName = node.getName();
-			if (!node.isNumbered()
-					|| StandardMetadataEnvironments.contains(nodeName)
-					|| StandardMathEnvironments.contains(nodeName)
-					|| StandardStyleEnvironments.contains(nodeName)
-					|| nodeName.equals("proof") || nodeName.equals("document")
-					|| nodeName.equals("abstract"))
-				continue;
-			if (nodeName.equals("section")) {
-				currentSectionNumber++;
-				node.setTitle(String.format("%d. %s", currentSectionNumber,
-						node.getTitle()));
-				currentEnvironmentNumber = 0;
-				currentSubsectionNumber = 0;
-			} else if (nodeName.equals("subsection")) {
-				currentSubsectionNumber++;
-				node.setTitle(String.format("%d.%d. %s", currentSectionNumber,
-						currentSubsectionNumber, node.getTitle()));
-			} else {
-				currentEnvironmentNumber++;
-				node.setTitle(String.format("%s %d.%d", node.getTitle(),
-						currentSectionNumber, currentEnvironmentNumber));
-			}
+		if (this.model.isNumberingWithinSection()) {
+			getNumberingProcessor().processWithinSectionNumbers(sortedNodes);
+		} else {
+			getNumberingProcessor().processConsecutiveNumbers(sortedNodes);
 		}
 	}
 
@@ -222,6 +208,8 @@ public class StructureBuilderImpl implements StructureBuilder {
 					nodeName), null);
 			if (foundCommand != null) {
 				nodeTitle = foundCommand.getTitle();
+			} else {
+				nodeTitle = nodeName;
 			}
 		}
 		return nodeTitle;
@@ -407,6 +395,10 @@ public class StructureBuilderImpl implements StructureBuilder {
 
 	private List<ReferenceEntry> getLabels() {
 		return getModel().getLabels();
+	}
+
+	private NumberingProcessor getNumberingProcessor() {
+		return numberingProcessor;
 	}
 
 }

@@ -59,7 +59,7 @@ public class LatexParserImpl implements Parser {
 
 		List<NewtheoremCommand> newtheorems = new ArrayList<NewtheoremCommand>();
 		Scanner scanner = new Scanner(parsingInputStream, "utf8");
-
+		boolean isNumberingWithinSection = false;
 		while (scanner.hasNextLine()) {
 
 			String unnumberedNewtheoremCommand = scanner
@@ -75,6 +75,7 @@ public class LatexParserImpl implements Parser {
 				newtheoremCommand = unnumberedNewtheoremCommand;
 			}
 			if (newtheoremCommand != null) {
+
 				int firstLeftBrace = newtheoremCommand.indexOf("{") + 1;
 				int firstRightBrace = newtheoremCommand.indexOf("}",
 						firstLeftBrace);
@@ -87,6 +88,10 @@ public class LatexParserImpl implements Parser {
 								secondLeftBrace));
 				String title = StringUtil.takeoutMarkup(dirtyTitle);
 				newtheorems.add(new NewtheoremCommand(key, title, isNumbered));
+				if (!isNumberingWithinSection
+						&& scanner.findInLine("[section]") != null) {
+					isNumberingWithinSection = true;
+				}
 			}
 
 			boolean isEndOfPreamble = scanner
@@ -104,6 +109,7 @@ public class LatexParserImpl implements Parser {
 			Reader reader = new InputStreamReader(parsingInputStream);
 			LatexDocumentModel parsedModel = parseTree(reader);
 			parsedModel.setNewtheorems(newtheorems);
+			parsedModel.setNumberingWithinSection(isNumberingWithinSection);
 			if (closeStream) {
 				scanner.close();
 				parsingInputStream.close();
