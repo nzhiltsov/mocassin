@@ -34,7 +34,7 @@ public class StructureBuilderTest {
 
 	@Before
 	public void init() throws LexerException, IOException {
-		this.in = this.getClass().getResourceAsStream("/example.tex");
+		this.in = this.getClass().getResourceAsStream("/example3.tex");
 	}
 
 	@Test

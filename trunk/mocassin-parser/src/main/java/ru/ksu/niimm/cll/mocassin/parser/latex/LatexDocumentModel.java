@@ -23,6 +23,10 @@ public class LatexDocumentModel {
 	private List<TexCommandEntry> commands;
 
 	private List<NewtheoremCommand> newtheorems;
+	/**
+	 * flag for numbering theorem-like environments
+	 */
+	private boolean isNumberingWithinSection;
 
 	public LatexDocumentModel(List<OutlineNode> tree) {
 		this.tree = tree;
@@ -82,6 +86,14 @@ public class LatexDocumentModel {
 
 	public void setNewtheorems(List<NewtheoremCommand> newtheorems) {
 		this.newtheorems = newtheorems;
+	}
+
+	public boolean isNumberingWithinSection() {
+		return isNumberingWithinSection;
+	}
+
+	public void setNumberingWithinSection(boolean isNumberingWithinSection) {
+		this.isNumberingWithinSection = isNumberingWithinSection;
 	}
 
 }

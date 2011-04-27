@@ -1,7 +1,8 @@
 package ru.ksu.niimm.cll.mocassin.parser.util;
 
 public enum StandardStyleEnvironments {
-	ITEMIZE("itemize"), ENUMERATE("enumerate");
+	ITEMIZE("itemize"), ENUMERATE("enumerate"), CENTERING("centering"), CENTER("center"), NORMALSIZE(
+			"normalsize");
 
 	private final String name;
 
