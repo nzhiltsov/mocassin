@@ -6,22 +6,14 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
-import ru.ksu.niimm.cll.mocassin.fulltext.impl.IndexSearcherProviderImpl;
-import ru.ksu.niimm.cll.mocassin.fulltext.impl.IndexWriterProviderImpl;
 import ru.ksu.niimm.cll.mocassin.fulltext.impl.PDFLuceneIndexer;
-import ru.ksu.niimm.cll.mocassin.fulltext.providers.IndexSearcherProvider;
-import ru.ksu.niimm.cll.mocassin.fulltext.providers.IndexWriterProvider;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.google.inject.name.Names;
-import com.google.inject.throwingproviders.ThrowingProviderBinder;
 
 public class FullTextModule extends AbstractModule {
 	private static final String LUCENE_DIRECTORY_PARAMETER_NAME = "lucene.directory";
@@ -37,12 +29,6 @@ public class FullTextModule extends AbstractModule {
 
 	protected void bindInjections() {
 		bind(PDFIndexer.class).to(PDFLuceneIndexer.class);
-		ThrowingProviderBinder.create(binder())
-				.bind(IndexWriterProvider.class, IndexWriter.class)
-				.to(IndexWriterProviderImpl.class).in(Singleton.class);
-		ThrowingProviderBinder.create(binder())
-				.bind(IndexSearcherProvider.class, IndexSearcher.class)
-				.to(IndexSearcherProviderImpl.class).in(Singleton.class);
 	}
 
 	protected void bindDirectory() {

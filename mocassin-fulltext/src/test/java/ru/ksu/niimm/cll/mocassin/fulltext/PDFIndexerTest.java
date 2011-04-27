@@ -4,12 +4,9 @@ import java.io.InputStream;
 
 import junit.framework.Assert;
 
-import org.apache.lucene.index.IndexWriter;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import ru.ksu.niimm.cll.mocassin.fulltext.providers.IndexWriterProvider;
 
 import com.google.inject.Inject;
 import com.mycila.testing.junit.MycilaJunitRunner;
@@ -20,8 +17,6 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 public class PDFIndexerTest {
 	@Inject
 	private PDFIndexer pdfIndexer;
-	@Inject
-	private IndexWriterProvider<IndexWriter> indexWriterProvider;
 
 	private InputStream in;
 
@@ -54,12 +49,11 @@ public class PDFIndexerTest {
 			this.pdfIndexer.save("http://localhost/example2.pdf", in2);
 			pageNumber = this.pdfIndexer.getPageNumber(
 					"http://localhost/example2.pdf",
-					"Corollary 3 self-adjoint only where");
+			"\"Corollary 3\" self-adjoint only where");
 			Assert.assertEquals(3, pageNumber);
 		} finally {
 			this.in.close();
 			this.in2.close();
-			indexWriterProvider.get().close();
 		}
 
 	}
