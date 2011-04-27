@@ -13,11 +13,13 @@ import org.apache.lucene.document.Field.Index;
 import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.document.Field.TermVector;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.store.Directory;
 import org.apache.lucene.util.Version;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.util.PDFTextStripper;
@@ -26,23 +28,30 @@ import org.apache.pdfbox.util.Splitter;
 import ru.ksu.niimm.cll.mocassin.fulltext.EmptyResultException;
 import ru.ksu.niimm.cll.mocassin.fulltext.PDFIndexer;
 import ru.ksu.niimm.cll.mocassin.fulltext.PersistingDocumentException;
-import ru.ksu.niimm.cll.mocassin.fulltext.providers.IndexSearcherProvider;
-import ru.ksu.niimm.cll.mocassin.fulltext.providers.IndexWriterProvider;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 public class PDFLuceneIndexer implements PDFIndexer {
 	@Inject
 	private Logger logger;
+
+	private final Directory directory;
+
+	private IndexWriter indexWriter;
+
+	private IndexSearcher indexSearcher;
+
 	@Inject
-	private IndexWriterProvider<IndexWriter> indexWriterProvider;
-	@Inject
-	private IndexSearcherProvider<IndexSearcher> indexSearcherProvider;
+	public PDFLuceneIndexer(@Named("lucene.directory") Directory directory) {
+		this.directory = directory;
+	}
 
 	@Override
-	public void save(String pdfDocumentUri, InputStream pdfInputStream)
-			throws PersistingDocumentException {
+	public synchronized void save(String pdfDocumentUri,
+			InputStream pdfInputStream) throws PersistingDocumentException {
 		try {
+			initWriter();
 			PDDocument pdfDoc = PDDocument.load(pdfInputStream);
 			Splitter splitter = new Splitter();
 			List<PDDocument> docs = splitter.split(pdfDoc);
@@ -58,10 +67,10 @@ public class PDFLuceneIndexer implements PDFIndexer {
 				luceneDoc.add(new Field("contents", text, Store.NO,
 						Index.ANALYZED_NO_NORMS,
 						TermVector.WITH_POSITIONS_OFFSETS));
-				indexWriterProvider.get().addDocument(luceneDoc);
+				this.indexWriter.addDocument(luceneDoc);
 				doc.close();
 			}
-			indexWriterProvider.get().commit();
+			this.indexWriter.close();
 			pdfDoc.close();
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, String.format(
@@ -75,22 +84,24 @@ public class PDFLuceneIndexer implements PDFIndexer {
 	@Override
 	public int getPageNumber(String pdfDocumentUri, String fullTextQuery)
 			throws EmptyResultException {
+
 		QueryParser queryParser = new QueryParser(Version.LUCENE_31,
 				"contents", new StandardAnalyzer(Version.LUCENE_31));
 		int pageNumber = -1;
 		try {
+			initSearcher();
 			Query query = queryParser.parse(fullTextQuery);
-			TopDocs docs = indexSearcherProvider.get().search(query, 10);
+			TopDocs docs = this.indexSearcher.search(query, 30);
 			for (int i = 0; i < docs.scoreDocs.length; i++) {
-				Document foundDoc = indexSearcherProvider.get().doc(
-						docs.scoreDocs[i].doc);
+				Document foundDoc = this.indexSearcher
+						.doc(docs.scoreDocs[i].doc);
 				if (foundDoc.get("filename").startsWith(pdfDocumentUri)) {
 					pageNumber = Integer.parseInt(foundDoc.get("numberpage"));
 					break;
 				}
 
 			}
-
+			this.indexSearcher.close();
 		} catch (ParseException e) {
 			logger.log(Level.SEVERE, "failed to parse a given query: "
 					+ fullTextQuery);
@@ -118,5 +129,16 @@ public class PDFLuceneIndexer implements PDFIndexer {
 	 */
 	private String generateLuceneDocUri(String pdfDocumentUri, int i) {
 		return String.format("%s/%d", pdfDocumentUri, i);
+	}
+
+	private void initWriter() throws Exception {
+
+		this.indexWriter = new IndexWriter(this.directory,
+				new IndexWriterConfig(Version.LUCENE_31, new StandardAnalyzer(
+						Version.LUCENE_31)));
+	}
+
+	private void initSearcher() throws IOException {
+		this.indexSearcher = new IndexSearcher(this.directory);
 	}
 }
