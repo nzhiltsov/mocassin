@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.arxiv.Author;
@@ -31,6 +33,7 @@ import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.rdf.model.Resource;
 
 public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
+	private static final String PUBLICATION_TYPE_URI = "http://salt.semanticauthoring.org/ontologies/sdo#Publication";
 	private static final String RETRIEVED_OBJECT_CLASS = "?oclass";
 	private static final String RETRIEVED_SUBJECT_CLASS = "?sclass";
 	private static final String RETRIEVED_OBJECT_GRAPH_NODE = "?o";
@@ -49,6 +52,8 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 	private SparqlQueryLoader sparqlQueryLoader;
 	@Inject
 	private OntologyFacade ontologyFacade;
+	@Inject
+	private Logger logger;
 
 	private RDFGraph searchGraph;
 
@@ -70,8 +75,34 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 	@Override
 	public ArticleMetadata load(OntologyResource resource) {
 
-		String documentUri = parseDocumentUri(resource.getUri());
-		return load(documentUri);
+		if (isPublication(resource.getUri())) {
+			return loadPublication(resource.getUri());
+		} else {
+
+			String segmentInfoQueryString = generateSegmentInfoQuery(resource
+					.getUri());
+			Query query = QueryFactory.create(segmentInfoQueryString);
+
+			List<QuerySolution> solutions = getVirtuosoDAO().get(query,
+					getSearchGraph());
+			if (solutions.isEmpty()) {
+				logger.log(Level.SEVERE,
+						"none of a title and publication metadata was found for a segment: "
+								+ resource.getUri());
+				return null;
+			}
+			Resource titleResource = solutions.get(0).getResource("?stitle");
+			String segmentTitle = titleResource.toString();
+			Resource docResource = solutions.get(0).getResource("?p");
+			String documentUri = docResource.toString();
+			int numPage = solutions.get(0).getLiteral("?snumpage").getInt();
+			ArticleMetadata containedPublication = loadPublication(documentUri);
+			containedPublication.setCurrentSegmentUri(resource.getUri());
+			containedPublication.setCurrentSegmentTitle(segmentTitle);
+			containedPublication.setCurrentPageNumber(numPage);
+			return containedPublication;
+		}
+
 	}
 
 	@Override
@@ -121,7 +152,7 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 		List<ArticleMetadata> list = new ArrayList<ArticleMetadata>();
 		List<String> publicationsUris = retrievePublications();
 		for (String uri : publicationsUris) {
-			ArticleMetadata metadata = load(uri);
+			ArticleMetadata metadata = loadPublication(uri);
 			list.add(metadata);
 		}
 		return list;
@@ -135,7 +166,7 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 		getVirtuosoDAO().insert(triples, getSearchGraph());
 	}
 
-	private ArticleMetadata load(String documentUri) {
+	private ArticleMetadata loadPublication(String documentUri) {
 		String title = retrieveTitle(documentUri);
 		List<Author> authors = retrieveAuthors(documentUri);
 		List<Link> links = retrieveLinks(documentUri);
@@ -212,7 +243,25 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 		}
 		Resource resource = solutions.get(0).getResource(
 				RETRIEVED_TITLE_ELEMENT_KEY);
+
 		return resource.toString();
+	}
+
+	private boolean isPublication(String uri) {
+		String typeQueryString = generateTypeQueryString(uri);
+		Query query = QueryFactory.create(typeQueryString);
+
+		List<QuerySolution> solutions = getVirtuosoDAO().get(query,
+				getSearchGraph());
+		boolean isPublication = false;
+		for (QuerySolution solution : solutions) {
+			String typeUri = solution.getResource("?t").toString();
+			if (typeUri.equals(PUBLICATION_TYPE_URI)) {
+				isPublication = true;
+				break;
+			}
+		}
+		return isPublication;
 	}
 
 	private String parseDocumentUri(String resourceUri) {
@@ -222,9 +271,20 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 		return resourceUri.substring(0, resourceUri.indexOf(DELIMITER));
 	}
 
+	private String generateTypeQueryString(String uri) {
+		String query = getSparqlQueryLoader().loadQueryByName("GetTypes");
+		return String.format(query, uri);
+	}
+
 	private String generateTitleQuery(String documentUri) {
 		String query = getSparqlQueryLoader().loadQueryByName("GetTitle");
 		return String.format(query, documentUri);
+	}
+
+	private String generateSegmentInfoQuery(String segmentUri) {
+		String query = getSparqlQueryLoader()
+				.loadQueryByName("GetSegmentInfo");
+		return String.format(query, segmentUri);
 	}
 
 	private String generateAuthorQuery(String documentUri) {

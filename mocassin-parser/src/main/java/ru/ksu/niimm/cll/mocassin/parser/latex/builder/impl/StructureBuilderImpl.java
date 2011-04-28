@@ -26,9 +26,6 @@ import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl.NodePositionComparator;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
 import ru.ksu.niimm.cll.mocassin.parser.latex.NewtheoremCommand;
 import ru.ksu.niimm.cll.mocassin.parser.latex.builder.StructureBuilder;
-import ru.ksu.niimm.cll.mocassin.parser.util.StandardMathEnvironments;
-import ru.ksu.niimm.cll.mocassin.parser.util.StandardMetadataEnvironments;
-import ru.ksu.niimm.cll.mocassin.parser.util.StandardStyleEnvironments;
 
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;

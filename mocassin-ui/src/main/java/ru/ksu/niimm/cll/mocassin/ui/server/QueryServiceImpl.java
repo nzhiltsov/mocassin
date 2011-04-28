@@ -75,8 +75,8 @@ public class QueryServiceImpl implements QueryService {
 		PagingLoadConfig adjustedPagingLoadConfig = PagingLoadConfig
 				.adjustPagingLoadConfig(pagingLoadConfig, resources.size());
 		List<OntologyResource> filteredResources = resources.subList(
-				adjustedPagingLoadConfig.getOffset(), adjustedPagingLoadConfig
-						.getOffset()
+				adjustedPagingLoadConfig.getOffset(),
+				adjustedPagingLoadConfig.getOffset()
 						+ adjustedPagingLoadConfig.getLimit());
 		return filteredResources;
 	}
@@ -84,19 +84,24 @@ public class QueryServiceImpl implements QueryService {
 	private List<ResultDescription> convertToResultDescriptions(
 			List<ArticleMetadata> ontologyElements) {
 		List<ResultDescription> resultDescriptions = new ArrayList<ResultDescription>();
-		for (ArticleMetadata omDocElement : ontologyElements) {
+		for (ArticleMetadata ontologyElement : ontologyElements) {
 			ResultDescription rd = new ResultDescription();
-			rd.setDocumentUri(omDocElement.getId());
-			List<Link> links = omDocElement.getLinks();
+			rd.setDocumentUri(ontologyElement.getId());
+			rd.setViewerUri(ontologyElement.getCurrentSegmentUri() != null ? ontologyElement
+					.getCurrentSegmentUri() : ontologyElement.getId());
+			List<Link> links = ontologyElement.getLinks();
 
 			Link pdfLink = Iterables.find(links, new Link.PdfLinkPredicate(),
 					Link.nullPdfLink());
 			rd.setPdfUri(pdfLink.getHref());
-			List<Author> authors = omDocElement.getAuthors();
+			List<Author> authors = ontologyElement.getAuthors();
 			List<String> authorsNames = CollectionUtil.asList(Iterables
 					.transform(authors, new Author.NameFunction()));
 			rd.setAuthors(authorsNames);
-			String articleTitle = omDocElement.getTitle();
+			String articleTitle = ontologyElement.getCurrentSegmentTitle() != null ? String
+					.format("%s (%s)", ontologyElement.getTitle(),
+							ontologyElement.getCurrentSegmentTitle())
+					: ontologyElement.getTitle();
 			rd.setTitle(articleTitle);
 			resultDescriptions.add(rd);
 		}
@@ -173,9 +178,9 @@ public class QueryServiceImpl implements QueryService {
 			List<OntologyResource> resources) {
 		List<ArticleMetadata> elements = new ArrayList<ArticleMetadata>();
 		for (OntologyResource resource : resources) {
-			ArticleMetadata omdocElement = getOntologyResourceFacade().load(
+			ArticleMetadata ontologyElement = getOntologyResourceFacade().load(
 					resource);
-			elements.add(omdocElement);
+			elements.add(ontologyElement);
 		}
 		return elements;
 	}

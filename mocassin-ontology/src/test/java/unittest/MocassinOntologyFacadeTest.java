@@ -47,6 +47,10 @@ public class MocassinOntologyFacadeTest {
 				"http://cll.niimm.ksu.ru/ontologies/mocassin#refersTo",
 				"refers to");
 		Assert.assertTrue(properties.contains(relation));
+		relation = new OntologyRelation(
+				"http://cll.niimm.ksu.ru/ontologies/mocassin#hasText",
+				"has text");
+		Assert.assertTrue(properties.contains(relation));
 	}
 
 	@Test

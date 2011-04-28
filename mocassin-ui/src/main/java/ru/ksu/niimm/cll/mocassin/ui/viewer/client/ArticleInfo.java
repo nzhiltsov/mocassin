@@ -8,6 +8,9 @@ public class ArticleInfo implements Serializable {
 	private String key;
 	private String title;
 	private List<String> authors;
+	private String currentSegmentUri;
+	private int currentPageNumber = 1;
+	private String pdfUri;
 
 	public String getUri() {
 		return uri;
@@ -39,6 +42,32 @@ public class ArticleInfo implements Serializable {
 
 	public void setAuthors(List<String> authors) {
 		this.authors = authors;
+	}
+
+	public String getCurrentSegmentUri() {
+		return currentSegmentUri;
+	}
+
+	public void setCurrentSegmentUri(String currentSegmentUri) {
+		this.currentSegmentUri = currentSegmentUri;
+	}
+
+	public int getCurrentPageNumber() {
+		return currentPageNumber;
+	}
+
+	public void setCurrentPageNumber(int currentPageNumber) {
+		if (currentPageNumber > 0) {
+			this.currentPageNumber = currentPageNumber;
+		}
+	}
+
+	public String getPdfUri() {
+		return pdfUri;
+	}
+
+	public void setPdfUri(String pdfUri) {
+		this.pdfUri = pdfUri;
 	}
 
 }

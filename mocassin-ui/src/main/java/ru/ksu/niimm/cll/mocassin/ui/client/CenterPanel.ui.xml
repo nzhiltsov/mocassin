@@ -8,7 +8,7 @@
 		}
 		
 		.results-panel {
-			width: 40%;
+			width: 50%;
 		}
 	</ui:style>
 	<g:VerticalPanel styleName='{style.main-panel}'>

@@ -10,6 +10,7 @@
 		.title-label {
 			font-size: medium;
 			cursor: pointer;
+			text-decoration: underline;
 		}
 		
 		.author-label {
@@ -18,7 +19,7 @@
 	</ui:style>
 	<g:VerticalPanel styleName='{style.main-panel}'>
 		<g:HorizontalPanel ui:field="titlePanel">
-			<g:Hyperlink ui:field="titleLink" styleName='{style.title-label}' />
+			<g:Anchor ui:field="titleLink" styleName='{style.title-label}' />
 		</g:HorizontalPanel>
 		<g:HorizontalPanel>
 			<g:Label ui:field="relevantContextLabel" />
@@ -27,7 +28,7 @@
 			<g:Label ui:field="authorLabel" styleName='{style.author-label}' />
 			<ose:DocumentFormat ui:field="viewerDocumentFormat" />
 			<ose:DocumentFormat ui:field="rdfDocumentFormat" />
-		<!--  	<ose:DocumentFormat ui:field="pdfDocumentFormat" /> -->
+			<!-- <ose:DocumentFormat ui:field="pdfDocumentFormat" /> -->
 		</g:HorizontalPanel>
 	</g:VerticalPanel>
 

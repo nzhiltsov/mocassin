@@ -5,6 +5,7 @@ import java.util.List;
 
 import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.arxiv.Author;
+import ru.ksu.niimm.cll.mocassin.arxiv.impl.Link;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.ArticleInfo;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.Graph;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.ViewerService;
@@ -13,6 +14,7 @@ import ru.ksu.niimm.ose.ontology.OntologyResource;
 import ru.ksu.niimm.ose.ontology.OntologyResourceFacade;
 import ru.ksu.niimm.ose.ontology.SGEdge;
 
+import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 
 public class ViewerServiceImpl implements ViewerService {
@@ -28,12 +30,17 @@ public class ViewerServiceImpl implements ViewerService {
 		ArticleInfo info = new ArticleInfo();
 		info.setUri(metadata.getId());
 		info.setTitle(metadata.getTitle());
+		info.setCurrentSegmentUri(metadata.getCurrentSegmentUri());
+		info.setCurrentPageNumber(metadata.getCurrentPageNumber());
 		List<Author> authors = metadata.getAuthors();
 		List<String> authorNames = new ArrayList<String>();
 		for (Author author : authors) {
 			authorNames.add(author.getName());
 		}
 		info.setAuthors(authorNames);
+		Link pdfLink = Iterables.find(metadata.getLinks(),
+				new Link.PdfLinkPredicate(), Link.nullPdfLink());
+		info.setPdfUri(pdfLink.getHref());
 		return info;
 	}
 
