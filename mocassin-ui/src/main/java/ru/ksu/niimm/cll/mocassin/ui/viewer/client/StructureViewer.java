@@ -39,15 +39,12 @@ public class StructureViewer implements EntryPoint {
 		ScrollPanel outer = binder.createAndBindUi(this);
 		RootLayoutPanel root = RootLayoutPanel.get();
 		root.add(outer);
-		 root.forceLayout();
+		root.forceLayout();
 
 		String resourceUri = Location.getParameter("resourceuri");
 		String pdfUri = Location.getParameter("pdfuri");
 		if (resourceUri == null || pdfUri == null)
 			return;
-
-		frame.setUrl("http://docs.google.com/viewer?url=" + pdfUri
-				+ "&embedded=true");
 
 		metadataCaptionPanel.setCaptionText(constants.metadataPanelTitle());
 
@@ -92,6 +89,9 @@ public class StructureViewer implements EntryPoint {
 						+ result.getPdfUri() + "&embedded=true#:0.page."
 						+ currentPageNumber;
 				frame.setUrl(url);
+			} else {
+				frame.setUrl("http://docs.google.com/viewer?url="
+						+ result.getPdfUri() + "&embedded=true");
 			}
 
 			metadataCaptionPanel.add(metadataPanel);
