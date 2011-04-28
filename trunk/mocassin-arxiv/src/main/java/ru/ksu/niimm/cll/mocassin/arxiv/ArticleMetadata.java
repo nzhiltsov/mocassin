@@ -27,6 +27,12 @@ public class ArticleMetadata {
 
 	private List<Author> authors;
 
+	private String currentSegmentUri;
+
+	private String currentSegmentTitle;
+
+	private int currentPageNumber;
+
 	public String getId() {
 		return id;
 	}
@@ -58,7 +64,29 @@ public class ArticleMetadata {
 	public void setLinks(List<Link> links) {
 		this.links = links;
 	}
-	
-	
+
+	public String getCurrentSegmentUri() {
+		return currentSegmentUri;
+	}
+
+	public void setCurrentSegmentUri(String currentSegmentUri) {
+		this.currentSegmentUri = currentSegmentUri;
+	}
+
+	public int getCurrentPageNumber() {
+		return currentPageNumber;
+	}
+
+	public void setCurrentPageNumber(int currentPageNumber) {
+		this.currentPageNumber = currentPageNumber;
+	}
+
+	public String getCurrentSegmentTitle() {
+		return currentSegmentTitle;
+	}
+
+	public void setCurrentSegmentTitle(String currentSegmentTitle) {
+		this.currentSegmentTitle = currentSegmentTitle;
+	}
 
 }

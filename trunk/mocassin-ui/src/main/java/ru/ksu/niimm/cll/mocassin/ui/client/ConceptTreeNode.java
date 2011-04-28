@@ -11,9 +11,9 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
 
 public class ConceptTreeNode extends Composite {
 
@@ -79,7 +79,6 @@ public class ConceptTreeNode extends Composite {
 				suggestBoxPanel.setSuggestions(result);
 			}
 		};
-		callback.beforeCall();
 		ontologyService.getConceptList(callback);
 	}
 
@@ -93,7 +92,6 @@ public class ConceptTreeNode extends Composite {
 		};
 		if (selectedOntologyElement instanceof OntRelation) {
 			OntRelation selectedRelation = (OntRelation) selectedOntologyElement;
-			callback.beforeCall();
 			ontologyService.getRelationRangeConceptList(selectedRelation,
 					callback);
 		}

@@ -2,6 +2,8 @@ package ru.ksu.niimm.cll.mocassin.ui.client;
 
 import java.util.List;
 
+import ru.ksu.niimm.cll.mocassin.ui.client.DocumentFormat.Action;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -9,9 +11,9 @@ import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -25,7 +27,7 @@ public class HitDescription extends Composite {
 	@UiField
 	Label authorLabel;
 	@UiField
-	Hyperlink titleLink;
+	Anchor titleLink;
 	@UiField
 	DocumentFormat rdfDocumentFormat;
 	@UiField
@@ -33,21 +35,22 @@ public class HitDescription extends Composite {
 	@UiField
 	Label relevantContextLabel;
 
-	private String documentUri;
+	private String viewerUri;
+
+	private String pdfUri;
 
 	@UiConstructor
 	public HitDescription(ResultDescription resultDescription) {
 		initWidget(binder.createAndBindUi(this));
-		documentUri = resultDescription.getDocumentUri();
-		titleLink.setHTML(getLinkCode(resultDescription));
-		viewerDocumentFormat.setText("View");
-		viewerDocumentFormat.setPdfUri(resultDescription.getPdfUri());
-		viewerDocumentFormat.setResourceUri(getDocumentUri());
-		viewerDocumentFormat.setAction("StructureViewer.html");
+		viewerUri = resultDescription.getViewerUri();
+		pdfUri = resultDescription.getPdfUri();
+		titleLink.setText(resultDescription.getTitle());
+		viewerDocumentFormat.setText("arXiv");
+		viewerDocumentFormat.setResourceUri(resultDescription.getDocumentUri());
+		viewerDocumentFormat.setAction(Action.ARXIV);
 		rdfDocumentFormat.setText("RDF");
-		rdfDocumentFormat.setAction("describe");
-		rdfDocumentFormat.setPdfUri(resultDescription.getPdfUri());
-		rdfDocumentFormat.setResourceUri(getDocumentUri());
+		rdfDocumentFormat.setAction(Action.DESCRIBE);
+		rdfDocumentFormat.setResourceUri(getViewerUri());
 		relevantContextLabel.setText(resultDescription
 				.getRelevantContextString());
 
@@ -62,17 +65,21 @@ public class HitDescription extends Composite {
 		authorLabel.setText(authorLabelText);
 	}
 
-	private String getLinkCode(ResultDescription resultDescription) {
-		return "<a href=\"" + getDocumentUri() + "\">"
-				+ resultDescription.getTitle() + "</a>";
+	public String getViewerUri() {
+		return viewerUri;
 	}
 
-	public String getDocumentUri() {
-		return documentUri;
+	public String getPdfUri() {
+		return pdfUri;
 	}
 
 	@UiHandler("titleLink")
 	void handleClick(ClickEvent event) {
-		Window.open(getDocumentUri(), "_blank", "");
+		String encodedResourceUri = getViewerUri().replaceFirst("#", "%23");
+		String debugParam = GWT.isScript() ? "" : "&gwt.codesvr=127.0.0.1:9997";
+		String url = GWT.getHostPageBaseURL()
+				+ "StructureViewer.html?resourceuri=" + encodedResourceUri
+				+ "&pdfuri=" + pdfUri + debugParam;
+		Window.open(url, "_blank", "");
 	}
 }

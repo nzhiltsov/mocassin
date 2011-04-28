@@ -39,27 +39,19 @@ public class StructureViewer implements EntryPoint {
 		ScrollPanel outer = binder.createAndBindUi(this);
 		RootLayoutPanel root = RootLayoutPanel.get();
 		root.add(outer);
-		root.forceLayout();
+		 root.forceLayout();
 
 		String resourceUri = Location.getParameter("resourceuri");
 		String pdfUri = Location.getParameter("pdfuri");
 		if (resourceUri == null || pdfUri == null)
 			return;
 
-		this.frame.setUrl("http://docs.google.com/viewer?url=" + pdfUri
+		frame.setUrl("http://docs.google.com/viewer?url=" + pdfUri
 				+ "&embedded=true");
-
 
 		metadataCaptionPanel.setCaptionText(constants.metadataPanelTitle());
 
 		viewerService.load(resourceUri, new LoadMetadataCallback());
-
-		documentStructureGraphPanel
-				.setCaptionText(constants.graphPanelTitle());
-
-		DocumentStructureGraph documentStructureGraph = new DocumentStructureGraph(frame, resourceUri, pdfUri);
-		documentStructureGraph.setHeight("450");
-		documentStructureGraphPanel.add(documentStructureGraph.asWidget());
 
 	}
 
@@ -94,8 +86,22 @@ public class StructureViewer implements EntryPoint {
 				metadataPanel.add(lblNewLabel_2);
 			}
 
-			metadataCaptionPanel.add(metadataPanel);
+			if (result.getCurrentPageNumber() > 0) {
+				int currentPageNumber = result.getCurrentPageNumber() - 1;
+				String url = "http://docs.google.com/viewer?url="
+						+ result.getPdfUri() + "&embedded=true#:0.page."
+						+ currentPageNumber;
+				frame.setUrl(url);
+			}
 
+			metadataCaptionPanel.add(metadataPanel);
+			documentStructureGraphPanel.setCaptionText(constants
+					.graphPanelTitle());
+
+			DocumentStructureGraph documentStructureGraph = new DocumentStructureGraph(
+					frame, result.getUri(), result.getPdfUri());
+			documentStructureGraph.setHeight("450");
+			documentStructureGraphPanel.add(documentStructureGraph.asWidget());
 		}
 
 	}

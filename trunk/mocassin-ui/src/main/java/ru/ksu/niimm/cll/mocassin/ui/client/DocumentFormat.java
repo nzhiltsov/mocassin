@@ -11,6 +11,10 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 
 public class DocumentFormat extends Composite {
+	enum Action {
+		ARXIV, DESCRIBE
+	}
+
 	interface Binder extends UiBinder<HorizontalPanel, DocumentFormat> {
 	}
 
@@ -18,15 +22,13 @@ public class DocumentFormat extends Composite {
 	@UiField
 	Anchor link;
 
-	private String pdfUri;
-
 	private String resourceUri;
 	/**
 	 * string that represents an action performed after click on the link. This
 	 * is used via generating appropriate link, @see
 	 * {@link DocumentFormat#handleClick(ClickEvent)}
 	 */
-	private String action;
+	private Action action;
 
 	public DocumentFormat() {
 		initWidget(binder.createAndBindUi(this));
@@ -36,25 +38,26 @@ public class DocumentFormat extends Composite {
 		link.setText(text);
 	}
 
-	public void setPdfUri(String uri) {
-		this.pdfUri = uri;
-	}
-
 	public void setResourceUri(String resourceUri) {
 		this.resourceUri = resourceUri;
 	}
 
-	public void setAction(String action) {
-		this.action = action.trim();
+	public void setAction(Action action) {
+		this.action = action;
 	}
 
 	@UiHandler("link")
 	void handleClick(ClickEvent event) {
-		String encodedResourceUri = resourceUri.replaceFirst("#", "%23");
-		String debugParam = GWT.isScript() ? "" : "&gwt.codesvr=127.0.0.1:9997";
-		String url = GWT.getHostPageBaseURL() + action + "?resourceuri="
-				+ encodedResourceUri + "&pdfuri=" + pdfUri + debugParam;
-		Window.open(url, "_blank", "");
+		if (action == Action.DESCRIBE) {
+			String encodedResourceUri = resourceUri.replaceFirst("#", "%23");
+			String debugParam = GWT.isScript() ? ""
+					: "&gwt.codesvr=127.0.0.1:9997";
+			String url = GWT.getHostPageBaseURL() + "describe?resourceuri="
+					+ encodedResourceUri + debugParam;
+			Window.open(url, "_blank", "");
+		} else if (action == Action.ARXIV) {
+			Window.open(resourceUri, "_blank", "");
+		}
 
 	}
 }

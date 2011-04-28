@@ -2,16 +2,15 @@ package ru.ksu.niimm.cll.mocassin.parser.latex.builder.impl;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.SortedSet;
-
-import com.google.common.collect.LinkedHashMultimap;
-import com.google.common.collect.Multimap;
 
 import ru.ksu.niimm.cll.mocassin.parser.Node;
 import ru.ksu.niimm.cll.mocassin.parser.util.StandardMathEnvironments;
 import ru.ksu.niimm.cll.mocassin.parser.util.StandardMetadataEnvironments;
 import ru.ksu.niimm.cll.mocassin.parser.util.StandardStyleEnvironments;
+
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
 
 public class NumberingProcessorImpl implements NumberingProcessor {
 
