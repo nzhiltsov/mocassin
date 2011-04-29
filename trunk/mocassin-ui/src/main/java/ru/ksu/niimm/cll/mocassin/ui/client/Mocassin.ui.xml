@@ -1,17 +1,13 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 	xmlns:g='urn:import:com.google.gwt.user.client.ui' xmlns:ose='urn:import:ru.ksu.niimm.cll.mocassin.ui.client'>
+	<ui:with type="ru.ksu.niimm.cll.mocassin.ui.client.Resources"
+		field="res" />
 	<ui:style>
-		.title-label {
-			font-size: 2em;
-			font-weight: bold;
-			color: #777777;
-			margin: 40px 0px 70px;
-			text-align: center;
-		}
-		
 		.main-panel {
 			table-layout: auto;
 			width: 100%;
+			background-image: url(math_background.gif);
+			background-repeat: repeat;
 		}
 		
 		.ose-label-panel {
@@ -20,8 +16,9 @@
 	</ui:style>
 	<g:ScrollPanel>
 		<g:VerticalPanel styleName='{style.main-panel}'>
-			<g:HorizontalPanel styleName='{style.ose-label-panel}'>
-				<g:Label styleName='{style.title-label}'>Mocassin</g:Label>
+			<g:HorizontalPanel horizontalAlignment='ALIGN_CENTER'
+				width='100%'>
+				<g:Image resource='{res.logo}' />
 			</g:HorizontalPanel>
 			<ose:TopPanel ui:field='topPanel' />
 			<ose:CenterPanel ui:field="centerPanel" />
