@@ -99,7 +99,7 @@ public class StructureViewer implements EntryPoint {
 					.graphPanelTitle());
 
 			DocumentStructureGraph documentStructureGraph = new DocumentStructureGraph(
-					frame, result.getUri(), result.getPdfUri());
+					frame, result);
 			documentStructureGraph.setHeight("450");
 			documentStructureGraphPanel.add(documentStructureGraph.asWidget());
 		}
