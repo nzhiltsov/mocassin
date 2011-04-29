@@ -17,14 +17,10 @@ public class CopyrightWidget extends Composite {
 			UiBinder<HorizontalPanel, CopyrightWidget> {
 	}
 
-	@UiField
-	HTML message;
-
 	public CopyrightWidget() {
 		HorizontalPanel panel = uiBinder.createAndBindUi(this);
 		initWidget(panel);
-		message.setHTML(constants.authorName() + "&nbsp;©2010-2011 Mocassin:&nbsp;"
-				+ constants.version());
+
 	}
 
 }
