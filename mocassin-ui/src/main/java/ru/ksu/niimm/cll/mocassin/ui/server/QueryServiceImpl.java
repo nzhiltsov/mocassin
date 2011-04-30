@@ -180,7 +180,9 @@ public class QueryServiceImpl implements QueryService {
 		for (OntologyResource resource : resources) {
 			ArticleMetadata ontologyElement = getOntologyResourceFacade().load(
 					resource);
-			elements.add(ontologyElement);
+			if (ontologyElement != null) {
+				elements.add(ontologyElement);
+			}
 		}
 		return elements;
 	}
