@@ -51,7 +51,7 @@ public class DocumentStructureGraph extends ProtovisWidget {
 		this.resourceUri = result.getUri();
 		this.currentSegmentUri = result.getCurrentSegmentUri();
 		this.navigationPopup = new NavigationPopup(frame, result.getPdfUri());
-		if (result.getCurrentPageNumber() > 0) {
+		if (result.getCurrentPageNumber() > 1) {
 			this.navigationPopup.setNumPage(result.getCurrentPageNumber());
 			this.navigationPopup.setPopupPosition(this.getAbsoluteLeft(),
 					this.getAbsoluteTop());
