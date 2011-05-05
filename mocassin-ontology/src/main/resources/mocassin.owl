@@ -170,7 +170,7 @@
     <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#hasPart -->
 
     <owl:ObjectProperty rdf:about="#hasPart">
-    <rdfs:label xml:lang="en">has part</rdfs:label>
+     <rdfs:label xml:lang="en">has part</rdfs:label>
         <rdf:type rdf:resource="&owl;TransitiveProperty"/>
         <rdfs:domain>
             <owl:Class>
@@ -524,13 +524,13 @@
 
     <!-- http://salt.semanticauthoring.org/ontologies/Figure -->
 
-    <owl:Class rdf:about="&ontologies;sdo#Figure"/>
+    <owl:Class rdf:about="&ontologies;Figure"/>
     
 
 
     <!-- http://salt.semanticauthoring.org/ontologies/Table -->
 
-    <owl:Class rdf:about="&ontologies;sdo#Table"/>
+    <owl:Class rdf:about="&ontologies;Table"/>
     
 
 

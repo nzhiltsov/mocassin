@@ -56,8 +56,8 @@ public class MocassinOntologyFacadeTest {
 	@Test
 	public void testGetRangeOfConcreteProperty() {
 		OntologyRelation relation = new OntologyRelation(
-				"http://cll.niimm.ksu.ru/ontologies/mocassin#dependsOn",
-				"depends on");
+				"http://cll.niimm.ksu.ru/ontologies/mocassin#refersTo",
+				"refers to");
 		List<OntologyConcept> ontPropertyRangeList = this.ontologyFacade
 				.getOntPropertyRangeList(relation);
 		boolean containsConjecture = false;

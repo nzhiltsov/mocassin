@@ -104,7 +104,7 @@ public class OntologyFacadeImpl implements OntologyFacade {
 		while (propertiesIterator.hasNext()) {
 			OntProperty property = propertiesIterator.next();
 			String uri = property.getURI();
-			if (!isOmdocProperty(uri)) {
+			if (!isOntologyProperty(uri)) {
 				continue;
 			}
 			String rdfsLabel = property.getLabel(getLocale());
@@ -115,7 +115,7 @@ public class OntologyFacadeImpl implements OntologyFacade {
 		return relations;
 	}
 
-	private boolean isOmdocProperty(String uri) {
+	private boolean isOntologyProperty(String uri) {
 		return uri.startsWith(this.ontologyUri);
 	}
 
