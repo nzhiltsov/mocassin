@@ -1,6 +1,7 @@
 package ru.ksu.niimm.cll.mocassin.parser.latex.impl;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -11,9 +12,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.sourceforge.texlipse.model.DocumentReference;
@@ -28,14 +29,16 @@ import ru.ksu.niimm.cll.mocassin.util.StringUtil;
 import com.google.inject.Inject;
 
 public class LatexParserImpl implements Parser {
+	private static final String NUMBERING_WITHIN_SECTION_FLAG = "[section]";
+	private static final String LATEX_COMMENT_SYMBOL = "%";
 	/**
 	 * buffer size while reading the preamble of a document
 	 */
 	private static final int PREAMBLE_MAX_SIZE = 10 * 1024 * 1024;
 	private static final Pattern UNNUMBERED_NEW_THEOREM_PATTERN = Pattern
-			.compile("\\\\newtheorem(\\*){1}\\{.+\\}(\\[.+\\])?\\{.+\\}");
+			.compile("(\\\\newtheorem(\\*){1}\\{.+\\}(\\[.+\\])?\\{.+\\})");
 	private static final Pattern NUMBERED_NEW_THEOREM_PATTERN = Pattern
-			.compile("\\\\newtheorem\\{.+\\}(\\[.+\\])?\\{.+\\}");
+			.compile("(\\\\newtheorem\\{.+\\}(\\[.+\\])?\\{.+\\})");
 	private static final Pattern BEGIN_DOCUMENT_PATTERN = Pattern
 			.compile("\\\\begin\\{document\\}");
 
@@ -58,60 +61,82 @@ public class LatexParserImpl implements Parser {
 		parsingInputStream.mark(PREAMBLE_MAX_SIZE);
 
 		List<NewtheoremCommand> newtheorems = new ArrayList<NewtheoremCommand>();
-		Scanner scanner = new Scanner(parsingInputStream, "utf8");
+
+		BufferedReader headerReader = new BufferedReader(new InputStreamReader(
+				parsingInputStream));
+
 		boolean isNumberingWithinSection = false;
-		while (scanner.hasNextLine()) {
-
-			String unnumberedNewtheoremCommand = scanner
-					.findInLine(UNNUMBERED_NEW_THEOREM_PATTERN);
-			String numberedNewtheoremCommand = scanner
-					.findInLine(NUMBERED_NEW_THEOREM_PATTERN);
-			String newtheoremCommand = null;
-			boolean isNumbered = false;
-			if (numberedNewtheoremCommand != null) {
-				newtheoremCommand = numberedNewtheoremCommand;
-				isNumbered = true;
-			} else if (unnumberedNewtheoremCommand != null) {
-				newtheoremCommand = unnumberedNewtheoremCommand;
-			}
-			if (newtheoremCommand != null) {
-
-				int firstLeftBrace = newtheoremCommand.indexOf("{") + 1;
-				int firstRightBrace = newtheoremCommand.indexOf("}",
-						firstLeftBrace);
-				String key = newtheoremCommand.substring(firstLeftBrace,
-						firstRightBrace);
-				int secondLeftBrace = newtheoremCommand.indexOf("{",
-						firstRightBrace) + 1;
-				String dirtyTitle = newtheoremCommand.substring(
-						secondLeftBrace, newtheoremCommand.indexOf("}",
-								secondLeftBrace));
-				String title = StringUtil.takeoutMarkup(dirtyTitle);
-				newtheorems.add(new NewtheoremCommand(key, title, isNumbered));
-				if (!isNumberingWithinSection
-						&& scanner.findInLine("[section]") != null) {
-					isNumberingWithinSection = true;
-				}
-			}
-
-			boolean isEndOfPreamble = scanner
-					.findInLine(BEGIN_DOCUMENT_PATTERN) != null;
-			if (isEndOfPreamble) {
-				break;
-			}
-
-			scanner.nextLine();
-
-		}
-
+		String line;
 		try {
+			while ((line = headerReader.readLine()) != null) {
+
+				int commentBeginningPosition = line
+						.indexOf(LATEX_COMMENT_SYMBOL);
+				final String strippedLine = commentBeginningPosition > 0 ? line
+						.substring(0, commentBeginningPosition) : line;
+
+				if (strippedLine.length() == 0)
+					continue;
+
+				boolean isEndOfPreamble = BEGIN_DOCUMENT_PATTERN.matcher(
+						strippedLine).find();
+				if (isEndOfPreamble) {
+					break;
+				}
+
+				Matcher unnumberedNewTheoremMatcher = UNNUMBERED_NEW_THEOREM_PATTERN
+						.matcher(strippedLine);
+				String unnumberedNewtheoremCommand = null;
+				if (unnumberedNewTheoremMatcher.find()) {
+					unnumberedNewtheoremCommand = unnumberedNewTheoremMatcher
+							.group(1);
+				}
+				Matcher numberedNewTheoremMatcher = NUMBERED_NEW_THEOREM_PATTERN
+						.matcher(strippedLine);
+				String numberedNewtheoremCommand = null;
+				if (numberedNewTheoremMatcher.find()) {
+					numberedNewtheoremCommand = numberedNewTheoremMatcher
+							.group(1);
+				}
+				String newtheoremCommand = null;
+				boolean isNumbered = false;
+				if (numberedNewtheoremCommand != null) {
+					newtheoremCommand = numberedNewtheoremCommand;
+					isNumbered = true;
+				} else if (unnumberedNewtheoremCommand != null) {
+					newtheoremCommand = unnumberedNewtheoremCommand;
+				}
+				if (newtheoremCommand != null) {
+
+					int firstLeftBrace = newtheoremCommand.indexOf("{") + 1;
+					int firstRightBrace = newtheoremCommand.indexOf("}",
+							firstLeftBrace);
+					String key = newtheoremCommand.substring(firstLeftBrace,
+							firstRightBrace);
+					int secondLeftBrace = newtheoremCommand.indexOf("{",
+							firstRightBrace) + 1;
+					String dirtyTitle = newtheoremCommand.substring(
+							secondLeftBrace, newtheoremCommand.indexOf("}",
+									secondLeftBrace));
+					String title = StringUtil.takeoutMarkup(dirtyTitle);
+					newtheorems.add(new NewtheoremCommand(key, title,
+							isNumbered));
+					if (!isNumberingWithinSection
+							&& strippedLine
+									.contains(NUMBERING_WITHIN_SECTION_FLAG)) {
+						isNumberingWithinSection = true;
+					}
+				}
+
+			}
+
 			parsingInputStream.reset();
 			Reader reader = new InputStreamReader(parsingInputStream);
 			LatexDocumentModel parsedModel = parseTree(reader);
 			parsedModel.setNewtheorems(newtheorems);
 			parsedModel.setNumberingWithinSection(isNumberingWithinSection);
 			if (closeStream) {
-				scanner.close();
+				headerReader.close();
 				parsingInputStream.close();
 			}
 			return parsedModel;
