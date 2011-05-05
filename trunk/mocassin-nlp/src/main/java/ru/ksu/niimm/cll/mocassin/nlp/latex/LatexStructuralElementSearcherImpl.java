@@ -47,6 +47,7 @@ import edu.uci.ics.jung.graph.Graph;
 public class LatexStructuralElementSearcherImpl implements
 		LatexStructuralElementSearcher {
 	private static final int DOCUMENT_MAX_SIZE = 50 * 1024 * 1024;
+	private static final String LATEX_COMMENT_SYMBOL = "%";
 	@Inject
 	private Logger logger;
 	@Inject
@@ -131,6 +132,11 @@ public class LatexStructuralElementSearcherImpl implements
 		String line;
 		while ((line = reader.readLine()) != null) {
 			currentLineNumber++;
+			int commentBeginningPosition = line.indexOf(LATEX_COMMENT_SYMBOL);
+			final String strippedLine = commentBeginningPosition >= 0 ? line
+					.substring(0, commentBeginningPosition) : line;
+			if (strippedLine.length() == 0)
+				continue;
 			/**
 			 * TODO: skip the boundaries of a segment in a more accurate way
 			 */
@@ -153,7 +159,7 @@ public class LatexStructuralElementSearcherImpl implements
 			if (shouldSkip)
 				continue;
 
-			List<String> tokens = StringUtil.stripLatexMarkup(line);
+			List<String> tokens = StringUtil.stripLatexMarkup(strippedLine);
 			Iterable<String> tokensForIndex = Iterables.filter(tokens,
 					getNonStopWordPredicate());
 			String[] contents = Iterables.toArray(tokensForIndex, String.class);

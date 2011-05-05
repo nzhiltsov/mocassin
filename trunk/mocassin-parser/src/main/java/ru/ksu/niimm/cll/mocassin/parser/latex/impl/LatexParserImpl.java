@@ -72,7 +72,7 @@ public class LatexParserImpl implements Parser {
 
 				int commentBeginningPosition = line
 						.indexOf(LATEX_COMMENT_SYMBOL);
-				final String strippedLine = commentBeginningPosition > 0 ? line
+				final String strippedLine = commentBeginningPosition >= 0 ? line
 						.substring(0, commentBeginningPosition) : line;
 
 				if (strippedLine.length() == 0)
