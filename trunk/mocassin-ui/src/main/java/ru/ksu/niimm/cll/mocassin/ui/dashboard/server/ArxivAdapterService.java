@@ -31,7 +31,7 @@ import com.google.inject.Inject;
 
 import edu.uci.ics.jung.graph.Graph;
 
-public class ArxivServiceImpl implements ArxivService {
+public class ArxivAdapterService implements ArxivService {
 	@Inject
 	private Logger logger;
 	@Inject

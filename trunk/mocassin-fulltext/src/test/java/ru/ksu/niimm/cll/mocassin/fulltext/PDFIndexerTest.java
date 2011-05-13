@@ -21,11 +21,14 @@ public class PDFIndexerTest {
 	private InputStream in;
 
 	private InputStream in2;
+	
+	private InputStream in3;
 
 	@Before
 	public void init() {
 		this.in = this.getClass().getResourceAsStream("/example.pdf");
 		this.in2 = this.getClass().getResourceAsStream("/example2.pdf");
+		this.in3 = this.getClass().getResourceAsStream("/example3.pdf");
 	}
 
 	@Test
@@ -51,9 +54,16 @@ public class PDFIndexerTest {
 					"http://localhost/example2.pdf",
 			"\"Corollary 3\" self-adjoint only where");
 			Assert.assertEquals(3, pageNumber);
+			
+			this.pdfIndexer.save("http://arxiv.org/pdf/math/0205003", in3);
+			pageNumber = this.pdfIndexer.getPageNumber(
+					"http://arxiv.org/pdf/math/0205003",
+			"\"Theorem 1.1\" Riemann hypothesis equivalent statement");
+			Assert.assertEquals(2, pageNumber);
 		} finally {
 			this.in.close();
 			this.in2.close();
+			this.in3.close();
 		}
 
 	}

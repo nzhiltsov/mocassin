@@ -1,90 +1,65 @@
 package unittest;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.junit.Ignore;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ru.ksu.niimm.cll.mocassin.fulltext.FullTextModule;
 import ru.ksu.niimm.cll.mocassin.nlp.NlpModule;
+import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
+import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.ReferenceSearcher;
+import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateDocumentException;
-import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
+import ru.ksu.niimm.cll.mocassin.nlp.impl.ParsedDocumentImpl;
+import ru.ksu.niimm.cll.mocassin.parser.LatexParserModule;
+import unittest.LatexStructuralElementSearcherTest.UriComparator;
 
+import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
+import edu.uci.ics.jung.graph.Graph;
+
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext(NlpModule.class)
-@Ignore("needs to fix the performance of the test")
+@GuiceContext( { NlpModule.class, LatexParserModule.class, FullTextModule.class })
 public class ReferenceSearcherTest {
 	@Inject
 	private Logger logger;
 	@Inject
 	private ReferenceSearcher referenceSearcher;
 
-	@Inject
-	private GateDocumentDAO gateDocumentDAO;
-
 	@Test
-	public void testRetrieve() throws AccessGateDocumentException, IOException {
-		/*List<DocumentData> data = new ArrayList<DocumentData>();
-		List<String> ids = CollectionUtil.sampleRandomSublist(
-				gateDocumentDAO.getDocumentIds(), 30);
-		for (String id : ids) {
-			ParsedDocument document = new ParsedDocumentImpl(id);
-			try {
+	public void testRetrieveReferences() throws AccessGateDocumentException,
+			IOException {
+		ParsedDocument document = new ParsedDocumentImpl("math_0205003",
+				"http://arxiv.org/pdf/math/0205003");
+		Graph<StructuralElement, Reference> graph = this.referenceSearcher
+				.retrieveReferences(document);
+		Collection<Reference> edges = graph.getEdges();
+		Assert.assertTrue(edges.size() > 0);
 
-				Graph<StructuralElement, Reference> graph = referenceSearcher
-						.retrieveReferences(document);
-				Collection<Reference> references = graph.getEdges();
-				if (!references.isEmpty()) {
-					String filename = graph.getEdges().getDocument()
-							.getFilename();
-					long size = references.get(0).getDocument().getSize();
-					data.add(new DocumentData(filename, size, references.size()));
-				}
-				logger.log(Level.INFO, String.format(
-						"the document '%s' was processed successfully", id));
-			} catch (RuntimeException ex) {
-				logger.log(Level.SEVERE, String.format(
-						"failed to retrieve references from the document: %s",
-						id));
-
-			}
+		for (Reference ref : edges) {
+			System.out.println(graph.getSource(ref) + " -> "
+					+ graph.getDest(ref) + ": " + ref);
 		}
-		printDocs(data);*/
-	}
 
-	private void printDocs(List<DocumentData> docs) throws IOException {
-		FileWriter writer = new FileWriter(new File("/tmp/reference-stats.txt"));
-		try {
-			writer.write("filename size count\n");
-			for (DocumentData doc : docs) {
-				writer.write(String.format("%s %s %s\n", doc.filename,
-						doc.size, doc.referenceCount));
-			}
-		} finally {
-			writer.flush();
-			writer.close();
+		System.out.println("***");
+		Collection<StructuralElement> vertices = graph.getVertices();
+		StructuralElement[] verticesArray = Iterables.toArray(vertices,
+				StructuralElement.class);
+		Arrays.sort(verticesArray, new UriComparator());
+		for (StructuralElement element : verticesArray) {
+			logger.log(Level.INFO, String.format("%s \"%s\" %d", element,
+					element.getTitle(), element.getStartPageNumber()));
 		}
 	}
 
-	static class DocumentData {
-		String filename;
-		long size;
-		int referenceCount;
-
-		DocumentData(String filename, long size, int referenceCount) {
-			this.filename = filename;
-			this.size = size;
-			this.referenceCount = referenceCount;
-		}
-
-	}
 }
