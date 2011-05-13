@@ -8,12 +8,13 @@ import gate.util.OffsetComparator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import ru.ksu.niimm.cll.mocassin.fulltext.EmptyResultException;
+import ru.ksu.niimm.cll.mocassin.fulltext.PDFIndexer;
 import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElementSearcher;
@@ -43,20 +44,25 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 	private NlpModulePropertiesLoader nlpModulePropertiesLoader;
 	@Inject
 	private AnnotationUtil annotationUtil;
-
+	@Inject
+	private PDFIndexer pdfIndexer;
 	@Inject
 	private StructuralElementTypeRecognizer structuralElementTypeRecognizer;
 
 	@Inject
 	private GateDocumentDAO gateDocumentDAO;
 
-	private Set<String> nameSet = ArxmlivStructureElementTypes.toNameSet();
+	private static final Set<String> NAME_SET = ArxmlivStructureElementTypes
+			.toNameSet();
 
 	private AnnotationSet structuralAnnotations;
+
+	private ParsedDocument parsedDocument;
 
 	@Override
 	public List<StructuralElement> retrieveElements(
 			ParsedDocument parsedDocument) {
+		this.parsedDocument = parsedDocument;
 		Document document = null;
 		try {
 			document = gateDocumentDAO.load(parsedDocument.getFilename());
@@ -64,7 +70,7 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 			setStructuralAnnotations(document
 					.getAnnotations(
 							getProperty(GateFormatConstants.ARXMLIV_MARKUP_NAME_PROPERTY_KEY))
-					.get(nameSet));
+					.get(NAME_SET));
 
 			Function<Annotation, StructuralElement> extractFunction = new ExtractionFunction(
 					document);
@@ -91,7 +97,7 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 			setStructuralAnnotations(document
 					.getAnnotations(
 							getProperty(GateFormatConstants.ARXMLIV_MARKUP_NAME_PROPERTY_KEY))
-					.get(nameSet));
+					.get(NAME_SET));
 
 			Annotation foundAnnotation = null;
 			for (Annotation annotation : structuralAnnotations) {
@@ -177,9 +183,29 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 		return annotationUtil;
 	}
 
-	public List<Token> getTokensForAnnotation(Document document,
+	private List<Token> getTokensForAnnotation(Document document,
 			Annotation annotation) {
 		return getAnnotationUtil().getTokensForAnnotation(document, annotation,
+				false);
+	}
+
+	private String getTextContentsForAnnotation(Document document,
+			Annotation annotation) {
+		return getAnnotationUtil().getTextContentsForAnnotation(document,
+				annotation);
+	}
+
+	private int getPageNumber(String fullTextQuery) throws EmptyResultException {
+		return pdfIndexer.getPageNumber(getPdfUri(), fullTextQuery);
+	}
+
+	public String getPdfUri() {
+		return parsedDocument.getPdfUri();
+	}
+
+	public String[] getPureTokensForAnnotation(Document document,
+			Annotation annotation) {
+		return annotationUtil.getPureTokensForAnnotation(document, annotation,
 				false);
 	}
 
@@ -193,6 +219,8 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 
 	private class ExtractionFunction implements
 			Function<Annotation, StructuralElement> {
+		private static final int MINIMAL_TOKEN_COUNT = 6;
+
 		private Document document;
 
 		public ExtractionFunction(Document document) {
@@ -220,28 +248,66 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 							getProperty(GateFormatConstants.ARXMLIV_MARKUP_NAME_PROPERTY_KEY))
 					.get(
 							getProperty(GateFormatConstants.TITLE_ANNOTATION_NAME_PROPERTY_KEY))
+
 					.getContained(annotation.getStartNode().getOffset(),
 							annotation.getEndNode().getOffset());
 			List<Annotation> titleList = new ArrayList<Annotation>(titleSet);
 			Collections.sort(titleList, new OffsetComparator());
-			List<Token> titleTokens = null;
+			String title = "";
 			if (titleList.size() > 0) {
-				Annotation title = titleList.get(0);
-				titleTokens = getTokensForAnnotation(getDocument(), title);
+				Annotation titleAnnotation = titleList.get(0);
+				title = getTextContentsForAnnotation(getDocument(),
+						titleAnnotation);
 			}
-			StringBuffer sb = new StringBuffer();
-			Iterator<Token> iterator = titleTokens.iterator();
-			while (iterator.hasNext()) {
-				sb.append(iterator.next().getValue());
-				if (iterator.hasNext()) {
-					sb.append(" ");
-				}
-			}
-			String title = sb.toString();
+
 			StructuralElement element = new StructuralElementImpl.Builder(id,
 					document.getName() + "/" + id).start(start).end(end).name(
 					name).title(title).build();
 			element.setLabels(labels);
+			element.setContents(getPureTokensForAnnotation(getDocument(),
+					annotation));
+
+			StringBuffer sb = new StringBuffer();
+			int i = 0;
+			int j = 0;
+			int contentSize = element.getContents().size();
+			while (i < MINIMAL_TOKEN_COUNT && j < contentSize) {
+				String token = element.getContents().get(j);
+				if (token.length() > 3) {
+					sb.append(String.format("%s ", token));
+					i++;
+				}
+				j++;
+			}
+
+			if (i == MINIMAL_TOKEN_COUNT) {
+				String fullTextQuery;
+				if (element.getTitle() == null) {
+					fullTextQuery = sb.toString();
+				} else {
+					fullTextQuery = String.format("\"%s\" %s", element
+							.getTitle(), sb.toString());
+				}
+				try {
+					int pageNumber = getPageNumber(fullTextQuery);
+					element.setStartPageNumber(pageNumber);
+				} catch (EmptyResultException e) {
+					logger
+							.log(
+									Level.SEVERE,
+									String
+											.format(
+													"failed to find the page number for a segment %s using a query \"%s\" on PDF: %s",
+													element.getUri(),
+													fullTextQuery, getPdfUri()));
+				}
+
+			}
+
+			MocassinOntologyClasses predictedClass = getStructuralElementTypeRecognizer()
+					.predict(element);
+			element.setPredictedClass(predictedClass);
+
 			return element;
 		}
 
@@ -274,5 +340,6 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 			List<String> labels = StringUtil.tokenize(labelStr);
 			return labels;
 		}
+
 	}
 }

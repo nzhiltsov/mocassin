@@ -1,6 +1,8 @@
 package ru.ksu.niimm.cll.mocassin.nlp.impl;
 
+import java.io.Serializable;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -158,4 +160,21 @@ public class StructuralElementImpl implements StructuralElement {
 		return true;
 	}
 
+	@SuppressWarnings("serial")
+	public static class PositionComparator implements Serializable,
+			Comparator<StructuralElement> {
+
+		@Override
+		public int compare(StructuralElement first, StructuralElement second) {
+			if (first.getStart() < second.getStart())
+				return -1;
+			if (first.getStart() > second.getStart())
+				return 1;
+			if (first.getEnd() < second.getEnd())
+				return -1;
+			if (first.getEnd() > second.getEnd())
+				return 1;
+			return 0;
+		}
+	}
 }

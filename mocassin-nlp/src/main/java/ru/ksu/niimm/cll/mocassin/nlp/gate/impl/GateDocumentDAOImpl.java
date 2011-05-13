@@ -21,6 +21,8 @@ import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateDocumentException;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
 import ru.ksu.niimm.cll.mocassin.nlp.util.NlpModulePropertiesLoader;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 
 public class GateDocumentDAOImpl implements GateDocumentDAO {
@@ -44,9 +46,15 @@ public class GateDocumentDAOImpl implements GateDocumentDAO {
 	@Override
 	public Document load(String documentId) throws AccessGateDocumentException {
 		initialize();
+		List<String> documentIds = getDocumentIds();
+		String foundDocumentId = Iterables.find(documentIds,
+				new DocumentNamePredicate(documentId), null);
+		if (foundDocumentId == null)
+			throw new IllegalArgumentException(String.format(
+					"document with a key='%s' not found", documentId));
 		FeatureMap features = Factory.newFeatureMap();
 		features.put(DataStore.DATASTORE_FEATURE_NAME, getDataStore());
-		features.put(DataStore.LR_ID_FEATURE_NAME, documentId);
+		features.put(DataStore.LR_ID_FEATURE_NAME, foundDocumentId);
 		Document document;
 		try {
 			document = (Document) Factory.createResource(getDocumentLrType(),
@@ -120,5 +128,21 @@ public class GateDocumentDAOImpl implements GateDocumentDAO {
 	private String getDocumentLrType() {
 		return getNlpModulePropertiesLoader().get(
 				GATE_DOCUMENT_LR_TYPE_PROPERTY_KEY);
+	}
+
+	private static class DocumentNamePredicate implements Predicate<String> {
+		private final String key;
+
+		private DocumentNamePredicate(String key) {
+			this.key = key;
+		}
+
+		@Override
+		public boolean apply(String input) {
+			if (input == null)
+				return false;
+			return input.startsWith(key);
+		}
+
 	}
 }

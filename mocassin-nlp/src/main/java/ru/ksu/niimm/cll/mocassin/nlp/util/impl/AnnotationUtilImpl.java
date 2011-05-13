@@ -5,6 +5,7 @@ import gate.AnnotationSet;
 import gate.Document;
 import gate.util.OffsetComparator;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,8 +22,14 @@ import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 
 public class AnnotationUtilImpl implements AnnotationUtil {
+
+	private final NlpModulePropertiesLoader nlpModulePropertiesLoader;
+
 	@Inject
-	private NlpModulePropertiesLoader nlpModulePropertiesLoader;
+	private AnnotationUtilImpl(
+			NlpModulePropertiesLoader nlpModulePropertiesLoader) {
+		this.nlpModulePropertiesLoader = nlpModulePropertiesLoader;
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -33,22 +40,12 @@ public class AnnotationUtilImpl implements AnnotationUtil {
 	 */
 	public List<Token> getTokensForAnnotation(Document document,
 			Annotation annotation, boolean useStemming) {
-		List<Token> titleTokens;
-		titleTokens = new LinkedList<Token>();
+		List<Token> returningTokens;
+		returningTokens = new LinkedList<Token>();
 
-		AnnotationSet tokenSet = document
-				.getAnnotations(GateFormatConstants.DEFAULT_ANNOTATION_SET_NAME)
-				.get(
-						getProperty(GateFormatConstants.TOKEN_ANNOTATION_NAME_PROPERTY_KEY))
-				.getContained(annotation.getStartNode().getOffset(),
-						annotation.getEndNode().getOffset());
-		Iterable<Annotation> filteredTokens = Iterables
-				.filter(tokenSet, new NotInMathPredicate(
-						getNlpModulePropertiesLoader(), document));
+		List<Annotation> tokenList = getSortedTokenList(document, annotation,
+				false);
 
-		List<Annotation> tokenList = CollectionUtil.asList(filteredTokens);
-
-		Collections.sort(tokenList, new OffsetComparator());
 		for (int i = 0; i < tokenList.size(); i++) {
 			Annotation a = tokenList.get(i);
 			String kind = (String) a.getFeatures().get("kind");
@@ -60,16 +57,89 @@ public class AnnotationUtilImpl implements AnnotationUtil {
 			String pos = (String) a.getFeatures().get(
 					GateFormatConstants.POS_FEATURE_NAME);
 			Token token = new TokenImpl(tokenValue, pos);
-			titleTokens.add(token);
+			returningTokens.add(token);
 		}
-		return titleTokens;
+		return returningTokens;
 	}
 
-	public String getProperty(String key) {
+	@Override
+	public String[] getPureTokensForAnnotation(Document document,
+			Annotation annotation, boolean useStemming) {
+		List<Annotation> tokenList = getSortedTokenList(document, annotation,
+				false);
+		List<String> strTokens = new ArrayList<String>();
+		for (Annotation a : tokenList) {
+			String kind = (String) a.getFeatures().get("kind");
+			if (!kind.equals("word"))
+				continue;
+			String tokenFeatureName = useStemming ? GateFormatConstants.STEM_FEATURE_NAME
+					: GateFormatConstants.TOKEN_FEATURE_NAME;
+			String tokenValue = (String) a.getFeatures().get(tokenFeatureName);
+			strTokens.add(tokenValue);
+		}
+		return Iterables.toArray(strTokens, String.class);
+	}
+
+	@Override
+	public String getTextContentsForAnnotation(Document document,
+			Annotation annotation) {
+		List<Annotation> tokenList = getSortedTokenList(document, annotation,
+				true);
+		StringBuffer sb = new StringBuffer();
+		for (Annotation tokenAnnotation : tokenList) {
+			String tokenValue = (String) tokenAnnotation.getFeatures().get(
+					GateFormatConstants.TOKEN_FEATURE_NAME);
+			sb.append(tokenValue);
+		}
+		return sb.toString().trim();
+	}
+
+	private String getProperty(String key) {
 		return getNlpModulePropertiesLoader().get(key);
 	}
 
-	public NlpModulePropertiesLoader getNlpModulePropertiesLoader() {
+	private NlpModulePropertiesLoader getNlpModulePropertiesLoader() {
 		return nlpModulePropertiesLoader;
+	}
+
+	private List<Annotation> getSortedTokenList(Document document,
+			Annotation annotation, boolean withSpaces) {
+		AnnotationSet tokenSet = getTokenSetWithoutSpaces(document, annotation);
+		Iterable<Annotation> filteredTokens = Iterables
+				.filter(tokenSet, new NotInMathPredicate(
+						getNlpModulePropertiesLoader(), document));
+
+		List<Annotation> tokenList = CollectionUtil.asList(filteredTokens);
+
+		if (withSpaces) {
+			tokenList.addAll(getTokenSetWithSpaces(document, annotation));
+		}
+
+		Collections.sort(tokenList, new OffsetComparator());
+		return tokenList;
+	}
+
+	private AnnotationSet getTokenSetWithoutSpaces(Document document,
+			Annotation annotation) {
+		AnnotationSet tokenSet = document
+				.getAnnotations(GateFormatConstants.DEFAULT_ANNOTATION_SET_NAME)
+				.get(
+						getProperty(GateFormatConstants.TOKEN_ANNOTATION_NAME_PROPERTY_KEY))
+				.getContained(annotation.getStartNode().getOffset(),
+						annotation.getEndNode().getOffset());
+		return tokenSet;
+	}
+
+	private AnnotationSet getTokenSetWithSpaces(Document document,
+			Annotation annotation) {
+
+		AnnotationSet spaceTokenSet = document
+				.getAnnotations(GateFormatConstants.DEFAULT_ANNOTATION_SET_NAME)
+				.get(
+						getProperty(GateFormatConstants.SPACE_TOKEN_ANNOTATION_NAME_PROPERTY_KEY))
+				.getContained(annotation.getStartNode().getOffset(),
+						annotation.getEndNode().getOffset());
+
+		return spaceTokenSet;
 	}
 }

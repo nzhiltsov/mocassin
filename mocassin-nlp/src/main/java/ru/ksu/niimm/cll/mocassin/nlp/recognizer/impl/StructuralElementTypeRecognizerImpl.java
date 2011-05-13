@@ -35,9 +35,10 @@ public class StructuralElementTypeRecognizerImpl implements
 			return MocassinOntologyClasses.SECTION;
 		}
 
-		String name = structuralElement.getTitle() == null ? structuralElement
-				.getName() : new StringTokenizer(structuralElement.getTitle())
-				.nextToken();
+		String name = structuralElement.getTitle() == null
+				|| structuralElement.getTitle().length() == 0 ? structuralElement
+				.getName()
+				: new StringTokenizer(structuralElement.getTitle()).nextToken();
 		SortedMap<String, Float> similarityVector = computeSimilarityVector(name);
 		float maxValue = Float.NEGATIVE_INFINITY;
 		String maxName = null;

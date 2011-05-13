@@ -11,5 +11,16 @@ public interface AnnotationUtil {
 
 	List<Token> getTokensForAnnotation(Document document,
 			Annotation annotation, boolean useStemming);
+	
+	String[] getPureTokensForAnnotation(Document document,
+			Annotation annotation, boolean useStemming);
 
+	/**
+	 * returns a string of concatenated tokens contained by a given annotation
+	 * 
+	 * @param document
+	 * @param annotation
+	 * @return
+	 */
+	String getTextContentsForAnnotation(Document document, Annotation annotation);
 }
