@@ -48,7 +48,7 @@
 			<artifactId>lingpipe</artifactId>
 			<version>4.0.0</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
@@ -68,6 +68,11 @@
 			<groupId>net.sf.jung</groupId>
 			<artifactId>jung-graph-impl</artifactId>
 			<version>2.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>weka</groupId>
+			<artifactId>weka</artifactId>
+			<version>3.6.2</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.collections</groupId>
