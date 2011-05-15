@@ -34,6 +34,8 @@ public class StructureViewer implements EntryPoint {
 	CaptionPanel metadataCaptionPanel;
 	@UiField
 	CaptionPanel documentStructureGraphPanel;
+	@UiField
+	VerticalPanel graphPanel;
 
 	public void onModuleLoad() {
 		ScrollPanel outer = binder.createAndBindUi(this);
@@ -101,7 +103,7 @@ public class StructureViewer implements EntryPoint {
 			DocumentStructureGraph documentStructureGraph = new DocumentStructureGraph(
 					frame, result);
 			documentStructureGraph.setHeight("450");
-			documentStructureGraphPanel.add(documentStructureGraph.asWidget());
+			graphPanel.add(documentStructureGraph.asWidget());
 		}
 
 	}

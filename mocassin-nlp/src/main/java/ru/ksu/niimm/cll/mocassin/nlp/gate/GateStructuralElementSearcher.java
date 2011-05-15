@@ -64,8 +64,9 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 			ParsedDocument parsedDocument) {
 		this.parsedDocument = parsedDocument;
 		Document document = null;
+		String arxivId = parsedDocument.getArxivId().replace("/", "_");
 		try {
-			document = gateDocumentDAO.load(parsedDocument.getFilename());
+			document = gateDocumentDAO.load(arxivId);
 
 			setStructuralAnnotations(document
 					.getAnnotations(
@@ -80,8 +81,8 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 			return CollectionUtil.asList(structuralElementIterable);
 		} catch (AccessGateDocumentException e) {
 			logger.log(Level.SEVERE, String.format(
-					"failed to load the document: %s", parsedDocument
-							.getFilename()));
+					"failed to load the document: %s",
+					parsedDocument.getUri()));
 			throw new RuntimeException(e);
 		} finally {
 			gateDocumentDAO.release(document);
@@ -91,8 +92,10 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 	@Override
 	public StructuralElement findById(ParsedDocument parsedDocument, int id) {
 		Document document = null;
+		this.parsedDocument = parsedDocument;
+		String arxivId = parsedDocument.getArxivId().replace("/", "_");
 		try {
-			document = gateDocumentDAO.load(parsedDocument.getFilename());
+			document = gateDocumentDAO.load(arxivId);
 
 			setStructuralAnnotations(document
 					.getAnnotations(
@@ -107,17 +110,16 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 			}
 			if (foundAnnotation == null)
 				throw new RuntimeException(
-						String
-								.format(
-										"there is no structural element with id='%d' in document %s",
-										id, document.getName()));
+						String.format(
+								"there is no structural element with id='%d' in document %s",
+								id, document.getName()));
 			StructuralElement foundElement = new ExtractionFunction(document)
 					.apply(foundAnnotation);
 			return foundElement;
 		} catch (AccessGateDocumentException e) {
 			logger.log(Level.SEVERE, String.format(
-					"failed to load the document: %s", parsedDocument
-							.getFilename()));
+					"failed to load the document: %s",
+					parsedDocument.getUri()));
 			throw new RuntimeException(e);
 		} finally {
 			gateDocumentDAO.release(document);
@@ -183,6 +185,10 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 		return annotationUtil;
 	}
 
+	private ParsedDocument getParsedDocument() {
+		return parsedDocument;
+	}
+
 	private List<Token> getTokensForAnnotation(Document document,
 			Annotation annotation) {
 		return getAnnotationUtil().getTokensForAnnotation(document, annotation,
@@ -246,8 +252,7 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 			AnnotationSet titleSet = getDocument()
 					.getAnnotations(
 							getProperty(GateFormatConstants.ARXMLIV_MARKUP_NAME_PROPERTY_KEY))
-					.get(
-							getProperty(GateFormatConstants.TITLE_ANNOTATION_NAME_PROPERTY_KEY))
+					.get(getProperty(GateFormatConstants.TITLE_ANNOTATION_NAME_PROPERTY_KEY))
 
 					.getContained(annotation.getStartNode().getOffset(),
 							annotation.getEndNode().getOffset());
@@ -261,8 +266,8 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 			}
 
 			StructuralElement element = new StructuralElementImpl.Builder(id,
-					document.getName() + "/" + id).start(start).end(end).name(
-					name).title(title).build();
+					getParsedDocument().getUri() + "/" + id).start(start).end(end).name(name)
+					.title(title).build();
 			element.setLabels(labels);
 			element.setContents(getPureTokensForAnnotation(getDocument(),
 					annotation));
@@ -285,21 +290,19 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 				if (element.getTitle() == null) {
 					fullTextQuery = sb.toString();
 				} else {
-					fullTextQuery = String.format("\"%s\" %s", element
-							.getTitle(), sb.toString());
+					fullTextQuery = String.format("\"%s\" %s",
+							element.getTitle(), sb.toString());
 				}
 				try {
 					int pageNumber = getPageNumber(fullTextQuery);
 					element.setStartPageNumber(pageNumber);
 				} catch (EmptyResultException e) {
-					logger
-							.log(
-									Level.SEVERE,
-									String
-											.format(
-													"failed to find the page number for a segment %s using a query \"%s\" on PDF: %s",
-													element.getUri(),
-													fullTextQuery, getPdfUri()));
+					logger.log(
+							Level.SEVERE,
+							String.format(
+									"failed to find the page number for a segment %s using a query \"%s\" on PDF: %s",
+									element.getUri(), fullTextQuery,
+									getPdfUri()));
 				}
 
 			}

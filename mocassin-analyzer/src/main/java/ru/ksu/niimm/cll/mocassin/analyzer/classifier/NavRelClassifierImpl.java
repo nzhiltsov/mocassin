@@ -78,7 +78,7 @@ public class NavRelClassifierImpl implements NavigationalRelationClassifier {
 											"couldn't classify a reference with id='%d' in a document='%s' due to %s; null will be returned",
 											reference.getId(), reference
 													.getDocument()
-													.getFilename(), e
+													.getUri(), e
 													.getMessage()));
 		}
 		return null;

@@ -1,18 +1,15 @@
 package unittest;
 
-import java.util.List;
-
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ru.ksu.niimm.cll.mocassin.fulltext.FullTextModule;
 import ru.ksu.niimm.cll.mocassin.nlp.NlpModule;
 import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElementSearcher;
-import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.ParsedDocumentImpl;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
@@ -26,38 +23,26 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext( { NlpModule.class, OntologyModule.class, VirtuosoModule.class,
-		LatexParserModule.class })
-@Ignore("Gate facilities is out of use now")
+		LatexParserModule.class, FullTextModule.class })
 public class StructuralElementSearcherTest {
 
 	@Inject
 	private StructuralElementSearcher structuralElementSearcher;
 
-	@Inject
-	private GateDocumentDAO gateDocumentDAO;
-
 	private ParsedDocument parsedDocument;
 
 	@Before
 	public void init() throws Exception {
-		List<String> documentIds = getGateDocumentDAO().getDocumentIds();
-		String foundId = null;
-		for (String id : documentIds) {
-			if (id.startsWith("f000022.tex")) {
-				foundId = id;
-				break;
-			}
-		}
-		Assert.assertNotNull(foundId);
-		this.parsedDocument = new ParsedDocumentImpl(foundId);
+		this.parsedDocument = new ParsedDocumentImpl("math/0205003", "http://arxiv.org/abs/math/0205003",
+		"http://arxiv.org/pdf/math/0205003");
 	}
 
 	@Test
 	public void testFindById() throws Exception {
 
 		StructuralElement foundElement = getStructuralElementSearcher()
-				.findById(parsedDocument, 11808);
-		System.out.println(foundElement);
+				.findById(parsedDocument, 1167);
+		Assert.assertEquals("Lemma 2.2.", foundElement.getTitle());
 	}
 
 	@Test
@@ -65,17 +50,14 @@ public class StructuralElementSearcherTest {
 		MocassinOntologyClasses[] hasConsequenceDomains = MocassinOntologyRelations
 				.getValidDomains(MocassinOntologyRelations.HAS_CONSEQUENCE);
 		StructuralElement predecessor = getStructuralElementSearcher()
-				.findClosestPredecessor(parsedDocument, 11808,
+				.findClosestPredecessor(parsedDocument, 2949,
 						hasConsequenceDomains);
-		System.out.println(predecessor);
+		Assert.assertEquals(1167, predecessor.getId());
 	}
 
 	public StructuralElementSearcher getStructuralElementSearcher() {
 		return structuralElementSearcher;
 	}
 
-	public GateDocumentDAO getGateDocumentDAO() {
-		return gateDocumentDAO;
-	}
 
 }

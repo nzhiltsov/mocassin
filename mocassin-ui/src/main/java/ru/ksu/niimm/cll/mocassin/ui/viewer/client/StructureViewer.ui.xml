@@ -5,10 +5,17 @@
 			<g:VerticalPanel width='800' height='900'>
 				<g:Frame ui:field="frame" width='100%' height='100%' />
 			</g:VerticalPanel>
-			<g:VerticalPanel width='500'
-				height='100%'>
+			<g:VerticalPanel width='500' height='100%'>
 				<g:CaptionPanel ui:field="metadataCaptionPanel" />
-				<g:CaptionPanel ui:field="documentStructureGraphPanel" />
+				<g:CaptionPanel ui:field="documentStructureGraphPanel">
+					<g:VerticalPanel ui:field="graphPanel">
+						<g:HorizontalPanel>
+							<g:CheckBox text='hasPart' value='true' />
+							<g:CheckBox text='refersTo' value='true' />
+							<g:CheckBox text='dependsOn' value='true' />
+						</g:HorizontalPanel>
+					</g:VerticalPanel>
+				</g:CaptionPanel>
 			</g:VerticalPanel>
 		</g:HorizontalPanel>
 	</g:ScrollPanel>

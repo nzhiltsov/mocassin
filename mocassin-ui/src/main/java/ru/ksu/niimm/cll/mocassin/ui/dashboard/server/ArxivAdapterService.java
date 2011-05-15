@@ -55,7 +55,7 @@ public class ArxivAdapterService implements ArxivService {
 			Link pdfLink = Iterables.find(metadata.getLinks(),
 					new PdfLinkPredicate());
 			pdfIndexer.save(pdfLink.getHref(), pdfInputStream);
-			ParsedDocumentImpl document = new ParsedDocumentImpl(
+			ParsedDocumentImpl document = new ParsedDocumentImpl(arxivId, 
 					metadata.getId(), pdfLink.getHref());
 
 			Graph<StructuralElement, Reference> graph = latexStructuralElementSearcher

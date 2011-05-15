@@ -57,7 +57,7 @@ public class ArXMLivAdapterService implements ArxivService {
 			Link pdfLink = Iterables.find(metadata.getLinks(),
 					new PdfLinkPredicate());
 			pdfIndexer.save(pdfLink.getHref(), pdfInputStream);
-			ParsedDocumentImpl document = new ParsedDocumentImpl(metadata
+			ParsedDocumentImpl document = new ParsedDocumentImpl(arxivId, metadata
 					.getId(), pdfLink.getHref());
 			Graph<StructuralElement, Reference> graph = referenceSearcher
 					.retrieveReferences(document);

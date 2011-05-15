@@ -20,11 +20,11 @@ public class OntologyPelletLoader implements OntologyLoader {
 
 	private OntModel omdocOntology;
 
-	private String ontologyLoadingMode;
+	private final String ontologyLoadingMode;
 
-	private String ontologyUri;
+	private final String ontologyUri;
 
-	private String ontologyLocalFilename;
+	private final String ontologyLocalFilename;
 
 	@Inject
 	public OntologyPelletLoader(

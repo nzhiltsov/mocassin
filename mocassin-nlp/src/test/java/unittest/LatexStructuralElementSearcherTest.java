@@ -41,7 +41,7 @@ public class LatexStructuralElementSearcherTest {
 	@Before
 	public void init() throws Exception {
 		this.in = this.getClass().getResourceAsStream("/example.tex");
-		parsedDocument = new ParsedDocumentImpl("http://somehost.com/doc",
+		parsedDocument = new ParsedDocumentImpl("doc", "http://somehost.com/doc",
 				"http://localhost/example.pdf");
 	}
 

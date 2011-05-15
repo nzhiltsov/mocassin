@@ -3,16 +3,12 @@ package ru.ksu.niimm.cll.mocassin.analyzer.relation.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import ru.ksu.niimm.cll.mocassin.analyzer.relation.RelationInfo;
 import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElementSearcher;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
-import ru.ksu.niimm.cll.mocassin.nlp.impl.ParsedDocumentImpl;
-import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
 
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
@@ -31,7 +27,8 @@ public abstract class AbstractRelationAnalyzer {
 	}
 
 	public List<RelationInfo> analyze(List<RelationInfo> relations) {
-		List<RelationInfo> processedInfoList = new ArrayList<RelationInfo>();
+		throw new UnsupportedOperationException("implementation of this method must be fixed");
+		/* List<RelationInfo> processedInfoList = new ArrayList<RelationInfo>();
 		Map<String, List<RelationInfo>> filename2relations = groupByFilename(relations);
 		List<String> documentIds;
 		try {
@@ -45,7 +42,7 @@ public abstract class AbstractRelationAnalyzer {
 
 		for (String filename : prefix2id.keySet()) {
 			String documentId = prefix2id.get(filename);
-			ParsedDocument document = new ParsedDocumentImpl(documentId);
+			ParsedDocument document = new ParsedDocumentImpl(documentId, "", ""); // TODO : fix it!
 
 			try {
 				List<RelationInfo> relationInfoList = filename2relations
@@ -63,7 +60,7 @@ public abstract class AbstractRelationAnalyzer {
 
 			}
 		}
-		return processedInfoList;
+		return processedInfoList; */
 	}
 
 	protected abstract RelationInfo processRelationInfo(

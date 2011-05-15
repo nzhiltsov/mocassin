@@ -43,11 +43,11 @@ public class ReferenceTripleUtilImpl implements ReferenceTripleUtil {
 
 			triples.add(createTriple(from.getUri(), ref.getPredictedRelation()
 					.getUri(), to.getUri()));
-			triples.add(createTriple(ref.getDocument().getFilename(),
+			triples.add(createTriple(ref.getDocument().getUri(),
 					MocassinOntologyRelations.HAS_SEGMENT.getUri(), from
 							.getUri()));
 			triples
-					.add(createTriple(ref.getDocument().getFilename(),
+					.add(createTriple(ref.getDocument().getUri(),
 							MocassinOntologyRelations.HAS_SEGMENT.getUri(), to
 									.getUri()));
 		}
