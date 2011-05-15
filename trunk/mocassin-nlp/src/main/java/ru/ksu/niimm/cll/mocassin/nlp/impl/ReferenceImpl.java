@@ -80,7 +80,7 @@ public class ReferenceImpl implements Reference {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((document.getFilename() == null) ? 0 : document.hashCode());
+				+ ((document.getUri() == null) ? 0 : document.hashCode());
 		result = prime * result + id;
 		return result;
 	}

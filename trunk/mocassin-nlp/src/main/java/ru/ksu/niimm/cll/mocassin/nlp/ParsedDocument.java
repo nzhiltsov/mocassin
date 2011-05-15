@@ -7,9 +7,11 @@ package ru.ksu.niimm.cll.mocassin.nlp;
  * 
  */
 public interface ParsedDocument {
-	String getFilename();
+	String getUri();
 
 	String getPdfUri();
 
 	long getSize();
+	
+	String getArxivId();
 }

@@ -3,25 +3,25 @@ package ru.ksu.niimm.cll.mocassin.nlp.impl;
 import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
 
 public class ParsedDocumentImpl implements ParsedDocument {
-	private String uri;
+	private final String arxivId;
+	private final String uri;
 	private long size;
-	private String pdfUri;
+	private final String pdfUri;
 
-	public ParsedDocumentImpl(String uri) {
+	public ParsedDocumentImpl(String arxivId, String uri, String pdfUri) {
+		this.arxivId = arxivId;
 		this.uri = uri;
-	}
-
-	public ParsedDocumentImpl(String filename, String pdfUri) {
-		this.uri = filename;
 		this.pdfUri = pdfUri;
 	}
-
-	public ParsedDocumentImpl(String filename, long size) {
-		this.uri = filename;
+	public ParsedDocumentImpl(String arxivId, String uri, String pdfUri, long size) {
+		this.arxivId = arxivId;
+		this.uri = uri;
+		this.pdfUri = pdfUri;
 		this.size = size;
 	}
 
-	public String getFilename() {
+
+	public String getUri() {
 		return uri;
 	}
 
@@ -31,6 +31,10 @@ public class ParsedDocumentImpl implements ParsedDocument {
 
 	public String getPdfUri() {
 		return pdfUri;
+	}
+
+	public String getArxivId() {
+		return arxivId;
 	}
 
 	@Override

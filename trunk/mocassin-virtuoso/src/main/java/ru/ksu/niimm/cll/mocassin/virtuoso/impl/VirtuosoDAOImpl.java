@@ -24,6 +24,7 @@ import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Model;
 
 public class VirtuosoDAOImpl implements VirtuosoDAO {
+	private static final int SPARQL_LINE_NUMBER_LIMIT = 1000;
 	@Inject
 	Logger logger;
 	@Inject
@@ -38,9 +39,25 @@ public class VirtuosoDAOImpl implements VirtuosoDAO {
 	public void insert(List<RDFTriple> triples, RDFGraph graph) {
 		VirtGraph virtGraph = new VirtGraph(graph.getUrl(),
 				graph.getUsername(), graph.getPassword());
-		String expression = getInsertQueryGenerator().generate(triples, graph);
-		execute(virtGraph, expression);
+		if (triples.size() > SPARQL_LINE_NUMBER_LIMIT) {
+			int i = 0;
+			while (i < triples.size() / SPARQL_LINE_NUMBER_LIMIT) {
 
+				String expression = getInsertQueryGenerator().generate(
+						triples.subList(SPARQL_LINE_NUMBER_LIMIT * i + 1, SPARQL_LINE_NUMBER_LIMIT * (i + 1)), graph);
+				execute(virtGraph, expression);
+				i++;
+			}
+			List<RDFTriple> subList = triples.subList(SPARQL_LINE_NUMBER_LIMIT * i + 1, triples.size() - 1);
+			subList.add(triples.get(0));
+			String expression = getInsertQueryGenerator().generate(
+					subList, graph);
+			execute(virtGraph, expression);
+		} else {
+			String expression = getInsertQueryGenerator().generate(triples,
+					graph);
+			execute(virtGraph, expression);
+		}
 	}
 
 	@Override

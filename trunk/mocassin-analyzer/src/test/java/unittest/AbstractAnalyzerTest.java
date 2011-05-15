@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedMap;
 import java.util.Map.Entry;
+import java.util.SortedMap;
 import java.util.logging.Logger;
 
 import org.junit.Assert;
@@ -52,7 +52,7 @@ public abstract class AbstractAnalyzerTest {
 
 	@Before
 	public void init() throws Exception {
-		ParsedDocument document = new ParsedDocumentImpl("math_0205003",
+		ParsedDocument document = new ParsedDocumentImpl("math/0205003", "http://arxiv.org/abs/math/0205003",
 				"http://arxiv.org/pdf/math/0205003");
 		Graph<StructuralElement, Reference> graph = this.referenceSearcher
 				.retrieveReferences(document);

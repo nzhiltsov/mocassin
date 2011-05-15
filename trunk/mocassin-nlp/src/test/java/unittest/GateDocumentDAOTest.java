@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ru.ksu.niimm.cll.mocassin.fulltext.FullTextModule;
 import ru.ksu.niimm.cll.mocassin.nlp.NlpModule;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
 import ru.ksu.niimm.cll.mocassin.parser.LatexParserModule;
@@ -23,8 +23,7 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext( { NlpModule.class, OntologyModule.class, VirtuosoModule.class,
-		LatexParserModule.class })
-@Ignore("Gate facilities is out of use now")
+		LatexParserModule.class, FullTextModule.class })
 public class GateDocumentDAOTest {
 	@Inject
 	private Logger logger;

@@ -5,7 +5,6 @@ import ru.ksu.niimm.cll.mocassin.nlp.gate.GateReferenceSearcher;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateStructuralElementSearcher;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.impl.GateDocumentDAOImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.AnnotationAnalyzerImpl;
-import ru.ksu.niimm.cll.mocassin.nlp.impl.FeatureExtractorImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.latex.LatexStructuralElementSearcher;
 import ru.ksu.niimm.cll.mocassin.nlp.latex.LatexStructuralElementSearcherImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.recognizer.StructuralElementTypeRecognizer;
@@ -25,7 +24,7 @@ public class NlpModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		bind(FeatureExtractor.class).to(FeatureExtractorImpl.class);
+		
 		bind(NlpModulePropertiesLoader.class).to(
 				NlpModulePropertiesLoaderImpl.class);
 		bind(AnnotationAnalyzer.class).to(AnnotationAnalyzerImpl.class);

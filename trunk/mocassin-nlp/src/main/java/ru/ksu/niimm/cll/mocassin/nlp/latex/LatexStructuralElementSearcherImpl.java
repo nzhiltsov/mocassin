@@ -241,7 +241,7 @@ public class LatexStructuralElementSearcherImpl implements
 		@Override
 		public synchronized StructuralElement apply(Node node) {
 			String uri = String.format("%s/s%s", getParsedDocument()
-					.getFilename(), node.getId());
+					.getUri(), node.getId());
 			StructuralElement element = new StructuralElementImpl.Builder(uri
 					.hashCode(), uri).name(node.getName()).title(
 					node.getTitle()).build();
