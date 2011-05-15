@@ -1,5 +1,11 @@
 package ru.ksu.niimm.cll.mocassin.analyzer;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+import ru.ksu.niimm.cll.mocassin.analyzer.classifier.NavRelClassifierImpl;
+import ru.ksu.niimm.cll.mocassin.analyzer.classifier.NavigationalRelationClassifier;
 import ru.ksu.niimm.cll.mocassin.analyzer.importance.ImportantNodeService;
 import ru.ksu.niimm.cll.mocassin.analyzer.importance.impl.ImportantNodeServiceImpl;
 import ru.ksu.niimm.cll.mocassin.analyzer.location.ReferenceElementLocationAnalyzer;
@@ -18,8 +24,12 @@ import ru.ksu.niimm.cll.mocassin.analyzer.relation.ExemplifiesRelationAnalyzer;
 import ru.ksu.niimm.cll.mocassin.analyzer.relation.HasConsequenceRelationAnalyzer;
 import ru.ksu.niimm.cll.mocassin.analyzer.relation.impl.ExemplifiesRelationAnalyzerImpl;
 import ru.ksu.niimm.cll.mocassin.analyzer.relation.impl.HasConsequenceRelationAnalyzerImpl;
+import weka.classifiers.Classifier;
+import weka.core.Instances;
+import weka.core.SerializationHelper;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.name.Names;
 
 public class AnalyzerModule extends AbstractModule {
 
@@ -40,6 +50,43 @@ public class AnalyzerModule extends AbstractModule {
 				HasConsequenceRelationAnalyzerImpl.class);
 		bind(ExemplifiesRelationAnalyzer.class).to(
 				ExemplifiesRelationAnalyzerImpl.class);
+
+		bind(NavigationalRelationClassifier.class).to(
+				NavRelClassifierImpl.class);
+
+		bindClassifier();
+
+		bindTrainingSetHeader();
 	}
 
+	private void bindTrainingSetHeader() {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(this
+				.getClass().getClassLoader().getResourceAsStream(
+						"mocassin-nav-relation-training-set.arff")));
+		try {
+			Instances data = new Instances(reader);
+			reader.close();
+			data.setClassIndex(data.numAttributes() - 1);
+			bind(Instances.class).annotatedWith(
+					Names.named("training.set.header")).toInstance(data);
+		} catch (IOException e) {
+			throw new RuntimeException(
+					"couldn't read the navigation relations training set header");
+		}
+	}
+
+	private void bindClassifier() {
+		Classifier classifier;
+		try {
+			classifier = (Classifier) SerializationHelper.read(this.getClass()
+					.getClassLoader().getResourceAsStream(
+							"mocassin-nav-relations-j48.model"));
+		} catch (Exception e) {
+			throw new RuntimeException(
+					"couldn't read the navigation relations learning model");
+		}
+
+		bind(Classifier.class).annotatedWith(Names.named("classifier"))
+				.toInstance(classifier);
+	}
 }

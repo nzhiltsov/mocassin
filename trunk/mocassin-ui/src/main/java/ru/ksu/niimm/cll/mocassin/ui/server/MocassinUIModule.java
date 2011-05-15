@@ -3,7 +3,7 @@ package ru.ksu.niimm.cll.mocassin.ui.server;
 import ru.ksu.niimm.cll.mocassin.ui.client.OntologyService;
 import ru.ksu.niimm.cll.mocassin.ui.client.QueryService;
 import ru.ksu.niimm.cll.mocassin.ui.dashboard.client.ArxivService;
-import ru.ksu.niimm.cll.mocassin.ui.dashboard.server.ArxivAdapterService;
+import ru.ksu.niimm.cll.mocassin.ui.dashboard.server.ArXMLivAdapterService;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.ViewerService;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.server.ViewerServiceImpl;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.server.util.OntologyElementConverter;
@@ -20,7 +20,7 @@ public class MocassinUIModule extends ServletModule {
 		serve("*/describe").with(DescriptionServlet.class);
 		bind(OntologyService.class).to(OntologyServiceImpl.class);
 		bind(QueryService.class).to(QueryServiceImpl.class);
-		bind(ArxivService.class).to(ArxivAdapterService.class);
+		bind(ArxivService.class).to(ArXMLivAdapterService.class);
 		bind(ViewerService.class).to(ViewerServiceImpl.class);
 		bind(OntologyElementConverter.class).to(
 				OntologyElementConverterImpl.class);

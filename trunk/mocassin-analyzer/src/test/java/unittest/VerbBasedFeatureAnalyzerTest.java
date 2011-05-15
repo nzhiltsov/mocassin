@@ -3,14 +3,13 @@ package unittest;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import ru.ksu.niimm.cll.mocassin.analyzer.indexers.Index;
 import ru.ksu.niimm.cll.mocassin.analyzer.pos.VerbBasedFeatureAnalyzer;
 
 import com.google.inject.Inject;
-@Ignore("references should be read from a store")	
+
 public class VerbBasedFeatureAnalyzerTest extends AbstractAnalyzerTest {
 	private static final String TERMS_OUTPUT_FILENAME = "/tmp/verb-terms.txt";
 	private static final String REF_TFIDF_VECTORS_OUTPUT_FILENAME = "/tmp/verb-tfidf-features.txt";

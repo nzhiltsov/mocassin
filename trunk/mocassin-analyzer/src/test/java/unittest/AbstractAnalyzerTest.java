@@ -1,17 +1,16 @@
 package unittest;
 
-import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.Map.Entry;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.runner.RunWith;
@@ -19,8 +18,11 @@ import org.junit.runner.RunWith;
 import ru.ksu.niimm.cll.mocassin.analyzer.AnalyzerModule;
 import ru.ksu.niimm.cll.mocassin.fulltext.FullTextModule;
 import ru.ksu.niimm.cll.mocassin.nlp.NlpModule;
+import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
-import ru.ksu.niimm.cll.mocassin.nlp.util.ReferenceFeatureReader;
+import ru.ksu.niimm.cll.mocassin.nlp.ReferenceSearcher;
+import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
+import ru.ksu.niimm.cll.mocassin.nlp.impl.ParsedDocumentImpl;
 import ru.ksu.niimm.cll.mocassin.parser.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
 import ru.ksu.niimm.ose.ontology.OntologyModule;
@@ -30,31 +32,36 @@ import com.google.inject.Inject;
 import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
+import edu.uci.ics.jung.graph.Graph;
+
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext( { AnalyzerModule.class, NlpModule.class,
-		LatexParserModule.class, OntologyModule.class, VirtuosoModule.class, FullTextModule.class })
-@Ignore("references should be read from a store")		
+		LatexParserModule.class, OntologyModule.class, VirtuosoModule.class,
+		FullTextModule.class })
+@Ignore("references should be read from a store")
 public abstract class AbstractAnalyzerTest {
 	private static final String REF_CONTEXT_DATA_INPUT_FOLDER = "/tmp/refcontexts-data";
 
 	@Inject
 	private Logger logger;
 
-	private List<Reference> references;
+	@Inject
+	private ReferenceSearcher referenceSearcher;
+
+	private final List<Reference> references = new ArrayList<Reference>();
 
 	@Before
 	public void init() throws Exception {
-		File dir = new File(REF_CONTEXT_DATA_INPUT_FOLDER);
-		File[] files = dir.listFiles();
-		this.references = new ArrayList<Reference>();
-		for (File file : files) {
-			List<Reference> refs;
-			try {
-				refs = ReferenceFeatureReader.read(new FileReader(file));
-				this.references.addAll(refs);
-			} catch (Exception e) {
-				logger.log(Level.SEVERE, String.format(
-						"failed to parse file: %s", file.getName()));
+		ParsedDocument document = new ParsedDocumentImpl("math_0205003",
+				"http://arxiv.org/pdf/math/0205003");
+		Graph<StructuralElement, Reference> graph = this.referenceSearcher
+				.retrieveReferences(document);
+		Collection<Reference> edges = graph.getEdges();
+		Assert.assertTrue(edges.size() > 0);
+
+		for (Reference ref : edges) {
+			if (ref.getPredictedRelation() == null) {
+				this.references.add(ref);
 			}
 
 		}

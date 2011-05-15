@@ -16,7 +16,8 @@ public enum MocassinOntologyRelations {
 			"http://cll.niimm.ksu.ru/ontologies/mocassin#hasSegment", 4), HAS_START_PAGE_NUMBER(
 			"http://cll.niimm.ksu.ru/ontologies/mocassin#hasStartPageNumber", 5), HAS_TEXT(
 			"http://cll.niimm.ksu.ru/ontologies/mocassin#hasText", 6), HAS_TITLE(
-			"http://cll.niimm.ksu.ru/ontologies/mocassin#hasTitle", 7);
+			"http://cll.niimm.ksu.ru/ontologies/mocassin#hasTitle", 7), DEPENDS_ON(
+			"http://cll.niimm.ksu.ru/ontologies/mocassin#dependsOn", 8);
 
 	private String uri;
 	/**
@@ -102,4 +103,10 @@ public enum MocassinOntologyRelations {
 		}
 
 	}
+
+	@Override
+	public String toString() {
+		return super.toString().toLowerCase();
+	}
+
 }
