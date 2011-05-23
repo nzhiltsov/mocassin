@@ -10,9 +10,9 @@
 				<g:CaptionPanel ui:field="documentStructureGraphPanel">
 					<g:VerticalPanel ui:field="graphPanel">
 						<g:HorizontalPanel>
-							<g:CheckBox text='hasPart' value='true' />
-							<g:CheckBox text='refersTo' value='true' />
-							<g:CheckBox text='dependsOn' value='true' />
+							<g:CheckBox ui:field="hasPartCheckbox" text='hasPart' value='true' />
+							<g:CheckBox ui:field="refersToCheckbox" text='refersTo' value='true' />
+							<g:CheckBox ui:field="dependsOnCheckbox" text='dependsOn' value='true' />
 						</g:HorizontalPanel>
 					</g:VerticalPanel>
 				</g:CaptionPanel>

@@ -5,11 +5,13 @@ import java.util.List;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.CaptionPanel;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
@@ -36,6 +38,12 @@ public class StructureViewer implements EntryPoint {
 	CaptionPanel documentStructureGraphPanel;
 	@UiField
 	VerticalPanel graphPanel;
+	@UiField
+	CheckBox hasPartCheckbox;
+	@UiField
+	CheckBox refersToCheckbox;
+	@UiField
+	CheckBox dependsOnCheckbox;
 
 	public void onModuleLoad() {
 		ScrollPanel outer = binder.createAndBindUi(this);
@@ -101,7 +109,7 @@ public class StructureViewer implements EntryPoint {
 					.graphPanelTitle());
 
 			DocumentStructureGraph documentStructureGraph = new DocumentStructureGraph(
-					frame, result);
+					frame, hasPartCheckbox, refersToCheckbox, dependsOnCheckbox, result);
 			documentStructureGraph.setHeight("450");
 			graphPanel.add(documentStructureGraph.asWidget());
 		}
