@@ -1,5 +1,9 @@
 package ru.ksu.niimm.cll.mocassin.ui.viewer.client;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 import org.thechiselgroup.choosel.protovis.client.Link;
 import org.thechiselgroup.choosel.protovis.client.PV;
 import org.thechiselgroup.choosel.protovis.client.PVColor;
@@ -19,23 +23,35 @@ import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.Node.NovelCharacterNodeAdapter;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.protovis.LinkAdapter;
 
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Widget;
 
-public class DocumentStructureGraph extends ProtovisWidget {
+public class DocumentStructureGraph extends ProtovisWidget implements
+		ClickHandler {
 
 	private final ViewerServiceAsync viewerService = GWT
 			.create(ViewerService.class);
 	private String resourceUri;
 
-	private NavigationPopup navigationPopup;
+	private final NavigationPopup navigationPopup;
 
 	private String currentSegmentUri;
+
+	private final CheckBox hasPartCheckbox;
+
+	private final CheckBox refersToCheckbox;
+
+	private final CheckBox dependsOnCheckbox;
 
 	/*
 	 * private static final PVColor[] code2color = { PV.color("red"),
@@ -46,8 +62,16 @@ public class DocumentStructureGraph extends ProtovisWidget {
 	 * PV.color("green"), PV.color("black") };
 	 */
 
-	public DocumentStructureGraph(Frame frame, ArticleInfo result) {
+	public DocumentStructureGraph(Frame frame, CheckBox hasPartCheckbox,
+			CheckBox refersToCheckbox, CheckBox dependsOnCheckbox,
+			ArticleInfo result) {
 		super();
+		this.hasPartCheckbox = hasPartCheckbox;
+		this.hasPartCheckbox.addClickHandler(this);
+		this.refersToCheckbox = refersToCheckbox;
+		this.refersToCheckbox.addClickHandler(this);
+		this.dependsOnCheckbox = dependsOnCheckbox;
+		this.dependsOnCheckbox.addClickHandler(this);
 		this.resourceUri = result.getUri();
 		this.currentSegmentUri = result.getCurrentSegmentUri();
 		this.navigationPopup = new NavigationPopup(frame, result.getPdfUri());
@@ -57,6 +81,12 @@ public class DocumentStructureGraph extends ProtovisWidget {
 					this.getAbsoluteTop());
 			this.navigationPopup.show();
 		}
+	}
+
+	@Override
+	public void onClick(ClickEvent event) {
+		initPVPanel();
+		loadData();
 	}
 
 	@Override
@@ -148,17 +178,36 @@ public class DocumentStructureGraph extends ProtovisWidget {
 	protected void onAttach() {
 		super.onAttach();
 		initPVPanel();
+		loadData();
+
+	}
+
+	private void loadData() {
 		AsyncCallback<Graph> callback = new AsyncCallback<Graph>() {
 
 			@Override
 			public void onSuccess(Graph result) {
 				LinkAdapter[] l = result.getLinks();
-				Link[] links = new Link[l.length];
+				List<Link> linkList = new LinkedList<Link>();
+
 				for (int i = 0; i < l.length; i++) {
-					links[i] = new Link(l[i].getSource(), l[i].getTarget(),
-							l[i].getValue());
+					// see MocassinOntologyRelations for predicate codes
+					if (l[i].getType() == 0 && !hasPartCheckbox.getValue()) {
+						continue;
+					} else if (l[i].getType() == 8
+							&& !dependsOnCheckbox.getValue()) {
+						continue;
+					} else if (l[i].getType() == 1
+							&& !refersToCheckbox.getValue()) {
+						continue;
+					}
+					linkList.add(new Link(l[i].getSource(), l[i].getTarget(),
+							l[i].getValue()));
+
 				}
-				createVisualization(result.getNodes(), links);
+				Link[] links = linkList.toArray(new Link[linkList.size()]);
+				createVisualization(result.getNodes(),
+						links);
 				getPVPanel().render();
 			}
 
@@ -170,6 +219,5 @@ public class DocumentStructureGraph extends ProtovisWidget {
 			}
 		};
 		viewerService.retrieveGraph(this.resourceUri, callback);
-
 	}
 }
