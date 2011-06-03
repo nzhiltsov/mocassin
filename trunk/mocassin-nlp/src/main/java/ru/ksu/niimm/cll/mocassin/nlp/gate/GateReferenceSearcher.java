@@ -52,7 +52,7 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 	private ParsedDocument parsedDocument;
 
 	@Override
-	public synchronized Graph<StructuralElement, Reference> retrieveReferences(
+	public synchronized Graph<StructuralElement, Reference> retrieveStructuralGraph(
 			ParsedDocument parsedDocument) {
 		this.parsedDocument = parsedDocument;
 		String arxivId = parsedDocument.getArxivId().replace("/", "_");

@@ -1,10 +1,13 @@
 package ru.ksu.niimm.cll.mocassin.nlp.impl;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+
+import com.google.common.base.Predicate;
 
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
@@ -175,6 +178,35 @@ public class StructuralElementImpl implements StructuralElement {
 			if (first.getEnd() > second.getEnd())
 				return 1;
 			return 0;
+		}
+	}
+
+	public static class TypePredicate implements Predicate<StructuralElement> {
+		private final MocassinOntologyClasses type;
+
+		public TypePredicate(MocassinOntologyClasses type) {
+			this.type = type;
+		}
+
+		@Override
+		public boolean apply(StructuralElement elem) {
+			return this.type == elem.getPredictedClass();
+		}
+
+	}
+
+	public static class TypeFilterPredicate implements
+			Predicate<StructuralElement> {
+		private final List<MocassinOntologyClasses> filterTypes;
+
+		public TypeFilterPredicate(MocassinOntologyClasses[] filterTypes) {
+			this.filterTypes = Arrays.asList(filterTypes);
+		}
+
+		@Override
+		public boolean apply(StructuralElement element) {
+			MocassinOntologyClasses elementType = element.getPredictedClass();
+			return this.filterTypes.contains(elementType);
 		}
 	}
 }

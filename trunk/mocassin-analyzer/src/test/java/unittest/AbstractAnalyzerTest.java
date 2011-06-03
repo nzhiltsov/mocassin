@@ -55,7 +55,7 @@ public abstract class AbstractAnalyzerTest {
 		ParsedDocument document = new ParsedDocumentImpl("math/0205003", "http://arxiv.org/abs/math/0205003",
 				"http://arxiv.org/pdf/math/0205003");
 		Graph<StructuralElement, Reference> graph = this.referenceSearcher
-				.retrieveReferences(document);
+				.retrieveStructuralGraph(document);
 		Collection<Reference> edges = graph.getEdges();
 		Assert.assertTrue(edges.size() > 0);
 

@@ -9,6 +9,6 @@ import edu.uci.ics.jung.graph.Graph;
  * 
  */
 public interface ReferenceSearcher {
-	Graph<StructuralElement, Reference> retrieveReferences(
+	Graph<StructuralElement, Reference> retrieveStructuralGraph(
 			ParsedDocument document);
 }
