@@ -60,7 +60,7 @@ public class ArXMLivAdapterService implements ArxivService {
 			ParsedDocumentImpl document = new ParsedDocumentImpl(arxivId, metadata
 					.getId(), pdfLink.getHref());
 			Graph<StructuralElement, Reference> graph = referenceSearcher
-					.retrieveReferences(document);
+					.retrieveStructuralGraph(document);
 			Collection<Reference> edges = graph.getEdges();
 			for (Reference reference : edges) {
 				if (reference.getPredictedRelation() == null) {

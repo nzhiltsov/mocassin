@@ -1,5 +1,6 @@
 package ru.ksu.niimm.cll.mocassin.nlp.gate;
 
+import edu.uci.ics.jung.graph.Graph;
 import gate.Annotation;
 import gate.AnnotationSet;
 import gate.Document;
@@ -7,6 +8,7 @@ import gate.util.OffsetComparator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -16,11 +18,13 @@ import java.util.logging.Logger;
 import ru.ksu.niimm.cll.mocassin.fulltext.EmptyResultException;
 import ru.ksu.niimm.cll.mocassin.fulltext.PDFIndexer;
 import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
+import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElementSearcher;
 import ru.ksu.niimm.cll.mocassin.nlp.Token;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.StructuralElementByLocationComparator;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.StructuralElementImpl;
+import ru.ksu.niimm.cll.mocassin.nlp.impl.StructuralElementImpl.TypeFilterPredicate;
 import ru.ksu.niimm.cll.mocassin.nlp.recognizer.StructuralElementTypeRecognizer;
 import ru.ksu.niimm.cll.mocassin.nlp.util.AnnotationUtil;
 import ru.ksu.niimm.cll.mocassin.nlp.util.NlpModulePropertiesLoader;
@@ -81,8 +85,7 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 			return CollectionUtil.asList(structuralElementIterable);
 		} catch (AccessGateDocumentException e) {
 			logger.log(Level.SEVERE, String.format(
-					"failed to load the document: %s",
-					parsedDocument.getUri()));
+					"failed to load the document: %s", parsedDocument.getUri()));
 			throw new RuntimeException(e);
 		} finally {
 			gateDocumentDAO.release(document);
@@ -118,12 +121,24 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 			return foundElement;
 		} catch (AccessGateDocumentException e) {
 			logger.log(Level.SEVERE, String.format(
-					"failed to load the document: %s",
-					parsedDocument.getUri()));
+					"failed to load the document: %s", parsedDocument.getUri()));
 			throw new RuntimeException(e);
 		} finally {
 			gateDocumentDAO.release(document);
 		}
+	}
+
+	@Override
+	public StructuralElement findClosestPredecessor(StructuralElement element,
+			MocassinOntologyClasses[] validDomains,
+			Graph<StructuralElement, Reference> graph) {
+		Collection<StructuralElement> elements = graph.getVertices();
+		List<StructuralElement> filteredElements = CollectionUtil
+				.asList(Iterables.filter(elements, new TypeFilterPredicate(
+						validDomains)));
+		if (!filteredElements.contains(element))
+			filteredElements.add(element);
+		return getClosestPredecessor(filteredElements, element);
 	}
 
 	@Override
@@ -132,19 +147,9 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 			final MocassinOntologyClasses... filterPredecessorTypes) {
 		List<StructuralElement> elements = retrieveElements(document);
 
-		Predicate<StructuralElement> typeFilter = new Predicate<StructuralElement>() {
-
-			@Override
-			public boolean apply(StructuralElement element) {
-				MocassinOntologyClasses elementType = getStructuralElementTypeRecognizer()
-						.predict(element);
-				return Arrays.asList(filterPredecessorTypes).contains(
-						elementType);
-			}
-		};
-
 		List<StructuralElement> filteredElements = CollectionUtil
-				.asList(Iterables.filter(elements, typeFilter));
+				.asList(Iterables.filter(elements, new TypeFilterPredicate(
+						filterPredecessorTypes)));
 
 		Predicate<StructuralElement> findById = new Predicate<StructuralElement>() {
 
@@ -157,16 +162,18 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 		StructuralElement foundElement = Iterables.find(elements, findById);
 		if (!filteredElements.contains(foundElement))
 			filteredElements.add(foundElement);
+		return getClosestPredecessor(filteredElements, foundElement);
+	}
 
-		Collections.sort(filteredElements,
-				new StructuralElementByLocationComparator());
+	private StructuralElement getClosestPredecessor(
+			List<StructuralElement> elements, StructuralElement successorElement) {
+		Collections.sort(elements, new StructuralElementByLocationComparator());
 
-		int foundElementIndex = filteredElements.indexOf(foundElement);
+		int foundElementIndex = elements.indexOf(successorElement);
 
 		int predecessorIndex = foundElementIndex - 1;
 
-		return predecessorIndex > -1 ? filteredElements.get(predecessorIndex)
-				: null;
+		return predecessorIndex > -1 ? elements.get(predecessorIndex) : null;
 	}
 
 	public StructuralElementTypeRecognizer getStructuralElementTypeRecognizer() {
@@ -266,8 +273,8 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 			}
 
 			StructuralElement element = new StructuralElementImpl.Builder(id,
-					getParsedDocument().getUri() + "/" + id).start(start).end(end).name(name)
-					.title(title).build();
+					getParsedDocument().getUri() + "/" + id).start(start)
+					.end(end).name(name).title(title).build();
 			element.setLabels(labels);
 			element.setContents(getPureTokensForAnnotation(getDocument(),
 					annotation));

@@ -2,6 +2,8 @@ package ru.ksu.niimm.cll.mocassin.nlp;
 
 import java.util.List;
 
+import edu.uci.ics.jung.graph.Graph;
+
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
 
 /**
@@ -40,4 +42,8 @@ public interface StructuralElementSearcher {
 	 */
 	StructuralElement findClosestPredecessor(ParsedDocument document, int id,
 			MocassinOntologyClasses... filterPredecessorTypes);
+
+	StructuralElement findClosestPredecessor(StructuralElement element,
+			MocassinOntologyClasses[] validDomains,
+			Graph<StructuralElement, Reference> graph);
 }

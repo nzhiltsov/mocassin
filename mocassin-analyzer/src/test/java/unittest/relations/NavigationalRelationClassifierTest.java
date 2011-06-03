@@ -46,7 +46,7 @@ public class NavigationalRelationClassifierTest {
 	public void init() throws Exception {
 		ParsedDocument document = new ParsedDocumentImpl("math/0205003", "http://arxiv.org/abs/math/0205003",
 				"http://arxiv.org/pdf/math/0205003");
-		graph = this.referenceSearcher.retrieveReferences(document);
+		graph = this.referenceSearcher.retrieveStructuralGraph(document);
 		Collection<Reference> edges = graph.getEdges();
 		Assert.assertTrue(edges.size() > 0);
 
