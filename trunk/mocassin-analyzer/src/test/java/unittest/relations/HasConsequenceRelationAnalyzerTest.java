@@ -59,8 +59,8 @@ public class HasConsequenceRelationAnalyzerTest {
 			if (ref.getPredictedRelation() == MocassinOntologyRelations.HAS_CONSEQUENCE) {
 				StructuralElement from = graph.getSource(ref);
 				StructuralElement to = graph.getDest(ref);
-				Assert.assertEquals(2949, from.getId());
-				Assert.assertEquals(1167, to.getId());
+				Assert.assertEquals(1167, from.getId());
+				Assert.assertEquals(2949, to.getId());
 				found = true;
 				break;
 			}

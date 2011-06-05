@@ -22,8 +22,10 @@ import ru.ksu.niimm.cll.mocassin.analyzer.pos.VerbBasedFeatureAnalyzer;
 import ru.ksu.niimm.cll.mocassin.analyzer.pos.impl.VerbBasedFeatureAnalyzerImpl;
 import ru.ksu.niimm.cll.mocassin.analyzer.relation.ExemplifiesRelationAnalyzer;
 import ru.ksu.niimm.cll.mocassin.analyzer.relation.HasConsequenceRelationAnalyzer;
+import ru.ksu.niimm.cll.mocassin.analyzer.relation.ProvesRelationAnalyzer;
 import ru.ksu.niimm.cll.mocassin.analyzer.relation.impl.ExemplifiesRelationAnalyzerImpl;
 import ru.ksu.niimm.cll.mocassin.analyzer.relation.impl.HasConsequenceRelationAnalyzerImpl;
+import ru.ksu.niimm.cll.mocassin.analyzer.relation.impl.ProvesRelationAnalyzerImpl;
 import weka.classifiers.Classifier;
 import weka.core.Instances;
 import weka.core.SerializationHelper;
@@ -50,6 +52,7 @@ public class AnalyzerModule extends AbstractModule {
 				HasConsequenceRelationAnalyzerImpl.class);
 		bind(ExemplifiesRelationAnalyzer.class).to(
 				ExemplifiesRelationAnalyzerImpl.class);
+		bind(ProvesRelationAnalyzer.class).to(ProvesRelationAnalyzerImpl.class);
 
 		bind(NavigationalRelationClassifier.class).to(
 				NavRelClassifierImpl.class);

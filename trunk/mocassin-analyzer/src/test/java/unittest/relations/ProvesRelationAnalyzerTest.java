@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ru.ksu.niimm.cll.mocassin.analyzer.AnalyzerModule;
-import ru.ksu.niimm.cll.mocassin.analyzer.relation.ExemplifiesRelationAnalyzer;
+import ru.ksu.niimm.cll.mocassin.analyzer.relation.ProvesRelationAnalyzer;
 import ru.ksu.niimm.cll.mocassin.fulltext.FullTextModule;
 import ru.ksu.niimm.cll.mocassin.nlp.NlpModule;
 import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
@@ -33,10 +33,9 @@ import edu.uci.ics.jung.graph.Graph;
 @GuiceContext( { AnalyzerModule.class, NlpModule.class,
 		LatexParserModule.class, OntologyModule.class, VirtuosoModule.class,
 		FullTextModule.class })
-public class ExemplifiesRelationAnalyzerTest {
+public class ProvesRelationAnalyzerTest {
 	@Inject
-	ExemplifiesRelationAnalyzer exemplifiesRelationAnalyzer;
-
+	ProvesRelationAnalyzer provesRelationAnalyzer;
 	@Inject
 	private ReferenceSearcher referenceSearcher;
 
@@ -46,22 +45,22 @@ public class ExemplifiesRelationAnalyzerTest {
 
 	@Before
 	public void init() {
-		document = new ParsedDocumentImpl("math/0005005",
-				"http://arxiv.org/abs/math/0005005",
-				"http://arxiv.org/pdf/math/0005005");
+		document = new ParsedDocumentImpl("math/0205003",
+				"http://arxiv.org/abs/math/0205003",
+				"http://arxiv.org/pdf/math/0205003");
 		graph = this.referenceSearcher.retrieveStructuralGraph(document);
 	}
 
 	@Test
 	public void testAnalyze() throws IOException {
-		this.exemplifiesRelationAnalyzer.addRelations(graph, document);
+		this.provesRelationAnalyzer.addRelations(graph, document);
 		Collection<Reference> edges = graph.getEdges();
 		boolean found = false;
 		for (Reference ref : edges) {
 			StructuralElement from = graph.getSource(ref);
-			if (ref.getPredictedRelation() == MocassinOntologyRelations.EXEMPLIFIES && from.getId() == 2047) {
+			if (ref.getPredictedRelation() == MocassinOntologyRelations.PROVES && from.getId() == 1258) {
 				StructuralElement to = graph.getDest(ref);
-				Assert.assertEquals(1937, to.getId());
+				Assert.assertEquals(1167, to.getId());
 				found = true;
 				break;
 			}
