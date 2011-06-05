@@ -6,18 +6,15 @@ import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import edu.uci.ics.jung.graph.Graph;
 
 /**
- * 
  * @author nzhiltsov
  * 
  */
-public interface ExemplifiesRelationAnalyzer {
+public interface ProvesRelationAnalyzer {
 	/**
-	 * adds instances of 'exemplifies' (Mocassin Ontology) to a given document
-	 * graph
+	 * adds instances of 'proves' (Mocassin Ontology) to a given document graph
 	 * 
 	 * @param graph
-	 * @param document
+	 * @param document 
 	 */
-	void addRelations(Graph<StructuralElement, Reference> graph,
-			ParsedDocument document);
+	void addRelations(Graph<StructuralElement, Reference> graph, ParsedDocument document);
 }

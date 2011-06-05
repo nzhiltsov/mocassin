@@ -1,95 +1,48 @@
 package ru.ksu.niimm.cll.mocassin.analyzer.relation.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
+import java.util.Collection;
 
-import ru.ksu.niimm.cll.mocassin.analyzer.relation.RelationInfo;
-import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
+import ru.ksu.niimm.cll.mocassin.nlp.Reference;
+import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElementSearcher;
-import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
 
-import com.google.common.collect.Maps;
 import com.google.inject.Inject;
+
+import edu.uci.ics.jung.graph.Graph;
 
 public abstract class AbstractRelationAnalyzer {
 
 	@Inject
-	private Logger logger;
-	@Inject
-	private GateDocumentDAO gateDocumentDAO;
-	@Inject
-	private StructuralElementSearcher structuralElementSearcher;
+	protected final StructuralElementSearcher structuralElementSearcher;
 
-	public AbstractRelationAnalyzer() {
-		super();
+	protected Graph<StructuralElement, Reference> graph;
+
+	protected AbstractRelationAnalyzer(
+			StructuralElementSearcher structuralElementSearcher) {
+		this.structuralElementSearcher = structuralElementSearcher;
 	}
 
-	public List<RelationInfo> analyze(List<RelationInfo> relations) {
-		throw new UnsupportedOperationException("implementation of this method must be fixed");
-		/* List<RelationInfo> processedInfoList = new ArrayList<RelationInfo>();
-		Map<String, List<RelationInfo>> filename2relations = groupByFilename(relations);
-		List<String> documentIds;
-		try {
-			documentIds = getGateDocumentDAO().getDocumentIds();
-		} catch (Exception e) {
-			throw new RuntimeException("couldn't get list of documents", e);
+	protected void addEdge(Reference edge, final StructuralElement from,
+			final StructuralElement to) {
+		StructuralElement foundFrom = null;
+		StructuralElement foundTo = null;
+		if (this.graph.containsVertex(from)) {
+			foundFrom = findVertice(from);
 		}
-		Set<String> prefixSet = filename2relations.keySet();
-		Map<String, String> prefix2id = CollectionUtil.mapPrefixesWithNames(
-				documentIds, prefixSet);
+		if (this.graph.containsVertex(to)) {
+			foundTo = findVertice(to);
+		}
+		this.graph.addEdge(edge, foundFrom != null ? foundFrom : from,
+				foundTo != null ? foundTo : to);
+	}
 
-		for (String filename : prefix2id.keySet()) {
-			String documentId = prefix2id.get(filename);
-			ParsedDocument document = new ParsedDocumentImpl(documentId, "", ""); // TODO : fix it!
-
-			try {
-				List<RelationInfo> relationInfoList = filename2relations
-						.get(filename);
-				for (RelationInfo info : relationInfoList) {
-					processedInfoList.add(processRelationInfo(document, info));
-				}
-				logger.log(Level.INFO, String.format(
-						"the document '%s' has been processed successfully",
-						documentId));
-			} catch (Exception e) {
-				logger.log(Level.SEVERE, String.format(
-						"failed to process the document: %s caused by %s",
-						documentId, e.getMessage()));
-
+	protected StructuralElement findVertice(StructuralElement node) {
+		Collection<StructuralElement> vertices = this.graph.getVertices();
+		for (StructuralElement cur : vertices) {
+			if (cur.equals(node)) {
+				return cur;
 			}
 		}
-		return processedInfoList; */
+		throw new RuntimeException("node not found: " + node);
 	}
-
-	protected abstract RelationInfo processRelationInfo(
-			ParsedDocument document, RelationInfo info);
-
-	public StructuralElementSearcher getStructuralElementSearcher() {
-		return structuralElementSearcher;
-	}
-
-	public GateDocumentDAO getGateDocumentDAO() {
-		return gateDocumentDAO;
-	}
-
-	private Map<String, List<RelationInfo>> groupByFilename(
-			List<RelationInfo> relations) {
-		Map<String, List<RelationInfo>> filename2relations = Maps.newHashMap();
-
-		for (RelationInfo relation : relations) {
-			String filename = relation.getFilename();
-			if (filename2relations.containsKey(filename)) {
-				List<RelationInfo> list = filename2relations.get(filename);
-				list.add(relation);
-			} else {
-				List<RelationInfo> list = new ArrayList<RelationInfo>();
-				list.add(relation);
-				filename2relations.put(filename, list);
-			}
-		}
-		return filename2relations;
-	}
-
 }
