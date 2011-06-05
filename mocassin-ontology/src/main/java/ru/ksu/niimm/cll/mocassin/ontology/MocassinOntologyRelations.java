@@ -17,7 +17,8 @@ public enum MocassinOntologyRelations {
 			"http://cll.niimm.ksu.ru/ontologies/mocassin#hasStartPageNumber", 5), HAS_TEXT(
 			"http://cll.niimm.ksu.ru/ontologies/mocassin#hasText", 6), HAS_TITLE(
 			"http://cll.niimm.ksu.ru/ontologies/mocassin#hasTitle", 7), DEPENDS_ON(
-			"http://cll.niimm.ksu.ru/ontologies/mocassin#dependsOn", 8);
+			"http://cll.niimm.ksu.ru/ontologies/mocassin#dependsOn", 8), PROVES(
+			"http://cll.niimm.ksu.ru/ontologies/mocassin#proves", 9);
 
 	private String uri;
 	/**
@@ -54,6 +55,15 @@ public enum MocassinOntologyRelations {
 	public static MocassinOntologyClasses[] getValidRanges(
 			MocassinOntologyRelations relation) {
 		switch (relation) {
+		case PROVES: {
+			MocassinOntologyClasses[] domains = {
+					MocassinOntologyClasses.CLAIM,
+					MocassinOntologyClasses.COROLLARY,
+					MocassinOntologyClasses.LEMMA,
+					MocassinOntologyClasses.PROPOSITION,
+					MocassinOntologyClasses.THEOREM };
+			return domains;
+		}
 		case HAS_CONSEQUENCE: {
 			MocassinOntologyClasses[] domains = { MocassinOntologyClasses.COROLLARY };
 			return domains;
@@ -81,6 +91,10 @@ public enum MocassinOntologyRelations {
 			MocassinOntologyRelations relation) {
 
 		switch (relation) {
+		case PROVES: {
+			MocassinOntologyClasses[] domains = { MocassinOntologyClasses.PROOF };
+			return domains;
+		}
 		case HAS_CONSEQUENCE: {
 			MocassinOntologyClasses[] domains = {
 					MocassinOntologyClasses.AXIOM,
