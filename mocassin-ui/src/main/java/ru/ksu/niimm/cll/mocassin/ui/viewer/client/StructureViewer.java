@@ -44,6 +44,12 @@ public class StructureViewer implements EntryPoint {
 	CheckBox refersToCheckbox;
 	@UiField
 	CheckBox dependsOnCheckbox;
+	@UiField
+	CheckBox provesCheckbox;
+	@UiField
+	CheckBox hasConsequenceCheckbox;
+	@UiField
+	CheckBox exemplifiesCheckbox;
 
 	public void onModuleLoad() {
 		ScrollPanel outer = binder.createAndBindUi(this);
@@ -109,7 +115,7 @@ public class StructureViewer implements EntryPoint {
 					.graphPanelTitle());
 
 			DocumentStructureGraph documentStructureGraph = new DocumentStructureGraph(
-					frame, hasPartCheckbox, refersToCheckbox, dependsOnCheckbox, result);
+					frame, hasPartCheckbox, refersToCheckbox, dependsOnCheckbox, provesCheckbox, hasConsequenceCheckbox, exemplifiesCheckbox, result);
 			documentStructureGraph.setHeight("450");
 			graphPanel.add(documentStructureGraph.asWidget());
 		}
