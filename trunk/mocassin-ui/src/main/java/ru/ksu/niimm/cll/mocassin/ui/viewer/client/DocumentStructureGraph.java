@@ -23,12 +23,12 @@ import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.Node.NovelCharacterNodeAdapter;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.protovis.LinkAdapter;
 
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -53,6 +53,12 @@ public class DocumentStructureGraph extends ProtovisWidget implements
 
 	private final CheckBox dependsOnCheckbox;
 
+	private final CheckBox provesCheckbox;
+
+	private final CheckBox hasConsequenceCheckbox;
+
+	private final CheckBox exemplifiesCheckbox;
+
 	/*
 	 * private static final PVColor[] code2color = { PV.color("red"),
 	 * PV.color("orange"), PV.color("fuchsia"), PV.color("teal"),
@@ -64,7 +70,8 @@ public class DocumentStructureGraph extends ProtovisWidget implements
 
 	public DocumentStructureGraph(Frame frame, CheckBox hasPartCheckbox,
 			CheckBox refersToCheckbox, CheckBox dependsOnCheckbox,
-			ArticleInfo result) {
+			CheckBox provesCheckbox, CheckBox hasConsequenceCheckbox,
+			CheckBox exemplifiesCheckbox, ArticleInfo result) {
 		super();
 		this.hasPartCheckbox = hasPartCheckbox;
 		this.hasPartCheckbox.addClickHandler(this);
@@ -72,6 +79,12 @@ public class DocumentStructureGraph extends ProtovisWidget implements
 		this.refersToCheckbox.addClickHandler(this);
 		this.dependsOnCheckbox = dependsOnCheckbox;
 		this.dependsOnCheckbox.addClickHandler(this);
+		this.provesCheckbox = provesCheckbox;
+		this.provesCheckbox.addClickHandler(this);
+		this.hasConsequenceCheckbox = hasConsequenceCheckbox;
+		this.hasConsequenceCheckbox.addClickHandler(this);
+		this.exemplifiesCheckbox = exemplifiesCheckbox;
+		this.exemplifiesCheckbox.addClickHandler(this);
 		this.resourceUri = result.getUri();
 		this.currentSegmentUri = result.getCurrentSegmentUri();
 		this.navigationPopup = new NavigationPopup(frame, result.getPdfUri());
@@ -200,14 +213,22 @@ public class DocumentStructureGraph extends ProtovisWidget implements
 					} else if (l[i].getType() == 1
 							&& !refersToCheckbox.getValue()) {
 						continue;
+					} else if (l[i].getType() == 9
+							&& !provesCheckbox.getValue()) {
+						continue;
+					} else if (l[i].getType() == 2
+							&& !hasConsequenceCheckbox.getValue()) {
+						continue;
+					} else if (l[i].getType() == 3
+							&& !exemplifiesCheckbox.getValue()) {
+						continue;
 					}
 					linkList.add(new Link(l[i].getSource(), l[i].getTarget(),
 							l[i].getValue()));
 
 				}
 				Link[] links = linkList.toArray(new Link[linkList.size()]);
-				createVisualization(result.getNodes(),
-						links);
+				createVisualization(result.getNodes(), links);
 				getPVPanel().render();
 			}
 

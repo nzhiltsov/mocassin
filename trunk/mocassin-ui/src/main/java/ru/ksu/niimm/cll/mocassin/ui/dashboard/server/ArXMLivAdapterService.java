@@ -9,6 +9,9 @@ import java.util.logging.Logger;
 
 import ru.ksu.niimm.cll.mocassin.analyzer.classifier.NavigationalRelationClassifier;
 import ru.ksu.niimm.cll.mocassin.analyzer.classifier.Prediction;
+import ru.ksu.niimm.cll.mocassin.analyzer.relation.ExemplifiesRelationAnalyzer;
+import ru.ksu.niimm.cll.mocassin.analyzer.relation.HasConsequenceRelationAnalyzer;
+import ru.ksu.niimm.cll.mocassin.analyzer.relation.ProvesRelationAnalyzer;
 import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.arxiv.ArxivDAOFacade;
 import ru.ksu.niimm.cll.mocassin.arxiv.LoadingPdfException;
@@ -48,6 +51,12 @@ public class ArXMLivAdapterService implements ArxivService {
 	private PDFIndexer pdfIndexer;
 	@Inject
 	private NavigationalRelationClassifier navigationalRelationClassifier;
+	@Inject
+	private ProvesRelationAnalyzer provesRelationAnalyzer;
+	@Inject
+	private HasConsequenceRelationAnalyzer hasConsequenceRelationAnalyzer;
+	@Inject
+	private ExemplifiesRelationAnalyzer exemplifiesRelationAnalyzer;
 
 	@Override
 	public void handle(String arxivId) {
@@ -57,8 +66,8 @@ public class ArXMLivAdapterService implements ArxivService {
 			Link pdfLink = Iterables.find(metadata.getLinks(),
 					new PdfLinkPredicate());
 			pdfIndexer.save(pdfLink.getHref(), pdfInputStream);
-			ParsedDocumentImpl document = new ParsedDocumentImpl(arxivId, metadata
-					.getId(), pdfLink.getHref());
+			ParsedDocumentImpl document = new ParsedDocumentImpl(arxivId,
+					metadata.getId(), pdfLink.getHref());
 			Graph<StructuralElement, Reference> graph = referenceSearcher
 					.retrieveStructuralGraph(document);
 			Collection<Reference> edges = graph.getEdges();
@@ -71,12 +80,14 @@ public class ArXMLivAdapterService implements ArxivService {
 					reference.setPredictedRelation(prediction.getRelation());
 				}
 			}
+			exemplifiesRelationAnalyzer.addRelations(graph, document);
+			provesRelationAnalyzer.addRelations(graph, document);
+			hasConsequenceRelationAnalyzer.addRelations(graph, document);
 			Set<RDFTriple> triples = referenceTripleUtil.convert(graph);
 			ontologyResourceFacade.insert(metadata, triples);
 		} catch (PersistingDocumentException e) {
 			String message = String
-					.format(
-							"failed to persist the PDF index of the article %s due to: %s",
+					.format("failed to persist the PDF index of the article %s due to: %s",
 							arxivId, e.getMessage());
 			logger.log(Level.SEVERE, message);
 			throw new RuntimeException(message);
