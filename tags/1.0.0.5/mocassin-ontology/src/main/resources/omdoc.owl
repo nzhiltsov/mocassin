@@ -1,0 +1,1598 @@
+<?xml version="1.0"?>
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:protege="http://protege.stanford.edu/plugins/owl/protege#"
+    xmlns:xsp="http://www.owl-ontologies.com/2005/08/07/xsp.owl#"
+    xmlns:cd="http://www.openmath.org/cd/"
+    xmlns:oo="http://omdoc.org/ontology#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:sdoc="http://salt.semanticauthoring.org/onto/abstract-document-ontology#"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:swrl="http://www.w3.org/2003/11/swrl#"
+    xmlns:swrlb="http://www.w3.org/2003/11/swrlb#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xml:base="file:/home/nzhiltsov/projects/cll/mocassin/mocassin-ontology/src/main/resources/omdoc.owl">
+  <owl:Ontology rdf:about="http://omdoc.org/ontology#">
+    <dc:contributor rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Nikita Zhiltsov (Никита Жильцов) &lt;nikita.zhiltsov@gmail.com&gt;</dc:contributor>
+    <dc:contributor rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Gordan Ristovski &lt;g.ristovski@jacobs-university.de&gt;</dc:contributor>
+    <dc:subject rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Semantic Mathematical Markup</dc:subject>
+    <dc:creator rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Christoph Lange &lt;ch.lange@jacobs-university.de&gt;</dc:creator>
+    <owl:versionInfo rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >0.5.5</owl:versionInfo>
+    <dc:title rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >OMDoc document ontology</dc:title>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >OMDoc document ontology in OWL-DL.
+The homepage of this project can be found at http://mathweb.org/wiki/OMDoc/document_ontology.</dc:description>
+    <dc:contributor rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Krzysztof Retel &lt;retel@macs.hw.ac.uk&gt;</dc:contributor>
+    <dc:contributor rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Normen Müller &lt;n.mueller@jacobs-university.de&gt;</dc:contributor>
+    <dc:contributor rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Andrei Ioniţă &lt;a.ionita@jacobs-university.de&gt;</dc:contributor>
+  </owl:Ontology>
+  <rdfs:Class rdf:about="http://salt.semanticauthoring.org/onto/abstract-document-ontology#Document"/>
+  <rdfs:Class rdf:about="http://salt.semanticauthoring.org/onto/abstract-document-ontology#Composite"/>
+  <rdfs:Class rdf:about="http://salt.semanticauthoring.org/onto/abstract-document-ontology#InformationChunk"/>
+  <owl:Class rdf:about="http://omdoc.org/ontology#FalseConjecture">
+    <rdfs:label xml:lang="en">False Conjecture</rdfs:label>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Formula"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Proposition"/>
+    </owl:disjointWith>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Assertion"/>
+    </rdfs:subClassOf>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Corollary"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Rule"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Conjecture"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Lemma"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#AssumptionAssertion"/>
+    </owl:disjointWith>
+    <rdfs:label xml:lang="ru">Ложное утверждение</rdfs:label>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Theorem"/>
+    </owl:disjointWith>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >An OMDoc assertion, which is a conjecture that has proven to be false; see figure 15.5 (Types of Mathematical Assertions) in the OMDoc1.2 specification.
+In OMDoc/XML, this is represented by the omdoc:assertion/@type='false-conjecture' attribute. It can also be informal, as a type in an omtext element, linked with a Informal Formality Degree.</dc:description>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Postulate"/>
+    </owl:disjointWith>
+    <rdfs:label xml:lang="de">Falsche Behauptung</rdfs:label>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Obligation"/>
+    </owl:disjointWith>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#NestedProof">
+    <rdfs:label xml:lang="de">Unterbeweis</rdfs:label>
+    <rdfs:label xml:lang="en">Nested Proof</rdfs:label>
+    <rdfs:label xml:lang="ru">Поддоказательство</rdfs:label>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Proof"/>
+    </owl:disjointWith>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="http://omdoc.org/ontology#GeneralProof"/>
+    </rdfs:subClassOf>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >A proof nested into a proof step (in order to realize substeps), often without an explicit pointer to an assertion</dc:description>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#StatementInTheory">
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:label xml:lang="de">Aussage</rdfs:label>
+    <rdfs:label xml:lang="en">Statement</rdfs:label>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Statement"/>
+    </rdfs:subClassOf>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Any OMDoc statement, as defined in the OMDoc1.2 specification, chapters 14.3 (Text Fragments and their Rhetoric/Mathematical Roles) and 15 (Mathematical Statements). A statement can only belong to one theory.</dc:description>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#Postulate">
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Lemma"/>
+    </owl:disjointWith>
+    <rdfs:label xml:lang="de">Postulat</rdfs:label>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Assertion"/>
+    </rdfs:subClassOf>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >An OMDoc assertion, which is a postulate; see figure 15.5 (Types of Mathematical Assertions) in the OMDoc1.2 specification.
+In OMDoc/XML, this is represented by the omdoc:assertion/@type='postulate' attribute. It can also be informal, as a type in an omtext element, linked with a Informal Formality Degree.</dc:description>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#FalseConjecture"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Conjecture"/>
+    </owl:disjointWith>
+    <rdfs:label xml:lang="en">Postulate</rdfs:label>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Obligation"/>
+    </owl:disjointWith>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Rule"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Proposition"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Corollary"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Formula"/>
+    </owl:disjointWith>
+    <rdfs:label xml:lang="ru">Постулат</rdfs:label>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#AssumptionAssertion"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Theorem"/>
+    </owl:disjointWith>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#Citation">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Reference"/>
+    </rdfs:subClassOf>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:label xml:lang="de">Zitat</rdfs:label>
+    <rdfs:label xml:lang="en">Citation</rdfs:label>
+    <rdfs:label xml:lang="ru">Цитата</rdfs:label>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Some references have the cite type attribute, meaning they are proper references of some text.</dc:description>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#Theorem">
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#FalseConjecture"/>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Corollary"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Proposition"/>
+    </owl:disjointWith>
+    <rdfs:label xml:lang="ru">Утверждение</rdfs:label>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Rule"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Obligation"/>
+    </owl:disjointWith>
+    <rdfs:label xml:lang="de">Satz/Theorem</rdfs:label>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Assertion"/>
+    </rdfs:subClassOf>
+    <rdfs:label xml:lang="en">Theorem</rdfs:label>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Conjecture"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Postulate"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >An OMDoc assertion, which is a theorem; see figure 15.5 (Types of Mathematical Assertions) in the OMDoc1.2 specification.
+In OMDoc/XML, this is represented by the omdoc:assertion/@type='theorem' attribute. It can also be informal, as a type in an omtext element, linked with a Informal Formality Degree.</dc:description>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Formula"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#AssumptionAssertion"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Lemma"/>
+    </owl:disjointWith>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#GeneralAxiom">
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#GeneralSymbol"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#GeneralDefinition"/>
+    </owl:disjointWith>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="http://omdoc.org/ontology#AnyLevelStatement"/>
+    </rdfs:subClassOf>
+    <rdfs:label xml:lang="de">Axiom (allgemein)</rdfs:label>
+    <rdfs:label xml:lang="en">Axiom (general)</rdfs:label>
+    <rdfs:label xml:lang="ru">Общая аксиома</rdfs:label>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >An axiom, both as a constitutive element of a theory and as a proof-local hypothesis</dc:description>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#MathKnowledgeItem">
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Any mathematical knowledge item that can be expressed in OMDoc (i.e. a statement or theory, or probably something else).  This base class neither has a counterpart in the OMDoc1.2 specification nor in its XML schema.</dc:description>
+    <rdfs:label xml:lang="de">Mathematische Wissenseinheit</rdfs:label>
+    <rdfs:label xml:lang="en">Mathematical Knowledge Item</rdfs:label>
+    <rdfs:label xml:lang="ru">Объект математического знания</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#Rule">
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Obligation"/>
+    </owl:disjointWith>
+    <rdfs:label xml:lang="de">Regel</rdfs:label>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >An OMDoc assertion, which is a rule.  This type of assertion is missing from figure 15.5 (Types of Mathematical Assertions) in the OMDoc1.2 specification, but it occurs in the XML schema nevertheless (Appendix D.4, enumeration ``assertiontype'').
+In OMDoc/XML, this is represented by the omdoc:assertion/@type='rule' attribute. It can also be informal, as a type in an omtext element, linked with a Informal Formality Degree.</dc:description>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Conjecture"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#AssumptionAssertion"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Corollary"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Proposition"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#FalseConjecture"/>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Theorem"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Lemma"/>
+    </owl:disjointWith>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:label xml:lang="ru">Правило</rdfs:label>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Formula"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Postulate"/>
+    <rdfs:label xml:lang="en">Rule</rdfs:label>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Assertion"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#NotationDefinition">
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:label xml:lang="de">Notationsdefinition</rdfs:label>
+    <rdfs:label xml:lang="en">Notation Definition</rdfs:label>
+    <rdfs:label xml:lang="ru">Определение обозначения</rdfs:label>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Statement"/>
+    </rdfs:subClassOf>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >A notation definition for a symbol</dc:description>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#SequentPart">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Statement"/>
+    </rdfs:subClassOf>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:label xml:lang="de">Sequenzabschnitt</rdfs:label>
+    <rdfs:label xml:lang="en">Sequent Part</rdfs:label>
+    <rdfs:label xml:lang="ru">Следующая часть</rdfs:label>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#StatementInTheory"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >A part (either assumption or conclusion) of a sequent structure that a formal property may have</dc:description>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#Assertion">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="http://omdoc.org/ontology#NonConstitutiveStatement"/>
+    </rdfs:subClassOf>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >An OMDoc assertion, as defined in the OMDoc1.2 specification, chapter 15.3.1 (Assertions).
+In OMDoc/XML, this is represented by the omdoc:assertion element.
+Note: This class has lots of subclasses.  Their semantics needs to be clarified, as not everything is clearly documented in the OMDoc specification; see the discussion on
+http://mathweb.org/wiki/Talk:OMDoc/document_ontology —Christoph Lange</dc:description>
+    <rdfs:label xml:lang="de">Behauptung</rdfs:label>
+    <rdfs:label xml:lang="en">Assertion</rdfs:label>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Example"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#AlternativeDefinition"/>
+    </owl:disjointWith>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#Hypothesis">
+    <rdfs:subClassOf rdf:resource="http://omdoc.org/ontology#GeneralAxiom"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Local assumptions that allow hypothetical reasoning, as defined in the OMDoc 1.2 manual, chapter 17 (Representing Proofs).</dc:description>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#DerivationStep"/>
+    </owl:disjointWith>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="http://omdoc.org/ontology#FormalKnowledgeItem"/>
+    </rdfs:subClassOf>
+    <rdfs:label xml:lang="en">Hypothesis</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="http://omdoc.org/ontology#ProofLocalStatement"/>
+    </rdfs:subClassOf>
+    <rdfs:label xml:lang="de">Hypothese</rdfs:label>
+    <rdfs:label xml:lang="ru">Гипотеза</rdfs:label>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#Gap">
+    <rdfs:label xml:lang="de">Lücke</rdfs:label>
+    <rdfs:label xml:lang="en">Gap</rdfs:label>
+    <rdfs:label xml:lang="ru">Пропуск</rdfs:label>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Proof steps that are not justifed yet, as defined in the OMDoc 1.2 manual, chapter 17 (Representing Proofs). The presence of gaps allows OMDoc to specify incomplete proofs as proofs with gap steps.</dc:description>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#DerivedConclusion"/>
+    </owl:disjointWith>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="http://omdoc.org/ontology#DerivationStep"/>
+    </rdfs:subClassOf>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#Example">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="http://omdoc.org/ontology#NonConstitutiveStatement"/>
+    </rdfs:subClassOf>
+    <rdfs:label xml:lang="de">Beispiel</rdfs:label>
+    <rdfs:label xml:lang="en">Example</rdfs:label>
+    <rdfs:label xml:lang="ru">Пример</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Assertion"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#AlternativeDefinition"/>
+    </owl:disjointWith>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >An OMDoc example, as defined in the OMDoc specification, chapter 15.4 (Mathematical Examples in OMDoc).
+In OMDoc/XML, this is represented by the omdoc:example element. It can also be informal, as a type in an omtext element, linked with a Informal Formality Degree.</dc:description>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#Formula">
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Rule"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Proposition"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Theorem"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Corollary"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#AssumptionAssertion"/>
+    </owl:disjointWith>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >An OMDoc assertion, which is a formula; see figure 15.5 (Types of Mathematical Assertions) in the OMDoc1.2 specification.
+In OMDoc/XML, this is represented by omdoc:assertion/@type='formula' attribute. It can also be informal, as a type in an omtext element, linked with a Informal Formality Degree.</dc:description>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Obligation"/>
+    </owl:disjointWith>
+    <rdfs:label xml:lang="de">Formel</rdfs:label>
+    <rdfs:label xml:lang="en">Formel</rdfs:label>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Lemma"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Postulate"/>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#FalseConjecture"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Conjecture"/>
+    </owl:disjointWith>
+    <rdfs:subClassOf rdf:resource="http://omdoc.org/ontology#Assertion"/>
+    <rdfs:label xml:lang="ru">Формула</rdfs:label>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#Definition">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="http://omdoc.org/ontology#ConstitutiveStatement"/>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="http://omdoc.org/ontology#GeneralDefinition"/>
+    </rdfs:subClassOf>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Axiom"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Symbol"/>
+    </owl:disjointWith>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:label xml:lang="de">Definition</rdfs:label>
+    <rdfs:label xml:lang="en">Definition</rdfs:label>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Import"/>
+    </owl:disjointWith>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >An OMDoc definition, as defined in the OMDoc1.2 specification, chapter 15.2.4 (Definitions).
+In OMDoc/XML, this is represented by the omdoc:definition element. It can also be informal, as a type in an omtext element, linked with a Informal Formality Degree.</dc:description>
+    <rdfs:label xml:lang="ru">Определение</rdfs:label>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#Import">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="http://omdoc.org/ontology#ConstitutiveStatement"/>
+    </rdfs:subClassOf>
+    <rdfs:label xml:lang="de">Import</rdfs:label>
+    <rdfs:label xml:lang="en">Import</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >An import from one theory into another one, modeled as a first-class object</dc:description>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Symbol"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Definition"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Axiom"/>
+    </owl:disjointWith>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#ProofStep">
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >A placeholder for all proofsteps, designed according to the specifications in the OMDoc 1.2 manual, chapter 17 (Representing Proofs).</dc:description>
+    <rdfs:subClassOf rdf:resource="http://omdoc.org/ontology#MathKnowledgeItem"/>
+    <rdfs:label xml:lang="de">Beweisschritt</rdfs:label>
+    <rdfs:label xml:lang="en">Proof Step</rdfs:label>
+    <rdfs:label xml:lang="ru">Шаг доказательства</rdfs:label>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#Proof">
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Axiom"/>
+    </owl:disjointWith>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="http://omdoc.org/ontology#GeneralProof"/>
+    </rdfs:subClassOf>
+    <rdfs:label xml:lang="de">Beweis</rdfs:label>
+    <rdfs:label xml:lang="en">Proof</rdfs:label>
+    <rdfs:label xml:lang="ru">Доказательство</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Assertion"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#AlternativeDefinition"/>
+    </owl:disjointWith>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="http://omdoc.org/ontology#NonConstitutiveStatement"/>
+    </rdfs:subClassOf>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#ProofLocalStatement"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Example"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >A proof, as defined in the OMDoc 1.2 manual, chapter 17 (Representing Proofs).  This comprises both the proof and proofobject elements.</dc:description>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Definition"/>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#AnyLevelStatement">
+    <rdfs:label xml:lang="de">Aussage</rdfs:label>
+    <rdfs:label xml:lang="en">Statement</rdfs:label>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Statement"/>
+    </rdfs:subClassOf>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Generic superclass of statements that can not only occur as children of theories but also elsewhere.</dc:description>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#Assumption">
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Represents any assumption that may occur in a formal property.</dc:description>
+    <rdfs:label xml:lang="de">Vermutung</rdfs:label>
+    <rdfs:label xml:lang="en">Assumption</rdfs:label>
+    <rdfs:label xml:lang="ru">Предположение</rdfs:label>
+    <rdfs:subClassOf rdf:resource="http://omdoc.org/ontology#SequentPart"/>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#Type">
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Theory"/>
+    </owl:disjointWith>
+    <rdfs:label xml:lang="de">Typ</rdfs:label>
+    <rdfs:label xml:lang="en">Type</rdfs:label>
+    <rdfs:label xml:lang="ru">Тип</rdfs:label>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >The type of a symbol (declared or asserted), as defined in the OMDoc1.2 specification, chapter 15.2.3 (Type Declarations) and 15.3.2 (Type Assertions).
+In OMDoc/XML, this is represented by the omdoc:type element.</dc:description>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="http://omdoc.org/ontology#FormalKnowledgeItem"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#FormalKnowledgeItem">
+    <rdfs:label xml:lang="de">Formale Wissenseinheit</rdfs:label>
+    <rdfs:label xml:lang="en">Formal Knowledge Item</rdfs:label>
+    <rdfs:label xml:lang="ru">Объект формального знания</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty>
+          <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#formalityDegree"/>
+        </owl:onProperty>
+        <owl:hasValue>
+          <oo:FormalityDegree rdf:about="http://omdoc.org/ontology#Formal">
+            <rdfs:label xml:lang="de">formal</rdfs:label>
+            <rdfs:label xml:lang="en">formal</rdfs:label>
+            <rdfs:label xml:lang="ru">Формальный</rdfs:label>
+            <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+          </oo:FormalityDegree>
+        </owl:hasValue>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#AssumptionAssertion">
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Proposition"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#FalseConjecture"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Lemma"/>
+    </owl:disjointWith>
+    <rdfs:subClassOf rdf:resource="http://omdoc.org/ontology#Assertion"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >An OMDoc assertion, which is an assumption; see figure 15.5 (Types of Mathematical Assertions) in the OMDoc1.2 specification.
+In OMDoc/XML, this is represented by omdoc:assertion/@type='assumption' attribute. It can also be informal, as a type in an omtext element, linked with a Informal Formality Degree.</dc:description>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Formula"/>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Theorem"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Conjecture"/>
+    </owl:disjointWith>
+    <rdfs:label xml:lang="de">Vermutung</rdfs:label>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Corollary"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Obligation"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Postulate"/>
+    <rdfs:label xml:lang="en">Assumption</rdfs:label>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Rule"/>
+    <rdfs:label xml:lang="ru">Предположение</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#Obligation">
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Theorem"/>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:label xml:lang="en">Obligation</rdfs:label>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Postulate"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Lemma"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Corollary"/>
+    </owl:disjointWith>
+    <rdfs:label xml:lang="de">Verpflichtung</rdfs:label>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Conjecture"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Rule"/>
+    <rdfs:subClassOf rdf:resource="http://omdoc.org/ontology#Assertion"/>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#FalseConjecture"/>
+    <rdfs:label xml:lang="ru">Требование</rdfs:label>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Formula"/>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#AssumptionAssertion"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Proposition"/>
+    </owl:disjointWith>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >An OMDoc assertion, which is an obligation; see figure 15.5 (Types of Mathematical Assertions) in the OMDoc1.2 specification.
+In OMDoc/XML, this is represented by the omdoc:assertion/@type='obligation' attribute. It can also be informal, as a type in an omtext element, linked with a Informal Formality Degree.</dc:description>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#Axiom">
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Definition"/>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Import"/>
+    <rdfs:label xml:lang="ru">Аксиома</rdfs:label>
+    <rdfs:label xml:lang="de">Axiom</rdfs:label>
+    <rdfs:label xml:lang="en">Axiom</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="http://omdoc.org/ontology#ConstitutiveStatement"/>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf rdf:resource="http://omdoc.org/ontology#GeneralAxiom"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Symbol"/>
+    </owl:disjointWith>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >An OMDoc axiom, as defined in the OMDoc1.2 specification, chapter 15.2.2 (Axioms).
+In OMDoc/XML, this is represented by the omdoc:axiom element. It can also be informal, as a type in an omtext element, linked with a Informal Formality Degree.</dc:description>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#DocumentUnit">
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Reference"/>
+    </owl:disjointWith>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Represents omgroup element, which can be a chapter, section, paragraph ... of a matematical document, as described in the OMDoc 1.2 manual, chapter 11 (Document Infrastructure). </dc:description>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Document"/>
+    </owl:disjointWith>
+    <rdfs:label xml:lang="de">Dokumenteneinheit</rdfs:label>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#MathKnowledgeItem"/>
+    <rdfs:label xml:lang="ru">Часть документа</rdfs:label>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#FormalityDegree"/>
+    </owl:disjointWith>
+    <rdfs:subClassOf rdf:resource="http://salt.semanticauthoring.org/onto/abstract-document-ontology#Composite"/>
+    <rdfs:label xml:lang="en">Document Unit</rdfs:label>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#Document">
+    <rdfs:label xml:lang="en">Document</rdfs:label>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Represents an OMDoc element which  contains all other document, as described in the OMDoc 1.2 manual, chapter 11 (Document Infrastructure). </dc:description>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Reference"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#MathKnowledgeItem"/>
+    <rdfs:label xml:lang="ru">Документ</rdfs:label>
+    <rdfs:label xml:lang="de">Dokument</rdfs:label>
+    <rdfs:subClassOf rdf:resource="http://salt.semanticauthoring.org/onto/abstract-document-ontology#Document"/>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#FormalityDegree"/>
+    </owl:disjointWith>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#TextFragment">
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:label xml:lang="de">Textfragment</rdfs:label>
+    <rdfs:label xml:lang="en">Text Fragment</rdfs:label>
+    <rdfs:label xml:lang="ru">Фрагмент текста</rdfs:label>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Citation"/>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Reference"/>
+    </rdfs:subClassOf>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Some references hace the include type attribute, meaning they are text fragments to be replaced in the text.</dc:description>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#GeneralSymbol">
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >A symbol, both as a constitutive element of a theory and as a proof-local declaration</dc:description>
+    <rdfs:label xml:lang="de">Symbol (allgemein)</rdfs:label>
+    <rdfs:label xml:lang="en">Symbol (general)</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:subClassOf rdf:resource="http://omdoc.org/ontology#AnyLevelStatement"/>
+    <rdfs:subClassOf rdf:resource="http://omdoc.org/ontology#FormalKnowledgeItem"/>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#DeclaredType">
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:label xml:lang="de">Deklarierter Typ</rdfs:label>
+    <rdfs:label xml:lang="en">Declared Type</rdfs:label>
+    <rdfs:label xml:lang="ru">Объявленный тип</rdfs:label>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >The declared type of a symbol, as defined in the OMDoc1.2 specification, chapter 15.2.3 (Type Declarations).
+In OMDoc/XML, this is represented by the omdoc:type element being a child of omdoc:symbol.</dc:description>
+    <rdfs:subClassOf rdf:resource="http://omdoc.org/ontology#Type"/>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#Lemma">
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Postulate"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Proposition"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Rule"/>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#AssumptionAssertion"/>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Obligation"/>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Formula"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Conjecture"/>
+    </owl:disjointWith>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >An OMDoc assertion, which is a lemma; see figure 15.5 (Types of Mathematical Assertions) in the OMDoc1.2 specification.
+In OMDoc/XML, this is represented by the omdoc:assertion/@type='lemma' attribute. It can also be informal, as a type in an omtext element, linked with a Informal Formality Degree.</dc:description>
+    <rdfs:label xml:lang="en">Lemma</rdfs:label>
+    <rdfs:label xml:lang="de">Lemma</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Corollary"/>
+    </owl:disjointWith>
+    <rdfs:subClassOf rdf:resource="http://omdoc.org/ontology#Assertion"/>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Theorem"/>
+    <rdfs:label xml:lang="ru">Лемма</rdfs:label>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#FalseConjecture"/>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#Theory">
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Statement"/>
+    </owl:disjointWith>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >An OMDoc theory, as defined in chapter 15.6 (Theories as Structured Contexts) of the OMDoc1.2 specification.
+In OMDoc/XML, this is represented by the omdoc:theory element.
+Note that theories are no proper statements, although the basic infrastructure for theories is part of the statement module of OMDoc.</dc:description>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:label xml:lang="de">Theorie</rdfs:label>
+    <rdfs:label xml:lang="en">Theory</rdfs:label>
+    <rdfs:label xml:lang="ru">Теория</rdfs:label>
+    <rdfs:subClassOf rdf:resource="http://omdoc.org/ontology#MathKnowledgeItem"/>
+    <rdfs:subClassOf rdf:resource="http://salt.semanticauthoring.org/onto/abstract-document-ontology#Composite"/>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#Property">
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Statement"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Type"/>
+    <rdfs:subClassOf rdf:resource="http://omdoc.org/ontology#MathKnowledgeItem"/>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Represents a property, which can be either formal (FMP) or informal (CMP)</dc:description>
+    <rdfs:label xml:lang="de">Eigenschaft</rdfs:label>
+    <rdfs:subClassOf rdf:resource="http://salt.semanticauthoring.org/onto/abstract-document-ontology#InformationChunk"/>
+    <rdfs:label xml:lang="ru">Свойство</rdfs:label>
+    <rdfs:label xml:lang="en">Property</rdfs:label>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Theory"/>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#Statement">
+    <rdfs:label xml:lang="de">Aussage</rdfs:label>
+    <rdfs:label xml:lang="en">Statement</rdfs:label>
+    <rdfs:label xml:lang="ru">Предложение</rdfs:label>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >A very general type of statement, comprising not only “proper” statements occurring in theories, but also statements made local to a proof, or other substatements.</dc:description>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Theory"/>
+    <rdfs:subClassOf rdf:resource="http://omdoc.org/ontology#MathKnowledgeItem"/>
+    <rdfs:subClassOf rdf:resource="http://salt.semanticauthoring.org/onto/abstract-document-ontology#Composite"/>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#InformalKnowledgeItem">
+    <rdfs:label xml:lang="de">Informale Wissenseinheit</rdfs:label>
+    <rdfs:label xml:lang="en">Informal Knowledge Item</rdfs:label>
+    <rdfs:label xml:lang="ru">Объект неформального знания</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty>
+          <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#formalityDegree"/>
+        </owl:onProperty>
+        <owl:hasValue>
+          <oo:FormalityDegree rdf:about="http://omdoc.org/ontology#Informal">
+            <rdfs:label xml:lang="de">informal</rdfs:label>
+            <rdfs:label xml:lang="en">informal</rdfs:label>
+            <rdfs:label xml:lang="ru">Неформальный</rdfs:label>
+            <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+          </oo:FormalityDegree>
+        </owl:hasValue>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#AlternativeDefinition">
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:label xml:lang="de">Alternative Definition</rdfs:label>
+    <rdfs:label xml:lang="en">Alternative Definition</rdfs:label>
+    <rdfs:label xml:lang="ru">Альтернативное определение</rdfs:label>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Example"/>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Assertion"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >An OMDoc alternative definition, as defined in the OMDoc specification, chapter 15.3.3 (Alternative Definitions).
+In OMDoc/XML, this is represented by the omdoc:AlternativeDefinition element.</dc:description>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="http://omdoc.org/ontology#NonConstitutiveStatement"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#DerivationStep">
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >A derivation step inside a proof, as defined in the OMDoc 1.2 manual, chapter 17 (Representing Proofs).</dc:description>
+    <rdfs:label xml:lang="de">Ableitungsschritt</rdfs:label>
+    <rdfs:label xml:lang="en">Derivation Step</rdfs:label>
+    <rdfs:label xml:lang="ru">Шаг вывода</rdfs:label>
+    <rdfs:subClassOf rdf:resource="http://omdoc.org/ontology#FormalKnowledgeItem"/>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="http://omdoc.org/ontology#ProofLocalStatement"/>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf rdf:resource="http://salt.semanticauthoring.org/onto/abstract-document-ontology#Composite"/>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#Symbol">
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Definition"/>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="http://omdoc.org/ontology#ConstitutiveStatement"/>
+    </rdfs:subClassOf>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Axiom"/>
+    <rdfs:label xml:lang="de">Symbol</rdfs:label>
+    <rdfs:label xml:lang="en">Symbol</rdfs:label>
+    <rdfs:subClassOf rdf:resource="http://omdoc.org/ontology#GeneralSymbol"/>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:label xml:lang="ru">Символ</rdfs:label>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Import"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >An OMDoc symbol, as defined in the OMDoc1.2 specification, chapter 15.2.1 (Symbol Declarations).
+In OMDoc/XML, this is represented by the omdoc:symbol element.</dc:description>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#ProofLocalSymbol">
+    <rdfs:subClassOf rdf:resource="http://omdoc.org/ontology#GeneralSymbol"/>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="http://omdoc.org/ontology#ProofLocalStatement"/>
+    </rdfs:subClassOf>
+    <rdfs:label xml:lang="de">Beweis-lokales Symbol</rdfs:label>
+    <rdfs:label xml:lang="en">Proof-local Symbol</rdfs:label>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Proof-local symbol, as defined in the OMDoc 1.2 manual, chapter 17 (Representing Proofs).</dc:description>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Hypothesis"/>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#DerivationStep"/>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#Reference">
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Empty elements used to reference OMDoc elements elsewhere, as described in the OMDoc 1.2 manual, chapter 11(Document Infrastructure).</dc:description>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#MathKnowledgeItem"/>
+    <rdfs:label xml:lang="de">Querverweis</rdfs:label>
+    <rdfs:label xml:lang="en">Reference</rdfs:label>
+    <rdfs:label xml:lang="ru">Ссылка</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#FormalityDegree">
+    <rdfs:label xml:lang="de">Formalitätsgrad</rdfs:label>
+    <rdfs:label xml:lang="en">Formality Degree</rdfs:label>
+    <rdfs:label xml:lang="ru">Степень формальности</rdfs:label>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#MathKnowledgeItem"/>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Reference"/>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >A class container for all formality degrees used to describe how formal a statement is. </dc:description>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#Corollary">
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Rule"/>
+    <rdfs:label xml:lang="en">Corollary</rdfs:label>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Proposition"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Formula"/>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Theorem"/>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#FalseConjecture"/>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Lemma"/>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Postulate"/>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:subClassOf rdf:resource="http://omdoc.org/ontology#Assertion"/>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Obligation"/>
+    <rdfs:label xml:lang="de">Korollar</rdfs:label>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >An OMDoc assertion, which is a corollary; see figure 15.5 (Types of Mathematical Assertions) in the OMDoc1.2 specification.
+In OMDoc/XML, this is represented by the omdoc:assertion/@type='corollary' attribute. It can also be informal, as a type in an omtext element, linked with a Informal Formality Degree.</dc:description>
+    <rdfs:label xml:lang="ru">Следствие</rdfs:label>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Conjecture"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#AssumptionAssertion"/>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#ProofLocalDefinition">
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Hypothesis"/>
+    <rdfs:label xml:lang="en">Proof-local Definition</rdfs:label>
+    <rdfs:label xml:lang="de">Beweis-lokale Definition</rdfs:label>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="http://omdoc.org/ontology#ProofLocalStatement"/>
+    </rdfs:subClassOf>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#DerivationStep"/>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#ProofLocalSymbol"/>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="http://omdoc.org/ontology#GeneralDefinition"/>
+    </rdfs:subClassOf>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Proof-local definition, as defined in the OMDoc 1.2 manual, chapter 17 (Representing Proofs).</dc:description>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#Conclusion">
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Assumption"/>
+    <rdfs:subClassOf rdf:resource="http://omdoc.org/ontology#SequentPart"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Represents any conclusion that may occur in a formal property.</dc:description>
+    <rdfs:label xml:lang="de">Schlussfolgerung</rdfs:label>
+    <rdfs:label xml:lang="en">Conclusion</rdfs:label>
+    <rdfs:label xml:lang="ru">Заключение</rdfs:label>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#GeneralProof">
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >A proof, both as statement within a theory and as a nested proof (within one step of another proof)</dc:description>
+    <rdfs:label xml:lang="en">Proof (general)</rdfs:label>
+    <rdfs:subClassOf rdf:resource="http://omdoc.org/ontology#AnyLevelStatement"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#GeneralDefinition"/>
+    </owl:disjointWith>
+    <rdfs:label xml:lang="de">Beweis (allgemein)</rdfs:label>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#GeneralSymbol"/>
+    <rdfs:label xml:lang="ru">Общее доказательство</rdfs:label>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#GeneralAxiom"/>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#Conjecture">
+    <rdfs:label xml:lang="en">Conjecture</rdfs:label>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Theorem"/>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Formula"/>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#FalseConjecture"/>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Postulate"/>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Obligation"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#Proposition"/>
+    </owl:disjointWith>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >An OMDoc assertion, which is a conjecture; see figure 15.5 (Types of Mathematical Assertions) in the OMDoc1.2 specification.
+In OMDoc/XML, this is represented by the omdoc:assertion/@type='conjecture' attribute. It can also be informal, as a type in an omtext element, linked with a Informal Formality Degree.</dc:description>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#AssumptionAssertion"/>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Lemma"/>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Rule"/>
+    <rdfs:label xml:lang="de">Konjektur</rdfs:label>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Corollary"/>
+    <rdfs:subClassOf rdf:resource="http://omdoc.org/ontology#Assertion"/>
+    <rdfs:label xml:lang="ru">Гипотетическое утверждение</rdfs:label>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#Proposition">
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Conjecture"/>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Postulate"/>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Theorem"/>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#AssumptionAssertion"/>
+    <rdfs:label xml:lang="de">Proposition</rdfs:label>
+    <rdfs:label xml:lang="en">Proposition</rdfs:label>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >An OMDoc assertion, which is a proposition; see figure 15.5 (Types of Mathematical Assertions) in the OMDoc1.2 specification.
+In OMDoc/XML, this is represented by the omdoc:assertion/@type='proposition' attribute. It can also be informal, as a type in an omtext element, linked with a Informal Formality Degree.</dc:description>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Rule"/>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#FalseConjecture"/>
+    <rdfs:label xml:lang="ru">Предложение</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:subClassOf rdf:resource="http://omdoc.org/ontology#Assertion"/>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Lemma"/>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Obligation"/>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Corollary"/>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#Formula"/>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#NonConstitutiveStatement">
+    <rdfs:subClassOf rdf:resource="http://omdoc.org/ontology#StatementInTheory"/>
+    <rdfs:label xml:lang="de">Nicht-konstitutive Aussage</rdfs:label>
+    <rdfs:label xml:lang="en">Non-constitutive Statement</rdfs:label>
+    <rdfs:label xml:lang="ru">Неконструктивное предложение</rdfs:label>
+    <owl:disjointWith>
+      <owl:Class rdf:about="http://omdoc.org/ontology#ConstitutiveStatement"/>
+    </owl:disjointWith>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >An OMDoc statement, which is not theory-constitutive, as defined in the OMDoc1.2 specification, chapter 15.1 (Types of Statements in Mathematics).</dc:description>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#ProofLocalStatement">
+    <rdfs:label xml:lang="ru">Локальное предложение</rdfs:label>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >A statement that is local to a proof and given as a proof step</dc:description>
+    <rdfs:subClassOf rdf:resource="http://omdoc.org/ontology#ProofStep"/>
+    <rdfs:subClassOf rdf:resource="http://omdoc.org/ontology#Statement"/>
+    <rdfs:label xml:lang="en">Proof-local Statement</rdfs:label>
+    <rdfs:label xml:lang="de">Beweis-lokale Aussage</rdfs:label>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#SequentPart"/>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#StatementInTheory"/>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#ProofText">
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:label xml:lang="de">Beweistext</rdfs:label>
+    <rdfs:label xml:lang="en">Proof Text</rdfs:label>
+    <rdfs:label xml:lang="ru">Текст доказательства</rdfs:label>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#ProofLocalStatement"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Intermediate text in proofs that does not have to have a logical correspondence to a proof step, but guides the reader through the proof.</dc:description>
+    <rdfs:subClassOf rdf:resource="http://omdoc.org/ontology#ProofStep"/>
+    <rdfs:subClassOf rdf:resource="http://omdoc.org/ontology#InformalKnowledgeItem"/>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#ConstitutiveStatement">
+    <rdfs:label xml:lang="de">Konstitutive Aussage</rdfs:label>
+    <rdfs:label xml:lang="en">Constitutive Statement</rdfs:label>
+    <rdfs:label xml:lang="ru">Конструктивное предложение</rdfs:label>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#NonConstitutiveStatement"/>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >An OMDoc statement, which is theory-constitutive, as defined in the OMDoc1.2 specification, chapter 15.1 (Types of Statements in Mathematics) and 15.2 (Theory-Constitutive Statements in OMDoc).</dc:description>
+    <rdfs:subClassOf rdf:resource="http://omdoc.org/ontology#StatementInTheory"/>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#GeneralDefinition">
+    <rdfs:label xml:lang="de">Definition (allgemein)</rdfs:label>
+    <rdfs:label xml:lang="en">Definition (general)</rdfs:label>
+    <rdfs:label xml:lang="ru">Общее определение</rdfs:label>
+    <rdfs:subClassOf rdf:resource="http://omdoc.org/ontology#AnyLevelStatement"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >A definition, both as a constitutive element of a theory and as a proof-local definition</dc:description>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#GeneralSymbol"/>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#DerivedConclusion">
+    <rdfs:subClassOf rdf:resource="http://omdoc.org/ontology#DerivationStep"/>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:label xml:lang="de">Schlussfolgerung</rdfs:label>
+    <rdfs:label xml:lang="en">Conclusion</rdfs:label>
+    <rdfs:label xml:lang="ru">Выводимое заключение</rdfs:label>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Concluding step of the proof, the one that derives the assertion made in the corresponding theorem, as defined in the OMDoc 1.2 manual, chapter 17 (Representing Proofs).</dc:description>
+  </owl:Class>
+  <owl:Class rdf:about="http://omdoc.org/ontology#AssertedType">
+    <rdfs:label xml:lang="de">Behaupteter Typ</rdfs:label>
+    <rdfs:label xml:lang="en">Asserted Type</rdfs:label>
+    <rdfs:label xml:lang="ru">Утвержденный тип</rdfs:label>
+    <owl:disjointWith rdf:resource="http://omdoc.org/ontology#DeclaredType"/>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:subClassOf rdf:resource="http://omdoc.org/ontology#Type"/>
+    <rdfs:subClassOf rdf:resource="http://omdoc.org/ontology#NonConstitutiveStatement"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >The asserted type of a symbol, as defined in the OMDoc1.2 specification, chapter 15.3.2 (Type Assertions).
+In OMDoc/XML, this is represented by the omdoc:type element on statement level.</dc:description>
+  </owl:Class>
+  <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#hasOccurrenceOfInDefinition">
+    <rdfs:label xml:lang="de">enthält in der Definition</rdfs:label>
+    <rdfs:label xml:lang="en">has occurrence of in definition</rdfs:label>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Another symbol occurs in the definition of this symbol (MMT/OMDoc1.6)</dc:description>
+    <owl:propertyChainAxiom rdf:parseType="Collection">
+      <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#hasDefinition"/>
+      <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#usesSymbol"/>
+    </owl:propertyChainAxiom>
+    <rdfs:range rdf:resource="http://omdoc.org/ontology#Symbol"/>
+    <rdfs:subPropertyOf>
+      <owl:TransitiveProperty rdf:about="http://omdoc.org/ontology#wellFormedNessDependsOn"/>
+    </rdfs:subPropertyOf>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:domain rdf:resource="http://omdoc.org/ontology#Symbol"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#hasDeclaredType">
+    <rdfs:label xml:lang="de">hat deklarierten Typ</rdfs:label>
+    <rdfs:label xml:lang="en">has declared type</rdfs:label>
+    <rdfs:label xml:lang="ru">имеет объявленный тип</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >The relation between a symbol and its declared type, as defined in the OMDoc1.2 specification, chapter 15.2.3 (Type Declarations).</dc:description>
+    <rdfs:range rdf:resource="http://omdoc.org/ontology#DeclaredType"/>
+    <rdfs:subPropertyOf>
+      <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#hasType"/>
+    </rdfs:subPropertyOf>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#formalizes">
+    <owl:inverseOf>
+      <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#verbalizes"/>
+    </owl:inverseOf>
+    <rdfs:label xml:lang="de">formalisiert</rdfs:label>
+    <rdfs:label xml:lang="en">formalizes</rdfs:label>
+    <rdfs:label xml:lang="ru">формализует</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#exemplifies">
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >The statement that is exemplified by this example; see the OMDoc specification, chapter 15.4 (Mathematical Examples in OMDoc).
+In OMDoc/XML, this is represented by the omdoc:example/@for attribute.</dc:description>
+    <rdfs:range>
+      <owl:Class>
+        <owl:unionOf rdf:parseType="Collection">
+          <owl:Class rdf:about="http://omdoc.org/ontology#Symbol"/>
+          <owl:Class rdf:about="http://omdoc.org/ontology#Definition"/>
+          <owl:Class rdf:about="http://omdoc.org/ontology#Axiom"/>
+          <owl:Class rdf:about="http://omdoc.org/ontology#Assertion"/>
+        </owl:unionOf>
+      </owl:Class>
+    </rdfs:range>
+    <rdfs:domain rdf:resource="http://omdoc.org/ontology#Example"/>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:label xml:lang="de">erläutert</rdfs:label>
+    <rdfs:label xml:lang="en">exemplifies</rdfs:label>
+    <rdfs:label xml:lang="ru">является примером для</rdfs:label>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#rendersSymbol">
+    <rdfs:domain rdf:resource="http://omdoc.org/ontology#NotationDefinition"/>
+    <rdfs:range rdf:resource="http://omdoc.org/ontology#Symbol"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >The relationship of a notation definition to the symbol it specifies</dc:description>
+    <rdfs:label xml:lang="de">stellt Symbol dar</rdfs:label>
+    <rdfs:label xml:lang="en">renders symbol</rdfs:label>
+    <rdfs:label xml:lang="ru">представляет</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#hasNotationDefinition">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#InverseFunctionalProperty"/>
+    <rdfs:label xml:lang="de">hat Notationsdefinition</rdfs:label>
+    <rdfs:label xml:lang="en">has notation definition</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <owl:inverseOf rdf:resource="http://omdoc.org/ontology#rendersSymbol"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#assumes">
+    <rdfs:range rdf:resource="http://omdoc.org/ontology#Assumption"/>
+    <rdfs:subPropertyOf>
+      <owl:InverseFunctionalProperty rdf:about="http://omdoc.org/ontology#hasDirectPart"/>
+    </rdfs:subPropertyOf>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:label xml:lang="de">setzt voraus</rdfs:label>
+    <rdfs:label xml:lang="en">assumes</rdfs:label>
+    <rdfs:label xml:lang="ru">предполагает</rdfs:label>
+    <rdfs:domain rdf:resource="http://omdoc.org/ontology#Property"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#stepJustifiedBySubProof">
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Points from a derivation step to a subproof nested into this step, which gives the justification for this step</dc:description>
+    <rdfs:range rdf:resource="http://omdoc.org/ontology#NestedProof"/>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:label xml:lang="de">begründet durch Unterbeweis</rdfs:label>
+    <rdfs:label xml:lang="en">justified by subproof</rdfs:label>
+    <rdfs:subPropertyOf>
+      <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#stepLocallyJustifiedBy"/>
+    </rdfs:subPropertyOf>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#imports">
+    <rdfs:label xml:lang="de">importiert</rdfs:label>
+    <rdfs:label xml:lang="ru">включает</rdfs:label>
+    <rdfs:domain rdf:resource="http://omdoc.org/ontology#Theory"/>
+    <owl:propertyChainAxiom rdf:parseType="Collection">
+      <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#hasImport"/>
+      <owl:FunctionalProperty rdf:about="http://omdoc.org/ontology#importsFrom"/>
+    </owl:propertyChainAxiom>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:range rdf:resource="http://omdoc.org/ontology#Theory"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >An import relation between two theories, which is not further specified (e.g. by morphisms), as defined in chapter 15.6.1 (Simple Inheritance) of the OMDoc1.2 specification.
+In OMDoc/XML, this is represented by the omdoc:theory/@import attribute</dc:description>
+    <rdfs:subPropertyOf>
+      <owl:TransitiveProperty rdf:about="http://omdoc.org/ontology#wellFormedNessDependsOn"/>
+    </rdfs:subPropertyOf>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+    <rdfs:label xml:lang="en">imports</rdfs:label>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#metaTheory">
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:subPropertyOf rdf:resource="http://omdoc.org/ontology#imports"/>
+    <rdfs:label xml:lang="de">Metatheorie</rdfs:label>
+    <rdfs:label xml:lang="en">Meta Theory</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#stepJustifiedBy">
+    <rdfs:subPropertyOf>
+      <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#justifiedBy"/>
+    </rdfs:subPropertyOf>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:label xml:lang="de">begründet durch</rdfs:label>
+    <rdfs:label xml:lang="en">justified by</rdfs:label>
+    <rdfs:label xml:lang="ru">обоснован посредством</rdfs:label>
+    <rdfs:domain rdf:resource="http://omdoc.org/ontology#DerivationStep"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Points from a derivation step in a proof to its justification(s).</dc:description>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#corroboratedBy">
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <owl:inverseOf>
+      <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#corroborates"/>
+    </owl:inverseOf>
+    <rdfs:label xml:lang="de">bestätigt durch</rdfs:label>
+    <rdfs:label xml:lang="en">corroborated by</rdfs:label>
+    <rdfs:label xml:lang="ru">подтвержден посредством</rdfs:label>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#hasStep">
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >hasStep is a more concrete subproperty of hasDirectPart which is only valid within Proofs.</dc:description>
+    <rdfs:domain rdf:resource="http://omdoc.org/ontology#Proof"/>
+    <rdfs:subPropertyOf>
+      <owl:InverseFunctionalProperty rdf:about="http://omdoc.org/ontology#hasDirectPart"/>
+    </rdfs:subPropertyOf>
+    <rdfs:label xml:lang="ru">имеет шаг</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#InverseFunctionalProperty"/>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:label xml:lang="de">hat Schritt</rdfs:label>
+    <rdfs:range rdf:resource="http://omdoc.org/ontology#ProofStep"/>
+    <rdfs:label xml:lang="en">has step</rdfs:label>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#stepJustifiedByPrecedingStep">
+    <rdfs:range rdf:resource="http://omdoc.org/ontology#ProofLocalStatement"/>
+    <rdfs:subPropertyOf>
+      <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#stepLocallyJustifiedBy"/>
+    </rdfs:subPropertyOf>
+    <rdfs:label xml:lang="de">begründet durch vorherigen Schritt</rdfs:label>
+    <rdfs:label xml:lang="en">justified by preceding step</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Points from a derivation step in a proof to a preceding derivation step giving its justification</dc:description>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#justifiedBy">
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Generic superproperty for justifications of knowledge items made by pointing to other statements.</dc:description>
+    <rdfs:domain rdf:resource="http://omdoc.org/ontology#MathKnowledgeItem"/>
+    <rdfs:label xml:lang="de">begründet durch</rdfs:label>
+    <rdfs:label xml:lang="en">justified by</rdfs:label>
+    <rdfs:label xml:lang="ru">обоснован посредством</rdfs:label>
+    <rdfs:range rdf:resource="http://omdoc.org/ontology#Statement"/>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#exemplifiedBy">
+    <owl:inverseOf rdf:resource="http://omdoc.org/ontology#exemplifies"/>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:label xml:lang="de">erläutert durch</rdfs:label>
+    <rdfs:label xml:lang="en">exemplified by</rdfs:label>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#concludesWith">
+    <rdfs:label xml:lang="de">schlussfolgert</rdfs:label>
+    <rdfs:label xml:lang="en">concludes with</rdfs:label>
+    <rdfs:label xml:lang="ru">заключается посредством</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:range rdf:resource="http://omdoc.org/ontology#Conclusion"/>
+    <rdfs:subPropertyOf>
+      <owl:InverseFunctionalProperty rdf:about="http://omdoc.org/ontology#hasDirectPart"/>
+    </rdfs:subPropertyOf>
+    <rdfs:domain rdf:resource="http://omdoc.org/ontology#Property"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#formalityDegree">
+    <rdfs:range rdf:resource="http://omdoc.org/ontology#FormalityDegree"/>
+    <rdfs:domain rdf:resource="http://omdoc.org/ontology#MathKnowledgeItem"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Used to express how formal a mathematical knowledge item is.</dc:description>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:label xml:lang="de">Formalitätsgrad</rdfs:label>
+    <rdfs:label xml:lang="en">formality degree</rdfs:label>
+    <rdfs:label xml:lang="ru">имеет степень формальности</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#occursInTypeOf">
+    <rdfs:label xml:lang="de">kommt vor im Typ von</rdfs:label>
+    <rdfs:label xml:lang="en">occurs in type of</rdfs:label>
+    <rdfs:label xml:lang="ru">встречается в типе</rdfs:label>
+    <owl:inverseOf>
+      <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#hasOccurrenceOfInType"/>
+    </owl:inverseOf>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#hasProperty">
+    <rdfs:domain rdf:resource="http://omdoc.org/ontology#Statement"/>
+    <rdfs:range rdf:resource="http://omdoc.org/ontology#Property"/>
+    <rdfs:label xml:lang="de">hat Eigenschaft</rdfs:label>
+    <rdfs:label xml:lang="en">has property</rdfs:label>
+    <rdfs:label xml:lang="ru">обладает свойством</rdfs:label>
+    <rdfs:subPropertyOf>
+      <owl:InverseFunctionalProperty rdf:about="http://omdoc.org/ontology#hasDirectPart"/>
+    </rdfs:subPropertyOf>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Represents relation between nodes and its CMP/FMP children nodes</dc:description>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#stepLocallyJustifiedBy">
+    <rdfs:subPropertyOf rdf:resource="http://omdoc.org/ontology#stepJustifiedBy"/>
+    <rdfs:range rdf:resource="http://omdoc.org/ontology#Statement"/>
+    <rdfs:label xml:lang="de">begründet durch</rdfs:label>
+    <rdfs:label xml:lang="en">justified by</rdfs:label>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Points from a derivation step in a proof to (an)other local proof step(s) or to a nested proof (i.e. to substeps) giving its justification</dc:description>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#hasConclusion">
+    <rdfs:range rdf:resource="http://omdoc.org/ontology#DerivedConclusion"/>
+    <rdfs:label xml:lang="de">hat Schlussfolgerung</rdfs:label>
+    <rdfs:label xml:lang="en">has step</rdfs:label>
+    <rdfs:label xml:lang="ru">имеет заключение</rdfs:label>
+    <rdfs:subPropertyOf rdf:resource="http://omdoc.org/ontology#hasStep"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >A proof can have at most one conclusion step.</dc:description>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#stepExternallyJustifiedBy">
+    <rdfs:label xml:lang="de">begründet durch externe Aussage</rdfs:label>
+    <rdfs:label xml:lang="en">justified by external statement</rdfs:label>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Points from a derivation step in a proof to an external statement giving its justification</dc:description>
+    <rdfs:subPropertyOf rdf:resource="http://omdoc.org/ontology#stepJustifiedBy"/>
+    <rdfs:range>
+      <owl:Class>
+        <owl:unionOf rdf:parseType="Collection">
+          <owl:Class rdf:about="http://omdoc.org/ontology#Definition"/>
+          <owl:Class rdf:about="http://omdoc.org/ontology#Axiom"/>
+          <owl:Class rdf:about="http://omdoc.org/ontology#Assertion"/>
+        </owl:unionOf>
+      </owl:Class>
+    </rdfs:range>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#occursInDefinitionOf">
+    <owl:inverseOf rdf:resource="http://omdoc.org/ontology#hasOccurrenceOfInDefinition"/>
+    <rdfs:label xml:lang="de">kommt vor in der Definition von</rdfs:label>
+    <rdfs:label xml:lang="en">occurs in definition of</rdfs:label>
+    <rdfs:label xml:lang="ru">встречается в определении</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#verbalizes">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+    <rdfs:range rdf:resource="http://omdoc.org/ontology#MathKnowledgeItem"/>
+    <rdfs:domain rdf:resource="http://omdoc.org/ontology#MathKnowledgeItem"/>
+    <rdfs:label xml:lang="de">verbalisiert</rdfs:label>
+    <rdfs:label xml:lang="en">verbalizes</rdfs:label>
+    <rdfs:label xml:lang="ru">вербализует</rdfs:label>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >An informal knowledge item is supposed to represent its formal counterpart.</dc:description>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#hasOccurrenceOfInType">
+    <rdfs:label xml:lang="en">has occurrence of in type</rdfs:label>
+    <rdfs:label xml:lang="ru">встречается в</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <owl:propertyChainAxiom rdf:parseType="Collection">
+      <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#hasType"/>
+      <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#usesSymbol"/>
+    </owl:propertyChainAxiom>
+    <rdfs:domain rdf:resource="http://omdoc.org/ontology#Symbol"/>
+    <rdfs:range rdf:resource="http://omdoc.org/ontology#Symbol"/>
+    <rdfs:label xml:lang="de">enthält im Typen</rdfs:label>
+    <rdfs:subPropertyOf>
+      <owl:TransitiveProperty rdf:about="http://omdoc.org/ontology#wellFormedNessDependsOn"/>
+    </rdfs:subPropertyOf>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Another symbol occurs in the type declaration of this symbol (MMT/OMDoc1.6)</dc:description>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#homeTheoryOf">
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Expresses that a theory is the home of a statement or another (nested) theory (and thereby also provides a context for the statement or the theory, but not the only one, as importing theories elsewhere embeds them into new contexts as well).  Each statement or nested theory has at most one home theory.  See chapter 15.1 (Types of Statements in Mathematics) of the OMDoc1.2 specification for a definition.</dc:description>
+    <rdfs:subPropertyOf>
+      <owl:InverseFunctionalProperty rdf:about="http://omdoc.org/ontology#hasDirectPart"/>
+    </rdfs:subPropertyOf>
+    <rdfs:domain rdf:resource="http://omdoc.org/ontology#Theory"/>
+    <rdfs:range>
+      <owl:Class>
+        <owl:unionOf rdf:parseType="Collection">
+          <owl:Class rdf:about="http://omdoc.org/ontology#StatementInTheory"/>
+          <owl:Class rdf:about="http://omdoc.org/ontology#Theory"/>
+          <owl:Class rdf:about="http://omdoc.org/ontology#Document"/>
+          <owl:Class rdf:about="http://omdoc.org/ontology#DocumentUnit"/>
+        </owl:unionOf>
+      </owl:Class>
+    </rdfs:range>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <owl:inverseOf>
+      <owl:FunctionalProperty rdf:about="http://omdoc.org/ontology#homeTheory"/>
+    </owl:inverseOf>
+    <rdfs:label xml:lang="de">Heimattheorie von</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#InverseFunctionalProperty"/>
+    <rdfs:label xml:lang="en">home theory of</rdfs:label>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#provedBy">
+    <rdfs:label xml:lang="de">bewiesen durch</rdfs:label>
+    <rdfs:label xml:lang="en">proved by</rdfs:label>
+    <rdfs:label xml:lang="ru">доказывается посредством</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <owl:inverseOf>
+      <owl:FunctionalProperty rdf:about="http://omdoc.org/ontology#proves"/>
+    </owl:inverseOf>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#hasType">
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >The relation between a symbol and its (declared or asserted-and-proved) type, as defined in the OMDoc1.2 specification, chapter 15.2.3 (Type Declarations) and 15.3.2 (Type Assertions).</dc:description>
+    <rdfs:label xml:lang="de">hat Typ</rdfs:label>
+    <rdfs:label xml:lang="en">has type</rdfs:label>
+    <rdfs:label xml:lang="ru">имеет тип</rdfs:label>
+    <rdfs:domain rdf:resource="http://omdoc.org/ontology#Symbol"/>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:range rdf:resource="http://omdoc.org/ontology#Type"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#hasImport">
+    <rdfs:label xml:lang="de">hat Import</rdfs:label>
+    <rdfs:label xml:lang="en">has import</rdfs:label>
+    <rdfs:label xml:lang="ru">имеет включение</rdfs:label>
+    <rdfs:range rdf:resource="http://omdoc.org/ontology#Import"/>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:subPropertyOf rdf:resource="http://omdoc.org/ontology#homeTheoryOf"/>
+    <rdfs:domain rdf:resource="http://omdoc.org/ontology#Theory"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >The relationship between a theory and an import statement it contains</dc:description>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#truthDependsOn">
+    <rdfs:label xml:lang="de">Wahrheit hängt ab von</rdfs:label>
+    <rdfs:label xml:lang="en">truth depends on</rdfs:label>
+    <rdfs:subPropertyOf>
+      <owl:TransitiveProperty rdf:about="http://omdoc.org/ontology#dependsOn"/>
+    </rdfs:subPropertyOf>
+    <owl:propertyChainAxiom rdf:parseType="Collection">
+      <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#hasStep"/>
+      <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#stepExternallyJustifiedBy"/>
+    </owl:propertyChainAxiom>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Currently: A proof depends on a statement provided externally; may be extended to other truth-related dependencies</dc:description>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#refutes">
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >The assertion that is refuted by this example; see the OMDoc specification, chapter 15.4 (Mathematical Examples in OMDoc).  Although not explicitly stated in the OMDoc book, I guess that only assertions can be corroborated by an example; for a symbol or definition, it wouldn't make sense.
+In OMDoc/XML, this is represented by the omdoc:example/@for attribute, together with omdoc:example/@type='against'.</dc:description>
+    <rdfs:label xml:lang="de">widerlegt</rdfs:label>
+    <rdfs:label xml:lang="en">refutes</rdfs:label>
+    <rdfs:label xml:lang="ru">опровергает</rdfs:label>
+    <rdfs:subPropertyOf rdf:resource="http://omdoc.org/ontology#exemplifies"/>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:range rdf:resource="http://omdoc.org/ontology#Assertion"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#usesSymbol">
+    <rdfs:domain>
+      <owl:Class>
+        <owl:unionOf rdf:parseType="Collection">
+          <owl:Class rdf:about="http://omdoc.org/ontology#Property"/>
+          <owl:Class rdf:about="http://omdoc.org/ontology#SequentPart"/>
+        </owl:unionOf>
+      </owl:Class>
+    </rdfs:domain>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >FMP can refer to several symbols in its body.</dc:description>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:label xml:lang="de">verwendet Symbol</rdfs:label>
+    <rdfs:label xml:lang="en">uses symbol</rdfs:label>
+    <rdfs:label xml:lang="ru">использует символ</rdfs:label>
+    <rdfs:range rdf:resource="http://omdoc.org/ontology#Symbol"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#occursIn">
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:label xml:lang="de">kommt vor in</rdfs:label>
+    <rdfs:label xml:lang="en">occurs in</rdfs:label>
+    <rdfs:label xml:lang="ru">встречается в</rdfs:label>
+    <owl:inverseOf rdf:resource="http://omdoc.org/ontology#usesSymbol"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#refutedBy">
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:label xml:lang="de">widerlegt durch</rdfs:label>
+    <rdfs:label xml:lang="en">refuted by</rdfs:label>
+    <rdfs:label xml:lang="ru">опровергается посредством</rdfs:label>
+    <owl:inverseOf rdf:resource="http://omdoc.org/ontology#refutes"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#refersTo">
+    <rdfs:domain rdf:resource="http://omdoc.org/ontology#Reference"/>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:label xml:lang="de">verweist auf</rdfs:label>
+    <rdfs:label xml:lang="en">refers to</rdfs:label>
+    <rdfs:label xml:lang="ru">ссылается на</rdfs:label>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Every ref node has a mandatory xref atribute pointing to some existing element. This is later extracted as RDF tripple connected with refersTo property</dc:description>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#corroborates">
+    <rdfs:range rdf:resource="http://omdoc.org/ontology#Assertion"/>
+    <rdfs:label xml:lang="de">bestätigt</rdfs:label>
+    <rdfs:label xml:lang="en">corroborates</rdfs:label>
+    <rdfs:label xml:lang="ru">подтверждает</rdfs:label>
+    <rdfs:subPropertyOf rdf:resource="http://omdoc.org/ontology#exemplifies"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >The assertion that is corroborated by this example; see the OMDoc specification, chapter 15.4 (Mathematical Examples in OMDoc). Although not explicitly stated in the OMDoc book, I guess that only assertions can be corroborated by an example; for a symbol or definition, it wouldn't make sense.
+In OMDoc/XML, this is represented by the omdoc:example/@for attribute, together with omdoc:example/@type='for'.</dc:description>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#hasDefinition">
+    <rdfs:range>
+      <owl:Class>
+        <owl:unionOf rdf:parseType="Collection">
+          <owl:Class rdf:about="http://omdoc.org/ontology#Definition"/>
+          <owl:Class>
+            <owl:intersectionOf rdf:parseType="Collection">
+              <owl:Class rdf:about="http://omdoc.org/ontology#Property"/>
+              <owl:Class rdf:about="http://omdoc.org/ontology#InformalKnowledgeItem"/>
+            </owl:intersectionOf>
+          </owl:Class>
+        </owl:unionOf>
+      </owl:Class>
+    </rdfs:range>
+    <rdfs:label xml:lang="de">hat Definition</rdfs:label>
+    <owl:inverseOf>
+      <owl:InverseFunctionalProperty rdf:about="http://omdoc.org/ontology#defines"/>
+    </owl:inverseOf>
+    <rdfs:label xml:lang="ru">имеет определение</rdfs:label>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Expresses that a definition defines a symbol; see chapter 15.2.4 (Definitions) of the OMDoc1.2 specification.  A symbol can have at most one definition.  A definition defines at least one symbol.</dc:description>
+    <rdfs:domain rdf:resource="http://omdoc.org/ontology#Symbol"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:label xml:lang="en">has definition</rdfs:label>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://omdoc.org/ontology#hasAssertedType">
+    <rdfs:range rdf:resource="http://omdoc.org/ontology#AssertedType"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >The relation between a symbol and its asserted type, as defined in the OMDoc1.2 specification, chapter 15.3.2 (Type Assertions).</dc:description>
+    <rdfs:label xml:lang="de">hat behaupteten Typ</rdfs:label>
+    <rdfs:label xml:lang="en">has asserted type</rdfs:label>
+    <rdfs:label xml:lang="ru">имеет утвержденный тип</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+  </owl:ObjectProperty>
+  <owl:DatatypeProperty rdf:about="http://omdoc.org/ontology#hasText">
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:domain rdf:resource="http://omdoc.org/ontology#Property"/>
+    <rdfs:label xml:lang="de">Text</rdfs:label>
+    <rdfs:label xml:lang="en">has text</rdfs:label>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >The text of a property (usually an informal one)</dc:description>
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="http://omdoc.org/ontology#logic">
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >A Formal Mathematical Property is formally represented in some logic. This property helps us create a relation between the property and the logic. This is as defined in the OMDoc 1.2 specification, chapter 1 (Mathematical Text (Modules MTXT and RT)</dc:description>
+    <rdfs:domain rdf:resource="http://omdoc.org/ontology#Property"/>
+    <rdfs:label xml:lang="de">Logik</rdfs:label>
+    <rdfs:label xml:lang="en">Logic</rdfs:label>
+  </owl:DatatypeProperty>
+  <owl:TransitiveProperty rdf:about="http://omdoc.org/ontology#hasPart">
+    <rdfs:label xml:lang="de">hat Teil</rdfs:label>
+    <rdfs:label xml:lang="en">has part</rdfs:label>
+    <rdfs:label xml:lang="ru">имеет частью</rdfs:label>
+    <rdfs:domain rdf:resource="http://omdoc.org/ontology#MathKnowledgeItem"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >The most generic containment relation, used to create relation between a whole and a part, denoting that one concept A (directly or indirectly) contains another concept B. This is orthogonal to dependency. Note that containment is not only transitive but also inverse functional, but both properties together are not allowed in OWL for decidability reasons.  Therefore, we model a single step of a transitive has-part chain (i.e. direct parthood) by a separate property, which is inverse functional.</dc:description>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:range rdf:resource="http://omdoc.org/ontology#MathKnowledgeItem"/>
+  </owl:TransitiveProperty>
+  <owl:TransitiveProperty rdf:about="http://omdoc.org/ontology#dependsOn">
+    <rdfs:domain rdf:resource="http://omdoc.org/ontology#MathKnowledgeItem"/>
+    <rdfs:range rdf:resource="http://omdoc.org/ontology#MathKnowledgeItem"/>
+    <rdfs:label xml:lang="de">hängt ab von</rdfs:label>
+    <rdfs:label xml:lang="en">depends on</rdfs:label>
+    <rdfs:label xml:lang="ru">зависит от</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >This relation denotes that one concept B depends on another concept A.  Dependency is “defined” as:  A change to A may have an impact on some property of B.  It is up to subproperties to fix the latter property to something reasonable, such as well-formedness.</dc:description>
+  </owl:TransitiveProperty>
+  <owl:TransitiveProperty rdf:about="http://omdoc.org/ontology#importedBy">
+    <owl:inverseOf rdf:resource="http://omdoc.org/ontology#imports"/>
+    <rdfs:label xml:lang="de">wird importiert von</rdfs:label>
+    <rdfs:label xml:lang="en">imported by</rdfs:label>
+    <rdfs:label xml:lang="ru">включена</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+  </owl:TransitiveProperty>
+  <owl:TransitiveProperty rdf:about="http://omdoc.org/ontology#wellFormedNessDependsOn">
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Dependency in terms of well-formedness, as defined by MMT/OMDoc 1.6.</dc:description>
+    <rdfs:label xml:lang="de">Wohlgeformtheit hängt ab von</rdfs:label>
+    <rdfs:label xml:lang="en">wellformedness depends on</rdfs:label>
+    <rdfs:subPropertyOf rdf:resource="http://omdoc.org/ontology#dependsOn"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </owl:TransitiveProperty>
+  <owl:FunctionalProperty rdf:about="http://omdoc.org/ontology#homeTheory">
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label xml:lang="de">Heimattheorie</rdfs:label>
+    <rdfs:label xml:lang="en">has home theory</rdfs:label>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Expresses that a statement or a nested theory has another theory as its home theory, which provides the context for the statement or the theory.  Each statement or nested theory has at most one home theory.  See chapter 15.1 (Types of Statements in Mathematics) of the OMDoc1.2 specification for a definition.
+In OMDoc/XML, this is represented by the omdoc:*/@theory attribute (at least for non-constitutive statements) or by containment within an omdoc:theory element.
+Probably, this relation should be refactored into two ones.  A statement has exactly one home theory, but a theory need not have a home theory, if it's at top level. —Christoph Lange</dc:description>
+    <owl:inverseOf rdf:resource="http://omdoc.org/ontology#homeTheoryOf"/>
+  </owl:FunctionalProperty>
+  <owl:FunctionalProperty rdf:about="http://omdoc.org/ontology#importsFrom">
+    <rdfs:domain rdf:resource="http://omdoc.org/ontology#Import"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >The relationship between an import and the theory it imports</dc:description>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:label xml:lang="de">importiert aus</rdfs:label>
+    <rdfs:label xml:lang="en">imports from</rdfs:label>
+    <rdfs:label xml:lang="ru">включает из</rdfs:label>
+    <rdfs:range rdf:resource="http://omdoc.org/ontology#Theory"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </owl:FunctionalProperty>
+  <owl:FunctionalProperty rdf:about="http://omdoc.org/ontology#typeJustifiedBy">
+    <rdfs:domain rdf:resource="http://omdoc.org/ontology#AssertedType"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Points from a type assertion to the corresponding assertion that justifies it.</dc:description>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:subPropertyOf rdf:resource="http://omdoc.org/ontology#justifiedBy"/>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:range rdf:resource="http://omdoc.org/ontology#Assertion"/>
+    <rdfs:label xml:lang="de">begründet durch</rdfs:label>
+    <rdfs:label xml:lang="en">justified by</rdfs:label>
+    <rdfs:label xml:lang="ru">обоснован посредством</rdfs:label>
+  </owl:FunctionalProperty>
+  <owl:FunctionalProperty rdf:about="http://omdoc.org/ontology#proves">
+    <rdfs:range rdf:resource="http://omdoc.org/ontology#Assertion"/>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:label xml:lang="de">beweist</rdfs:label>
+    <rdfs:label xml:lang="en">proves</rdfs:label>
+    <rdfs:label xml:lang="ru">доказывает</rdfs:label>
+    <rdfs:domain rdf:resource="http://omdoc.org/ontology#Proof"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >The statement (assertion or derivation; at most one) that is proven by this proof; see chapter 17.1 (Proof Structure) of the OMDoc1.2 specification.
+In OMDoc/XML, this is represented by the omdoc:proof/@for attribute.</dc:description>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+  </owl:FunctionalProperty>
+  <owl:InverseFunctionalProperty rdf:about="http://omdoc.org/ontology#hasDirectPart">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >We model the direct relation between a whole and a part separately, as that allows us to state that it is inverse functional.</dc:description>
+    <rdfs:label xml:lang="de">hat direkten Teil</rdfs:label>
+    <rdfs:label xml:lang="en">has direct part</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+  </owl:InverseFunctionalProperty>
+  <owl:InverseFunctionalProperty rdf:about="http://omdoc.org/ontology#defines">
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <owl:inverseOf rdf:resource="http://omdoc.org/ontology#hasDefinition"/>
+    <rdfs:label xml:lang="de">definiert</rdfs:label>
+    <rdfs:label xml:lang="en">defines</rdfs:label>
+    <rdfs:label xml:lang="ru">определяет</rdfs:label>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <dc:description rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Expresses that a definition defines a symbol; see chapter 15.2.4 (Definitions) of the OMDoc1.2 specification.  A symbol can have at most one definition.  A definition defines at least one symbol.
+In OMDoc/XML, this is represented by the omdoc:definition/@for attribute.</dc:description>
+  </owl:InverseFunctionalProperty>
+  <oo:FormalityDegree rdf:about="http://omdoc.org/ontology#Computerized">
+    <rdfs:isDefinedBy rdf:resource="http://omdoc.org/ontology#"/>
+    <rdfs:label xml:lang="de">computerisiert</rdfs:label>
+    <rdfs:label xml:lang="en">computerized</rdfs:label>
+    <rdfs:label xml:lang="ru">Компьютеризированный</rdfs:label>
+  </oo:FormalityDegree>
+  <owl:AnnotationProperty rdf:about="http://purl.org/dc/elements/1.1/title"/>
+  <owl:AnnotationProperty rdf:about="http://purl.org/dc/elements/1.1/description"/>
+  <owl:AnnotationProperty rdf:about="http://purl.org/dc/elements/1.1/subject"/>
+  <owl:AnnotationProperty rdf:about="http://purl.org/dc/elements/1.1/creator"/>
+  <owl:AnnotationProperty rdf:about="http://purl.org/dc/elements/1.1/contributor"/>
+</rdf:RDF>
+
+<!-- Created with Protege (with OWL Plugin 3.4.4, Build 579)  http://protege.stanford.edu -->
