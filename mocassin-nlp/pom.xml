@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>ru.ksu.niimm.cll.mocassin</groupId>
 		<artifactId>mocassin-pom</artifactId>
-		<version>1.0.0.5-SNAPSHOT</version>
+		<version>1.0.0.5</version>
 		<relativePath>../mocassin-pom</relativePath>
 	</parent>
 
@@ -12,7 +12,7 @@
 	<groupId>ru.ksu.niimm.cll.mocassin</groupId>
 	<artifactId>mocassin-nlp</artifactId>
 	<name>Mocassin NLP - Natural Language Processing</name>
-	<version>1.0.0.5-SNAPSHOT</version>
+	<version>1.0.0.5</version>
 	<organization>
 		<name>N.G. Chebotarev Research Institute of Mathematics and Mechanics</name>
 		<url>http://cll.niimm.ksu.ru</url>
@@ -21,17 +21,17 @@
 		<dependency>
 			<groupId>ru.ksu.niimm.cll.mocassin</groupId>
 			<artifactId>mocassin-util</artifactId>
-			<version>1.0.0.5-SNAPSHOT</version>
+			<version>1.0.0.5</version>
 		</dependency>
 		<dependency>
 			<groupId>ru.ksu.niimm.cll.mocassin</groupId>
 			<artifactId>mocassin-parser</artifactId>
-			<version>1.0.0.5-SNAPSHOT</version>
+			<version>1.0.0.5</version>
 		</dependency>
 		<dependency>
 			<groupId>ru.ksu.niimm.cll.mocassin</groupId>
 			<artifactId>mocassin-ontology</artifactId>
-			<version>1.0.0.5-SNAPSHOT</version>
+			<version>1.0.0.5</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.jung</groupId>
@@ -86,7 +86,7 @@
 			<artifactId>guava</artifactId>
 		</dependency>
 
-		<!-- for Unit testing  -->
+		<!-- for Unit testing -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -134,15 +134,19 @@
 		<dependency>
 			<groupId>ru.ksu.niimm.cll.mocassin</groupId>
 			<artifactId>mocassin-virtuoso</artifactId>
-			<version>1.0.0.5-SNAPSHOT</version>
+			<version>1.0.0.5</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>ru.ksu.niimm.cll.mocassin</groupId>
 			<artifactId>mocassin-fulltext</artifactId>
-			<version>1.0.0.5-SNAPSHOT</version>
+			<version>1.0.0.5</version>
 			<scope>compile</scope>
 		</dependency>
-
+		<dependency>
+			<groupId>edu.stanford.nlp</groupId>
+			<artifactId>stanford-parser</artifactId>
+			<version>1.6.6</version>
+		</dependency>
 	</dependencies>
 </project>
