@@ -84,7 +84,7 @@ public class StructureViewer implements EntryPoint {
 			metadataPanel.setSize("100%", "180");
 
 			String key = result.getKey() != null ? result.getKey() : "";
-			Label lblNewLabel = new Label("arXiv:" + key);
+			Label lblNewLabel = new Label("arXiv: " + key);
 			lblNewLabel.setStyleName("paper-id");
 			metadataPanel.add(lblNewLabel);
 

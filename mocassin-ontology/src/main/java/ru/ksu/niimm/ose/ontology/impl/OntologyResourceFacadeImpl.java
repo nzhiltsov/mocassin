@@ -46,6 +46,7 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 	private static final String RETRIEVED_LINK_HREF_ELEMENT_KEY = "?4";
 	private static final String RETRIEVED_PUBLICATION_URI_ELEMENT_KEY = "?1";
 	private static final String RULES_SET_ENTRY = "define input:inference \"%s\"";
+	private static final String RETRIEVED_ARXIV_ID_ELEMENT_KEY = "?2";
 	@Inject
 	private VirtuosoDAO virtuosoDAO;
 	@Inject
@@ -168,10 +169,12 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 
 	private ArticleMetadata loadPublication(String documentUri) {
 		String title = retrieveTitle(documentUri);
+		String arxivId = retrieveArxivId(documentUri);
 		List<Author> authors = retrieveAuthors(documentUri);
 		List<Link> links = retrieveLinks(documentUri);
 
 		ArticleMetadata articleMetadata = new ArticleMetadata();
+		articleMetadata.setArxivId(arxivId);
 		articleMetadata.setId(documentUri);
 		articleMetadata.setTitle(title);
 		articleMetadata.setAuthors(authors);
@@ -247,6 +250,22 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 		return resource.toString();
 	}
 
+	private String retrieveArxivId(String documentUri) {
+		String idQueryString = generateArxivIdQuery(documentUri);
+
+		Query query = QueryFactory.create(idQueryString);
+
+		List<QuerySolution> solutions = getVirtuosoDAO().get(query,
+				getSearchGraph());
+		if (solutions.isEmpty()) {
+			return null;
+		}
+		Resource resource = solutions.get(0).getResource(
+				RETRIEVED_ARXIV_ID_ELEMENT_KEY);
+
+		return resource.toString();
+	}
+
 	private boolean isPublication(String uri) {
 		String typeQueryString = generateTypeQueryString(uri);
 		Query query = QueryFactory.create(typeQueryString);
@@ -281,9 +300,13 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 		return String.format(query, documentUri);
 	}
 
+	private String generateArxivIdQuery(String documentUri) {
+		String query = getSparqlQueryLoader().loadQueryByName("GetArxivId");
+		return String.format(query, documentUri);
+	}
+
 	private String generateSegmentInfoQuery(String segmentUri) {
-		String query = getSparqlQueryLoader()
-				.loadQueryByName("GetSegmentInfo");
+		String query = getSparqlQueryLoader().loadQueryByName("GetSegmentInfo");
 		return String.format(query, segmentUri);
 	}
 

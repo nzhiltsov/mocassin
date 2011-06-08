@@ -14,7 +14,7 @@ public class ArticleMetadata {
 	/**
 	 * arXiv id, e.g. 'math/0205003'
 	 */
-	// private String arxivId;
+	private String arxivId;
 	/**
 	 * full id, e.g. 'http://arxiv.org/abs/math/0205003v1' where the 'v1' suffix
 	 * is a pointer of the version
@@ -87,6 +87,14 @@ public class ArticleMetadata {
 
 	public void setCurrentSegmentTitle(String currentSegmentTitle) {
 		this.currentSegmentTitle = currentSegmentTitle;
+	}
+
+	public String getArxivId() {
+		return arxivId;
+	}
+
+	public void setArxivId(String arxivId) {
+		this.arxivId = arxivId;
 	}
 
 }

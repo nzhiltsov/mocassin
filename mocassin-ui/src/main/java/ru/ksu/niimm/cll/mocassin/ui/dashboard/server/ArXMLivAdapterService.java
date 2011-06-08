@@ -62,6 +62,7 @@ public class ArXMLivAdapterService implements ArxivService {
 	public void handle(String arxivId) {
 		try {
 			ArticleMetadata metadata = arxivDAOFacade.retrieve(arxivId);
+			metadata.setArxivId(arxivId);
 			InputStream pdfInputStream = arxivDAOFacade.loadPDF(metadata);
 			Link pdfLink = Iterables.find(metadata.getLinks(),
 					new PdfLinkPredicate());

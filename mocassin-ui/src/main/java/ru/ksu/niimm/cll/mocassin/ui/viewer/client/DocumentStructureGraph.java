@@ -130,6 +130,10 @@ public class DocumentStructureGraph extends ProtovisWidget implements
 				.size(new JsDoubleFunction() {
 					public double f(JsArgs args) {
 						PVNode d = args.getObject();
+						if (d.<Node> object().getNodeType() == 14) {// the node is not recognized
+							return 24 * (Math.pow(args.<PVMark> getThis().scale(),
+									-1.5));
+						}
 						return (20 * d.linkDegree() + 4)
 								* (Math.pow(args.<PVMark> getThis().scale(),
 										-1.5));
