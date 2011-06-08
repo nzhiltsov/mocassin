@@ -94,12 +94,12 @@ public class QueryManagerFacadeTest {
 
 	@Test
 	public void testDescribe() {
-		Model model = getQueryManagerFacade().describe("http://arxiv.org/abs/1104.1326v1");
+		Model model = getQueryManagerFacade().describe("http://arxiv.org/abs/math/0005005v2");
 		Graph describeGraph = model.getGraph();
 		ExtendedIterator<Triple> foundIt = describeGraph.find(Node.ANY,
 				Node.ANY, Node.ANY);
 		boolean contains = false;
-		Node subject = Node.createURI("http://arxiv.org/abs/1104.1326v1");
+		Node subject = Node.createURI("http://arxiv.org/abs/math/0005005v2");
 		Node predicate = Node.createURI("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
 		Node object = Node.createURI("http://salt.semanticauthoring.org/ontologies/sdo#Publication");
 		Triple tripleForSearch = new Triple(subject, predicate, object);
