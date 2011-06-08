@@ -32,12 +32,12 @@ public class OntologyResourceFacadeTest {
 	@Test
 	public void testLoadArticleMetadataResource() {
 		OntologyResource resource = new OntologyResource(
-				"http://arxiv.org/abs/1104.1326v1");
+				"http://arxiv.org/abs/math/0005005v2");
 		ArticleMetadata articleMetadata = getOntologyResourceFacade().load(
 				resource);
-		Assert.assertEquals("http://arxiv.org/abs/1104.1326v1",
+		Assert.assertEquals("http://arxiv.org/abs/math/0005005v2",
 				articleMetadata.getId());
-		boolean titleEquals = "On images of Mori dream spaces"
+		boolean titleEquals = "The Derived Picard Group is a Locally Algebraic Group"
 				.equals(articleMetadata.getTitle());
 
 		Assert.assertTrue(titleEquals);
