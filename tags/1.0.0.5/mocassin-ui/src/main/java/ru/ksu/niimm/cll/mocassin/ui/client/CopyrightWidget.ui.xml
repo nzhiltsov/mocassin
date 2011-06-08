@@ -1,0 +1,28 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:style>
+		.table {
+			width: 100%;
+		}
+		
+		.message {
+			color: #646464;
+		}
+		
+		.table td {
+			text-align: center;
+		}
+	</ui:style>
+	<g:HorizontalPanel styleName='{style.table}'>
+		<g:HTML styleName='{style.message}'>
+			Brought to you by
+			<a href="http://cll.niimm.ksu.ru">CLL</a>
+			(author -
+			<a href="http://cll.niimm.ksu.ru/cms/lang/en_US/main/people/zhiltsov">Nikita Zhiltsov</a>
+			)
+			<br />
+			2010-2011 Mocassin v. 1.0.0.5
+		</g:HTML>
+	</g:HorizontalPanel>
+</ui:UiBinder> 

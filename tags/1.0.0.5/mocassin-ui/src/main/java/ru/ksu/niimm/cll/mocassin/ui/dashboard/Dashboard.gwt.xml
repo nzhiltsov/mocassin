@@ -1,0 +1,8 @@
+<module rename-to='dashboard'>
+	<inherits name="com.google.gwt.user.User" />
+	<inherits name="com.google.gwt.user.theme.standard.Standard" />
+	<inherits name='org.thechiselgroup.choosel.protovis.ProtovisGWT' />
+	<inherits name="com.google.gwt.uibinder.UiBinder" />
+	<source path='client' />
+	<entry-point class="ru.ksu.niimm.cll.mocassin.ui.dashboard.client.Dashboard" />
+</module>

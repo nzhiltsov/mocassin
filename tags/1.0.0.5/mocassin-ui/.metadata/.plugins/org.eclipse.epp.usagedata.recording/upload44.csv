@@ -1,0 +1,26 @@
+what,kind,bundleId,bundleVersion,description,time
+started,bundle,com.google.gwt.eclipse.core,1.2.0.v200912062003,"com.google.gwt.eclipse.core",1263593069264
+started,bundle,com.google.gwt.eclipse.oophm,1.2.0.v200912062003,"com.google.gwt.eclipse.oophm",1263593069265
+started,bundle,org.eclipse.wst.css.core,1.1.300.v200904131653,"org.eclipse.wst.css.core",1263593069266
+started,bundle,org.eclipse.wst.html.core,1.1.300.v200903120608,"org.eclipse.wst.html.core",1263593069326
+started,bundle,com.collabnet.subversion.merge,1.10.0,"com.collabnet.subversion.merge",1263593069326
+started,bundle,org.tigris.subversion.clientadapter,1.6.4.1,"org.tigris.subversion.clientadapter",1263593069326
+started,bundle,org.tigris.subversion.clientadapter.javahl,1.6.6,"org.tigris.subversion.clientadapter.javahl",1263593069326
+started,bundle,org.tigris.subversion.clientadapter.svnkit,1.6.4,"org.tigris.subversion.clientadapter.svnkit",1263593069326
+started,bundle,org.tigris.subversion.subclipse.core,1.6.5,"org.tigris.subversion.subclipse.core",1263593069326
+started,bundle,org.tigris.subversion.subclipse.mylyn,3.0.0,"org.tigris.subversion.subclipse.mylyn",1263593069326
+started,bundle,org.tigris.subversion.subclipse.ui,1.6.5,"org.tigris.subversion.subclipse.ui",1263593069328
+os,sysinfo,,,"linux",1263593069340
+arch,sysinfo,,,"x86_64",1263593069340
+ws,sysinfo,,,"gtk",1263593069340
+locale,sysinfo,,,"ru_RU",1263593069340
+processors,sysinfo,,,"1",1263593069341
+java.runtime.name,sysinfo,,,"OpenJDK Runtime Environment",1263593069341
+java.runtime.version,sysinfo,,,"1.6.0_0-b14",1263593069341
+java.specification.name,sysinfo,,,"Java Platform API Specification",1263593069341
+java.specification.vendor,sysinfo,,,"Sun Microsystems Inc.",1263593069341
+java.specification.version,sysinfo,,,"1.6",1263593069341
+java.vendor,sysinfo,,,"Sun Microsystems Inc.",1263593069341
+java.version,sysinfo,,,"1.6.0_0",1263593069341
+java.vm.info,sysinfo,,,"mixed mode",1263593069341
+java.vm.name,sysinfo,,,"OpenJDK 64-Bit Server VM",1263593069341
