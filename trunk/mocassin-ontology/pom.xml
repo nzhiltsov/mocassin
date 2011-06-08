@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>ru.ksu.niimm.cll.mocassin</groupId>
 		<artifactId>mocassin-pom</artifactId>
-		<version>1.0.0.5-SNAPSHOT</version>
+		<version>1.0.0.5</version>
 		<relativePath>../mocassin-pom</relativePath>
 	</parent>
 
@@ -12,7 +12,7 @@
 	<groupId>ru.ksu.niimm.cll.mocassin</groupId>
 	<artifactId>mocassin-ontology</artifactId>
 	<name>Mocassin Ontology</name>
-	<version>1.0.0.5-SNAPSHOT</version>
+	<version>1.0.0.5</version>
 	<organization>
 		<name>N.G. Chebotarev Research Institute of Mathematics and Mechanics</name>
 		<url>http://cll.niimm.ksu.ru</url>
@@ -21,14 +21,14 @@
 		<dependency>
 			<groupId>ru.ksu.niimm.cll.mocassin</groupId>
 			<artifactId>mocassin-virtuoso</artifactId>
-			<version>1.0.0.5-SNAPSHOT</version>
+			<version>1.0.0.5</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>ru.ksu.niimm.cll.mocassin</groupId>
 			<artifactId>mocassin-arxiv</artifactId>
-			<version>1.0.0.5-SNAPSHOT</version>
+			<version>1.0.0.5</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
@@ -139,7 +139,7 @@
 		<dependency>
 			<groupId>ru.ksu.niimm.cll.mocassin</groupId>
 			<artifactId>mocassin-util</artifactId>
-			<version>1.0.0.5-SNAPSHOT</version>
+			<version>1.0.0.5</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
