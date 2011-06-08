@@ -11,6 +11,13 @@ import ru.ksu.niimm.cll.mocassin.virtuoso.RDFTriple;
 import ru.ksu.niimm.cll.mocassin.virtuoso.impl.RDFTripleImpl;
 
 public class ArxivMetadataUtil {
+	private static final String ARXIV_IDENTIFIER = "http://arxiv.org/schema#id";// TODO:
+																				// the
+																				// fake
+																				// schema
+																				// is
+																				// used!
+
 	private static final String ATOM_RDF_SCHEMA = "http://djpowell.net/schemas/atomrdf/0.3";
 
 	private static final String SALT_SCHEMA = "http://salt.semanticauthoring.org/ontologies/sdo";
@@ -22,11 +29,12 @@ public class ArxivMetadataUtil {
 
 	public static List<RDFTriple> convertToTriples(ArticleMetadata metadata) {
 		List<RDFTriple> triples = new ArrayList<RDFTriple>();
-		triples.add(createTriple("<%s> <%s> <%s#Publication> .", metadata
-				.getId(), RDFS_TYPE, SALT_SCHEMA));
+		triples.add(createTriple("<%s> <%s> <%s#Publication> .",
+				metadata.getId(), RDFS_TYPE, SALT_SCHEMA));
 		convertTitle(triples, metadata);
 		convertAuthors(triples, metadata);
 		convertLinks(triples, metadata);
+		convertKey(triples, metadata);
 		return triples;
 	}
 
@@ -73,5 +81,11 @@ public class ArxivMetadataUtil {
 				.replaceAll("\n", "") : "";
 		triples.add(createTriple("%s <%s/textValue> \"%s\" .", titleNode,
 				ATOM_RDF_SCHEMA, title));
+	}
+
+	private static void convertKey(List<RDFTriple> triples,
+			ArticleMetadata metadata) {
+		triples.add(createTriple("<%s> <%s> \"%s\" .", metadata.getId(),
+				ARXIV_IDENTIFIER, metadata.getArxivId()));
 	}
 }
