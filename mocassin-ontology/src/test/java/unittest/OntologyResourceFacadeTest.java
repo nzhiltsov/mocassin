@@ -53,18 +53,19 @@ public class OntologyResourceFacadeTest {
 	public void testRetrieveGraph() {
 		List<SGEdge> edges = getOntologyResourceFacade()
 				.retrieveStructureGraph(
-						new OntologyResource("http://arxiv.org/abs/1104.1326v1"));
+						new OntologyResource(
+								"http://arxiv.org/abs/math/0005005v2"));
 		Assert.assertTrue(!edges.isEmpty());
 		boolean found = false;
 		for (SGEdge edge : edges) {
 			OntologyIndividual subject = edge.getSubject();
 			found = subject.getUri().equals(
-					"http://arxiv.org/abs/1104.1326v1/s1918_1")
+					"http://arxiv.org/abs/math/0005005v2/1208")
 					&& subject.getType() == MocassinOntologyClasses.PROOF
-					&& edge.getPredicate().getUri().contains("refersTo")
+					&& edge.getPredicate().getUri().contains("dependsOn")
 					&& edge.getObject().getUri()
-							.equals("http://arxiv.org/abs/1104.1326v1/s612_1")
-					&& edge.getFromNumPage() == 32 && edge.getToNumPage() == 30;
+							.equals("http://arxiv.org/abs/math/0005005v2/636")
+					&& edge.getFromNumPage() == 2 && edge.getToNumPage() == 2;
 			if (found)
 				break;
 		}
