@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>mocassin-pom</artifactId>
 		<groupId>ru.ksu.niimm.cll.mocassin</groupId>
-		<version>1.0.0.5</version>
+		<version>1.0.0.6-SNAPSHOT</version>
 		<relativePath>../mocassin-pom</relativePath>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
@@ -12,7 +12,7 @@
 	<artifactId>mocassin-ui</artifactId>
 	<packaging>war</packaging>
 	<name>Mocassin UI</name>
-	<version>1.0.0.5</version>
+	<version>1.0.0.6-SNAPSHOT</version>
 	<organization>
 		<name>N.G. Chebotarev Research Institute of Mathematics and Mechanics</name>
 		<url>http://cll.niimm.ksu.ru</url>
@@ -92,21 +92,21 @@
 		<dependency>
 			<groupId>ru.ksu.niimm.cll.mocassin</groupId>
 			<artifactId>mocassin-ontology</artifactId>
-			<version>1.0.0.5</version>
+			<version>1.0.0.6-SNAPSHOT</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>ru.ksu.niimm.cll.mocassin</groupId>
 			<artifactId>mocassin-arxiv</artifactId>
-			<version>1.0.0.5</version>
+			<version>1.0.0.6-SNAPSHOT</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>ru.ksu.niimm.cll.mocassin</groupId>
 			<artifactId>mocassin-util</artifactId>
-			<version>1.0.0.5</version>
+			<version>1.0.0.6-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
@@ -128,14 +128,14 @@
 		<dependency>
 			<groupId>ru.ksu.niimm.cll.mocassin</groupId>
 			<artifactId>mocassin-nlp</artifactId>
-			<version>1.0.0.5</version>
+			<version>1.0.0.6-SNAPSHOT</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>ru.ksu.niimm.cll.mocassin</groupId>
 			<artifactId>mocassin-fulltext</artifactId>
-			<version>1.0.0.5</version>
+			<version>1.0.0.6-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		
@@ -143,7 +143,7 @@
 		<dependency>
 			<groupId>ru.ksu.niimm.cll.mocassin</groupId>
 			<artifactId>mocassin-analyzer</artifactId>
-			<version>1.0.0.5</version>
+			<version>1.0.0.6-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
