@@ -81,6 +81,34 @@ public class AnnotationUtilImpl implements AnnotationUtil {
 	}
 
 	@Override
+	public String[] getTokenWithMathAnnotation(Document document,
+			Annotation annotation) {
+		List<Annotation> tokenList = getSortedTokenList(document, annotation,
+				false);
+		tokenList.addAll(getMathTokens(document, annotation));
+		Collections.sort(tokenList, new OffsetComparator());
+		List<String> strTokens = new ArrayList<String>();
+		for (Annotation a : tokenList) {
+			String value = null;
+			if (a.getType()
+					.equals(getProperty(GateFormatConstants.TOKEN_ANNOTATION_NAME_PROPERTY_KEY))) {
+				value = (String) a.getFeatures().get(
+						GateFormatConstants.TOKEN_FEATURE_NAME);
+			} else if (a
+					.getType()
+					.equals(getProperty(GateFormatConstants.ARXMLIV_MATH_ANNOTATION_PROPERTY_KEY))) {
+				value = String
+						.format("$%s$",
+								(String) a
+										.getFeatures()
+										.get(getProperty(GateFormatConstants.ARXMLIV_MATH_TEX_PROPERTY_KEY)));
+			}
+			strTokens.add(value);
+		}
+		return Iterables.toArray(strTokens, String.class);
+	}
+
+	@Override
 	public String getTextContentsForAnnotation(Document document,
 			Annotation annotation) {
 		List<Annotation> tokenList = getSortedTokenList(document, annotation,
@@ -123,11 +151,21 @@ public class AnnotationUtilImpl implements AnnotationUtil {
 			Annotation annotation) {
 		AnnotationSet tokenSet = document
 				.getAnnotations(GateFormatConstants.DEFAULT_ANNOTATION_SET_NAME)
-				.get(
-						getProperty(GateFormatConstants.TOKEN_ANNOTATION_NAME_PROPERTY_KEY))
+				.get(getProperty(GateFormatConstants.TOKEN_ANNOTATION_NAME_PROPERTY_KEY))
 				.getContained(annotation.getStartNode().getOffset(),
 						annotation.getEndNode().getOffset());
 		return tokenSet;
+	}
+
+	private List<Annotation> getMathTokens(Document document,
+			Annotation annotation) {
+		AnnotationSet mathTokens = document
+				.getAnnotations(
+						getProperty(GateFormatConstants.ARXMLIV_MARKUP_NAME_PROPERTY_KEY))
+				.get(getProperty(GateFormatConstants.ARXMLIV_MATH_ANNOTATION_PROPERTY_KEY))
+				.getContained(annotation.getStartNode().getOffset(),
+						annotation.getEndNode().getOffset());
+		return CollectionUtil.asList(mathTokens);
 	}
 
 	private AnnotationSet getTokenSetWithSpaces(Document document,
@@ -135,8 +173,7 @@ public class AnnotationUtilImpl implements AnnotationUtil {
 
 		AnnotationSet spaceTokenSet = document
 				.getAnnotations(GateFormatConstants.DEFAULT_ANNOTATION_SET_NAME)
-				.get(
-						getProperty(GateFormatConstants.SPACE_TOKEN_ANNOTATION_NAME_PROPERTY_KEY))
+				.get(getProperty(GateFormatConstants.SPACE_TOKEN_ANNOTATION_NAME_PROPERTY_KEY))
 				.getContained(annotation.getStartNode().getOffset(),
 						annotation.getEndNode().getOffset());
 

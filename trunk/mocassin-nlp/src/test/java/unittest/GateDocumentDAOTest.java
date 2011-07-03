@@ -6,14 +6,18 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import junit.framework.Assert;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ru.ksu.niimm.cll.mocassin.fulltext.FullTextModule;
 import ru.ksu.niimm.cll.mocassin.nlp.NlpModule;
+import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateDocumentException;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
 import ru.ksu.niimm.cll.mocassin.parser.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
+import ru.ksu.niimm.cll.mocassin.util.GateDocumentMetadata;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
 import ru.ksu.niimm.ose.ontology.OntologyModule;
 
@@ -22,7 +26,7 @@ import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext( { NlpModule.class, OntologyModule.class, VirtuosoModule.class,
+@GuiceContext({ NlpModule.class, OntologyModule.class, VirtuosoModule.class,
 		LatexParserModule.class, FullTextModule.class })
 public class GateDocumentDAOTest {
 	@Inject
@@ -39,18 +43,31 @@ public class GateDocumentDAOTest {
 			try {
 				document = getGateDocumentDAO().load(id);
 			} catch (Exception e) {
-				logger.log(Level.SEVERE, String.format(
-						"couldn't load the document: %s", id));
+				logger.log(Level.SEVERE,
+						String.format("couldn't load the document: %s", id));
 			} finally {
 				if (document != null) {
-					logger.log(Level.INFO, String.format("document %s is OK",
-							id));
+					logger.log(Level.INFO,
+							String.format("document %s is OK", id));
 					getGateDocumentDAO().release(document);
 					document = null;
 				}
 			}
 
 		}
+	}
+
+	@Test
+	public void testLoadMetadata() throws AccessGateDocumentException {
+		GateDocumentMetadata metadata = gateDocumentDAO
+				.loadMetadata("math_0410002");
+		Assert.assertEquals("math_0410002.tex.xml", metadata.getName());
+		Assert.assertEquals("On certain multiplicity one theorems",
+				metadata.getTitle());
+		Assert.assertEquals(2, metadata.getAuthorNames().size());
+		Assert.assertEquals("Jeffrey D Adler", metadata.getAuthorNames().get(0));
+		Assert.assertEquals("Dipendra Prasad School", metadata.getAuthorNames()
+				.get(1));
 	}
 
 	public GateDocumentDAO getGateDocumentDAO() {

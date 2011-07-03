@@ -11,9 +11,18 @@ public interface AnnotationUtil {
 
 	List<Token> getTokensForAnnotation(Document document,
 			Annotation annotation, boolean useStemming);
-	
+
 	String[] getPureTokensForAnnotation(Document document,
 			Annotation annotation, boolean useStemming);
+
+	/**
+	 * extracts text tokens along with LaTeX expressions as separate tokens
+	 * 
+	 * @param document
+	 * @param annotation
+	 * @return
+	 */
+	String[] getTokenWithMathAnnotation(Document document, Annotation annotation);
 
 	/**
 	 * returns a string of concatenated tokens contained by a given annotation
