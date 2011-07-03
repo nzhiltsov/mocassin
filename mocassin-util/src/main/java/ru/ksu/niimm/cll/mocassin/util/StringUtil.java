@@ -10,6 +10,8 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringEscapeUtils;
 
+import com.google.common.collect.Iterables;
+
 public class StringUtil {
 	private static final Pattern STYLE_PATTERN = Pattern
 			.compile("\\\\[a-zA-Z]+\\{([^}]*)\\}");
@@ -70,9 +72,9 @@ public class StringUtil {
 	 * @return
 	 */
 	public static List<String> stripLatexMarkup(String str) {
-		String escaped = StringEscapeUtils.escapeJava(str).replaceAll(
-				DOLLAR_PATTERN_STRING, "").replaceAll(REFERENCE_PATTERN_STRING,
-				"");
+		String escaped = StringEscapeUtils.escapeJava(str)
+				.replaceAll(DOLLAR_PATTERN_STRING, "")
+				.replaceAll(REFERENCE_PATTERN_STRING, "");
 
 		StringTokenizer st = new StringTokenizer(escaped, "- \t\n\r\f");
 		List<String> list = new LinkedList<String>();
@@ -92,5 +94,20 @@ public class StringUtil {
 		}
 
 		return list;
+	}
+
+	public static String asString(String[] args) {
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < args.length; i++) {
+			sb.append(args[i]);
+			if (i < args.length - 1) {
+				sb.append(" ");
+			}
+		}
+		return sb.toString();
+	}
+
+	public static String asString(List<String> list) {
+		return asString(Iterables.toArray(list, String.class));
 	}
 }
