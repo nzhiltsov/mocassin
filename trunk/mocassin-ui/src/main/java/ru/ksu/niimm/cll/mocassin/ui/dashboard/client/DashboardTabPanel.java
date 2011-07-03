@@ -4,6 +4,10 @@ import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.json.client.JSONNumber;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONString;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -11,11 +15,15 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 
 public class DashboardTabPanel extends Composite {
 
@@ -31,29 +39,47 @@ public class DashboardTabPanel extends Composite {
 
 	@UiField
 	Button uploadButton;
+	@UiField
+	Button closeDialogButton;
+	@UiField
+	Button multipleUploadButton;
 
 	@UiField
 	TabLayoutPanel tabPanel;
 	@UiField
 	TextBox uploadKeyInput;
 	@UiField
-	Label successMessage;
-	@UiField
-	Label errorMessage;
+	DialogBox dialogBox;
 	@UiField
 	FlexTable documentTable;
+
+	@UiField
+	FormPanel multipleUploadForm;
 
 	public DashboardTabPanel() {
 		initWidget(uiBinder.createAndBindUi(this));
 		tabPanel.selectTab(0);
-		successMessage.setVisible(false);
-		errorMessage.setVisible(false);
 
 		documentTable.getColumnFormatter().setWidth(0, "50px");
 		documentTable.getColumnFormatter().setWidth(1, "300px");
 
 		documentTable.setText(0, 0, "arXiv key");
 		documentTable.setText(0, 1, "Title");
+
+		multipleUploadForm
+				.addSubmitCompleteHandler(new SubmitCompleteHandler() {
+
+					@Override
+					public void onSubmitComplete(SubmitCompleteEvent event) {
+						
+						String body = event
+								.getResults();
+						JSONObject response = (JSONObject) JSONParser.parseLenient(body);
+						double numberOfSuccesses = ((JSONNumber) response.get("numberOfSuccesses")).doubleValue();
+						showSuccess((int) numberOfSuccesses);
+						multipleUploadForm.reset();
+					}
+				});
 
 		AsyncCallback<List<ArxivArticleMetadata>> callback = new AsyncCallback<List<ArxivArticleMetadata>>() {
 
@@ -75,23 +101,38 @@ public class DashboardTabPanel extends Composite {
 		arxivService.loadArticles(callback);
 	}
 
-	@UiHandler("uploadButton")
+	@UiHandler({ "uploadButton", "closeDialogButton", "multipleUploadButton" })
 	void handleClick(ClickEvent event) {
-		AsyncCallback<Void> callback = new AsyncCallback<Void>() {
+		AsyncCallback<Void> singleUploadCallback = new AsyncCallback<Void>() {
 
 			@Override
 			public void onSuccess(Void result) {
-				successMessage.setVisible(true);
+				showSuccess(1);
 
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				errorMessage.setVisible(true);
+				dialogBox.setText("The upload has failed.");
+				dialogBox.center();
+				dialogBox.show();
 			}
 		};
-		successMessage.setVisible(false);
-		errorMessage.setVisible(false);
-		arxivService.handle(uploadKeyInput.getValue(), callback);
+		if (event.getSource() == uploadButton) {
+			arxivService.handle(uploadKeyInput.getValue(), singleUploadCallback);
+		} else if (event.getSource() == closeDialogButton) {
+			dialogBox.hide();
+		} else if (event.getSource() == multipleUploadButton) {
+			multipleUploadForm.submit();
+		}
+	}
+
+	private void showSuccess(int number) {
+		String message = number > 1 ? number
+				+ " papers have been uploaded successfully!"
+				: "The paper has been uploaded successfully!";
+		dialogBox.setText(message);
+		dialogBox.center();
+		dialogBox.show();
 	}
 }

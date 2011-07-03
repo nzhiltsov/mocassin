@@ -3,6 +3,8 @@
 	<inherits name="com.google.gwt.user.theme.standard.Standard" />
 	<inherits name='org.thechiselgroup.choosel.protovis.ProtovisGWT' />
 	<inherits name="com.google.gwt.uibinder.UiBinder" />
+	<inherits name="com.google.gwt.json.JSON"/>
 	<source path='client' />
 	<entry-point class="ru.ksu.niimm.cll.mocassin.ui.dashboard.client.Dashboard" />
+	
 </module>
