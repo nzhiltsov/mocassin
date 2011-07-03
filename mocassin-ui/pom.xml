@@ -138,15 +138,49 @@
 			<version>1.0.0.6-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
-		
-		
+
+
 		<dependency>
 			<groupId>ru.ksu.niimm.cll.mocassin</groupId>
 			<artifactId>mocassin-analyzer</artifactId>
 			<version>1.0.0.6-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>1.2.2</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<!-- for Unit testing -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.mycila</groupId>
+			<artifactId>mycila-guice</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.mycila</groupId>
+			<artifactId>mycila-log</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.mycila</groupId>
+			<artifactId>mycila-plugin</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.mycila.testing</groupId>
+			<artifactId>mycila-testing-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.mycila.testing.plugins</groupId>
+			<artifactId>mycila-testing-guice</artifactId>
+		</dependency>
+
 	</dependencies>
+
 	<properties>
 		<gwt.version>2.2.0</gwt.version>
 	</properties>
