@@ -1,5 +1,7 @@
 package ru.ksu.niimm.cll.mocassin.nlp.gate.impl;
 
+import gate.Annotation;
+import gate.AnnotationSet;
 import gate.DataStore;
 import gate.Document;
 import gate.Factory;
@@ -9,17 +11,24 @@ import gate.creole.ResourceInstantiationException;
 import gate.persist.PersistenceException;
 import gate.persist.SerialDataStore;
 import gate.util.GateException;
+import gate.util.OffsetComparator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateDocumentException;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
+import ru.ksu.niimm.cll.mocassin.nlp.gate.GateFormatConstants;
+import ru.ksu.niimm.cll.mocassin.nlp.util.AnnotationUtil;
 import ru.ksu.niimm.cll.mocassin.nlp.util.NlpModulePropertiesLoader;
+import ru.ksu.niimm.cll.mocassin.util.GateDocumentMetadata;
+import ru.ksu.niimm.cll.mocassin.util.StringUtil;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
@@ -27,6 +36,7 @@ import com.google.inject.Inject;
 
 public class GateDocumentDAOImpl implements GateDocumentDAO {
 
+	private static final String GATE_DOCUMENT_AFFIX = ".tex.xml";
 	private static final String GATE_BUILTIN_CREOLE_DIR_PROPERTY_KEY = "gate.builtin.creole.dir";
 	private static final String GATE_HOME_PROPERTY_KEY = "gate.home";
 
@@ -42,6 +52,18 @@ public class GateDocumentDAOImpl implements GateDocumentDAO {
 
 	@Inject
 	private NlpModulePropertiesLoader nlpModulePropertiesLoader;
+	@Inject
+	private AnnotationUtil annotationUtil;
+
+	@Override
+	public GateDocumentMetadata loadMetadata(String documentId)
+			throws AccessGateDocumentException {
+		initialize();
+		Document document = load(documentId);
+		GateDocumentMetadata metadata = extractMetadata(document);
+		release(document);
+		return metadata;
+	}
 
 	@Override
 	public Document load(String documentId) throws AccessGateDocumentException {
@@ -80,7 +102,7 @@ public class GateDocumentDAOImpl implements GateDocumentDAO {
 				String documentLrId = (String) it.next();
 				gateDocuments.add(documentLrId);
 			}
-			Collections.sort(gateDocuments);
+
 			return gateDocuments;
 		} catch (PersistenceException e) {
 			logger.log(Level.SEVERE,
@@ -109,7 +131,8 @@ public class GateDocumentDAOImpl implements GateDocumentDAO {
 			isInitialized = true;
 			System.setProperty(GATE_HOME_PROPERTY_KEY,
 					getNlpModulePropertiesLoader().get(GATE_HOME_PROPERTY_KEY));
-			System.setProperty(GATE_BUILTIN_CREOLE_DIR_PROPERTY_KEY,
+			System.setProperty(
+					GATE_BUILTIN_CREOLE_DIR_PROPERTY_KEY,
 					getNlpModulePropertiesLoader().get(
 							GATE_BUILTIN_CREOLE_DIR_PROPERTY_KEY));
 			try {
@@ -130,6 +153,56 @@ public class GateDocumentDAOImpl implements GateDocumentDAO {
 				GATE_DOCUMENT_LR_TYPE_PROPERTY_KEY);
 	}
 
+	private GateDocumentMetadata extractMetadata(Document document)
+			throws AccessGateDocumentException {
+		AnnotationSet allTitleAnnotations = document
+				.getAnnotations(
+						getProperty(GateFormatConstants.ARXMLIV_MARKUP_NAME_PROPERTY_KEY))
+				.get(getProperty(GateFormatConstants.TITLE_ANNOTATION_NAME_PROPERTY_KEY));
+		String documentName = document.getName().substring(
+				0,
+				document.getName().lastIndexOf(GATE_DOCUMENT_AFFIX)
+						+ GATE_DOCUMENT_AFFIX.length());
+		if (allTitleAnnotations.size() == 0) {
+			throw new AccessGateDocumentException(String.format(
+					"The document %s has the wrong metadata: title is absent",
+					documentName));
+		}
+		AnnotationSet allCreatorAnnotations = document
+				.getAnnotations(
+						getProperty(GateFormatConstants.ARXMLIV_MARKUP_NAME_PROPERTY_KEY))
+				.get(getProperty(GateFormatConstants.ARXMLIV_CREATOR_PROPERTY_KEY));
+		if (!allCreatorAnnotations.iterator().hasNext()) {
+			throw new AccessGateDocumentException(
+					String.format(
+							"The document %s has the wrong metadata: no one creator exists",
+							documentName));
+		}
+		List<Annotation> titleList = new ArrayList<Annotation>(
+				allTitleAnnotations);
+		Collections.sort(titleList, new OffsetComparator());
+		Annotation titleAnnotation = titleList.iterator().next();
+		String[] strTokens = annotationUtil.getTokenWithMathAnnotation(
+				document, titleAnnotation);
+		String title = StringUtil.asString(strTokens);
+
+		List<String> authorNames = new LinkedList<String>();
+
+		for (Annotation creator : allCreatorAnnotations) {
+			String[] authorTokens = annotationUtil.getPureTokensForAnnotation(
+					document, creator, false);
+			String authorName = StringUtil.asString(Arrays.copyOfRange(
+					authorTokens, 0, 3));
+			authorNames.add(authorName);
+		}
+
+		return new GateDocumentMetadata(documentName, title, authorNames);
+	}
+
+	private String getProperty(String key) {
+		return getNlpModulePropertiesLoader().get(key);
+	}
+
 	private static class DocumentNamePredicate implements Predicate<String> {
 		private final String key;
 
@@ -141,7 +214,8 @@ public class GateDocumentDAOImpl implements GateDocumentDAO {
 		public boolean apply(String input) {
 			if (input == null)
 				return false;
-			return input.startsWith(key);
+			return key.equals(input.substring(0,
+					input.lastIndexOf(GATE_DOCUMENT_AFFIX)));
 		}
 
 	}

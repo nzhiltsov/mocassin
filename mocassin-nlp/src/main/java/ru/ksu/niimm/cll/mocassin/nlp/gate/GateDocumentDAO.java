@@ -5,6 +5,8 @@ import gate.util.GateException;
 
 import java.util.List;
 
+import ru.ksu.niimm.cll.mocassin.util.GateDocumentMetadata;
+
 public interface GateDocumentDAO {
 	/**
 	 * returns identifiers of all the documents from given corpus (see
@@ -33,4 +35,14 @@ public interface GateDocumentDAO {
 	 * @param document
 	 */
 	void release(Document document);
+
+	/**
+	 * loads the metadata of a document with a given id
+	 * 
+	 * @param documentId
+	 * @return
+	 * @throws AccessGateDocumentException
+	 */
+	GateDocumentMetadata loadMetadata(String documentId)
+			throws AccessGateDocumentException;
 }
