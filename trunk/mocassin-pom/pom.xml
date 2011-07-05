@@ -165,7 +165,7 @@
 		<snapshotRepository>
 			<id>server318</id>
 			<name>server318s</name>
-			<url>http://localhost:8080/artifactory/libss-local</url>
+			<url>http://localhost:8080/artifactory/libs-local</url>
 		</snapshotRepository>
 	</distributionManagement>
 	<properties>
