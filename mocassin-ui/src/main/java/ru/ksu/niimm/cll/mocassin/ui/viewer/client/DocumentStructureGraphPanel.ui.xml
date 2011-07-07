@@ -1,0 +1,22 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' xmlns:v='urn:import:ru.ksu.niimm.cll.mocassin.ui.viewer.client'>
+	<v:DocumentStructureGraphPanel>
+		<g:VerticalPanel ui:field="graphPanel">
+			<g:HorizontalPanel>
+				<g:CheckBox ui:field="hasPartCheckbox" text='hasPart'
+					value='true' />
+				<g:CheckBox ui:field="refersToCheckbox" text='refersTo'
+					value='true' />
+				<g:CheckBox ui:field="dependsOnCheckbox" text='dependsOn'
+					value='true' />
+				<g:CheckBox ui:field="provesCheckbox" text='proves'
+					value='true' />
+				<g:CheckBox ui:field="hasConsequenceCheckbox" text='hasConsequence'
+					value='true' />
+				<g:CheckBox ui:field="exemplifiesCheckbox" text='exemplifies'
+					value='true' />
+			</g:HorizontalPanel>
+			<v:DocumentStructureGraph ui:field="documentStructureGraph"/>
+		</g:VerticalPanel>
+	</v:DocumentStructureGraphPanel>
+</ui:UiBinder>

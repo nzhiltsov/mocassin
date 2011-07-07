@@ -1,6 +1,7 @@
 package ru.ksu.niimm.cll.mocassin.ui.viewer.client;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -20,6 +21,8 @@ import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsFunction;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
 
+import ru.ksu.niimm.cll.mocassin.ui.viewer.client.DocumentStructureGraphPanel.Binder;
+import ru.ksu.niimm.cll.mocassin.ui.viewer.client.DocumentStructureGraphPanel.Relations;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.Node.NovelCharacterNodeAdapter;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.protovis.LinkAdapter;
 
@@ -28,7 +31,9 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 
+import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -36,70 +41,30 @@ import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Widget;
 
-public class DocumentStructureGraph extends ProtovisWidget implements
-		ClickHandler {
+public class DocumentStructureGraph extends ProtovisWidget {
+	@UiTemplate("DocumentStructureGraph.ui.xml")
+	interface Binder extends
+			UiBinder<DocumentStructureGraph, DocumentStructureGraph> {
+	}
+
+	private static Binder uiBinder = GWT.create(Binder.class);
 
 	private final ViewerServiceAsync viewerService = GWT
 			.create(ViewerService.class);
 	private String resourceUri;
 
-	private final NavigationPopup navigationPopup;
-
 	private String currentSegmentUri;
 
-	private final CheckBox hasPartCheckbox;
-
-	private final CheckBox refersToCheckbox;
-
-	private final CheckBox dependsOnCheckbox;
-
-	private final CheckBox provesCheckbox;
-
-	private final CheckBox hasConsequenceCheckbox;
-
-	private final CheckBox exemplifiesCheckbox;
-
-	/*
-	 * private static final PVColor[] code2color = { PV.color("red"),
-	 * PV.color("orange"), PV.color("fuchsia"), PV.color("teal"),
-	 * PV.color("navy"), PV.color("gray"), PV.color("purple"),
-	 * PV.color("maroon"), PV.color("lime"), PV.color("yellow"),
-	 * PV.color("violet"), PV.color("aqua"), PV.color("blue"),
-	 * PV.color("green"), PV.color("black") };
-	 */
-
-	public DocumentStructureGraph(Frame frame, CheckBox hasPartCheckbox,
-			CheckBox refersToCheckbox, CheckBox dependsOnCheckbox,
-			CheckBox provesCheckbox, CheckBox hasConsequenceCheckbox,
-			CheckBox exemplifiesCheckbox, ArticleInfo result) {
+	public DocumentStructureGraph() {
 		super();
-		this.hasPartCheckbox = hasPartCheckbox;
-		this.hasPartCheckbox.addClickHandler(this);
-		this.refersToCheckbox = refersToCheckbox;
-		this.refersToCheckbox.addClickHandler(this);
-		this.dependsOnCheckbox = dependsOnCheckbox;
-		this.dependsOnCheckbox.addClickHandler(this);
-		this.provesCheckbox = provesCheckbox;
-		this.provesCheckbox.addClickHandler(this);
-		this.hasConsequenceCheckbox = hasConsequenceCheckbox;
-		this.hasConsequenceCheckbox.addClickHandler(this);
-		this.exemplifiesCheckbox = exemplifiesCheckbox;
-		this.exemplifiesCheckbox.addClickHandler(this);
-		this.resourceUri = result.getUri();
-		this.currentSegmentUri = result.getCurrentSegmentUri();
-		this.navigationPopup = new NavigationPopup(frame, result.getPdfUri());
-		if (result.getCurrentPageNumber() > 1) {
-			this.navigationPopup.setNumPage(result.getCurrentPageNumber());
-			this.navigationPopup.setPopupPosition(this.getAbsoluteLeft(),
-					this.getAbsoluteTop());
-			this.navigationPopup.show();
-		}
+		uiBinder.createAndBindUi(this);
 	}
 
-	@Override
-	public void onClick(ClickEvent event) {
+	public void refresh(ArticleInfo info, EnumMap<Relations, Boolean> filters) {
+		this.resourceUri = info.getUri();
+		this.currentSegmentUri = info.getCurrentSegmentUri();
 		initPVPanel();
-		loadData();
+		loadData(filters);
 	}
 
 	@Override
@@ -130,9 +95,11 @@ public class DocumentStructureGraph extends ProtovisWidget implements
 				.size(new JsDoubleFunction() {
 					public double f(JsArgs args) {
 						PVNode d = args.getObject();
-						if (d.<Node> object().getNodeType() == 14) {// the node is not recognized
-							return 24 * (Math.pow(args.<PVMark> getThis().scale(),
-									-1.5));
+						if (d.<Node> object().getNodeType() == 14) {// the node
+																	// is not
+																	// recognized
+							return 24 * (Math.pow(args.<PVMark> getThis()
+									.scale(), -1.5));
 						}
 						return (20 * d.linkDegree() + 4)
 								* (Math.pow(args.<PVMark> getThis().scale(),
@@ -167,6 +134,7 @@ public class DocumentStructureGraph extends ProtovisWidget implements
 				.event(PV.Event.DRAG, force)
 				.event(PV.Event.MOUSEDOWN, new PVEventHandler() {
 
+					@SuppressWarnings("deprecation")
 					@Override
 					public void onEvent(Event e, String pvEventType, JsArgs args) {
 						PVNode d = args.getObject();
@@ -174,11 +142,7 @@ public class DocumentStructureGraph extends ProtovisWidget implements
 						Node currentNode = d.<Node> object();
 						setCurrentSegmentUri(currentNode.getUri());
 						int numPage = currentNode.getNumPage();
-						navigationPopup.setNumPage(numPage);
-						Element node = e.getCurrentTarget();
-						navigationPopup.setPopupPosition(
-								node.getAbsoluteLeft(), node.getAbsoluteTop());
-						navigationPopup.show();
+						
 					}
 				});
 		/*
@@ -192,14 +156,7 @@ public class DocumentStructureGraph extends ProtovisWidget implements
 
 	}
 
-	protected void onAttach() {
-		super.onAttach();
-		initPVPanel();
-		loadData();
-
-	}
-
-	private void loadData() {
+	private void loadData(final EnumMap<Relations, Boolean> filters) {
 		AsyncCallback<Graph> callback = new AsyncCallback<Graph>() {
 
 			@Override
@@ -209,22 +166,22 @@ public class DocumentStructureGraph extends ProtovisWidget implements
 
 				for (int i = 0; i < l.length; i++) {
 					// see MocassinOntologyRelations for predicate codes
-					if (l[i].getType() == 0 && !hasPartCheckbox.getValue()) {
+					if (l[i].getType() == 0 && !filters.get(Relations.hasPart)) {
 						continue;
 					} else if (l[i].getType() == 8
-							&& !dependsOnCheckbox.getValue()) {
+							&& !filters.get(Relations.dependsOn)) {
 						continue;
 					} else if (l[i].getType() == 1
-							&& !refersToCheckbox.getValue()) {
+							&& !filters.get(Relations.refersTo)) {
 						continue;
 					} else if (l[i].getType() == 9
-							&& !provesCheckbox.getValue()) {
+							&& !filters.get(Relations.proves)) {
 						continue;
 					} else if (l[i].getType() == 2
-							&& !hasConsequenceCheckbox.getValue()) {
+							&& !filters.get(Relations.hasConsequence)) {
 						continue;
 					} else if (l[i].getType() == 3
-							&& !exemplifiesCheckbox.getValue()) {
+							&& !filters.get(Relations.exemplifies)) {
 						continue;
 					}
 					linkList.add(new Link(l[i].getSource(), l[i].getTarget(),

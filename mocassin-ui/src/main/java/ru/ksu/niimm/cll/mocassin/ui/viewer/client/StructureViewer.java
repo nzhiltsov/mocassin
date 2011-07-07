@@ -35,21 +35,7 @@ public class StructureViewer implements EntryPoint {
 	@UiField
 	CaptionPanel metadataCaptionPanel;
 	@UiField
-	CaptionPanel documentStructureGraphPanel;
-	@UiField
-	VerticalPanel graphPanel;
-	@UiField
-	CheckBox hasPartCheckbox;
-	@UiField
-	CheckBox refersToCheckbox;
-	@UiField
-	CheckBox dependsOnCheckbox;
-	@UiField
-	CheckBox provesCheckbox;
-	@UiField
-	CheckBox hasConsequenceCheckbox;
-	@UiField
-	CheckBox exemplifiesCheckbox;
+	DocumentStructureGraphPanel documentStructureGraphPanel;
 
 	public void onModuleLoad() {
 		ScrollPanel outer = binder.createAndBindUi(this);
@@ -111,13 +97,7 @@ public class StructureViewer implements EntryPoint {
 			}
 
 			metadataCaptionPanel.add(metadataPanel);
-			documentStructureGraphPanel.setCaptionText(constants
-					.graphPanelTitle());
-
-			DocumentStructureGraph documentStructureGraph = new DocumentStructureGraph(
-					frame, hasPartCheckbox, refersToCheckbox, dependsOnCheckbox, provesCheckbox, hasConsequenceCheckbox, exemplifiesCheckbox, result);
-			documentStructureGraph.setHeight("450");
-			graphPanel.add(documentStructureGraph.asWidget());
+			documentStructureGraphPanel.refresh(result);
 		}
 
 	}
