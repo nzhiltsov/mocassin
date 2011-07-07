@@ -11,29 +11,25 @@ import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.PopupPanel;
 
-public class NavigationPopup extends Composite {
-	interface Binder extends UiBinder<HorizontalPanel, NavigationPopup> {
+public class NavigationPopup extends PopupPanel {
+	interface Binder extends UiBinder<NavigationPopup, NavigationPopup> {
 	}
 
 	private static final Binder binder = GWT.create(Binder.class);
 	private ViewerConstants constants = GWT.create(ViewerConstants.class);
 
-	private Frame frame;
-
 	private int numPage;
 
 	private String pdfUri;
-
-	@UiField
-	PopupPanel popup;
 	@UiField
 	Anchor goLink;
 
-	public NavigationPopup(Frame frame, String pdfUri) {
-		initWidget(binder.createAndBindUi(this));
-		this.popup.setAutoHideEnabled(true);
-		
-		this.frame = frame;
+	public NavigationPopup() {
+		binder.createAndBindUi(this);
+		setAutoHideEnabled(true);
+	}
+
+	public void setPdfUri(String pdfUri) {
 		this.pdfUri = pdfUri;
 	}
 
@@ -42,21 +38,17 @@ public class NavigationPopup extends Composite {
 		goLink.setText(constants.goLink() + " " + this.numPage);
 	}
 
-	public void setPopupPosition(int left, int top) {
-		popup.setPopupPosition(left, top);
-	}
-
 	public void show() {
 		if (this.numPage > 0) {
-			popup.show();
+			show();
 		}
 	}
 
 	@UiHandler("goLink")
 	void handleClick(ClickEvent event) {
 		int urlNumPage = this.numPage - 1;
-		frame.setUrl("http://docs.google.com/viewer?url=" + pdfUri
-				+ "&embedded=true#:0.page." + urlNumPage);
-		popup.hide();
+		/*frame.setUrl("http://docs.google.com/viewer?url=" + pdfUri
+				+ "&embedded=true#:0.page." + urlNumPage);*/
+		hide();
 	}
 }
