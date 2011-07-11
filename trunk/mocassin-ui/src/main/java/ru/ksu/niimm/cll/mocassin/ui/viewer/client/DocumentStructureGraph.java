@@ -1,6 +1,5 @@
 package ru.ksu.niimm.cll.mocassin.ui.viewer.client;
 
-import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,30 +20,22 @@ import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsFunction;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
 
-import ru.ksu.niimm.cll.mocassin.ui.viewer.client.DocumentStructureGraphPanel.Binder;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.DocumentStructureGraphPanel.Relations;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.Node.NovelCharacterNodeAdapter;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.protovis.LinkAdapter;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-
 import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Widget;
 
 public class DocumentStructureGraph extends ProtovisWidget {
 	@UiTemplate("DocumentStructureGraph.ui.xml")
 	interface Binder extends
-			UiBinder<DocumentStructureGraph, DocumentStructureGraph> {
+			UiBinder<ProtovisWidget, DocumentStructureGraph> {
 	}
 
 	private static Binder uiBinder = GWT.create(Binder.class);
@@ -66,6 +57,10 @@ public class DocumentStructureGraph extends ProtovisWidget {
 		initPVPanel();
 		loadData(filters);
 	}
+	public void refresh(EnumMap<Relations, Boolean> filters) {
+		initPVPanel();
+		loadData(filters);
+	}
 
 	@Override
 	public Widget asWidget() {
@@ -81,7 +76,7 @@ public class DocumentStructureGraph extends ProtovisWidget {
 	}
 
 	private void createVisualization(Node[] nodes, Link[] links) {
-		PVPanel vis = getPVPanel().width(450).height(450).fillStyle("white")
+		PVPanel vis = getPVPanel().width(480).height(350).fillStyle("white")
 				.event(PV.Event.MOUSEDOWN, PV.Behavior.pan())
 				.event(PV.Event.MOUSEWHEEL, PV.Behavior.zoom());
 

@@ -9,23 +9,24 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.uibinder.client.UiTemplate;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CaptionPanel;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-public class DocumentStructureGraphPanel extends CaptionPanel implements
+public class DocumentStructureGraphPanel extends Composite implements
 		ClickHandler {
 	@UiTemplate("DocumentStructureGraphPanel.ui.xml")
 	interface Binder extends
-			UiBinder<DocumentStructureGraphPanel, DocumentStructureGraphPanel> {
+			UiBinder<CaptionPanel, DocumentStructureGraphPanel> {
 	}
 
 	private static Binder uiBinder = GWT.create(Binder.class);
 
 	private ViewerConstants constants = GWT.create(ViewerConstants.class);
 
-	@UiField
-	VerticalPanel graphPanel;
 	@UiField
 	CheckBox hasPartCheckbox;
 	@UiField
@@ -40,17 +41,25 @@ public class DocumentStructureGraphPanel extends CaptionPanel implements
 	CheckBox exemplifiesCheckbox;
 	@UiField
 	DocumentStructureGraph documentStructureGraph;
+	@UiField
+	Button refreshButton;
 
 	enum Relations {
 		hasPart, refersTo, dependsOn, proves, hasConsequence, exemplifies
 	}
 
 	public DocumentStructureGraphPanel() {
-		uiBinder.createAndBindUi(this);
-		setCaptionText(constants.graphPanelTitle());
+		CaptionPanel captionPanel = uiBinder.createAndBindUi(this);
+		captionPanel.setCaptionText(constants.graphPanelTitle());
+		initWidget(captionPanel);
 	}
 
 	public void refresh(ArticleInfo result) {
+		EnumMap<Relations, Boolean> filters = getFilters();
+		documentStructureGraph.refresh(result, filters);
+	}
+
+	private EnumMap<Relations, Boolean> getFilters() {
 		EnumMap<Relations, Boolean> filters = new EnumMap<DocumentStructureGraphPanel.Relations, Boolean>(
 				Relations.class);
 		filters.put(Relations.hasPart, hasPartCheckbox.getValue());
@@ -59,13 +68,13 @@ public class DocumentStructureGraphPanel extends CaptionPanel implements
 		filters.put(Relations.proves, provesCheckbox.getValue());
 		filters.put(Relations.hasConsequence, hasConsequenceCheckbox.getValue());
 		filters.put(Relations.exemplifies, exemplifiesCheckbox.getValue());
-		documentStructureGraph.refresh(result, filters);
+		return filters;
 	}
 
-	@UiHandler({ "hasPartCheckbox", "refersToCheckbox", "dependsOnCheckbox",
-			"provesCheckbox", "hasConsequenceCheckbox", "exemplifiesCheckbox" })
+	@UiHandler("refreshButton")
 	public void onClick(ClickEvent event) {
-
+		EnumMap<Relations, Boolean> filters = getFilters();
+		documentStructureGraph.refresh(filters);
 	}
 
 }
