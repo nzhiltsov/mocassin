@@ -1,17 +1,46 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-              xmlns:g='urn:import:com.google.gwt.user.client.ui' 
-              xmlns:v='urn:import:ru.ksu.niimm.cll.mocassin.ui.viewer.client'>
-    <v:NodeExplorer text="NodeExplorer" animationEnabled="true" glassEnabled="true" visible="false">
-        <g:VerticalPanel horizontalAlignment="ALIGN_RIGHT">
-            <g:HTML>
-                <b>Sending name to the server:</b>
-            </g:HTML>
-            <g:Label ui:field="labelTextToServer" />
-            <g:HTML>
-                <br/>
-                <b>Server replies:</b>
-            </g:HTML>
-            <g:Button ui:field="closeButton" text="Close"/>
-        </g:VerticalPanel>
-    </v:NodeExplorer>
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' xmlns:v='urn:import:ru.ksu.niimm.cll.mocassin.ui.viewer.client'>
+	<ui:style>
+		.property-label {
+			font-size: 16px;
+		}
+		.property-label-value {
+			font-style:italic;
+			font-size: 14px;
+		}
+		.goLink {
+			font-size: large;
+			color: silver;
+			cursor: pointer;
+			text-decoration: underline;
+		}
+	</ui:style>
+	<g:DialogBox width='450' height='300'>
+		<g:VerticalPanel width="100%" height="100%">
+			<g:HorizontalPanel>
+				<g:Label ui:field="titleLabel" styleName="{style.property-label-value}"/>
+				<g:Grid>
+					<g:row>
+						<g:customCell>
+							<g:Label styleName="{style.property-label}">URI</g:Label>
+						</g:customCell>
+						<g:customCell>
+							<g:Label ui:field="uriLabel" styleName="{style.property-label-value}"/>
+						</g:customCell>
+					</g:row>
+					<g:row>
+						<g:customCell>
+							<g:Label styleName="{style.property-label}">Type</g:Label>
+						</g:customCell>
+						<g:customCell>
+							<g:Label styleName="{style.property-label-value}" ui:field="typeLabel"/>
+						</g:customCell>
+					</g:row>
+				</g:Grid>
+			</g:HorizontalPanel>
+			<g:TextArea width='100%' enabled="false"/>
+			<g:Anchor ui:field="goLink" styleName='{style.goLink}' />
+			<g:Button ui:field="closeButton" text="Close" />
+		</g:VerticalPanel>
+	</g:DialogBox>
 </ui:UiBinder>

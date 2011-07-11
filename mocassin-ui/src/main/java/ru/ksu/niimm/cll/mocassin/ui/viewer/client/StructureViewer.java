@@ -19,7 +19,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class StructureViewer implements EntryPoint {
+public class StructureViewer implements EntryPoint, NavigationEventHandler {
 	interface Binder extends UiBinder<ScrollPanel, StructureViewer> {
 	}
 
@@ -35,6 +35,8 @@ public class StructureViewer implements EntryPoint {
 	@UiField
 	DocumentStructureGraphPanel documentStructureGraphPanel;
 
+	private String pdfUri;
+
 	public void onModuleLoad() {
 		ScrollPanel outer = binder.createAndBindUi(this);
 		RootLayoutPanel root = RootLayoutPanel.get();
@@ -42,9 +44,11 @@ public class StructureViewer implements EntryPoint {
 		root.forceLayout();
 
 		String resourceUri = Location.getParameter("resourceuri");
-		String pdfUri = Location.getParameter("pdfuri");
+		pdfUri = Location.getParameter("pdfuri");
 		if (resourceUri == null || pdfUri == null)
 			return;
+
+		App.eventBus.addHandler(NavigationEvent.TYPE, this);
 
 		metadataCaptionPanel.setCaptionText(constants.metadataPanelTitle());
 
@@ -99,4 +103,12 @@ public class StructureViewer implements EntryPoint {
 		}
 
 	}
+
+	@Override
+	public void onChange(NavigationEvent event) {
+		frame.setUrl("http://docs.google.com/viewer?url=" + pdfUri
+				+ "&embedded=true#:0.page." + event.getNumPage());
+
+	}
+
 }
