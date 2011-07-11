@@ -15,10 +15,10 @@ import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
+import ru.ksu.niimm.cll.mocassin.util.IOUtils;
+
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import ru.ksu.niimm.cll.mocassin.util.IOUtils;
 
 @SuppressWarnings("serial")
 @Singleton

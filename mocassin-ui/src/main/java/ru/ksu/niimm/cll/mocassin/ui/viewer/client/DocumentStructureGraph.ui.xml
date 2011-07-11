@@ -1,5 +1,6 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
               xmlns:g='urn:import:com.google.gwt.user.client.ui' 
-              xmlns:v='urn:import:ru.ksu.niimm.cll.mocassin.ui.viewer.client'>
-    <v:DocumentStructureGraph height="450"/>
+              xmlns:v='urn:import:ru.ksu.niimm.cll.mocassin.ui.viewer.client'
+              xmlns:p='urn:import:org.thechiselgroup.choosel.protovis.client'>
+    <p:ProtovisWidget height="450"/>
 </ui:UiBinder>
