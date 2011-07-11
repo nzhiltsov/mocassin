@@ -44,10 +44,6 @@ public class DocumentStructureGraphPanel extends Composite implements
 	@UiField
 	Button refreshButton;
 
-	enum Relations {
-		hasPart, refersTo, dependsOn, proves, hasConsequence, exemplifies
-	}
-
 	public DocumentStructureGraphPanel() {
 		CaptionPanel captionPanel = uiBinder.createAndBindUi(this);
 		captionPanel.setCaptionText(constants.graphPanelTitle());
@@ -60,7 +56,7 @@ public class DocumentStructureGraphPanel extends Composite implements
 	}
 
 	private EnumMap<Relations, Boolean> getFilters() {
-		EnumMap<Relations, Boolean> filters = new EnumMap<DocumentStructureGraphPanel.Relations, Boolean>(
+		EnumMap<Relations, Boolean> filters = new EnumMap<Relations, Boolean>(
 				Relations.class);
 		filters.put(Relations.hasPart, hasPartCheckbox.getValue());
 		filters.put(Relations.refersTo, refersToCheckbox.getValue());

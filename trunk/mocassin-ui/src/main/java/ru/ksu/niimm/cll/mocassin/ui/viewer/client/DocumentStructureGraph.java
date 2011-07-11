@@ -20,51 +20,52 @@ import org.thechiselgroup.choosel.protovis.client.jsutil.JsDoubleFunction;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsFunction;
 import org.thechiselgroup.choosel.protovis.client.jsutil.JsStringFunction;
 
-import ru.ksu.niimm.cll.mocassin.ui.viewer.client.DocumentStructureGraphPanel.Relations;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.Node.NovelCharacterNodeAdapter;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.protovis.LinkAdapter;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class DocumentStructureGraph extends ProtovisWidget {
+public class DocumentStructureGraph extends Composite {
 	@UiTemplate("DocumentStructureGraph.ui.xml")
-	interface Binder extends
-			UiBinder<ProtovisWidget, DocumentStructureGraph> {
+	interface Binder extends UiBinder<VerticalPanel, DocumentStructureGraph> {
 	}
 
 	private static Binder uiBinder = GWT.create(Binder.class);
 
 	private final ViewerServiceAsync viewerService = GWT
 			.create(ViewerService.class);
+	@UiField
+	NodeExplorer nodeExplorer;
+	@UiField
+	ProtovisWidget protovisWidget;
+
 	private String resourceUri;
 
 	private String currentSegmentUri;
 
 	public DocumentStructureGraph() {
-		super();
-		uiBinder.createAndBindUi(this);
+		initWidget(uiBinder.createAndBindUi(this));
 	}
 
 	public void refresh(ArticleInfo info, EnumMap<Relations, Boolean> filters) {
 		this.resourceUri = info.getUri();
 		this.currentSegmentUri = info.getCurrentSegmentUri();
-		initPVPanel();
-		loadData(filters);
-	}
-	public void refresh(EnumMap<Relations, Boolean> filters) {
-		initPVPanel();
+		protovisWidget.initPVPanel();
 		loadData(filters);
 	}
 
-	@Override
-	public Widget asWidget() {
-		return this;
+	public void refresh(EnumMap<Relations, Boolean> filters) {
+		protovisWidget.initPVPanel();
+		loadData(filters);
 	}
 
 	private String getCurrentSegmentUri() {
@@ -76,7 +77,8 @@ public class DocumentStructureGraph extends ProtovisWidget {
 	}
 
 	private void createVisualization(Node[] nodes, Link[] links) {
-		PVPanel vis = getPVPanel().width(480).height(350).fillStyle("white")
+		PVPanel vis = protovisWidget.getPVPanel().width(480).height(350)
+				.fillStyle("white")
 				.event(PV.Event.MOUSEDOWN, PV.Behavior.pan())
 				.event(PV.Event.MOUSEWHEEL, PV.Behavior.zoom());
 
@@ -136,8 +138,9 @@ public class DocumentStructureGraph extends ProtovisWidget {
 
 						Node currentNode = d.<Node> object();
 						setCurrentSegmentUri(currentNode.getUri());
-						int numPage = currentNode.getNumPage();
-						
+						nodeExplorer.setCurrentNode(currentNode);
+						nodeExplorer.center();
+						nodeExplorer.show();
 					}
 				});
 		/*
@@ -160,32 +163,18 @@ public class DocumentStructureGraph extends ProtovisWidget {
 				List<Link> linkList = new LinkedList<Link>();
 
 				for (int i = 0; i < l.length; i++) {
-					// see MocassinOntologyRelations for predicate codes
-					if (l[i].getType() == 0 && !filters.get(Relations.hasPart)) {
-						continue;
-					} else if (l[i].getType() == 8
-							&& !filters.get(Relations.dependsOn)) {
-						continue;
-					} else if (l[i].getType() == 1
-							&& !filters.get(Relations.refersTo)) {
-						continue;
-					} else if (l[i].getType() == 9
-							&& !filters.get(Relations.proves)) {
-						continue;
-					} else if (l[i].getType() == 2
-							&& !filters.get(Relations.hasConsequence)) {
-						continue;
-					} else if (l[i].getType() == 3
-							&& !filters.get(Relations.exemplifies)) {
+					Relations relType = Relations.fromCode(l[i].getType());
+					if (relType != null && !filters.get(relType)) {
 						continue;
 					}
+
 					linkList.add(new Link(l[i].getSource(), l[i].getTarget(),
 							l[i].getValue()));
 
 				}
 				Link[] links = linkList.toArray(new Link[linkList.size()]);
 				createVisualization(result.getNodes(), links);
-				getPVPanel().render();
+				protovisWidget.getPVPanel().render();
 			}
 
 			@Override
