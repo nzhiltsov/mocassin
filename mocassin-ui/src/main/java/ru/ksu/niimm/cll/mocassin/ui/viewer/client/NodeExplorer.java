@@ -10,10 +10,11 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.Label;
 
-public class NodeExplorer extends DialogBox {
+public class NodeExplorer {
 	@UiTemplate("NodeExplorer.ui.xml")
 	interface Binder extends UiBinder<DialogBox, NodeExplorer> {
 	}
@@ -32,14 +33,15 @@ public class NodeExplorer extends DialogBox {
 	Label typeLabel;
 	@UiField
 	Anchor goLink;
+	@UiField
+	DialogBox dialog;
 
 	private Node currentNode;
 
 	public NodeExplorer() {
-		setWidget(uiBinder.createAndBindUi(this));
+		uiBinder.createAndBindUi(this);
 	}
 
-	@Override
 	public void show() {
 		titleLabel.setText(currentNode.getName());
 		uriLabel.setText(currentNode.getUri());
@@ -50,7 +52,8 @@ public class NodeExplorer extends DialogBox {
 			goLink.setVisible(true);
 			goLink.setText(constants.goLink() + " " + currentNode.getNumPage());
 		}
-		super.show();
+		dialog.center();
+		dialog.show();
 	}
 
 	public void setCurrentNode(Node currentNode) {
@@ -64,6 +67,6 @@ public class NodeExplorer extends DialogBox {
 					currentNode.getNumPage() - 1);
 			App.eventBus.fireEvent(navigationEvent);
 		}
-		this.hide();
+		dialog.hide();
 	}
 }

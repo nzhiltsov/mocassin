@@ -3,7 +3,5 @@
 	xmlns:p='urn:import:org.thechiselgroup.choosel.protovis.client'>
 	<g:VerticalPanel width='100%' height='100%'>
 		<p:ProtovisWidget ui:field="protovisWidget" height="450" />
-		<v:NodeExplorer ui:field="nodeExplorer" text="Node Explorer"
-			animationEnabled="true" glassEnabled="true" visible="false" />
 	</g:VerticalPanel>
 </ui:UiBinder>
