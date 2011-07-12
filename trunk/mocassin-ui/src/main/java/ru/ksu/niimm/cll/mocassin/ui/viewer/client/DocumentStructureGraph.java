@@ -43,8 +43,8 @@ public class DocumentStructureGraph extends Composite {
 
 	private final ViewerServiceAsync viewerService = GWT
 			.create(ViewerService.class);
-	@UiField
-	NodeExplorer nodeExplorer;
+	
+	NodeExplorer nodeExplorer = new NodeExplorer();
 	@UiField
 	ProtovisWidget protovisWidget;
 
@@ -139,7 +139,6 @@ public class DocumentStructureGraph extends Composite {
 						Node currentNode = d.<Node> object();
 						setCurrentSegmentUri(currentNode.getUri());
 						nodeExplorer.setCurrentNode(currentNode);
-						nodeExplorer.center();
 						nodeExplorer.show();
 					}
 				});
