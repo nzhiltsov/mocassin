@@ -1,5 +1,7 @@
 package ru.ksu.niimm.cll.mocassin.ui.viewer.client;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,7 +36,8 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class DocumentStructureGraph extends Composite {
+public class DocumentStructureGraph extends Composite implements
+		GraphEventHandler {
 	@UiTemplate("DocumentStructureGraph.ui.xml")
 	interface Binder extends UiBinder<VerticalPanel, DocumentStructureGraph> {
 	}
@@ -43,7 +46,7 @@ public class DocumentStructureGraph extends Composite {
 
 	private final ViewerServiceAsync viewerService = GWT
 			.create(ViewerService.class);
-	
+
 	NodeExplorer nodeExplorer = new NodeExplorer();
 	@UiField
 	ProtovisWidget protovisWidget;
@@ -52,8 +55,11 @@ public class DocumentStructureGraph extends Composite {
 
 	private String currentSegmentUri;
 
+	private Graph graph;
+
 	public DocumentStructureGraph() {
 		initWidget(uiBinder.createAndBindUi(this));
+		App.eventBus.addHandler(GraphEvent.TYPE, this);
 	}
 
 	public void refresh(ArticleInfo info, EnumMap<Relations, Boolean> filters) {
@@ -131,25 +137,15 @@ public class DocumentStructureGraph extends Composite {
 				.event(PV.Event.DRAG, force)
 				.event(PV.Event.MOUSEDOWN, new PVEventHandler() {
 
-					@SuppressWarnings("deprecation")
 					@Override
 					public void onEvent(Event e, String pvEventType, JsArgs args) {
 						PVNode d = args.getObject();
-
 						Node currentNode = d.<Node> object();
-						setCurrentSegmentUri(currentNode.getUri());
-						nodeExplorer.setCurrentNode(currentNode);
-						nodeExplorer.show();
+
+						showNodeExplorer(currentNode);
 					}
+
 				});
-		/*
-		 * new PVEventHandler() { public void onEvent(Event e, String
-		 * pvEventType, JsArgs args) { PVNode d = args.getObject();
-		 * 
-		 * String numPage = Integer.toString(d.<Node> object() .getNumPage() -
-		 * 1); getFrame().setUrl( "http://docs.google.com/viewer?url=" + pdfUri
-		 * + "&embedded=true#:0.page." + numPage); }
-		 */
 
 	}
 
@@ -158,17 +154,19 @@ public class DocumentStructureGraph extends Composite {
 
 			@Override
 			public void onSuccess(Graph result) {
-				LinkAdapter[] l = result.getLinks();
+				graph = result;
+				LinkAdapter[] linkData = result.getLinks();
 				List<Link> linkList = new LinkedList<Link>();
 
-				for (int i = 0; i < l.length; i++) {
-					Relations relType = Relations.fromCode(l[i].getType());
+				for (int i = 0; i < linkData.length; i++) {
+					Relations relType = Relations.fromCode(linkData[i]
+							.getType());
 					if (relType != null && !filters.get(relType)) {
 						continue;
 					}
 
-					linkList.add(new Link(l[i].getSource(), l[i].getTarget(),
-							l[i].getValue()));
+					linkList.add(new Link(linkData[i].getSource(), linkData[i]
+							.getTarget(), linkData[i].getValue()));
 
 				}
 				Link[] links = linkList.toArray(new Link[linkList.size()]);
@@ -185,4 +183,34 @@ public class DocumentStructureGraph extends Composite {
 		};
 		viewerService.retrieveGraph(this.resourceUri, callback);
 	}
+
+	private void showNodeExplorer(Node currentNode) {
+		setCurrentSegmentUri(currentNode.getUri());
+		nodeExplorer.setCurrentNode(currentNode);
+		List<RelationMetadata> relations = new ArrayList<RelationMetadata>();
+		LinkAdapter[] linkData = graph.getLinks();
+		Node[] nodes = graph.getNodes();
+		for (LinkAdapter link : linkData) {
+			RelationMetadata relation = null;
+			if (nodes[link.getSource()] == currentNode) {
+				relation = new RelationMetadata(currentNode,
+						nodes[link.getTarget()], Relations.fromCode(link
+								.getType()));
+			} else if (nodes[link.getTarget()] == currentNode) {
+				relation = new RelationMetadata(nodes[link.getSource()],
+						currentNode, Relations.fromCode(link.getType()));
+			}
+			if (relation != null) {
+				relations.add(relation);
+			}
+		}
+		nodeExplorer.setRelations(relations);
+		nodeExplorer.show();
+	}
+
+	@Override
+	public void onNodeChange(GraphEvent event) {
+		showNodeExplorer(event.getCurrentNode());
+	}
+
 }

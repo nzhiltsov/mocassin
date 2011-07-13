@@ -1,12 +1,12 @@
 /** Add css rules here for your application. */
-	/** Example rules used by the template application (remove for your app) */
+/** Example rules used by the template application (remove for your app) */
 h1 {
 	font-size: 14pt;
 	font-weight: bold;
 	color: #777777;
 	margin: 40px 0px 70px;
 	text-align: center;
-	font:bold;
+	font: bold;
 }
 
 .sendButton {
@@ -47,17 +47,31 @@ h1 {
 .property-SuggestBox {
 	border-color: #2977a7;
 }
+
 .paper-id {
-font-size:14px;
+	font-size: 14px;
 }
+
 .paper-title {
-font:bold;
-font-size:16px;
+	font: bold;
+	font-size: 16px;
 }
+
 .paper-author {
-font-size:14px;
-color:blue;
+	font-size: 14px;
+	color: blue;
 }
+
+.viewNodeLink {
+	padding-top: 10px;
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+.thisNodeLabel {
+	font-style: italic;
+}
+
 /**
 .gwt-Tree .gwt-TreeItem-query {
 	margin-left: 170px;

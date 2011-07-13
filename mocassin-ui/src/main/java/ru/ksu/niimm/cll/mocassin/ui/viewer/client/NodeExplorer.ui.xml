@@ -9,7 +9,7 @@
 		}
 		
 		.property-label {
-			font:bold;
+			font: bold;
 			font-size: 16px;
 		}
 		
@@ -24,10 +24,21 @@
 			cursor: pointer;
 			text-decoration: underline;
 		}
+		
+		.relation-table {
+			padding-top: 10px;
+		}
+		
+		.relation-table td {
+			border: 1px solid #BBBBBB;
+			padding: 3px;
+		}
 	</ui:style>
 	<g:DialogBox width='450' height='230' styleName="{style.dialog}"
-		ui:field="dialog" animationEnabled="true" glassEnabled="true" visible="false"
-		text="Node Explorer">
+		ui:field="dialog" animationEnabled="true" glassEnabled="true" visible="false">
+		<g:caption>
+			<b>Node Explorer</b>
+		</g:caption>
 		<g:VerticalPanel width="100%" verticalAlignment="ALIGN_TOP">
 			<g:Grid>
 				<g:row>
@@ -59,6 +70,7 @@
 
 			<g:TextArea width='100%' enabled="false" />
 			<g:Anchor ui:field="goLink" styleName='{style.goLink}' />
+			<g:FlexTable ui:field="relationTable" styleName="{style.relation-table}" />
 			<g:HorizontalPanel horizontalAlignment="ALIGN_CENTER"
 				width="100%">
 				<g:Button ui:field="closeButton" text="Close" />
