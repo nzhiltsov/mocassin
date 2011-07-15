@@ -11,6 +11,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,12 +19,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.sourceforge.texlipse.model.DocumentReference;
+import net.sourceforge.texlipse.model.ReferenceEntry;
 import net.sourceforge.texlipse.texparser.LatexLexer;
 import net.sourceforge.texlipse.texparser.LatexParser;
 import net.sourceforge.texlipse.texparser.lexer.LexerException;
+import ru.ksu.niimm.cll.mocassin.parser.Latex2PDFMapper;
 import ru.ksu.niimm.cll.mocassin.parser.Parser;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
 import ru.ksu.niimm.cll.mocassin.parser.latex.NewtheoremCommand;
+import ru.ksu.niimm.cll.mocassin.parser.latex.PdfReferenceEntry;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
 
 import com.google.inject.Inject;
@@ -48,10 +52,15 @@ public class LatexParserImpl implements Parser {
 	private LatexParser latexParser = new LatexParser();
 
 	private LatexLexer latexLexer;
+	@Inject
+	private Latex2PDFMapper latex2pdfMapper;
+
+	private String docId;
 
 	@Override
-	public LatexDocumentModel parse(final InputStream inputStream,
-			boolean closeStream) {
+	public LatexDocumentModel parse(String docId,
+			final InputStream inputStream, boolean closeStream) {
+		this.docId = docId;
 		InputStream parsingInputStream;
 		if (!inputStream.markSupported()) {
 			parsingInputStream = new BufferedInputStream(inputStream);
@@ -116,8 +125,8 @@ public class LatexParserImpl implements Parser {
 					int secondLeftBrace = newtheoremCommand.indexOf("{",
 							firstRightBrace) + 1;
 					String dirtyTitle = newtheoremCommand.substring(
-							secondLeftBrace, newtheoremCommand.indexOf("}",
-									secondLeftBrace));
+							secondLeftBrace,
+							newtheoremCommand.indexOf("}", secondLeftBrace));
 					String title = StringUtil.takeoutMarkup(dirtyTitle);
 					newtheorems.add(new NewtheoremCommand(key, title,
 							isNumbered));
@@ -133,6 +142,7 @@ public class LatexParserImpl implements Parser {
 			parsingInputStream.reset();
 			Reader reader = new InputStreamReader(parsingInputStream);
 			LatexDocumentModel parsedModel = parseTree(reader);
+			parsedModel.setDocId(this.docId);
 			parsedModel.setNewtheorems(newtheorems);
 			parsedModel.setNumberingWithinSection(isNumberingWithinSection);
 			if (closeStream) {
@@ -165,7 +175,16 @@ public class LatexParserImpl implements Parser {
 		LatexDocumentModel model = new LatexDocumentModel(getLatexParser()
 				.getOutlineTree());
 		model.setReferences(references);
-		model.setLabels(getLatexParser().getLabels());
+		List<ReferenceEntry> labels = getLatexParser().getLabels();
+		List<PdfReferenceEntry> pdfLabels = new LinkedList<PdfReferenceEntry>();
+		for (ReferenceEntry label : labels) {
+			int pdfPageNumber = latex2pdfMapper.getPDFPageNumber(
+					label.startLine, this.docId);
+			PdfReferenceEntry entry = new PdfReferenceEntry(label,
+					pdfPageNumber);
+			pdfLabels.add(entry);
+		}
+		model.setLabels(pdfLabels);
 		model.setDocumentRoot(getLatexParser().getDocumentEnv());
 
 		model.setCommands(getLatexParser().getCommands());

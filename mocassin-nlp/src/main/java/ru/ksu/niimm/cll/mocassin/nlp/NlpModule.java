@@ -6,7 +6,7 @@ import ru.ksu.niimm.cll.mocassin.nlp.gate.GateStructuralElementSearcher;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.impl.GateDocumentDAOImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.AnnotationAnalyzerImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.latex.LatexStructuralElementSearcher;
-import ru.ksu.niimm.cll.mocassin.nlp.latex.LatexStructuralElementSearcherImpl;
+import ru.ksu.niimm.cll.mocassin.nlp.latex.impl.LatexStructuralElementSearcherImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.recognizer.StructuralElementTypeRecognizer;
 import ru.ksu.niimm.cll.mocassin.nlp.recognizer.impl.StructuralElementTypeRecognizerImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.util.AnnotationUtil;
@@ -24,7 +24,7 @@ public class NlpModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		
+
 		bind(NlpModulePropertiesLoader.class).to(
 				NlpModulePropertiesLoaderImpl.class);
 		bind(AnnotationAnalyzer.class).to(AnnotationAnalyzerImpl.class);
@@ -39,6 +39,7 @@ public class NlpModule extends AbstractModule {
 		bind(StructuralElementTypeRecognizer.class).to(
 				StructuralElementTypeRecognizerImpl.class);
 		bind(ReferenceTripleUtil.class).to(ReferenceTripleUtilImpl.class);
+
 	}
 
 }

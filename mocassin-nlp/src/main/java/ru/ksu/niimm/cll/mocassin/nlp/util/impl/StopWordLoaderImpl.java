@@ -28,6 +28,13 @@ public class StopWordLoaderImpl implements StopWordLoader {
 	public NonStopWordPredicate getNonStopWordPredicate() {
 		return nonStopWordPredicate;
 	}
+	
+
+	@Override
+	public boolean isStopWord(String word) {
+		return !nonStopWordPredicate.apply(word);
+	}
+
 
 	public class NonStopWordPredicate implements Predicate<String> {
 

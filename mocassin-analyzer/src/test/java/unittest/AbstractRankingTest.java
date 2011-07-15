@@ -24,6 +24,8 @@ import ru.ksu.niimm.cll.mocassin.nlp.NlpModule;
 import ru.ksu.niimm.cll.mocassin.parser.Edge;
 import ru.ksu.niimm.cll.mocassin.parser.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.parser.Node;
+import ru.ksu.niimm.cll.mocassin.parser.Parser;
+import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
 import ru.ksu.niimm.cll.mocassin.parser.latex.builder.StructureBuilder;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
 import ru.ksu.niimm.ose.ontology.OntologyModule;
@@ -35,11 +37,12 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 import edu.uci.ics.jung.graph.Graph;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext( { AnalyzerModule.class, NlpModule.class,
-		LatexParserModule.class, OntologyModule.class, VirtuosoModule.class,
-		FullTextModule.class })
+@GuiceContext({ AnalyzerModule.class, NlpModule.class, LatexParserModule.class,
+		OntologyModule.class, VirtuosoModule.class, FullTextModule.class })
 @Ignore
 public class AbstractRankingTest {
+	@Inject
+	private Parser parser;
 	@Inject
 	private StructureBuilder structureBuilder;
 	@Inject
@@ -50,8 +53,10 @@ public class AbstractRankingTest {
 	@Before
 	public void init() throws LexerException, IOException {
 		InputStream in = this.getClass().getResourceAsStream("/example.tex");
+		LatexDocumentModel latexDocumentModel = this.parser.parse("example", in, true);
 
-		this.models.add(this.structureBuilder.buildStructureGraph(in, true));
+		this.models.add(this.structureBuilder
+				.buildStructureGraph(latexDocumentModel));
 
 	}
 
@@ -63,8 +68,8 @@ public class AbstractRankingTest {
 	}
 
 	protected static Map<Node, Float> sortByValue(Map<Node, Float> map) {
-		List<Entry<Node, Float>> list = new LinkedList<Entry<Node, Float>>(map
-				.entrySet());
+		List<Entry<Node, Float>> list = new LinkedList<Entry<Node, Float>>(
+				map.entrySet());
 		Collections.sort(list, new Comparator<Entry<Node, Float>>() {
 
 			@Override

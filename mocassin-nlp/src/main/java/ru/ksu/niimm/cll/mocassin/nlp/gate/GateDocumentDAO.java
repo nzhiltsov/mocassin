@@ -18,7 +18,7 @@ public interface GateDocumentDAO {
 	List<String> getDocumentIds() throws AccessGateDocumentException;
 
 	/**
-	 * returns document with given id; <br>
+	 * returns document with given id (e.g. <i>math/0410002</i>); <br>
 	 * IMPORTANT: call of 'release' method ({@link #release(Document)}) is
 	 * required after the work with opened document has finished
 	 * 
