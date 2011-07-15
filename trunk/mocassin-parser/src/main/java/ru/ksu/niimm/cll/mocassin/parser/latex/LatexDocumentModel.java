@@ -18,7 +18,7 @@ public class LatexDocumentModel {
 	/**
 	 * list of labels ordered by their position (beginLine/offset) values
 	 */
-	private List<ReferenceEntry> labels;
+	private List<PdfReferenceEntry> labels;
 
 	private List<TexCommandEntry> commands;
 
@@ -48,11 +48,11 @@ public class LatexDocumentModel {
 		this.references = references;
 	}
 
-	public List<ReferenceEntry> getLabels() {
+	public List<PdfReferenceEntry> getLabels() {
 		return labels;
 	}
 
-	public void setLabels(List<ReferenceEntry> labels) {
+	public void setLabels(List<PdfReferenceEntry> labels) {
 		this.labels = labels;
 	}
 

@@ -21,6 +21,7 @@ public class NodeImpl implements Node {
 	private final boolean isNumbered;
 	private String labelText;
 	private String title;
+	private int pdfPageNumber;
 
 	public static class Builder {
 		private final String id;
@@ -33,6 +34,7 @@ public class NodeImpl implements Node {
 		private boolean isEnvironment;
 		private String labelText;
 		private String title;
+		private int pdfPageNumber;
 
 		public Builder(String id, String name) {
 			this.id = id;
@@ -42,6 +44,11 @@ public class NodeImpl implements Node {
 				this.name = name;
 			}
 
+		}
+
+		public Builder pdfPageNumber(int pageNumber) {
+			this.pdfPageNumber = pageNumber;
+			return this;
 		}
 
 		public Builder beginLine(int beginLine) {
@@ -94,6 +101,7 @@ public class NodeImpl implements Node {
 		this.isEnvironment = builder.isEnvironment;
 		this.labelText = builder.labelText;
 		this.title = builder.title;
+		this.pdfPageNumber = builder.pdfPageNumber;
 	}
 
 	public String getLabelText() {
@@ -134,6 +142,14 @@ public class NodeImpl implements Node {
 
 	public String getTitle() {
 		return title;
+	}
+
+	public int getPdfPageNumber() {
+		return pdfPageNumber;
+	}
+
+	public void setPdfPageNumber(int pdfPageNumber) {
+		this.pdfPageNumber = pdfPageNumber;
 	}
 
 	public void setLabelText(String labelText) {

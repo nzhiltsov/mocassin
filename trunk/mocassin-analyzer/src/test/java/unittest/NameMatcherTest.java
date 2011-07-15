@@ -17,6 +17,8 @@ import ru.ksu.niimm.cll.mocassin.nlp.NlpModule;
 import ru.ksu.niimm.cll.mocassin.parser.Edge;
 import ru.ksu.niimm.cll.mocassin.parser.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.parser.Node;
+import ru.ksu.niimm.cll.mocassin.parser.Parser;
+import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
 import ru.ksu.niimm.cll.mocassin.parser.latex.builder.StructureBuilder;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
 import ru.ksu.niimm.ose.ontology.OntologyModule;
@@ -29,10 +31,11 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 import edu.uci.ics.jung.graph.Graph;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext( { AnalyzerModule.class, NlpModule.class,
-		LatexParserModule.class, OntologyModule.class, VirtuosoModule.class,
-		FullTextModule.class })
+@GuiceContext({ AnalyzerModule.class, NlpModule.class, LatexParserModule.class,
+		OntologyModule.class, VirtuosoModule.class, FullTextModule.class })
 public class NameMatcherTest {
+	@Inject
+	private Parser parser;
 	@Inject
 	private StructureBuilder structureBuilder;
 	@Inject
@@ -43,7 +46,9 @@ public class NameMatcherTest {
 	public void init() throws Exception {
 		InputStream in = this.getClass().getResourceAsStream("/example.tex");
 
-		graph = this.structureBuilder.buildStructureGraph(in, true);
+		LatexDocumentModel model = parser.parse("example", in, true);
+
+		graph = this.structureBuilder.buildStructureGraph(model);
 	}
 
 	@Test
@@ -66,8 +71,8 @@ public class NameMatcherTest {
 
 			@Override
 			public int compare(MappingElement o1, MappingElement o2) {
-				return o1.getConcept().getUri().compareTo(
-						o2.getConcept().getUri());
+				return o1.getConcept().getUri()
+						.compareTo(o2.getConcept().getUri());
 			}
 		};
 

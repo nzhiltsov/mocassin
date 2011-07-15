@@ -1,7 +1,6 @@
 package ru.ksu.niimm.cll.mocassin.ui.viewer.client;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,7 +33,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 public class DocumentStructureGraph extends Composite implements
 		GraphEventHandler {

@@ -11,5 +11,5 @@ import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
  * 
  */
 public interface Parser {
-	LatexDocumentModel parse(InputStream inputStream, boolean closeStream);
+	LatexDocumentModel parse(String docId, InputStream inputStream, boolean closeStream);
 }

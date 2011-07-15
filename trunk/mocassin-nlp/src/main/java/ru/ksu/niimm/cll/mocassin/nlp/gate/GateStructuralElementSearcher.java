@@ -7,7 +7,6 @@ import gate.Document;
 import gate.util.OffsetComparator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -15,8 +14,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import ru.ksu.niimm.cll.mocassin.fulltext.EmptyResultException;
-import ru.ksu.niimm.cll.mocassin.fulltext.PDFIndexer;
+import net.sourceforge.texlipse.model.ReferenceEntry;
+
 import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
@@ -29,8 +28,14 @@ import ru.ksu.niimm.cll.mocassin.nlp.recognizer.StructuralElementTypeRecognizer;
 import ru.ksu.niimm.cll.mocassin.nlp.util.AnnotationUtil;
 import ru.ksu.niimm.cll.mocassin.nlp.util.NlpModulePropertiesLoader;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
+import ru.ksu.niimm.cll.mocassin.parser.Edge;
+import ru.ksu.niimm.cll.mocassin.parser.LatexDocumentDAO;
+import ru.ksu.niimm.cll.mocassin.parser.Node;
 import ru.ksu.niimm.cll.mocassin.parser.arxmliv.xpath.impl.ArxmlivFormatConstants;
 import ru.ksu.niimm.cll.mocassin.parser.arxmliv.xpath.impl.ArxmlivStructureElementTypes;
+import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
+import ru.ksu.niimm.cll.mocassin.parser.latex.PdfReferenceEntry;
+import ru.ksu.niimm.cll.mocassin.parser.latex.builder.StructureBuilder;
 import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
 
@@ -49,12 +54,13 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 	@Inject
 	private AnnotationUtil annotationUtil;
 	@Inject
-	private PDFIndexer pdfIndexer;
-	@Inject
 	private StructuralElementTypeRecognizer structuralElementTypeRecognizer;
-
+	@Inject
+	private StructureBuilder structureBuilder;
 	@Inject
 	private GateDocumentDAO gateDocumentDAO;
+	@Inject
+	private LatexDocumentDAO latexDocumentDAO;
 
 	private static final Set<String> NAME_SET = ArxmlivStructureElementTypes
 			.toNameSet();
@@ -63,22 +69,27 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 
 	private ParsedDocument parsedDocument;
 
+	private LatexDocumentModel latexDocumentModel;
+
+
 	@Override
 	public List<StructuralElement> retrieveElements(
 			ParsedDocument parsedDocument) {
 		this.parsedDocument = parsedDocument;
-		Document document = null;
+		Document gateDocument = null;
 		String arxivId = parsedDocument.getArxivId().replace("/", "_");
 		try {
-			document = gateDocumentDAO.load(arxivId);
+			gateDocument = gateDocumentDAO.load(arxivId);
+			latexDocumentModel = latexDocumentDAO.load(parsedDocument
+					.getArxivId());
 
-			setStructuralAnnotations(document
+			setStructuralAnnotations(gateDocument
 					.getAnnotations(
 							getProperty(GateFormatConstants.ARXMLIV_MARKUP_NAME_PROPERTY_KEY))
 					.get(NAME_SET));
 
 			Function<Annotation, StructuralElement> extractFunction = new ExtractionFunction(
-					document);
+					gateDocument);
 
 			Iterable<StructuralElement> structuralElementIterable = Iterables
 					.transform(structuralAnnotations, extractFunction);
@@ -88,7 +99,7 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 					"failed to load the document: %s", parsedDocument.getUri()));
 			throw new RuntimeException(e);
 		} finally {
-			gateDocumentDAO.release(document);
+			gateDocumentDAO.release(gateDocument);
 		}
 	}
 
@@ -208,10 +219,6 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 				annotation);
 	}
 
-	private int getPageNumber(String fullTextQuery) throws EmptyResultException {
-		return pdfIndexer.getPageNumber(getPdfUri(), fullTextQuery);
-	}
-
 	public String getPdfUri() {
 		return parsedDocument.getPdfUri();
 	}
@@ -230,9 +237,21 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 		this.structuralAnnotations = structuralAnnotations;
 	}
 
+	private void fillPageNumber(StructuralElement element) {
+		if (element.getLabels().isEmpty())
+			return;
+		List<PdfReferenceEntry> labels = latexDocumentModel.getLabels();
+		for (PdfReferenceEntry entry : labels) {// labels are ordered by their positions
+			String labelText = String.format("LABEL:%s", entry.key());
+			if (element.getLabels().contains(labelText)) {
+				element.setStartPageNumber(entry.getPdfNumberPage());
+				break;
+			}
+		}
+	}
+
 	private class ExtractionFunction implements
 			Function<Annotation, StructuralElement> {
-		private static final int MINIMAL_TOKEN_COUNT = 6;
 
 		private Document document;
 
@@ -252,6 +271,7 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 			String type = annotation.getType();
 			String classFeature = (String) annotation.getFeatures().get(
 					ArxmlivFormatConstants.CLASS_ATTRIBUTE_NAME);
+
 			String name = classFeature != null ? classFeature : type;
 
 			List<String> labels = collectLabels(annotation);
@@ -270,6 +290,10 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 				Annotation titleAnnotation = titleList.get(0);
 				title = getTextContentsForAnnotation(getDocument(),
 						titleAnnotation);
+			} else {
+				String refnum = (String) annotation.getFeatures().get(
+						ArxmlivFormatConstants.REF_NUM_ATTRIBUTE_NAME);
+				title = refnum != null ? String.format("%s %s", name, refnum) : name;
 			}
 
 			StructuralElement element = new StructuralElementImpl.Builder(id,
@@ -278,41 +302,7 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 			element.setLabels(labels);
 			element.setContents(getPureTokensForAnnotation(getDocument(),
 					annotation));
-
-			StringBuffer sb = new StringBuffer();
-			int i = 0;
-			int j = 0;
-			int contentSize = element.getContents().size();
-			while (i < MINIMAL_TOKEN_COUNT && j < contentSize) {
-				String token = element.getContents().get(j);
-				if (token.length() > 3) {
-					sb.append(String.format("%s ", token));
-					i++;
-				}
-				j++;
-			}
-
-			if (i == MINIMAL_TOKEN_COUNT) {
-				String fullTextQuery;
-				if (element.getTitle() == null) {
-					fullTextQuery = sb.toString();
-				} else {
-					fullTextQuery = String.format("\"%s\" %s",
-							element.getTitle(), sb.toString());
-				}
-				try {
-					int pageNumber = getPageNumber(fullTextQuery);
-					element.setStartPageNumber(pageNumber);
-				} catch (EmptyResultException e) {
-					logger.log(
-							Level.SEVERE,
-							String.format(
-									"failed to find the page number for a segment %s using a query \"%s\" on PDF: %s",
-									element.getUri(), fullTextQuery,
-									getPdfUri()));
-				}
-
-			}
+			fillPageNumber(element);
 
 			MocassinOntologyClasses predictedClass = getStructuralElementTypeRecognizer()
 					.predict(element);

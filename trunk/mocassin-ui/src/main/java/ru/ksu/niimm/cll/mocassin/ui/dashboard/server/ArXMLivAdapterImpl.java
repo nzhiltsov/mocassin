@@ -1,10 +1,8 @@
 package ru.ksu.niimm.cll.mocassin.ui.dashboard.server;
 
-import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import ru.ksu.niimm.cll.mocassin.analyzer.classifier.NavigationalRelationClassifier;
@@ -14,11 +12,9 @@ import ru.ksu.niimm.cll.mocassin.analyzer.relation.HasConsequenceRelationAnalyze
 import ru.ksu.niimm.cll.mocassin.analyzer.relation.ProvesRelationAnalyzer;
 import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.arxiv.ArxivDAOFacade;
-import ru.ksu.niimm.cll.mocassin.arxiv.LoadingPdfException;
 import ru.ksu.niimm.cll.mocassin.arxiv.impl.Link;
 import ru.ksu.niimm.cll.mocassin.arxiv.impl.Link.PdfLinkPredicate;
 import ru.ksu.niimm.cll.mocassin.fulltext.PDFIndexer;
-import ru.ksu.niimm.cll.mocassin.fulltext.PersistingDocumentException;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.ReferenceSearcher;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
@@ -81,45 +77,32 @@ public class ArXMLivAdapterImpl implements ArXMLivAdapter {
 	public void handle(String arxivId) {
 		if (arxivId == null || arxivId.length() == 0)
 			throw new RuntimeException("arXiv id cannot be null or empty");
-		try {
-			ArticleMetadata metadata = arxivDAOFacade.retrieve(arxivId);
-			metadata.setArxivId(arxivId);
-			InputStream pdfInputStream = arxivDAOFacade.loadPDF(metadata);
-			Link pdfLink = Iterables.find(metadata.getLinks(),
-					new PdfLinkPredicate());
-			pdfIndexer.save(pdfLink.getHref(), pdfInputStream);
-			ParsedDocumentImpl document = new ParsedDocumentImpl(arxivId,
-					metadata.getId(), pdfLink.getHref());
-			Graph<StructuralElement, Reference> graph = referenceSearcher
-					.retrieveStructuralGraph(document);
-			Collection<Reference> edges = graph.getEdges();
-			for (Reference reference : edges) {
-				if (reference.getPredictedRelation() == null) {
-					Prediction prediction = navigationalRelationClassifier
-							.predict(reference, graph);
-					if (prediction == null)
-						continue;
-					reference.setPredictedRelation(prediction.getRelation());
-				}
+
+		ArticleMetadata metadata = arxivDAOFacade.retrieve(arxivId);
+		metadata.setArxivId(arxivId);
+
+		Link pdfLink = Iterables.find(metadata.getLinks(),
+				new PdfLinkPredicate());
+		ParsedDocumentImpl document = new ParsedDocumentImpl(arxivId,
+				metadata.getId(), pdfLink.getHref());
+		Graph<StructuralElement, Reference> graph = referenceSearcher
+				.retrieveStructuralGraph(document);
+		Collection<Reference> edges = graph.getEdges();
+		for (Reference reference : edges) {
+			if (reference.getPredictedRelation() == null) {
+				Prediction prediction = navigationalRelationClassifier.predict(
+						reference, graph);
+				if (prediction == null)
+					continue;
+				reference.setPredictedRelation(prediction.getRelation());
 			}
-			exemplifiesRelationAnalyzer.addRelations(graph, document);
-			provesRelationAnalyzer.addRelations(graph, document);
-			hasConsequenceRelationAnalyzer.addRelations(graph, document);
-			Set<RDFTriple> triples = referenceTripleUtil.convert(graph);
-			ontologyResourceFacade.insert(metadata, triples);
-		} catch (PersistingDocumentException e) {
-			String message = String
-					.format("failed to persist the PDF index of the article %s due to: %s",
-							arxivId, e.getMessage());
-			logger.log(Level.SEVERE, message);
-			throw new RuntimeException(message);
-		} catch (LoadingPdfException e) {
-			String message = String.format(
-					"failed to load PDF of the article %s due to: %s", arxivId,
-					e.getMessage());
-			logger.log(Level.SEVERE, message);
-			throw new RuntimeException(message);
 		}
+		exemplifiesRelationAnalyzer.addRelations(graph, document);
+		provesRelationAnalyzer.addRelations(graph, document);
+		hasConsequenceRelationAnalyzer.addRelations(graph, document);
+		Set<RDFTriple> triples = referenceTripleUtil.convert(graph);
+		ontologyResourceFacade.insert(metadata, triples);
+
 	}
 
 	/*

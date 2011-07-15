@@ -7,10 +7,10 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.google.common.base.Predicate;
-
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
+
+import com.google.common.base.Predicate;
 
 public class StructuralElementImpl implements StructuralElement {
 	/**

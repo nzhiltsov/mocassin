@@ -1,3 +1,4 @@
+package ru.ksu.niimm.cll.mocassin.parser;
 import java.util.SortedSet;
 
 import junit.framework.Assert;
@@ -5,8 +6,6 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ru.ksu.niimm.cll.mocassin.parser.LatexParserModule;
-import ru.ksu.niimm.cll.mocassin.parser.Node;
 import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl;
 import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl.NodePositionComparator;
 import ru.ksu.niimm.cll.mocassin.parser.latex.builder.impl.NumberingProcessor;

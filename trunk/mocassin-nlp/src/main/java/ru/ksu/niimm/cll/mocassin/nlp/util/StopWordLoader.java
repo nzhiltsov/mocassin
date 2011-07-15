@@ -8,4 +8,6 @@ public interface StopWordLoader {
 	Set<String> getStopWords();
 	
 	Predicate<String> getNonStopWordPredicate();
+	
+	boolean isStopWord(String word);
 }

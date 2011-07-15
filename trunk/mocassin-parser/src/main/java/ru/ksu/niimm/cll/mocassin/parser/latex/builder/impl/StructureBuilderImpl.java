@@ -1,6 +1,5 @@
 package ru.ksu.niimm.cll.mocassin.parser.latex.builder.impl;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -17,14 +16,15 @@ import net.sourceforge.texlipse.model.ReferenceEntry;
 import ru.ksu.niimm.cll.mocassin.parser.Edge;
 import ru.ksu.niimm.cll.mocassin.parser.EdgeContext;
 import ru.ksu.niimm.cll.mocassin.parser.EdgeType;
+import ru.ksu.niimm.cll.mocassin.parser.Latex2PDFMapper;
 import ru.ksu.niimm.cll.mocassin.parser.Node;
-import ru.ksu.niimm.cll.mocassin.parser.Parser;
 import ru.ksu.niimm.cll.mocassin.parser.impl.EdgeContextImpl;
 import ru.ksu.niimm.cll.mocassin.parser.impl.EdgeImpl;
 import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl;
 import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl.NodePositionComparator;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
 import ru.ksu.niimm.cll.mocassin.parser.latex.NewtheoremCommand;
+import ru.ksu.niimm.cll.mocassin.parser.latex.PdfReferenceEntry;
 import ru.ksu.niimm.cll.mocassin.parser.latex.builder.StructureBuilder;
 
 import com.google.common.collect.Iterables;
@@ -44,8 +44,7 @@ public class StructureBuilderImpl implements StructureBuilder {
 	private static final String NODE_ID_FORMAT = "%d_%d";
 	@Inject
 	private Logger logger;
-
-	private final Parser parser;
+	private final Latex2PDFMapper latex2pdfMapper;
 
 	private final NumberingProcessor numberingProcessor;
 
@@ -53,10 +52,11 @@ public class StructureBuilderImpl implements StructureBuilder {
 	private Graph<Node, Edge> hypergraph;
 
 	@Inject
-	private StructureBuilderImpl(Parser parser,
-			NumberingProcessor numberingProcessor) {
-		this.parser = parser;
+	private StructureBuilderImpl(NumberingProcessor numberingProcessor,
+			Latex2PDFMapper latex2pdfMapper) {
+
 		this.numberingProcessor = numberingProcessor;
+		this.latex2pdfMapper = latex2pdfMapper;
 	}
 
 	/*
@@ -68,22 +68,19 @@ public class StructureBuilderImpl implements StructureBuilder {
 	 */
 	@Override
 	public synchronized Graph<Node, Edge> buildStructureGraph(
-			InputStream inputStream, boolean closeStream) {
+			LatexDocumentModel parsedModel) {
 		/**
 		 * TODO: this method is declared synchronized; this leads to lower
 		 * performance; such a solution should be revised by considering the
 		 * overall application architecture
 		 **/
 
-		this.hypergraph = new DirectedSparseMultigraph<Node, Edge>();
-		LatexDocumentModel parsedModel = this.parser.parse(inputStream,
-				closeStream);
 		if (parsedModel == null) {
-			logger
-					.log(Level.SEVERE,
-							"The parsed model is null. An empty graph will be returned");
+			logger.log(Level.SEVERE,
+					"The parsed model is null. An empty graph will be returned");
 			return hypergraph;
 		}
+		this.hypergraph = new DirectedSparseMultigraph<Node, Edge>();
 		setModel(parsedModel);
 
 		Stack<OutlineNode> stack = new Stack<OutlineNode>();
@@ -93,13 +90,14 @@ public class StructureBuilderImpl implements StructureBuilder {
 			OutlineNode treeItem = tree.get(i);
 			stack.push(treeItem);
 
-			String documentNodeId = String.format(NODE_ID_FORMAT, documentRoot
-					.getBeginLine(), documentRoot.getOffsetOnLine());
+			String documentNodeId = String
+					.format(NODE_ID_FORMAT, documentRoot.getBeginLine(),
+							documentRoot.getOffsetOnLine());
 			String documentNodeName = documentRoot.getName();
 			Node documentRootNode = new NodeImpl.Builder(documentNodeId,
 					documentNodeName).beginLine(documentRoot.getBeginLine())
-					.endLine(documentRoot.getEndLine()).offset(
-							documentRoot.getOffsetOnLine())
+					.endLine(documentRoot.getEndLine())
+					.offset(documentRoot.getOffsetOnLine())
 					.isEnvironment(false).numbered(false).build();
 			addEdge(documentRootNode, treeItem, EdgeType.CONTAINS);
 		}
@@ -109,14 +107,15 @@ public class StructureBuilderImpl implements StructureBuilder {
 			ArrayList<OutlineNode> children = node.getChildren();
 
 			if (children != null) {
-				String nodeId = String.format(NODE_ID_FORMAT, node
-						.getBeginLine(), node.getOffsetOnLine());
+				String nodeId = String.format(NODE_ID_FORMAT,
+						node.getBeginLine(), node.getOffsetOnLine());
 				String nodeTitle = extractTitle(node);
 				boolean isNumbered = getNumberedProperty(node);
 				Node from = new NodeImpl.Builder(nodeId, extractName(node))
-						.beginLine(node.getBeginLine()).endLine(
-								node.getEndLine()).offset(
-								node.getOffsetOnLine()).isEnvironment(
+						.beginLine(node.getBeginLine())
+						.endLine(node.getEndLine())
+						.offset(node.getOffsetOnLine())
+						.isEnvironment(
 								node.getType() == OutlineNode.TYPE_ENVIRONMENT)
 						.title(nodeTitle).numbered(isNumbered).build();
 				for (OutlineNode child : children) {
@@ -133,7 +132,23 @@ public class StructureBuilderImpl implements StructureBuilder {
 			}
 		}
 		extractTitles();
+		fillPageNumbers();
 		return this.hypergraph;
+	}
+
+	private void fillPageNumbers() {
+		Collection<Node> nodes = this.hypergraph.getVertices();
+
+		for (Node node : nodes) {
+			int pageNumber = 0;
+			for (int l = node.getBeginLine(); l <= node.getEndLine(); l++) {
+				pageNumber = latex2pdfMapper.getPDFPageNumber(l,
+						model.getDocId());
+				if (pageNumber > 0)
+					break;
+			}
+			node.setPdfPageNumber(pageNumber);
+		}
 	}
 
 	private void extractTitles() {
@@ -155,11 +170,13 @@ public class StructureBuilderImpl implements StructureBuilder {
 		String nodeName = extractName(toNode);
 		String nodeTitle = extractTitle(toNode);
 		boolean isNumbered = getNumberedProperty(toNode);
-		Node to = new NodeImpl.Builder(childId, nodeName).beginLine(
-				toNode.getBeginLine()).endLine(toNode.getEndLine()).offset(
-				toNode.getOffsetOnLine()).isEnvironment(
-				toNode.getType() == OutlineNode.TYPE_ENVIRONMENT).labelText(
-				labelText).title(nodeTitle).numbered(isNumbered).build();
+		Node to = new NodeImpl.Builder(childId, nodeName)
+				.beginLine(toNode.getBeginLine())
+				.endLine(toNode.getEndLine())
+				.offset(toNode.getOffsetOnLine())
+				.isEnvironment(toNode.getType() == OutlineNode.TYPE_ENVIRONMENT)
+				.labelText(labelText).title(nodeTitle).numbered(isNumbered)
+				.build();
 		EdgeContext context = new EdgeContextImpl(edgeType);
 		edge.setContext(context);
 		addEdge(edge, from, to);
@@ -239,11 +256,14 @@ public class StructureBuilderImpl implements StructureBuilder {
 		String labelText = getLabelText(fromNode);
 		String nodeTitle = extractTitle(fromNode);
 		boolean isNumbered = getNumberedProperty(fromNode);
-		Node from = new NodeImpl.Builder(childId, nodeName).beginLine(
-				fromNode.getBeginLine()).endLine(fromNode.getEndLine()).offset(
-				fromNode.getOffsetOnLine()).isEnvironment(
-				fromNode.getType() == OutlineNode.TYPE_ENVIRONMENT).labelText(
-				labelText).title(nodeTitle).numbered(isNumbered).build();
+		Node from = new NodeImpl.Builder(childId, nodeName)
+				.beginLine(fromNode.getBeginLine())
+				.endLine(fromNode.getEndLine())
+				.offset(fromNode.getOffsetOnLine())
+				.isEnvironment(
+						fromNode.getType() == OutlineNode.TYPE_ENVIRONMENT)
+				.labelText(labelText).title(nodeTitle).numbered(isNumbered)
+				.build();
 		EdgeContext context = new EdgeContextImpl(edgeType);
 		edge.setContext(context);
 		addEdge(edge, from, to);
@@ -348,12 +368,12 @@ public class StructureBuilderImpl implements StructureBuilder {
 
 	private List<DocumentReference> getReferencesForLabel(OutlineNode child) {
 
-		ReferenceEntry label = getLabel(child);
+		PdfReferenceEntry label = getLabel(child);
 		List<DocumentReference> refs = new ArrayList<DocumentReference>();
 		Iterator<DocumentReference> iterator = getReferences().iterator();
 		while (iterator.hasNext()) {
 			DocumentReference ref = iterator.next();
-			if (ref.getKey().equals(label.key)) {
+			if (ref.getKey().equals(label.key())) {
 				refs.add(ref);
 			} else if (!refs.isEmpty()) {
 				break; // 'cause references list is ordered by 'key'
@@ -363,13 +383,13 @@ public class StructureBuilderImpl implements StructureBuilder {
 		return refs;
 	}
 
-	private ReferenceEntry getLabel(OutlineNode child) {
-		ReferenceEntry foundLabel = null;
+	private PdfReferenceEntry getLabel(OutlineNode child) {
+		PdfReferenceEntry foundLabel = null;
 		int i = 0;
 		while (i <= getLabels().size() - 1) {
-			ReferenceEntry label = getLabels().get(i);
-			boolean found = label.key.equals(child.getName())
-					&& label.startLine == child.getBeginLine();
+			PdfReferenceEntry label = getLabels().get(i);
+			boolean found = label.key().equals(child.getName())
+					&& label.startLine() == child.getBeginLine();
 			if (found) {
 				foundLabel = label;
 			}
@@ -390,7 +410,7 @@ public class StructureBuilderImpl implements StructureBuilder {
 		return getModel().getReferences();
 	}
 
-	private List<ReferenceEntry> getLabels() {
+	private List<PdfReferenceEntry> getLabels() {
 		return getModel().getLabels();
 	}
 

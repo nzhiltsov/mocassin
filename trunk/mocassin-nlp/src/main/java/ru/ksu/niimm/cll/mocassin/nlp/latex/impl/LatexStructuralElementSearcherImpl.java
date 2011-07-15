@@ -1,4 +1,4 @@
-package ru.ksu.niimm.cll.mocassin.nlp.latex;
+package ru.ksu.niimm.cll.mocassin.nlp.latex.impl;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -20,6 +20,8 @@ import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.ReferenceImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.StructuralElementImpl;
+import ru.ksu.niimm.cll.mocassin.nlp.latex.LatexSearcherParseException;
+import ru.ksu.niimm.cll.mocassin.nlp.latex.LatexStructuralElementSearcher;
 import ru.ksu.niimm.cll.mocassin.nlp.recognizer.StructuralElementTypeRecognizer;
 import ru.ksu.niimm.cll.mocassin.nlp.util.StopWordLoader;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
@@ -27,9 +29,11 @@ import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
 import ru.ksu.niimm.cll.mocassin.parser.Edge;
 import ru.ksu.niimm.cll.mocassin.parser.EdgeType;
 import ru.ksu.niimm.cll.mocassin.parser.Node;
+import ru.ksu.niimm.cll.mocassin.parser.Parser;
 import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl.EnclosingNodePredicate;
 import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl.NodeBoundaryPredicate;
 import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl.NodePositionComparator;
+import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
 import ru.ksu.niimm.cll.mocassin.parser.latex.builder.StructureBuilder;
 import ru.ksu.niimm.cll.mocassin.parser.util.StandardMathEnvironments;
 import ru.ksu.niimm.cll.mocassin.parser.util.StandardMetadataEnvironments;
@@ -50,6 +54,8 @@ public class LatexStructuralElementSearcherImpl implements
 	private static final String LATEX_COMMENT_SYMBOL = "%";
 	@Inject
 	private Logger logger;
+	@Inject
+	private Parser parser;
 	@Inject
 	private StructureBuilder structureBuilder;
 	@Inject
@@ -92,8 +98,9 @@ public class LatexStructuralElementSearcherImpl implements
 				parsingInputStream = inputStream;
 			}
 			parsingInputStream.mark(DOCUMENT_MAX_SIZE);
-			this.latexNodeGraph = this.structureBuilder.buildStructureGraph(
-					parsingInputStream, false);
+			LatexDocumentModel model = parser.parse(parsedDocument.getArxivId(), parsingInputStream, false);
+			this.latexNodeGraph = this.structureBuilder
+					.buildStructureGraph(model);
 			parsingInputStream.reset();
 			extractTextContents(parsingInputStream);
 
@@ -240,11 +247,11 @@ public class LatexStructuralElementSearcherImpl implements
 
 		@Override
 		public synchronized StructuralElement apply(Node node) {
-			String uri = String.format("%s/s%s", getParsedDocument()
-					.getUri(), node.getId());
-			StructuralElement element = new StructuralElementImpl.Builder(uri
-					.hashCode(), uri).name(node.getName()).title(
-					node.getTitle()).build();
+			String uri = String.format("%s/s%s", getParsedDocument().getUri(),
+					node.getId());
+			StructuralElement element = new StructuralElementImpl.Builder(
+					uri.hashCode(), uri).name(node.getName())
+					.title(node.getTitle()).build();
 			List<String> labels = new ArrayList<String>();
 			labels.add(node.getLabelText());
 			element.setLabels(labels);
@@ -270,21 +277,19 @@ public class LatexStructuralElementSearcherImpl implements
 				if (element.getTitle() == null) {
 					fullTextQuery = sb.toString();
 				} else {
-					fullTextQuery = String.format("\"%s\" %s", element
-							.getTitle(), sb.toString());
+					fullTextQuery = String.format("\"%s\" %s",
+							element.getTitle(), sb.toString());
 				}
 				try {
 					int pageNumber = getPageNumber(fullTextQuery);
 					element.setStartPageNumber(pageNumber);
 				} catch (EmptyResultException e) {
-					logger
-							.log(
-									Level.SEVERE,
-									String
-											.format(
-													"failed to find the page number for a segment %s using a query \"%s\" on PDF: %s",
-													element.getUri(),
-													fullTextQuery, getPdfUri()));
+					logger.log(
+							Level.SEVERE,
+							String.format(
+									"failed to find the page number for a segment %s using a query \"%s\" on PDF: %s",
+									element.getUri(), fullTextQuery,
+									getPdfUri()));
 				}
 
 			}

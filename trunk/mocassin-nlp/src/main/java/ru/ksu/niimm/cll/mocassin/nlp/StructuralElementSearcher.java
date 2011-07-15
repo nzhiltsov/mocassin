@@ -2,9 +2,8 @@ package ru.ksu.niimm.cll.mocassin.nlp;
 
 import java.util.List;
 
-import edu.uci.ics.jung.graph.Graph;
-
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
+import edu.uci.ics.jung.graph.Graph;
 
 /**
  * Represents a functionality of searching the structural elements in parsed

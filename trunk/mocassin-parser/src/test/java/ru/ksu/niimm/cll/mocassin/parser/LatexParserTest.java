@@ -1,5 +1,6 @@
-package unittest;
+package ru.ksu.niimm.cll.mocassin.parser;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
@@ -8,8 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ru.ksu.niimm.cll.mocassin.parser.LatexParserModule;
-import ru.ksu.niimm.cll.mocassin.parser.Parser;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
 
 import com.google.inject.Inject;
@@ -27,12 +26,12 @@ public class LatexParserTest {
 
 	@Before
 	public void init() throws FileNotFoundException {
-		this.in = this.getClass().getResourceAsStream("/example.tex");
+		this.in = new FileInputStream("/opt/mocassin/tex/math_0001008.tex");
 	}
 
 	@Test
-	public void testGetGraph() throws Exception {
-		LatexDocumentModel model = getParser().parse(getInputStream(), true);
+	public void testParse() throws Exception {
+		LatexDocumentModel model = getParser().parse("math/0001008", getInputStream(), true);
 		Assert.assertTrue(model.getReferences().size() > 0);
 	}
 

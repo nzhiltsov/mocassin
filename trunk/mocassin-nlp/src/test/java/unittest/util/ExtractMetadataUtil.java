@@ -11,12 +11,6 @@ import java.util.logging.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.google.inject.Inject;
-import com.mycila.testing.junit.MycilaJunitRunner;
-import com.mycila.testing.plugin.guice.GuiceContext;
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.DomDriver;
-
 import ru.ksu.niimm.cll.mocassin.fulltext.FullTextModule;
 import ru.ksu.niimm.cll.mocassin.nlp.NlpModule;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateDocumentException;
@@ -25,6 +19,12 @@ import ru.ksu.niimm.cll.mocassin.parser.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.util.GateDocumentMetadata;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
 import ru.ksu.niimm.ose.ontology.OntologyModule;
+
+import com.google.inject.Inject;
+import com.mycila.testing.junit.MycilaJunitRunner;
+import com.mycila.testing.plugin.guice.GuiceContext;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
 
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext({ NlpModule.class, OntologyModule.class, VirtuosoModule.class,
