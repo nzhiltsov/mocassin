@@ -10,6 +10,8 @@ import ru.ksu.niimm.cll.mocassin.parser.latex.builder.impl.NumberingProcessorImp
 import ru.ksu.niimm.cll.mocassin.parser.latex.builder.impl.StructureBuilderImpl;
 import ru.ksu.niimm.cll.mocassin.parser.latex.impl.LatexParserImpl;
 import ru.ksu.niimm.cll.mocassin.parser.latex.impl.PdfsyncMapper;
+import ru.ksu.niimm.cll.mocassin.parser.util.LatexDocumentHeaderPatcher;
+import ru.ksu.niimm.cll.mocassin.parser.util.SedCommandPatcher;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
@@ -32,6 +34,7 @@ public class LatexParserModule extends AbstractModule {
 		bind(NumberingProcessor.class).to(NumberingProcessorImpl.class);
 		bind(Latex2PDFMapper.class).to(PdfsyncMapper.class);
 		bind(LatexDocumentDAO.class).to(LatexDocumentDAOImpl.class);
+		bind(LatexDocumentHeaderPatcher.class).to(SedCommandPatcher.class);
 	}
 
 }

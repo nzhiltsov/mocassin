@@ -110,4 +110,18 @@ public class StringUtil {
 	public static String asString(List<String> list) {
 		return asString(Iterables.toArray(list, String.class));
 	}
+
+	/**
+	 * returns a filename that corresponds to a given arXiv paper identifier
+	 * 
+	 * @param arxivId
+	 *            e.g. 'math/0002188'
+	 * @param extension
+	 *            e.g. 'tex'
+	 * @return e.g. 'math_0002188.tex'
+	 */
+	public static String arxivid2filename(String arxivId, String extension) {
+		String name = arxivId.replace("/", "_");
+		return String.format("%s.%s", name, extension);
+	}
 }
