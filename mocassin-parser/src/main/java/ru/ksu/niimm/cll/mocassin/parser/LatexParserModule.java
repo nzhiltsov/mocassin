@@ -3,6 +3,8 @@ package ru.ksu.niimm.cll.mocassin.parser;
 import java.io.IOException;
 import java.util.Properties;
 
+import ru.ksu.niimm.cll.mocassin.parser.arxmliv.ArxmlivProducer;
+import ru.ksu.niimm.cll.mocassin.parser.arxmliv.impl.ArxmlivProducerImpl;
 import ru.ksu.niimm.cll.mocassin.parser.impl.LatexDocumentDAOImpl;
 import ru.ksu.niimm.cll.mocassin.parser.latex.builder.StructureBuilder;
 import ru.ksu.niimm.cll.mocassin.parser.latex.builder.impl.NumberingProcessor;
@@ -35,6 +37,7 @@ public class LatexParserModule extends AbstractModule {
 		bind(Latex2PDFMapper.class).to(PdfsyncMapper.class);
 		bind(LatexDocumentDAO.class).to(LatexDocumentDAOImpl.class);
 		bind(LatexDocumentHeaderPatcher.class).to(SedCommandPatcher.class);
+		bind(ArxmlivProducer.class).to(ArxmlivProducerImpl.class);
 	}
 
 }

@@ -1,5 +1,7 @@
 package ru.ksu.niimm.cll.mocassin.parser;
 
+import java.io.InputStream;
+
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
 
 public interface LatexDocumentDAO {
@@ -10,4 +12,13 @@ public interface LatexDocumentDAO {
 	 * @return
 	 */
 	LatexDocumentModel load(String documentId);
+
+	/**
+	 * persists the Latex source which corresponds to a arXiv paper with a given
+	 * identifier
+	 * 
+	 * @param arxivId
+	 * @param inputStream
+	 */
+	void save(String arxivId, InputStream inputStream);
 }

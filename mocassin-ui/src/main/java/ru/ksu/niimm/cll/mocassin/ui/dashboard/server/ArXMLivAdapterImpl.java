@@ -1,5 +1,6 @@
 package ru.ksu.niimm.cll.mocassin.ui.dashboard.server;
 
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -20,6 +21,9 @@ import ru.ksu.niimm.cll.mocassin.nlp.ReferenceSearcher;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.ParsedDocumentImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.util.ReferenceTripleUtil;
+import ru.ksu.niimm.cll.mocassin.parser.LatexDocumentDAO;
+import ru.ksu.niimm.cll.mocassin.parser.arxmliv.ArxmlivProducer;
+import ru.ksu.niimm.cll.mocassin.parser.util.LatexDocumentHeaderPatcher;
 import ru.ksu.niimm.cll.mocassin.ui.dashboard.client.ArxivArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFTriple;
@@ -43,8 +47,6 @@ public class ArXMLivAdapterImpl implements ArXMLivAdapter {
 	@Inject
 	private ReferenceTripleUtil referenceTripleUtil;
 	@Inject
-	private PDFIndexer pdfIndexer;
-	@Inject
 	private NavigationalRelationClassifier navigationalRelationClassifier;
 	@Inject
 	private ProvesRelationAnalyzer provesRelationAnalyzer;
@@ -52,6 +54,12 @@ public class ArXMLivAdapterImpl implements ArXMLivAdapter {
 	private HasConsequenceRelationAnalyzer hasConsequenceRelationAnalyzer;
 	@Inject
 	private ExemplifiesRelationAnalyzer exemplifiesRelationAnalyzer;
+	@Inject
+	private LatexDocumentHeaderPatcher latexDocumentHeaderPatcher;
+	@Inject
+	private LatexDocumentDAO latexDocumentDAO;
+	@Inject
+	private ArxmlivProducer arxmlivProducer;
 
 	@Override
 	public int handle(Set<String> arxivIds) {
@@ -77,9 +85,20 @@ public class ArXMLivAdapterImpl implements ArXMLivAdapter {
 	public void handle(String arxivId) {
 		if (arxivId == null || arxivId.length() == 0)
 			throw new RuntimeException("arXiv id cannot be null or empty");
-
+		/*
+		 * TODO: refactor this method to decouple this class from a bunch of
+		 * classes; see Issue 70 for numbering
+		 */
+		// Step 1
 		ArticleMetadata metadata = arxivDAOFacade.retrieve(arxivId);
 		metadata.setArxivId(arxivId);
+		// Step 2
+		InputStream latexSourceStream = arxivDAOFacade.loadSource(metadata);
+		latexDocumentDAO.save(arxivId, latexSourceStream);
+		// Step 3
+		latexDocumentHeaderPatcher.patch(arxivId);
+		// Step 4
+		arxmlivProducer.produce(arxivId);
 
 		Link pdfLink = Iterables.find(metadata.getLinks(),
 				new PdfLinkPredicate());

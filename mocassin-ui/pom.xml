@@ -138,7 +138,11 @@
 			<version>1.0.0.6-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
-
+		<dependency>
+			<groupId>ru.ksu.niimm.cll.mocassin</groupId>
+			<artifactId>mocassin-parser</artifactId>
+			<version>1.0.0.6-SNAPSHOT</version>
+		</dependency>
 
 		<dependency>
 			<groupId>ru.ksu.niimm.cll.mocassin</groupId>

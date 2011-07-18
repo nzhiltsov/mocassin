@@ -1,4 +1,4 @@
-package ru.ksu.niimm.cll.mocassin.parser.arxmliv.xpath.impl;
+package ru.ksu.niimm.cll.mocassin.parser.arxmliv;
 
 import java.util.HashSet;
 import java.util.Set;
