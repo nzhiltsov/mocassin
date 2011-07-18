@@ -1,4 +1,4 @@
-package ru.ksu.niimm.cll.mocassin.parser.arxmliv.xpath.impl;
+package ru.ksu.niimm.cll.mocassin.parser.arxmliv;
 
 public class ArxmlivFormatConstants {
 	public static final String LABEL_ATTRIBUTE_NAME = "labels";

@@ -53,9 +53,11 @@ public class SedCommandPatcher implements LatexDocumentHeaderPatcher {
 				throw new Exception("process termination hasn't been normal");
 			}
 		} catch (Exception e) {
-			logger.log(Level.SEVERE, String.format(
+			String message = String.format(
 					"failed to patch the latex source of a document='%s'",
-					arxivId));
+					arxivId);
+			logger.log(Level.SEVERE, message);
+			throw new RuntimeException(message);
 		}
 
 	}
