@@ -12,7 +12,6 @@ import java.util.logging.Logger;
 
 import net.sourceforge.texlipse.model.DocumentReference;
 import net.sourceforge.texlipse.model.OutlineNode;
-import net.sourceforge.texlipse.model.ReferenceEntry;
 import ru.ksu.niimm.cll.mocassin.parser.Edge;
 import ru.ksu.niimm.cll.mocassin.parser.EdgeContext;
 import ru.ksu.niimm.cll.mocassin.parser.EdgeType;

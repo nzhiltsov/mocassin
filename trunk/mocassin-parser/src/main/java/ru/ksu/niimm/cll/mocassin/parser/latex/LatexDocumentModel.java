@@ -4,7 +4,6 @@ import java.util.List;
 
 import net.sourceforge.texlipse.model.DocumentReference;
 import net.sourceforge.texlipse.model.OutlineNode;
-import net.sourceforge.texlipse.model.ReferenceEntry;
 import net.sourceforge.texlipse.model.TexCommandEntry;
 
 public class LatexDocumentModel {

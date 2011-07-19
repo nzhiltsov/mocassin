@@ -6,6 +6,7 @@ public interface ArxmlivProducer {
 	 * representation of a paper with a given arXiv identifier
 	 * 
 	 * @param arxivId
+	 * @return local file path
 	 */
-	void produce(String arxivId);
+	String produce(String arxivId);
 }

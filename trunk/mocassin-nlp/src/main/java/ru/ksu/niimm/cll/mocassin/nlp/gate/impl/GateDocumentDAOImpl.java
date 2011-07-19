@@ -10,9 +10,12 @@ import gate.Gate;
 import gate.creole.ResourceInstantiationException;
 import gate.persist.PersistenceException;
 import gate.persist.SerialDataStore;
+import gate.security.SecurityException;
 import gate.util.GateException;
 import gate.util.OffsetComparator;
 
+import java.io.File;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -23,6 +26,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateDocumentException;
+import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateStorageException;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateFormatConstants;
 import ru.ksu.niimm.cll.mocassin.nlp.util.AnnotationUtil;
@@ -33,7 +37,9 @@ import ru.ksu.niimm.cll.mocassin.util.StringUtil;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
+@Singleton
 public class GateDocumentDAOImpl implements GateDocumentDAO {
 
 	private static final String GATE_DOCUMENT_AFFIX = ".tex.xml";
@@ -56,8 +62,50 @@ public class GateDocumentDAOImpl implements GateDocumentDAO {
 	private AnnotationUtil annotationUtil;
 
 	@Override
-	public GateDocumentMetadata loadMetadata(String documentId)
-			throws AccessGateDocumentException {
+	public synchronized void save(String documentId, File file)
+			throws AccessGateStorageException,
+			ru.ksu.niimm.cll.mocassin.nlp.gate.impl.PersistenceException {
+		initialize();
+		try {
+			Document document = Factory.newDocument(file.toURI().toURL());
+			Document persistedDocument = (Document) this.dataStore.adopt(
+					document, null);
+			persistedDocument.setName(StringUtil.arxivid2filename(documentId,
+					"tex.xml"));
+			this.dataStore.sync(persistedDocument);
+		} catch (ResourceInstantiationException e) {
+			String message = String.format(
+					"failed to create a GATE document for the file='%s'",
+					file.getAbsolutePath());
+			logger.log(Level.SEVERE, message);
+			throw new ru.ksu.niimm.cll.mocassin.nlp.gate.impl.PersistenceException(
+					message);
+		} catch (MalformedURLException e) {
+			String message = String
+					.format("failed to create a GATE document for the file='%s': this file path probably is incorrect",
+							file.getAbsolutePath());
+			logger.log(Level.SEVERE, message);
+			throw new IllegalArgumentException(message);
+		} catch (PersistenceException e) {
+			String message = String.format(
+					"failed to save a GATE document for the file='%s'",
+					file.getAbsolutePath());
+			logger.log(Level.SEVERE, message);
+			throw new ru.ksu.niimm.cll.mocassin.nlp.gate.impl.PersistenceException(
+					message);
+		} catch (SecurityException e) {
+			String message = String
+					.format("failed to save a GATE document for the file='%s' due to security reasons",
+							file.getAbsolutePath());
+			logger.log(Level.SEVERE, message);
+			throw new ru.ksu.niimm.cll.mocassin.nlp.gate.impl.PersistenceException(
+					message);
+		}
+	}
+
+	@Override
+	public synchronized GateDocumentMetadata loadMetadata(String documentId)
+			throws AccessGateDocumentException, AccessGateStorageException {
 		initialize();
 		Document document = load(documentId);
 		GateDocumentMetadata metadata = extractMetadata(document);
@@ -66,7 +114,8 @@ public class GateDocumentDAOImpl implements GateDocumentDAO {
 	}
 
 	@Override
-	public Document load(String documentId) throws AccessGateDocumentException {
+	public synchronized Document load(String documentId)
+			throws AccessGateDocumentException, AccessGateStorageException {
 		initialize();
 		List<String> documentIds = getDocumentIds();
 		String foundDocumentId = Iterables.find(documentIds,
@@ -91,7 +140,8 @@ public class GateDocumentDAOImpl implements GateDocumentDAO {
 	}
 
 	@Override
-	public List<String> getDocumentIds() throws AccessGateDocumentException {
+	public synchronized List<String> getDocumentIds()
+			throws AccessGateDocumentException, AccessGateStorageException {
 		initialize();
 
 		try {
@@ -112,7 +162,7 @@ public class GateDocumentDAOImpl implements GateDocumentDAO {
 	}
 
 	@Override
-	public void release(Document document) {
+	public synchronized void release(Document document) {
 		if (document != null) {
 			Factory.deleteResource(document);
 		}
@@ -126,7 +176,7 @@ public class GateDocumentDAOImpl implements GateDocumentDAO {
 		return dataStore;
 	}
 
-	private void initialize() throws AccessGateDocumentException {
+	private void initialize() throws AccessGateStorageException {
 		if (!isInitialized) {
 			isInitialized = true;
 			System.setProperty(GATE_HOME_PROPERTY_KEY,
@@ -142,7 +192,7 @@ public class GateDocumentDAOImpl implements GateDocumentDAO {
 								GATE_STORAGE_DIR_PROPERTY_KEY));
 				getDataStore().open();
 			} catch (GateException e) {
-				throw new AccessGateDocumentException(e);
+				throw new AccessGateStorageException(e);
 			}
 		}
 

@@ -19,7 +19,8 @@ import ru.ksu.niimm.cll.mocassin.nlp.impl.StructuralElementImpl.PositionComparat
 import ru.ksu.niimm.cll.mocassin.nlp.util.AnnotationUtil;
 import ru.ksu.niimm.cll.mocassin.nlp.util.NlpModulePropertiesLoader;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
-import ru.ksu.niimm.cll.mocassin.parser.arxmliv.xpath.impl.ArxmlivFormatConstants;
+import ru.ksu.niimm.cll.mocassin.parser.arxmliv.ArxmlivFormatConstants;
+import ru.ksu.niimm.cll.mocassin.util.StringUtil;
 
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
@@ -55,7 +56,7 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 	public synchronized Graph<StructuralElement, Reference> retrieveStructuralGraph(
 			ParsedDocument parsedDocument) {
 		this.parsedDocument = parsedDocument;
-		String arxivId = parsedDocument.getArxivId().replace("/", "_");
+		String arxivId = StringUtil.arxivid2gateid(parsedDocument.getArxivId());
 		try {
 			this.graph = new DirectedSparseMultigraph<StructuralElement, Reference>();
 
@@ -80,6 +81,13 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 			logger.log(Level.SEVERE,
 					String.format("failed to load the document: %s", arxivId));
 			throw new RuntimeException(e);
+		} catch (AccessGateStorageException e) {
+			logger.log(
+					Level.SEVERE,
+					String.format(
+							"failed to access the storage while loading the document: %s",
+							arxivId));
+			throw new RuntimeException(e);
 		} finally {
 			gateDocumentDAO.release(getDocument());
 		}
@@ -98,9 +106,9 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 								.get(j).getEnd()) {
 					long documentSize = getDocument().getContent().size();
 					ParsedDocument refDocument = new ParsedDocumentImpl(
-							getParsedDocument().getArxivId(), getParsedDocument()
-									.getUri(), getParsedDocument().getPdfUri(),
-							documentSize);
+							getParsedDocument().getArxivId(),
+							getParsedDocument().getUri(), getParsedDocument()
+									.getPdfUri(), documentSize);
 					Reference reference = new ReferenceImpl.Builder(refId--)
 							.document(refDocument).build();
 					reference

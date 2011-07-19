@@ -14,8 +14,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import net.sourceforge.texlipse.model.ReferenceEntry;
-
 import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
@@ -28,11 +26,9 @@ import ru.ksu.niimm.cll.mocassin.nlp.recognizer.StructuralElementTypeRecognizer;
 import ru.ksu.niimm.cll.mocassin.nlp.util.AnnotationUtil;
 import ru.ksu.niimm.cll.mocassin.nlp.util.NlpModulePropertiesLoader;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
-import ru.ksu.niimm.cll.mocassin.parser.Edge;
 import ru.ksu.niimm.cll.mocassin.parser.LatexDocumentDAO;
-import ru.ksu.niimm.cll.mocassin.parser.Node;
-import ru.ksu.niimm.cll.mocassin.parser.arxmliv.xpath.impl.ArxmlivFormatConstants;
-import ru.ksu.niimm.cll.mocassin.parser.arxmliv.xpath.impl.ArxmlivStructureElementTypes;
+import ru.ksu.niimm.cll.mocassin.parser.arxmliv.ArxmlivFormatConstants;
+import ru.ksu.niimm.cll.mocassin.parser.arxmliv.ArxmlivStructureElementTypes;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
 import ru.ksu.niimm.cll.mocassin.parser.latex.PdfReferenceEntry;
 import ru.ksu.niimm.cll.mocassin.parser.latex.builder.StructureBuilder;
@@ -71,7 +67,6 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 
 	private LatexDocumentModel latexDocumentModel;
 
-
 	@Override
 	public List<StructuralElement> retrieveElements(
 			ParsedDocument parsedDocument) {
@@ -97,6 +92,13 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 		} catch (AccessGateDocumentException e) {
 			logger.log(Level.SEVERE, String.format(
 					"failed to load the document: %s", parsedDocument.getUri()));
+			throw new RuntimeException(e);
+		} catch (AccessGateStorageException e) {
+			logger.log(
+					Level.SEVERE,
+					String.format(
+							"failed to access the storage while loading the document: %s",
+							arxivId));
 			throw new RuntimeException(e);
 		} finally {
 			gateDocumentDAO.release(gateDocument);
@@ -133,6 +135,13 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 		} catch (AccessGateDocumentException e) {
 			logger.log(Level.SEVERE, String.format(
 					"failed to load the document: %s", parsedDocument.getUri()));
+			throw new RuntimeException(e);
+		} catch (AccessGateStorageException e) {
+			logger.log(
+					Level.SEVERE,
+					String.format(
+							"failed to access the storage while loading the document: %s",
+							parsedDocument.getUri()));
 			throw new RuntimeException(e);
 		} finally {
 			gateDocumentDAO.release(document);
@@ -241,7 +250,8 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 		if (element.getLabels().isEmpty())
 			return;
 		List<PdfReferenceEntry> labels = latexDocumentModel.getLabels();
-		for (PdfReferenceEntry entry : labels) {// labels are ordered by their positions
+		for (PdfReferenceEntry entry : labels) {// labels are ordered by their
+												// positions
 			String labelText = String.format("LABEL:%s", entry.key());
 			if (element.getLabels().contains(labelText)) {
 				element.setStartPageNumber(entry.getPdfNumberPage());
@@ -293,7 +303,8 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 			} else {
 				String refnum = (String) annotation.getFeatures().get(
 						ArxmlivFormatConstants.REF_NUM_ATTRIBUTE_NAME);
-				title = refnum != null ? String.format("%s %s", name, refnum) : name;
+				title = refnum != null ? String.format("%s %s", name, refnum)
+						: name;
 			}
 
 			StructuralElement element = new StructuralElementImpl.Builder(id,

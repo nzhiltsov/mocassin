@@ -2,19 +2,23 @@ package unittest;
 
 import gate.Document;
 
+import java.io.File;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import junit.framework.Assert;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ru.ksu.niimm.cll.mocassin.fulltext.FullTextModule;
 import ru.ksu.niimm.cll.mocassin.nlp.NlpModule;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateDocumentException;
+import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateStorageException;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
+import ru.ksu.niimm.cll.mocassin.nlp.gate.impl.PersistenceException;
 import ru.ksu.niimm.cll.mocassin.parser.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
 import ru.ksu.niimm.cll.mocassin.util.GateDocumentMetadata;
@@ -33,6 +37,14 @@ public class GateDocumentDAOTest {
 	private Logger logger;
 	@Inject
 	private GateDocumentDAO gateDocumentDAO;
+
+	@Ignore
+	@Test
+	public void testSave() throws AccessGateStorageException,
+			PersistenceException {
+		gateDocumentDAO.save("math/0002188", new File(
+				"/opt/mocassin/arxmliv/math_0002188.tex.xml"));
+	}
 
 	@Test
 	public void testLoad() throws Exception {
@@ -58,7 +70,8 @@ public class GateDocumentDAOTest {
 	}
 
 	@Test
-	public void testLoadMetadata() throws AccessGateDocumentException {
+	public void testLoadMetadata() throws AccessGateDocumentException,
+			AccessGateStorageException {
 		GateDocumentMetadata metadata = gateDocumentDAO
 				.loadMetadata("math_0410002");
 		Assert.assertEquals("math_0410002.tex.xml", metadata.getName());

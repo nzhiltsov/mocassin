@@ -7,7 +7,6 @@ import java.util.regex.Pattern;
 
 import junit.framework.Assert;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -15,7 +14,6 @@ import ru.ksu.niimm.cll.mocassin.parser.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
 
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 

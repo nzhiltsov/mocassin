@@ -23,7 +23,8 @@ public class ArxmlivProducerTest {
 	@Test
 	public void testProduce() {
 		final String arxivId = "math/0002188";
-		arxmlivProducer.produce(arxivId);
+		String path = arxmlivProducer.produce(arxivId);
+		Assert.assertEquals("/opt/mocassin/arxmliv/math_0002188.tex.xml", path);
 		Assert.assertTrue(new File("/opt/mocassin/arxmliv/"
 				+ StringUtil.arxivid2filename(arxivId, "tex.xml")).exists());
 	}

@@ -44,14 +44,16 @@ public class VirtuosoDAOImpl implements VirtuosoDAO {
 			while (i < triples.size() / SPARQL_LINE_NUMBER_LIMIT) {
 
 				String expression = getInsertQueryGenerator().generate(
-						triples.subList(SPARQL_LINE_NUMBER_LIMIT * i + 1, SPARQL_LINE_NUMBER_LIMIT * (i + 1)), graph);
+						triples.subList(SPARQL_LINE_NUMBER_LIMIT * i + 1,
+								SPARQL_LINE_NUMBER_LIMIT * (i + 1)), graph);
 				execute(virtGraph, expression);
 				i++;
 			}
-			List<RDFTriple> subList = triples.subList(SPARQL_LINE_NUMBER_LIMIT * i + 1, triples.size() - 1);
+			List<RDFTriple> subList = triples.subList(SPARQL_LINE_NUMBER_LIMIT
+					* i + 1, triples.size() - 1);
 			subList.add(triples.get(0));
-			String expression = getInsertQueryGenerator().generate(
-					subList, graph);
+			String expression = getInsertQueryGenerator().generate(subList,
+					graph);
 			execute(virtGraph, expression);
 		} else {
 			String expression = getInsertQueryGenerator().generate(triples,
@@ -140,5 +142,6 @@ public class VirtuosoDAOImpl implements VirtuosoDAO {
 		VirtuosoUpdateRequest request = VirtuosoUpdateFactory.create(
 				expression, virtGraph);
 		request.exec();
+
 	}
 }
