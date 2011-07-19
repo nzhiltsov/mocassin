@@ -3,7 +3,7 @@ package ru.ksu.niimm.cll.mocassin.nlp;
 import java.util.List;
 
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
-import ru.ksu.niimm.cll.mocassin.parser.arxmliv.xpath.impl.ArxmlivStructureElementTypes;
+import ru.ksu.niimm.cll.mocassin.parser.arxmliv.ArxmlivStructureElementTypes;
 
 /**
  * Structural element is an element that belongs to the rhetorical structure

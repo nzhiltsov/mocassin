@@ -121,7 +121,11 @@ public class StringUtil {
 	 * @return e.g. 'math_0002188.tex'
 	 */
 	public static String arxivid2filename(String arxivId, String extension) {
-		String name = arxivId.replace("/", "_");
+		String name = arxivid2gateid(arxivId);
 		return String.format("%s.%s", name, extension);
+	}
+	
+	public static String arxivid2gateid(String arxivId) {
+		return arxivId.replace("/", "_");
 	}
 }

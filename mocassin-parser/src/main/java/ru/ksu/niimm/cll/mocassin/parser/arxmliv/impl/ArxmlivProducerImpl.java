@@ -7,11 +7,11 @@ import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
 
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
-
 import ru.ksu.niimm.cll.mocassin.parser.arxmliv.ArxmlivProducer;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
+
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 public class ArxmlivProducerImpl implements ArxmlivProducer {
 	@Inject
@@ -36,16 +36,18 @@ public class ArxmlivProducerImpl implements ArxmlivProducer {
 	}
 
 	@Override
-	public void produce(String arxivId) {
-		this.cmdArray[2] = String.format("--destination=%s/%s",
+	public String produce(String arxivId) {
+		String arxmlivDocFilePath = String.format("%s/%s",
 				ARXMLIV_DOCUMENT_DIR,
 				StringUtil.arxivid2filename(arxivId, "tex.xml"));
+		this.cmdArray[2] = String
+				.format("--destination=%s", arxmlivDocFilePath);
 		this.cmdArray[3] = String.format("%s/%s", LATEX_DIR,
 				StringUtil.arxivid2filename(arxivId, "tex"));
 		try {
 			Process process = Runtime.getRuntime().exec(cmdArray);
 			if (process.waitFor() == 0) {
-				return;
+				return arxmlivDocFilePath;
 			} else {
 				InputStream errorStream = process.getErrorStream();
 				StringWriter writer = new StringWriter();
@@ -61,5 +63,4 @@ public class ArxmlivProducerImpl implements ArxmlivProducer {
 			throw new RuntimeException(message);
 		}
 	}
-
 }

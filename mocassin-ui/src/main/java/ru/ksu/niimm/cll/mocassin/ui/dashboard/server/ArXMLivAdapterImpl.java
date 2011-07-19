@@ -1,9 +1,11 @@
 package ru.ksu.niimm.cll.mocassin.ui.dashboard.server;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import ru.ksu.niimm.cll.mocassin.analyzer.classifier.NavigationalRelationClassifier;
@@ -15,10 +17,11 @@ import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.arxiv.ArxivDAOFacade;
 import ru.ksu.niimm.cll.mocassin.arxiv.impl.Link;
 import ru.ksu.niimm.cll.mocassin.arxiv.impl.Link.PdfLinkPredicate;
-import ru.ksu.niimm.cll.mocassin.fulltext.PDFIndexer;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.ReferenceSearcher;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
+import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
+import ru.ksu.niimm.cll.mocassin.nlp.gate.GateProcessingFacade;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.ParsedDocumentImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.util.ReferenceTripleUtil;
 import ru.ksu.niimm.cll.mocassin.parser.LatexDocumentDAO;
@@ -60,6 +63,10 @@ public class ArXMLivAdapterImpl implements ArXMLivAdapter {
 	private LatexDocumentDAO latexDocumentDAO;
 	@Inject
 	private ArxmlivProducer arxmlivProducer;
+	@Inject
+	private GateDocumentDAO gateDocumentDAO;
+	@Inject
+	private GateProcessingFacade gateProcessingFacade;
 
 	@Override
 	public int handle(Set<String> arxivIds) {
@@ -90,27 +97,49 @@ public class ArXMLivAdapterImpl implements ArXMLivAdapter {
 		 * classes; see Issue 70 for numbering
 		 */
 		// Step 1
-		ArticleMetadata metadata = arxivDAOFacade.retrieve(arxivId);
-		metadata.setArxivId(arxivId);
-		// Step 2
-		InputStream latexSourceStream = arxivDAOFacade.loadSource(metadata);
-		latexDocumentDAO.save(arxivId, latexSourceStream);
-		// Step 3
-		latexDocumentHeaderPatcher.patch(arxivId);
-		// Step 4
-		arxmlivProducer.produce(arxivId);
+		ArticleMetadata metadata;
+		try {
+			metadata = arxivDAOFacade.retrieve(arxivId);
+			metadata.setArxivId(arxivId);
+			// Step 2
+			InputStream latexSourceStream = arxivDAOFacade.loadSource(metadata);
+			latexDocumentDAO.save(arxivId, latexSourceStream);
+			// Step 3
+			latexDocumentHeaderPatcher.patch(arxivId);
+			// Step 4
+			String arxmlivFilePath = arxmlivProducer.produce(arxivId);
+			// Step 5
+			gateDocumentDAO.save(arxivId, new File(arxmlivFilePath));
+			gateProcessingFacade.process(arxivId);
+			// Step 6
+			Graph<StructuralElement, Reference> graph = extractStructuralElements(metadata);
+			// Step 7
+			/**
+			 * TODO: PDF compilation etc.
+			 */
+			
+			// Step 8
+			Set<RDFTriple> triples = referenceTripleUtil.convert(graph);
+			ontologyResourceFacade.insert(metadata, triples);
 
-		Link pdfLink = Iterables.find(metadata.getLinks(),
-				new PdfLinkPredicate());
-		ParsedDocumentImpl document = new ParsedDocumentImpl(arxivId,
-				metadata.getId(), pdfLink.getHref());
+		} catch (Exception e) {
+			String message = String.format(
+					"failed to handle document with id='%s'", arxivId);
+			logger.log(Level.SEVERE, message);
+			throw new RuntimeException(message);
+		}
+	}
+
+	private Graph<StructuralElement, Reference> extractStructuralElements(
+			ArticleMetadata metadata) {
+		ParsedDocumentImpl document = getParsedDocument(metadata);
 		Graph<StructuralElement, Reference> graph = referenceSearcher
 				.retrieveStructuralGraph(document);
 		Collection<Reference> edges = graph.getEdges();
 		for (Reference reference : edges) {
 			if (reference.getPredictedRelation() == null) {
-				Prediction prediction = navigationalRelationClassifier.predict(
-						reference, graph);
+				Prediction prediction = navigationalRelationClassifier
+						.predict(reference, graph);
 				if (prediction == null)
 					continue;
 				reference.setPredictedRelation(prediction.getRelation());
@@ -119,9 +148,15 @@ public class ArXMLivAdapterImpl implements ArXMLivAdapter {
 		exemplifiesRelationAnalyzer.addRelations(graph, document);
 		provesRelationAnalyzer.addRelations(graph, document);
 		hasConsequenceRelationAnalyzer.addRelations(graph, document);
-		Set<RDFTriple> triples = referenceTripleUtil.convert(graph);
-		ontologyResourceFacade.insert(metadata, triples);
+		return graph;
+	}
 
+	private ParsedDocumentImpl getParsedDocument(ArticleMetadata metadata) {
+		Link pdfLink = Iterables.find(metadata.getLinks(),
+				new PdfLinkPredicate());
+		ParsedDocumentImpl document = new ParsedDocumentImpl(
+				metadata.getArxivId(), metadata.getId(), pdfLink.getHref());
+		return document;
 	}
 
 	/*

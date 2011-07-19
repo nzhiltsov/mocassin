@@ -14,6 +14,7 @@ import org.junit.runner.RunWith;
 import ru.ksu.niimm.cll.mocassin.fulltext.FullTextModule;
 import ru.ksu.niimm.cll.mocassin.nlp.NlpModule;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateDocumentException;
+import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateStorageException;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
 import ru.ksu.niimm.cll.mocassin.parser.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.util.GateDocumentMetadata;
@@ -37,7 +38,7 @@ public class ExtractMetadataUtil {
 
 	@Test
 	public void testExtractAndSaveMetadata()
-			throws AccessGateDocumentException, IOException {
+			throws AccessGateDocumentException, IOException, AccessGateStorageException {
 		List<String> documentIds = gateDocumentDAO.getDocumentIds();
 		Collections.sort(documentIds);
 		List<GateDocumentMetadata> metadataList = new ArrayList<GateDocumentMetadata>();

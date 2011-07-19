@@ -22,6 +22,7 @@ import ru.ksu.niimm.cll.mocassin.nlp.ReferenceSearcher;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.nlp.Token;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateDocumentException;
+import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateStorageException;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.ParsedDocumentImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.util.StopWordLoader;
@@ -53,7 +54,7 @@ public class ReferenceSearcherTest {
 	private List<String> documentIds;
 
 	@Before
-	public void init() throws AccessGateDocumentException {
+	public void init() throws AccessGateDocumentException, AccessGateStorageException {
 		documentIds = gateDocumentDAO.getDocumentIds();
 	}
 
