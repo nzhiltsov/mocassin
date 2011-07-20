@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Set;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -25,7 +26,7 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 @GuiceContext({ MocassinUIModule.class, OntologyModule.class,
 		VirtuosoModule.class, ArxivModule.class, NlpModule.class,
 		LatexParserModule.class, FullTextModule.class, AnalyzerModule.class })
-//@Ignore("disabled because of interference with the main index")
+@Ignore("disabled because of interference with the main index")
 public class ArXMLivAdapterTest {
 	@Inject
 	private ArXMLivAdapter arXMLivAdapter;
