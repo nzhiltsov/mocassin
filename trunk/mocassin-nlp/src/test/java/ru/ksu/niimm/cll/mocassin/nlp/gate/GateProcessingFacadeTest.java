@@ -23,5 +23,6 @@ public class GateProcessingFacadeTest {
 	@Test
 	public void testProcess() throws AccessGateDocumentException, AccessGateStorageException, ProcessException {
 		gateProcessingFacade.process("math/0002188");
+		gateProcessingFacade.process("math/0001036");
 	}
 }

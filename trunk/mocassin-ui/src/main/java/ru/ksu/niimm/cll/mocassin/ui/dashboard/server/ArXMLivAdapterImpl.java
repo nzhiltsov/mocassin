@@ -26,7 +26,9 @@ import ru.ksu.niimm.cll.mocassin.nlp.impl.ParsedDocumentImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.util.ReferenceTripleUtil;
 import ru.ksu.niimm.cll.mocassin.parser.LatexDocumentDAO;
 import ru.ksu.niimm.cll.mocassin.parser.arxmliv.ArxmlivProducer;
-import ru.ksu.niimm.cll.mocassin.parser.util.LatexDocumentHeaderPatcher;
+import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentHeaderPatcher;
+import ru.ksu.niimm.cll.mocassin.parser.pdf.Latex2PDFMapper;
+import ru.ksu.niimm.cll.mocassin.parser.pdf.PdflatexWrapper;
 import ru.ksu.niimm.cll.mocassin.ui.dashboard.client.ArxivArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFTriple;
@@ -67,13 +69,22 @@ public class ArXMLivAdapterImpl implements ArXMLivAdapter {
 	private GateDocumentDAO gateDocumentDAO;
 	@Inject
 	private GateProcessingFacade gateProcessingFacade;
+	@Inject
+	private PdflatexWrapper pdflatexWrapper;
+	@Inject
+	Latex2PDFMapper latex2pdfMapper;
 
 	@Override
 	public int handle(Set<String> arxivIds) {
 		int numberOfSuccesses = 0;
 		for (String arxivId : arxivIds) {
 			try {
+				long start = System.currentTimeMillis();
 				handle(arxivId);
+				long stop = System.currentTimeMillis();
+				logger.log(Level.INFO, String.format(
+						"The document='%s' has been processed in %.2f second(s)", arxivId,
+						((float) (stop - start)) / 1000));
 				numberOfSuccesses++;
 			} catch (Exception e) {// do nothing
 			}
@@ -104,8 +115,10 @@ public class ArXMLivAdapterImpl implements ArXMLivAdapter {
 			// Step 2
 			InputStream latexSourceStream = arxivDAOFacade.loadSource(metadata);
 			latexDocumentDAO.save(arxivId, latexSourceStream);
-			// Step 3
+			// Step 3 & partial Step 7
 			latexDocumentHeaderPatcher.patch(arxivId);
+			pdflatexWrapper.compile(arxivId);
+			latex2pdfMapper.generateSummary(arxivId);
 			// Step 4
 			String arxmlivFilePath = arxmlivProducer.produce(arxivId);
 			// Step 5
@@ -115,9 +128,9 @@ public class ArXMLivAdapterImpl implements ArXMLivAdapter {
 			Graph<StructuralElement, Reference> graph = extractStructuralElements(metadata);
 			// Step 7
 			/**
-			 * TODO: PDF compilation etc.
+			 * TODO: PDF-per-element compilation etc.
 			 */
-			
+
 			// Step 8
 			Set<RDFTriple> triples = referenceTripleUtil.convert(graph);
 			ontologyResourceFacade.insert(metadata, triples);
@@ -138,8 +151,8 @@ public class ArXMLivAdapterImpl implements ArXMLivAdapter {
 		Collection<Reference> edges = graph.getEdges();
 		for (Reference reference : edges) {
 			if (reference.getPredictedRelation() == null) {
-				Prediction prediction = navigationalRelationClassifier
-						.predict(reference, graph);
+				Prediction prediction = navigationalRelationClassifier.predict(
+						reference, graph);
 				if (prediction == null)
 					continue;
 				reference.setPredictedRelation(prediction.getRelation());

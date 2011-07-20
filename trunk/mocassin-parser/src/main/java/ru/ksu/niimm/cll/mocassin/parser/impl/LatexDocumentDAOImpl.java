@@ -62,6 +62,7 @@ public class LatexDocumentDAOImpl implements LatexDocumentDAO {
 			IOUtils.copy(inputStream, writer, "utf8");
 			writer.flush();
 			writer.close();
+			inputStream.close();
 		} catch (IOException e) {
 			String message = String.format(
 					"failed to save the Latex source with id='%s' due to: %s",

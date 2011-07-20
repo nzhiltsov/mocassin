@@ -61,9 +61,9 @@ public class ReferenceSearcherTest {
 	@Test
 	public void testRetrieveReferences() throws AccessGateDocumentException,
 			IOException {
-		ParsedDocument document = new ParsedDocumentImpl("math/0001008",
-				"http://arxiv.org/abs/math/0001008",
-				"http://arxiv.org/pdf/math/0001008");
+		ParsedDocument document = new ParsedDocumentImpl("math/0001036",
+				"http://arxiv.org/abs/math/0001036",
+				"http://arxiv.org/pdf/math/0001036");
 		Graph<StructuralElement, Reference> graph = this.referenceSearcher
 				.retrieveStructuralGraph(document);
 		Collection<Reference> edges = graph.getEdges();

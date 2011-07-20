@@ -33,16 +33,17 @@ public class StructuralElementSearcherTest {
 
 	@Before
 	public void init() throws Exception {
-		this.parsedDocument = new ParsedDocumentImpl("math/0205003", "http://arxiv.org/abs/math/0205003",
-		"http://arxiv.org/pdf/math/0205003");
+		this.parsedDocument = new ParsedDocumentImpl("math/0002188", "http://arxiv.org/abs/math/0002188",
+		"http://arxiv.org/pdf/math/0002188");
 	}
 
 	@Test
 	public void testFindById() throws Exception {
 
 		StructuralElement foundElement = getStructuralElementSearcher()
-				.findById(parsedDocument, 1167);
-		Assert.assertEquals("Lemma 2.2.", foundElement.getTitle());
+				.findById(parsedDocument, 2799);
+		Assert.assertNotNull(foundElement);
+		Assert.assertEquals(7, foundElement.getStartPageNumber());
 	}
 
 	@Test
@@ -50,9 +51,9 @@ public class StructuralElementSearcherTest {
 		MocassinOntologyClasses[] hasConsequenceDomains = MocassinOntologyRelations
 				.getValidDomains(MocassinOntologyRelations.HAS_CONSEQUENCE);
 		StructuralElement predecessor = getStructuralElementSearcher()
-				.findClosestPredecessor(parsedDocument, 2949,
+				.findClosestPredecessor(parsedDocument, 2787,
 						hasConsequenceDomains);
-		Assert.assertEquals(1167, predecessor.getId());
+		Assert.assertEquals(2708, predecessor.getId());
 	}
 
 	public StructuralElementSearcher getStructuralElementSearcher() {
