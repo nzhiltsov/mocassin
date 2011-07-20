@@ -26,7 +26,7 @@ public interface StructuralElementSearcher {
 	 * 
 	 * @param document
 	 * @param id
-	 * @return
+	 * @return null if the element is not found
 	 */
 	StructuralElement findById(ParsedDocument document, int id);
 

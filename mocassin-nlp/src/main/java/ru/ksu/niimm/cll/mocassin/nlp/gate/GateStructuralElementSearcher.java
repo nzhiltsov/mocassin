@@ -18,9 +18,9 @@ import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElementSearcher;
-import ru.ksu.niimm.cll.mocassin.nlp.Token;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.StructuralElementByLocationComparator;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.StructuralElementImpl;
+import ru.ksu.niimm.cll.mocassin.nlp.impl.StructuralElementImpl.IdPredicate;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.StructuralElementImpl.TypeFilterPredicate;
 import ru.ksu.niimm.cll.mocassin.nlp.recognizer.StructuralElementTypeRecognizer;
 import ru.ksu.niimm.cll.mocassin.nlp.util.AnnotationUtil;
@@ -31,7 +31,6 @@ import ru.ksu.niimm.cll.mocassin.parser.arxmliv.ArxmlivFormatConstants;
 import ru.ksu.niimm.cll.mocassin.parser.arxmliv.ArxmlivStructureElementTypes;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
 import ru.ksu.niimm.cll.mocassin.parser.latex.PdfReferenceEntry;
-import ru.ksu.niimm.cll.mocassin.parser.latex.builder.StructureBuilder;
 import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
 
@@ -51,8 +50,6 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 	private AnnotationUtil annotationUtil;
 	@Inject
 	private StructuralElementTypeRecognizer structuralElementTypeRecognizer;
-	@Inject
-	private StructureBuilder structureBuilder;
 	@Inject
 	private GateDocumentDAO gateDocumentDAO;
 	@Inject
@@ -107,45 +104,8 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 
 	@Override
 	public StructuralElement findById(ParsedDocument parsedDocument, int id) {
-		Document document = null;
-		this.parsedDocument = parsedDocument;
-		String arxivId = parsedDocument.getArxivId().replace("/", "_");
-		try {
-			document = gateDocumentDAO.load(arxivId);
-
-			setStructuralAnnotations(document
-					.getAnnotations(
-							getProperty(GateFormatConstants.ARXMLIV_MARKUP_NAME_PROPERTY_KEY))
-					.get(NAME_SET));
-
-			Annotation foundAnnotation = null;
-			for (Annotation annotation : structuralAnnotations) {
-				if (annotation.getId().equals(id)) {
-					foundAnnotation = annotation;
-				}
-			}
-			if (foundAnnotation == null)
-				throw new RuntimeException(
-						String.format(
-								"there is no structural element with id='%d' in document %s",
-								id, document.getName()));
-			StructuralElement foundElement = new ExtractionFunction(document)
-					.apply(foundAnnotation);
-			return foundElement;
-		} catch (AccessGateDocumentException e) {
-			logger.log(Level.SEVERE, String.format(
-					"failed to load the document: %s", parsedDocument.getUri()));
-			throw new RuntimeException(e);
-		} catch (AccessGateStorageException e) {
-			logger.log(
-					Level.SEVERE,
-					String.format(
-							"failed to access the storage while loading the document: %s",
-							parsedDocument.getUri()));
-			throw new RuntimeException(e);
-		} finally {
-			gateDocumentDAO.release(document);
-		}
+		List<StructuralElement> elements = retrieveElements(parsedDocument);
+		return Iterables.find(elements, new IdPredicate(id), null);
 	}
 
 	@Override
@@ -214,12 +174,6 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 
 	private ParsedDocument getParsedDocument() {
 		return parsedDocument;
-	}
-
-	private List<Token> getTokensForAnnotation(Document document,
-			Annotation annotation) {
-		return getAnnotationUtil().getTokensForAnnotation(document, annotation,
-				false);
 	}
 
 	private String getTextContentsForAnnotation(Document document,

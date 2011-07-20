@@ -1,36 +1,30 @@
 package ru.ksu.niimm.cll.mocassin.parser.arxmliv.impl;
 
-import java.io.InputStream;
-import java.io.StringWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.io.IOUtils;
-
 import ru.ksu.niimm.cll.mocassin.parser.arxmliv.ArxmlivProducer;
+import ru.ksu.niimm.cll.mocassin.util.AbstractUnixCommandWrapper;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-public class ArxmlivProducerImpl implements ArxmlivProducer {
-	@Inject
-	private Logger logger;
-
-	private final String[] cmdArray;
+public class ArxmlivProducerImpl extends AbstractUnixCommandWrapper implements
+		ArxmlivProducer {
 
 	private final String ARXMLIV_DOCUMENT_DIR;
 
 	private final String LATEX_DIR;
 
 	@Inject
-	public ArxmlivProducerImpl(
+	public ArxmlivProducerImpl(Logger logger,
 			@Named("arxmliv.document.dir") String arxmlivDocumentsDir,
 			@Named("arxmliv.path") String arxmlivPath,
 			@Named("patched.tex.document.dir") String latexDir) {
+		super(logger, 4);
 		this.ARXMLIV_DOCUMENT_DIR = arxmlivDocumentsDir;
 		this.LATEX_DIR = latexDir;
-		this.cmdArray = new String[4];
 		this.cmdArray[0] = "latexml";
 		this.cmdArray[1] = String.format("--path=%s/sty", arxmlivPath);
 	}
@@ -45,20 +39,12 @@ public class ArxmlivProducerImpl implements ArxmlivProducer {
 		this.cmdArray[3] = String.format("%s/%s", LATEX_DIR,
 				StringUtil.arxivid2filename(arxivId, "tex"));
 		try {
-			Process process = Runtime.getRuntime().exec(cmdArray);
-			if (process.waitFor() == 0) {
-				return arxmlivDocFilePath;
-			} else {
-				InputStream errorStream = process.getErrorStream();
-				StringWriter writer = new StringWriter();
-				IOUtils.copy(errorStream, writer, "utf8");
-				logger.log(Level.SEVERE, writer.toString());
-				throw new Exception("process termination hasn't been normal");
-			}
+			execute(arxivId);
+			return arxmlivDocFilePath;
 		} catch (Exception e) {
 			String message = String
-					.format("failed to produce the arxmliv document for arXiv identifier='%s'",
-							arxivId);
+					.format("failed to produce the arxmliv document for an arXiv identifier='%s' due to: %s",
+							arxivId, e.getMessage());
 			logger.log(Level.SEVERE, message);
 			throw new RuntimeException(message);
 		}

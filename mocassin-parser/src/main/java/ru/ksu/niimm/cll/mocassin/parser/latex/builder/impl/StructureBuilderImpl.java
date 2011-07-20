@@ -15,7 +15,6 @@ import net.sourceforge.texlipse.model.OutlineNode;
 import ru.ksu.niimm.cll.mocassin.parser.Edge;
 import ru.ksu.niimm.cll.mocassin.parser.EdgeContext;
 import ru.ksu.niimm.cll.mocassin.parser.EdgeType;
-import ru.ksu.niimm.cll.mocassin.parser.Latex2PDFMapper;
 import ru.ksu.niimm.cll.mocassin.parser.Node;
 import ru.ksu.niimm.cll.mocassin.parser.impl.EdgeContextImpl;
 import ru.ksu.niimm.cll.mocassin.parser.impl.EdgeImpl;
@@ -25,6 +24,7 @@ import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
 import ru.ksu.niimm.cll.mocassin.parser.latex.NewtheoremCommand;
 import ru.ksu.niimm.cll.mocassin.parser.latex.PdfReferenceEntry;
 import ru.ksu.niimm.cll.mocassin.parser.latex.builder.StructureBuilder;
+import ru.ksu.niimm.cll.mocassin.parser.pdf.Latex2PDFMapper;
 
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;

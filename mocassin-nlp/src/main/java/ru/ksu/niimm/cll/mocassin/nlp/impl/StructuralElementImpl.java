@@ -209,4 +209,17 @@ public class StructuralElementImpl implements StructuralElement {
 			return this.filterTypes.contains(elementType);
 		}
 	}
+
+	public static class IdPredicate implements Predicate<StructuralElement> {
+		private final int id;
+
+		public IdPredicate(int id) {
+			this.id = id;
+		}
+
+		@Override
+		public boolean apply(StructuralElement input) {
+			return id == input.getId();
+		}
+	}
 }

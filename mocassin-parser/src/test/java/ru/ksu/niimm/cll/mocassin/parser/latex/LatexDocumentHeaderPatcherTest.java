@@ -1,4 +1,4 @@
-package ru.ksu.niimm.cll.mocassin.parser.util;
+package ru.ksu.niimm.cll.mocassin.parser.latex;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -33,8 +33,16 @@ public class LatexDocumentHeaderPatcherTest {
 
 	@Test
 	public void testPatch() throws FileNotFoundException {
-		final String arxivId = "math/0002188";
+		String arxivId = "math/0002188";
 		this.latexDocumentHeaderPatcher.patch(arxivId);
+		checkIfFound(arxivId);
+		arxivId = "math/0001036";
+		this.latexDocumentHeaderPatcher.patch(arxivId);
+		checkIfFound(arxivId);
+	}
+
+	private void checkIfFound(final String arxivId)
+			throws FileNotFoundException {
 		Scanner scanner = new Scanner(new File("/opt/mocassin/patched-tex/"
 				+ StringUtil.arxivid2filename(arxivId, "tex")));
 		boolean found = false;

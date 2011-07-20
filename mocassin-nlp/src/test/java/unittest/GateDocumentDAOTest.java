@@ -44,6 +44,8 @@ public class GateDocumentDAOTest {
 			PersistenceException {
 		gateDocumentDAO.save("math/0002188", new File(
 				"/opt/mocassin/arxmliv/math_0002188.tex.xml"));
+		gateDocumentDAO.save("math/0001036", new File(
+		"/opt/mocassin/arxmliv/math_0001036.tex.xml"));
 	}
 
 	@Test
