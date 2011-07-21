@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 import org.apache.commons.io.IOUtils;
 
 public abstract class AbstractUnixCommandWrapper {
-	private static final long TIMEOUT_IN_SECONDS = 60;
+	private static final long TIMEOUT_IN_SECONDS = 120;
 	protected final String[] cmdArray;
 	protected final Logger logger;
 
