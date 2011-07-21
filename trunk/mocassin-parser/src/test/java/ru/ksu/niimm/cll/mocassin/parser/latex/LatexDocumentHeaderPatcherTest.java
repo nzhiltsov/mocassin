@@ -33,10 +33,10 @@ public class LatexDocumentHeaderPatcherTest {
 
 	@Test
 	public void testPatch() throws FileNotFoundException {
-		String arxivId = "math/0002188";
+		String arxivId = "math/0107167";
 		this.latexDocumentHeaderPatcher.patch(arxivId);
 		checkIfFound(arxivId);
-		arxivId = "math/0001036";
+		arxivId = "math/0002188";
 		this.latexDocumentHeaderPatcher.patch(arxivId);
 		checkIfFound(arxivId);
 	}

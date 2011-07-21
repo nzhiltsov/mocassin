@@ -71,7 +71,8 @@ public class PdfsyncMapper implements Latex2PDFMapper {
 	}
 
 	@Override
-	public void generateSummary(String arxivId) throws GeneratePdfSummaryException {
+	public void generateSummary(String arxivId)
+			throws GeneratePdfSummaryException {
 		String filename = StringUtil.arxivid2filename(arxivId, "pdfsync");
 		SortedSet<Page> pages = new TreeSet<Page>();
 
@@ -101,9 +102,9 @@ public class PdfsyncMapper implements Latex2PDFMapper {
 			reader.close();
 			printPages(filename, pages);
 		} catch (Exception e) {
-			String message = String.format(
-					"failed to generate the summary for a document='%s'",
-					arxivId);
+			String message = String
+					.format("failed to generate the summary for a document='%s' due to: %s",
+							arxivId, e.getMessage());
 			logger.log(Level.SEVERE, message);
 			throw new GeneratePdfSummaryException(message);
 		}

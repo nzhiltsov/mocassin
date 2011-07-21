@@ -1,6 +1,7 @@
 package ru.ksu.niimm.ose.ontology.impl;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
@@ -28,7 +29,7 @@ public class ArxivMetadataUtil {
 	}
 
 	public static List<RDFTriple> convertToTriples(ArticleMetadata metadata) {
-		List<RDFTriple> triples = new ArrayList<RDFTriple>();
+		List<RDFTriple> triples = new LinkedList<RDFTriple>();
 		triples.add(createTriple("<%s> <%s> <%s#Publication> .",
 				metadata.getId(), RDFS_TYPE, SALT_SCHEMA));
 		convertTitle(triples, metadata);

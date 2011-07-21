@@ -8,5 +8,4 @@ exit
 fi
 filename=$(basename $2)
 
-sed 's/\(^\\documentclass\[.*\]*{.*}\)/\1 \n\\usepackage{pdfsync}\n\\usepackage{xcolor}\n\\usepackage{framed}\n\\colorlet{shadecolor}{yellow!30}/;s/\\usepackage\[dvips\]/\\usepackage/' $2 > $1/$filename
-
+sed 's/\(^\\documentclass\[*.*\]*{.*}\)/\1 \n\\usepackage{pdfsync}\n\\usepackage{xcolor}\n\\usepackage{framed}\n\\colorlet{shadecolor}{yellow!30}/;s/\\usepackage\[dvips\]/\\usepackage/' $2 > $1/$filename

@@ -1,7 +1,10 @@
 package ru.ksu.niimm.cll.mocassin.virtuoso.impl;
 
+import java.io.FileWriter;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFGraph;
@@ -10,6 +13,7 @@ import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoDAO;
 import ru.ksu.niimm.cll.mocassin.virtuoso.generator.DeleteQueryGenerator;
 import ru.ksu.niimm.cll.mocassin.virtuoso.generator.DescribeQueryGenerator;
 import ru.ksu.niimm.cll.mocassin.virtuoso.generator.InsertQueryGenerator;
+import ru.ksu.niimm.cll.mocassin.virtuoso.generator.N3Util;
 import ru.ksu.niimm.cll.mocassin.virtuoso.validation.ValidateGraph;
 import virtuoso.jena.driver.VirtGraph;
 import virtuoso.jena.driver.VirtuosoQueryExecution;
@@ -22,6 +26,7 @@ import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 public class VirtuosoDAOImpl implements VirtuosoDAO {
 	private static final int SPARQL_LINE_NUMBER_LIMIT = 1000;
@@ -43,22 +48,17 @@ public class VirtuosoDAOImpl implements VirtuosoDAO {
 			int i = 0;
 			while (i < triples.size() / SPARQL_LINE_NUMBER_LIMIT) {
 
-				String expression = getInsertQueryGenerator().generate(
-						triples.subList(SPARQL_LINE_NUMBER_LIMIT * i + 1,
-								SPARQL_LINE_NUMBER_LIMIT * (i + 1)), graph);
-				execute(virtGraph, expression);
+				executeUpdate(virtGraph, graph, triples.subList(
+						SPARQL_LINE_NUMBER_LIMIT * i + 1,
+						SPARQL_LINE_NUMBER_LIMIT * (i + 1)));
 				i++;
 			}
 			List<RDFTriple> subList = triples.subList(SPARQL_LINE_NUMBER_LIMIT
 					* i + 1, triples.size() - 1);
 			subList.add(triples.get(0));
-			String expression = getInsertQueryGenerator().generate(subList,
-					graph);
-			execute(virtGraph, expression);
+			executeUpdate(virtGraph, graph, subList);
 		} else {
-			String expression = getInsertQueryGenerator().generate(triples,
-					graph);
-			execute(virtGraph, expression);
+			executeUpdate(virtGraph, graph, triples);
 		}
 	}
 
@@ -69,7 +69,8 @@ public class VirtuosoDAOImpl implements VirtuosoDAO {
 				graph.getUsername(), graph.getPassword());
 		String expression = getDeleteQueryGenerator().generate(documentUri,
 				graph);
-		execute(virtGraph, expression);
+		throw new RuntimeException("not implemented yet");
+		// execute(virtGraph, expression);
 	}
 
 	@Override
@@ -138,10 +139,25 @@ public class VirtuosoDAOImpl implements VirtuosoDAO {
 		return describeQueryGenerator;
 	}
 
-	private void execute(VirtGraph virtGraph, String expression) {
-		VirtuosoUpdateRequest request = VirtuosoUpdateFactory.create(
-				expression, virtGraph);
-		request.exec();
+	private void executeUpdate(VirtGraph virtGraph, RDFGraph graph,
+			List<RDFTriple> triples) {
+		String n3Expression = N3Util.getExpression(triples);
+		try {
+			Model model = ModelFactory.createDefaultModel();
+			model.read(new StringReader(n3Expression), "", "N3");
+			String insertExpression = getInsertQueryGenerator().generate(
+					triples, graph);
+			VirtuosoUpdateRequest request = VirtuosoUpdateFactory.create(
+					insertExpression, virtGraph); // TODO: use the model defined above and virtGraph.getBulkUpdateHandler()
+			request.exec();
+			
+		} catch (Exception e) {
 
+			String message = String.format(
+					"failed to update the RDF graph='%s' due to: %s",
+					virtGraph.getGraphName(), e.getMessage());
+			logger.log(Level.SEVERE, message);
+			throw new RuntimeException(message);
+		}
 	}
 }

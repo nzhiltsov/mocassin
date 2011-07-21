@@ -137,7 +137,7 @@ public class ArXMLivAdapterImpl implements ArXMLivAdapter {
 
 		} catch (Exception e) {
 			String message = String.format(
-					"failed to handle document with id='%s'", arxivId);
+					"failed to handle document with id='%s' due to: %s", arxivId, e.getMessage());
 			logger.log(Level.SEVERE, message);
 			throw new RuntimeException(message);
 		}

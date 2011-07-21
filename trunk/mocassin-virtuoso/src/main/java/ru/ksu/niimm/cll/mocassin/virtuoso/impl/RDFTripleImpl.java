@@ -3,18 +3,14 @@ package ru.ksu.niimm.cll.mocassin.virtuoso.impl;
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFTriple;
 
 public class RDFTripleImpl implements RDFTriple {
-	private String value;
+	private final String value;
 
 	public RDFTripleImpl(String value) {
-		this.value = value;
+		this.value = value.replace("\n", " ");
 	}
 
 	public String getValue() {
 		return value;
-	}
-
-	public void setValue(String value) {
-		this.value = value;
 	}
 
 	@Override
