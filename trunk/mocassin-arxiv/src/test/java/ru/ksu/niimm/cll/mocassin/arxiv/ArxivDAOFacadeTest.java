@@ -8,6 +8,7 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.apache.commons.io.IOUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -19,6 +20,7 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext( { ArxivModule.class })
+@Ignore("get an arxiv id for the test at random")
 public class ArxivDAOFacadeTest {
 	@Inject
 	ArxivDAOFacade arxivDAOFacade;
