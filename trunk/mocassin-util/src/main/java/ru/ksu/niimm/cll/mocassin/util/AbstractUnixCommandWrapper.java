@@ -17,7 +17,7 @@ public abstract class AbstractUnixCommandWrapper {
 		this.logger = logger;
 	}
 
-	public void execute(String arxivId) throws Exception {
+	public void execute() throws Exception {
 		Process process = Runtime.getRuntime().exec(cmdArray);
 		long now = System.currentTimeMillis();
 		long timeoutInMillis = 1000L * TIMEOUT_IN_SECONDS;

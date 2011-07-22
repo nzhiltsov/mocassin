@@ -30,15 +30,31 @@ public interface StructuralElement {
 
 	/**
 	 * 
-	 * @return start offset
+	 * @return start offset of an element in the GATE representation
 	 */
-	long getStart();
+	long getGateStartOffset();
 
 	/**
 	 * 
-	 * @return end offset
+	 * @return end offset of an element in the GATE representation
 	 */
-	long getEnd();
+	long getGateEndOffset();
+
+	/**
+	 * 
+	 * @return start line of an element in the Latex source file
+	 */
+	int getLatexStartLine();
+
+	/**
+	 * 
+	 * @return end line of an element in the Latex source file
+	 */
+	int getLatexEndLine();
+
+	void setLatexStartLine(int latexStartLine);
+
+	void setLatexEndLine(int latexEndLine);
 
 	/**
 	 * 

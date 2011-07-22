@@ -10,13 +10,13 @@ import ru.ksu.niimm.cll.mocassin.util.StringUtil;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-public class SedCommandPatcher extends AbstractUnixCommandWrapper implements
+public class SedBasedHeaderPatcher extends AbstractUnixCommandWrapper implements
 		LatexDocumentHeaderPatcher {
 
 	private final String texDocumentDir;
 
 	@Inject
-	public SedCommandPatcher(Logger logger,
+	public SedBasedHeaderPatcher(Logger logger,
 			@Named("header.patcher.script.path") String patcherScriptPath,
 			@Named("bash.path") String bashPath,
 			@Named("patched.tex.document.dir") String outputDir,
@@ -34,7 +34,7 @@ public class SedCommandPatcher extends AbstractUnixCommandWrapper implements
 		this.cmdArray[3] = String.format("%s/%s", texDocumentDir,
 				StringUtil.arxivid2filename(arxivId, "tex"));
 		try {
-			execute(arxivId);
+			execute();
 		} catch (Exception e) {
 			String message = String.format(
 					"failed to patch the latex source of a document='%s'",

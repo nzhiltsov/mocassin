@@ -57,7 +57,7 @@ public class NodeImpl implements Node {
 		}
 
 		public Builder endLine(int endLine) {
-			this.endLine = endLine;
+			this.endLine = endLine - 1;
 			return this;
 		}
 

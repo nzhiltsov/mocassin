@@ -28,6 +28,8 @@ public class StructuralElementImpl implements StructuralElement {
 
 	private int startPageNumber;
 	private MocassinOntologyClasses predictedClass;
+	private int latexStartLine;
+	private int latexEndLine;
 
 	public static class Builder {
 		private final int id;
@@ -97,11 +99,11 @@ public class StructuralElementImpl implements StructuralElement {
 		return uri;
 	}
 
-	public long getStart() {
+	public long getGateStartOffset() {
 		return start;
 	}
 
-	public long getEnd() {
+	public long getGateEndOffset() {
 		return end;
 	}
 
@@ -131,6 +133,22 @@ public class StructuralElementImpl implements StructuralElement {
 
 	public void setStartPageNumber(int startPageNumber) {
 		this.startPageNumber = startPageNumber;
+	}
+
+	public int getLatexStartLine() {
+		return latexStartLine;
+	}
+
+	public void setLatexStartLine(int latexStartLine) {
+		this.latexStartLine = latexStartLine;
+	}
+
+	public int getLatexEndLine() {
+		return latexEndLine;
+	}
+
+	public void setLatexEndLine(int latexEndLine) {
+		this.latexEndLine = latexEndLine;
 	}
 
 	@Override
@@ -169,13 +187,13 @@ public class StructuralElementImpl implements StructuralElement {
 
 		@Override
 		public int compare(StructuralElement first, StructuralElement second) {
-			if (first.getStart() < second.getStart())
+			if (first.getGateStartOffset() < second.getGateStartOffset())
 				return -1;
-			if (first.getStart() > second.getStart())
+			if (first.getGateStartOffset() > second.getGateStartOffset())
 				return 1;
-			if (first.getEnd() < second.getEnd())
+			if (first.getGateEndOffset() < second.getGateEndOffset())
 				return -1;
-			if (first.getEnd() > second.getEnd())
+			if (first.getGateEndOffset() > second.getGateEndOffset())
 				return 1;
 			return 0;
 		}

@@ -98,12 +98,12 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 		int refId = 0;
 		for (int i = 0; i < size; i++)
 			for (int j = i + 1; j < size
-					&& structuralElements.get(i).getEnd() >= structuralElements
-							.get(j).getStart(); j++) {
-				if (structuralElements.get(i).getStart() <= structuralElements
-						.get(j).getStart()
-						&& structuralElements.get(i).getEnd() >= structuralElements
-								.get(j).getEnd()) {
+					&& structuralElements.get(i).getGateEndOffset() >= structuralElements
+							.get(j).getGateStartOffset(); j++) {
+				if (structuralElements.get(i).getGateStartOffset() <= structuralElements
+						.get(j).getGateStartOffset()
+						&& structuralElements.get(i).getGateEndOffset() >= structuralElements
+								.get(j).getGateEndOffset()) {
 					long documentSize = getDocument().getContent().size();
 					ParsedDocument refDocument = new ParsedDocumentImpl(
 							getParsedDocument().getArxivId(),
@@ -255,15 +255,15 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 		StructuralElement closestParentElement = null;
 		List<StructuralElement> elements = getStructuralElements();
 		for (StructuralElement element : elements) {
-			long start = element.getStart();
-			long end = element.getEnd();
+			long start = element.getGateStartOffset();
+			long end = element.getGateEndOffset();
 			boolean isEnclosing = refOffset >= start && refOffset <= end;
 			if (!isEnclosing)
 				continue;
 			if (closestParentElement == null) {
 				closestParentElement = element;
 			} else if (refOffset - start < refOffset
-					- closestParentElement.getStart()) {
+					- closestParentElement.getGateStartOffset()) {
 				closestParentElement = element;
 			}
 

@@ -130,7 +130,6 @@ public class StructureBuilderImpl implements StructureBuilder {
 				}
 			}
 		}
-		extractTitles();
 		fillPageNumbers();
 		return this.hypergraph;
 	}
@@ -150,16 +149,6 @@ public class StructureBuilderImpl implements StructureBuilder {
 		}
 	}
 
-	private void extractTitles() {
-		SortedSet<Node> sortedNodes = new TreeSet<Node>(
-				new NodePositionComparator());
-		sortedNodes.addAll(this.hypergraph.getVertices());
-		if (this.model.isNumberingWithinSection()) {
-			getNumberingProcessor().processWithinSectionNumbers(sortedNodes);
-		} else {
-			getNumberingProcessor().processConsecutiveNumbers(sortedNodes);
-		}
-	}
 
 	private void addEdge(Node from, OutlineNode toNode, EdgeType edgeType) {
 		Edge edge = new EdgeImpl();

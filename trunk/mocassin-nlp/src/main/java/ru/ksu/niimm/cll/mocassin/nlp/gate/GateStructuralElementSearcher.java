@@ -7,6 +7,7 @@ import gate.Document;
 import gate.util.OffsetComparator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -27,10 +28,12 @@ import ru.ksu.niimm.cll.mocassin.nlp.util.AnnotationUtil;
 import ru.ksu.niimm.cll.mocassin.nlp.util.NlpModulePropertiesLoader;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.parser.LatexDocumentDAO;
+import ru.ksu.niimm.cll.mocassin.parser.Node;
 import ru.ksu.niimm.cll.mocassin.parser.arxmliv.ArxmlivFormatConstants;
 import ru.ksu.niimm.cll.mocassin.parser.arxmliv.ArxmlivStructureElementTypes;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
 import ru.ksu.niimm.cll.mocassin.parser.latex.PdfReferenceEntry;
+import ru.ksu.niimm.cll.mocassin.parser.latex.builder.StructureBuilder;
 import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
 
@@ -54,6 +57,8 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 	private GateDocumentDAO gateDocumentDAO;
 	@Inject
 	private LatexDocumentDAO latexDocumentDAO;
+	@Inject
+	private StructureBuilder structureBuilder;
 
 	private static final Set<String> NAME_SET = ArxmlivStructureElementTypes
 			.toNameSet();
@@ -63,6 +68,7 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 	private ParsedDocument parsedDocument;
 
 	private LatexDocumentModel latexDocumentModel;
+	private Collection<Node> latexNodes;
 
 	@Override
 	public List<StructuralElement> retrieveElements(
@@ -74,6 +80,8 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 			gateDocument = gateDocumentDAO.load(arxivId);
 			latexDocumentModel = latexDocumentDAO.load(parsedDocument
 					.getArxivId());
+			latexNodes = structureBuilder.buildStructureGraph(
+					latexDocumentModel).getVertices();
 
 			setStructuralAnnotations(gateDocument
 					.getAnnotations(
@@ -201,17 +209,37 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 	}
 
 	private void fillPageNumber(StructuralElement element) {
-		if (element.getLabels().isEmpty())
-			return;
-		List<PdfReferenceEntry> labels = latexDocumentModel.getLabels();
-		for (PdfReferenceEntry entry : labels) {// labels are ordered by their
-												// positions
-			String labelText = String.format("LABEL:%s", entry.key());
-			if (element.getLabels().contains(labelText)) {
-				element.setStartPageNumber(entry.getPdfNumberPage());
-				break;
+		for (Node node : latexNodes) {
+			if (!element.getLabels().isEmpty()) {
+				String labelText = String.format("LABEL:%s",
+						node.getLabelText());
+				if (element.getLabels().contains(labelText)) {
+					fillElementLocation(element, node);
+					break;
+				}
+			} else {
+				/**
+				 * TODO: this is a temporary workaround; use arxmliv coordinates
+				 * when they will be available
+				 */
+				if (element.getPredictedClass() != MocassinOntologyClasses.SECTION)
+					continue;
+				else if (Arrays.asList(
+						MocassinOntologyClasses.SECTION.getLabels()).contains(
+						node.getName())
+						&& element.getTitle().contains(node.getTitle())) {
+					fillElementLocation(element, node);
+					break;
+				}
 			}
 		}
+
+	}
+
+	private void fillElementLocation(StructuralElement element, Node node) {
+		element.setStartPageNumber(node.getPdfPageNumber());
+		element.setLatexStartLine(node.getBeginLine());
+		element.setLatexEndLine(node.getEndLine());
 	}
 
 	private class ExtractionFunction implements
@@ -267,11 +295,12 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 			element.setLabels(labels);
 			element.setContents(getPureTokensForAnnotation(getDocument(),
 					annotation));
-			fillPageNumber(element);
 
 			MocassinOntologyClasses predictedClass = getStructuralElementTypeRecognizer()
 					.predict(element);
 			element.setPredictedClass(predictedClass);
+
+			fillPageNumber(element);
 
 			return element;
 		}

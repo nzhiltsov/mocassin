@@ -28,7 +28,7 @@ public class LatexDocumentDAOImpl implements LatexDocumentDAO {
 
 	@Inject
 	public LatexDocumentDAOImpl(Parser parser,
-			@Named("tex.document.dir") String texDocumentDir) {
+			@Named("patched.tex.document.dir") String texDocumentDir) {
 		this.parser = parser;
 		LATEX_DOCUMENT_DIR = texDocumentDir;
 	}

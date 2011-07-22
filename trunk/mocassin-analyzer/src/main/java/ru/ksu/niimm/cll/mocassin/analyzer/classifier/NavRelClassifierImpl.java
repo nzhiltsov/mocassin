@@ -39,11 +39,11 @@ public class NavRelClassifierImpl implements NavigationalRelationClassifier {
 		StructuralElement to = graph.getDest(reference);
 		MocassinOntologyClasses toType = to.getPredictedClass();
 		long documentSize = reference.getDocument().getSize();
-		float normalizedStartDistance = ((float) from.getStart() - to
-				.getStart())
+		float normalizedStartDistance = ((float) from.getGateStartOffset() - to
+				.getGateStartOffset())
 				/ documentSize;
 
-		float normalizedEndDistance = ((float) from.getEnd() - to.getEnd())
+		float normalizedEndDistance = ((float) from.getGateEndOffset() - to.getGateEndOffset())
 				/ documentSize;
 		Instance instance = new Instance(trainingSetHeader.numAttributes());
 		instance.setDataset(trainingSetHeader);

@@ -29,7 +29,7 @@ public class StructureBuilderTest {
 	@Inject
 	private Parser parser;
 	@Inject
-	private StructureBuilder structureAnalyzer;
+	private StructureBuilder structureBuilder;
 
 	private LatexDocumentModel model;
 
@@ -41,7 +41,7 @@ public class StructureBuilderTest {
 
 	@Test
 	public void testGraphEdges() {
-		Hypergraph<Node, Edge> graph = getStructureAnalyzer()
+		Hypergraph<Node, Edge> graph = getStructureBuilder()
 				.buildStructureGraph(this.model);
 		Assert.assertTrue(graph.getEdgeCount() > 0);
 		for (Edge edge : graph.getEdges()) {
@@ -56,7 +56,7 @@ public class StructureBuilderTest {
 
 	@Test
 	public void testGraphNodes() {
-		Hypergraph<Node, Edge> graph = getStructureAnalyzer()
+		Hypergraph<Node, Edge> graph = getStructureBuilder()
 				.buildStructureGraph(this.model);
 		Assert.assertTrue(graph.getVertexCount() > 0);
 
@@ -72,8 +72,8 @@ public class StructureBuilderTest {
 
 	}
 
-	public StructureBuilder getStructureAnalyzer() {
-		return structureAnalyzer;
+	public StructureBuilder getStructureBuilder() {
+		return structureBuilder;
 	}
 
 }

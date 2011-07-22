@@ -10,6 +10,6 @@ public class StructuralElementByLocationComparator implements
 		Serializable, Comparator<StructuralElement> {
 	@Override
 	public int compare(StructuralElement first, StructuralElement second) {
-		return (int) (first.getStart() - second.getStart());
+		return (int) (first.getGateStartOffset() - second.getGateStartOffset());
 	}
 }

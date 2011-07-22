@@ -13,28 +13,54 @@ import com.google.inject.name.Named;
 
 public class PdflatexWrapperImpl extends AbstractUnixCommandWrapper implements
 		PdflatexWrapper {
-	private final String LATEX_DIR;
+	private final String PATCHED_LATEX_DIR;
+
+	private final String SHADED_LATEX_DIR;
+
+	private final String PDF_DIR;
+
+	private final String AUX_PDF_DIR;
 
 	@Inject
 	public PdflatexWrapperImpl(Logger logger,
 			@Named("auxiliary.pdf.document.dir") String auxPdfPath,
-			@Named("patched.tex.document.dir") String latexDir) {
+			@Named("patched.tex.document.dir") String patchedLatexDir,
+			@Named("shaded.tex.document.dir") String shadedLatexDir,
+			@Named("pdf.document.dir") String pdfDir) {
 		super(logger, 6);
-		LATEX_DIR = latexDir;
+		PATCHED_LATEX_DIR = patchedLatexDir;
+		SHADED_LATEX_DIR = shadedLatexDir;
+		AUX_PDF_DIR = auxPdfPath;
+		PDF_DIR = pdfDir;
 		this.cmdArray[0] = "pdflatex";
 		this.cmdArray[1] = "-interaction";
 		this.cmdArray[2] = "nonstopmode";
 		this.cmdArray[3] = "-output-directory";
-		this.cmdArray[4] = auxPdfPath;
 	}
 
 	@Override
-	public void compile(String arxivId) throws PdflatexCompilationException {
-		this.cmdArray[5] = String.format("%s/%s", LATEX_DIR,
+	public void compileShaded(String arxivId, int structuralElementId)
+			throws PdflatexCompilationException {
+		this.cmdArray[4] = PDF_DIR;
+		this.cmdArray[5] = String.format("%s/%s$%d.tex", SHADED_LATEX_DIR,
+				StringUtil.arxivid2gateid(arxivId), structuralElementId);
+		executeCommands(arxivId);
+	}
+
+	@Override
+	public void compilePatched(String arxivId)
+			throws PdflatexCompilationException {
+		this.cmdArray[4] = AUX_PDF_DIR;
+		this.cmdArray[5] = String.format("%s/%s", PATCHED_LATEX_DIR,
 				StringUtil.arxivid2filename(arxivId, "tex"));
+		executeCommands(arxivId);
+	}
+
+	private void executeCommands(String arxivId)
+			throws PdflatexCompilationException {
 		try {
-			execute(arxivId);
-			execute(arxivId); // double calling is necessary for right cross-references
+			execute();
+			execute(); // double calling is necessary for right cross-references
 		} catch (Exception e) {
 			String message = String
 					.format("failed to compile the PDF document for an arXiv identifier='%s'",
