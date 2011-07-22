@@ -21,20 +21,28 @@ public class PdflatexWrapperTest {
 	private PdflatexWrapper pdflatexWrapper;
 
 	@Test
-	public void testCompile() throws PdflatexCompilationException {
+	public void testCompilePatched() throws PdflatexCompilationException {
 		String arxivId = "math/0002188";
-		pdflatexWrapper.compile(arxivId);
+		pdflatexWrapper.compilePatched(arxivId);
 
 		Assert.assertTrue(new File("/opt/mocassin/aux-pdf/"
 				+ StringUtil.arxivid2filename(arxivId, "pdf")).exists());
 		Assert.assertTrue(new File("/opt/mocassin/aux-pdf/"
 				+ StringUtil.arxivid2filename(arxivId, "pdfsync")).exists());
 		arxivId = "math/0001036";
-		pdflatexWrapper.compile(arxivId);
+		pdflatexWrapper.compilePatched(arxivId);
 
 		Assert.assertTrue(new File("/opt/mocassin/aux-pdf/"
 				+ StringUtil.arxivid2filename(arxivId, "pdf")).exists());
 		Assert.assertTrue(new File("/opt/mocassin/aux-pdf/"
 				+ StringUtil.arxivid2filename(arxivId, "pdfsync")).exists());
+	}
+
+	@Test
+	public void testCompileShaded() throws PdflatexCompilationException {
+		String arxivId = "math/0001036";
+		pdflatexWrapper.compileShaded(arxivId, 1009);
+		Assert.assertTrue(new File(String.format("/opt/mocassin/pdf/%s$%d.pdf",
+				StringUtil.arxivid2gateid(arxivId), 1009)).exists());
 	}
 }

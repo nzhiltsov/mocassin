@@ -28,6 +28,7 @@ import ru.ksu.niimm.cll.mocassin.parser.LatexDocumentDAO;
 import ru.ksu.niimm.cll.mocassin.parser.arxmliv.ArxmlivProducer;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentHeaderPatcher;
 import ru.ksu.niimm.cll.mocassin.parser.pdf.Latex2PDFMapper;
+import ru.ksu.niimm.cll.mocassin.parser.pdf.PdfHighlighter;
 import ru.ksu.niimm.cll.mocassin.parser.pdf.PdflatexWrapper;
 import ru.ksu.niimm.cll.mocassin.ui.dashboard.client.ArxivArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
@@ -73,6 +74,8 @@ public class ArXMLivAdapterImpl implements ArXMLivAdapter {
 	private PdflatexWrapper pdflatexWrapper;
 	@Inject
 	Latex2PDFMapper latex2pdfMapper;
+	@Inject
+	PdfHighlighter pdfHighlighter;
 
 	@Override
 	public int handle(Set<String> arxivIds) {
@@ -82,9 +85,11 @@ public class ArXMLivAdapterImpl implements ArXMLivAdapter {
 				long start = System.currentTimeMillis();
 				handle(arxivId);
 				long stop = System.currentTimeMillis();
-				logger.log(Level.INFO, String.format(
-						"The document='%s' has been processed in %.2f second(s)", arxivId,
-						((float) (stop - start)) / 1000));
+				logger.log(
+						Level.INFO,
+						String.format(
+								"The document='%s' has been processed in %.2f second(s)",
+								arxivId, ((float) (stop - start)) / 1000));
 				numberOfSuccesses++;
 			} catch (Exception e) {// do nothing
 			}
@@ -117,7 +122,7 @@ public class ArXMLivAdapterImpl implements ArXMLivAdapter {
 			latexDocumentDAO.save(arxivId, latexSourceStream);
 			// Step 3 & partial Step 7
 			latexDocumentHeaderPatcher.patch(arxivId);
-			pdflatexWrapper.compile(arxivId);
+			pdflatexWrapper.compilePatched(arxivId);
 			latex2pdfMapper.generateSummary(arxivId);
 			// Step 4
 			String arxmlivFilePath = arxmlivProducer.produce(arxivId);
@@ -127,17 +132,32 @@ public class ArXMLivAdapterImpl implements ArXMLivAdapter {
 			// Step 6
 			Graph<StructuralElement, Reference> graph = extractStructuralElements(metadata);
 			// Step 7
-			/**
-			 * TODO: PDF-per-element compilation etc.
-			 */
-
+			Collection<StructuralElement> structuralElements = graph
+					.getVertices();
+			for (StructuralElement element : structuralElements) {
+				int latexStartLine = element.getLatexStartLine();
+				int latexEndLine = element.getLatexEndLine();
+				if (latexStartLine != 0 && latexEndLine != 0) {
+					try {
+						pdfHighlighter.generateHighlightedPdf(arxivId,
+								element.getId(), latexStartLine, latexEndLine);
+					} catch (Exception e) {
+						logger.log(
+								Level.SEVERE,
+								String.format(
+										"failed to generate the highlighted PDF for a segment with id='%d' in the document='%s'",
+										element.getId(), arxivId));
+					}
+				}
+			}
 			// Step 8
 			Set<RDFTriple> triples = referenceTripleUtil.convert(graph);
 			ontologyResourceFacade.insert(metadata, triples);
 
 		} catch (Exception e) {
 			String message = String.format(
-					"failed to handle document with id='%s' due to: %s", arxivId, e.getMessage());
+					"failed to handle document with id='%s' due to: %s",
+					arxivId, e.getMessage());
 			logger.log(Level.SEVERE, message);
 			throw new RuntimeException(message);
 		}

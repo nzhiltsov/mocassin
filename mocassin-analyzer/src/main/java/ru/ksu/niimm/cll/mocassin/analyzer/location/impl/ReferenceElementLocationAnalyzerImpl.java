@@ -15,10 +15,10 @@ public class ReferenceElementLocationAnalyzerImpl implements
 		long documentSize = reference.getDocument().getSize();
 		StructuralElement from = graph.getSource(reference);
 		StructuralElement to = graph.getDest(reference);
-		float normalizedStartDistance = ((float) from.getStart() - to
-				.getStart()) / documentSize;
+		float normalizedStartDistance = ((float) from.getGateStartOffset() - to
+				.getGateStartOffset()) / documentSize;
 
-		float normalizedEndDistance = ((float) from.getEnd() - to.getEnd())
+		float normalizedEndDistance = ((float) from.getGateEndOffset() - to.getGateEndOffset())
 				/ documentSize;
 		return new ReferenceElementLocationInfoImpl(reference,
 				normalizedStartDistance, normalizedEndDistance);

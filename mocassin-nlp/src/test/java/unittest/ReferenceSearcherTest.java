@@ -54,7 +54,8 @@ public class ReferenceSearcherTest {
 	private List<String> documentIds;
 
 	@Before
-	public void init() throws AccessGateDocumentException, AccessGateStorageException {
+	public void init() throws AccessGateDocumentException,
+			AccessGateStorageException {
 		documentIds = gateDocumentDAO.getDocumentIds();
 	}
 
@@ -80,8 +81,9 @@ public class ReferenceSearcherTest {
 				StructuralElement.class);
 		Arrays.sort(verticesArray, new UriComparator());
 		for (StructuralElement element : verticesArray) {
-			logger.log(Level.INFO, String.format("%s \"%s\" %d", element,
-					element.getTitle(), element.getStartPageNumber()));
+			logger.log(Level.INFO, String.format("%s \"%s\" p%d s%d e%d",
+					element, element.getTitle(), element.getStartPageNumber(),
+					element.getLatexStartLine(), element.getLatexEndLine()));
 		}
 	}
 
@@ -116,7 +118,8 @@ public class ReferenceSearcherTest {
 				}
 				i++;
 				logger.log(Level.INFO, String.format(
-						"%d out of %d documents have been processed", i, totalNumber));
+						"%d out of %d documents have been processed", i,
+						totalNumber));
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, String.format(
 						"couldn't process the document: %s", gateId));

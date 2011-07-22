@@ -39,7 +39,7 @@ public class ArxmlivProducerImpl extends AbstractUnixCommandWrapper implements
 		this.cmdArray[3] = String.format("%s/%s", LATEX_DIR,
 				StringUtil.arxivid2filename(arxivId, "tex"));
 		try {
-			execute(arxivId);
+			execute();
 			return arxmlivDocFilePath;
 		} catch (Exception e) {
 			String message = String

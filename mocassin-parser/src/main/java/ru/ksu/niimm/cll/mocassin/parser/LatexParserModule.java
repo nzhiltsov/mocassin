@@ -7,14 +7,18 @@ import ru.ksu.niimm.cll.mocassin.parser.arxmliv.ArxmlivProducer;
 import ru.ksu.niimm.cll.mocassin.parser.arxmliv.impl.ArxmlivProducerImpl;
 import ru.ksu.niimm.cll.mocassin.parser.impl.LatexDocumentDAOImpl;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentHeaderPatcher;
+import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentShadedPatcher;
 import ru.ksu.niimm.cll.mocassin.parser.latex.builder.StructureBuilder;
 import ru.ksu.niimm.cll.mocassin.parser.latex.builder.impl.NumberingProcessor;
 import ru.ksu.niimm.cll.mocassin.parser.latex.builder.impl.NumberingProcessorImpl;
 import ru.ksu.niimm.cll.mocassin.parser.latex.builder.impl.StructureBuilderImpl;
 import ru.ksu.niimm.cll.mocassin.parser.latex.impl.LatexParserImpl;
-import ru.ksu.niimm.cll.mocassin.parser.latex.impl.SedCommandPatcher;
+import ru.ksu.niimm.cll.mocassin.parser.latex.impl.SedBasedHeaderPatcher;
+import ru.ksu.niimm.cll.mocassin.parser.latex.impl.SedBasedShadedPatcher;
 import ru.ksu.niimm.cll.mocassin.parser.pdf.Latex2PDFMapper;
+import ru.ksu.niimm.cll.mocassin.parser.pdf.PdfHighlighter;
 import ru.ksu.niimm.cll.mocassin.parser.pdf.PdflatexWrapper;
+import ru.ksu.niimm.cll.mocassin.parser.pdf.impl.PdfHighlighterImpl;
 import ru.ksu.niimm.cll.mocassin.parser.pdf.impl.PdflatexWrapperImpl;
 import ru.ksu.niimm.cll.mocassin.parser.pdf.impl.PdfsyncMapper;
 
@@ -39,9 +43,11 @@ public class LatexParserModule extends AbstractModule {
 		bind(NumberingProcessor.class).to(NumberingProcessorImpl.class);
 		bind(Latex2PDFMapper.class).to(PdfsyncMapper.class);
 		bind(LatexDocumentDAO.class).to(LatexDocumentDAOImpl.class);
-		bind(LatexDocumentHeaderPatcher.class).to(SedCommandPatcher.class);
+		bind(LatexDocumentHeaderPatcher.class).to(SedBasedHeaderPatcher.class);
 		bind(ArxmlivProducer.class).to(ArxmlivProducerImpl.class);
 		bind(PdflatexWrapper.class).to(PdflatexWrapperImpl.class);
+		bind(LatexDocumentShadedPatcher.class).to(SedBasedShadedPatcher.class);
+		bind(PdfHighlighter.class).to(PdfHighlighterImpl.class);
 	}
 
 }
