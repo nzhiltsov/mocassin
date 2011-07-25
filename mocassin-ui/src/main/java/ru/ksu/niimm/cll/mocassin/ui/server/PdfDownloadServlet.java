@@ -34,8 +34,7 @@ public class PdfDownloadServlet extends HttpServlet {
 		String requestURI = req.getRequestURI();
 		logger.log(Level.INFO, "request URI: " + requestURI);
 		String parameter = requestURI.substring(
-				requestURI.lastIndexOf(ARXIVID_ENTRY) + ARXIVID_ENTRY_LENGTH,
-				requestURI.indexOf("&"));
+				requestURI.lastIndexOf(ARXIVID_ENTRY) + ARXIVID_ENTRY_LENGTH);
 		int signIndex = parameter
 				.indexOf(StringUtil.ARXIVID_SEGMENTID_DELIMITER);
 		String arxivId = signIndex != -1 ? parameter.substring(0, signIndex)
