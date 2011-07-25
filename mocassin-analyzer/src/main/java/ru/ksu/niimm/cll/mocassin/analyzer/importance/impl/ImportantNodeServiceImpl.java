@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ru.ksu.niimm.cll.mocassin.analyzer.importance.ImportantNodeService;
-import ru.ksu.niimm.cll.mocassin.parser.Edge;
-import ru.ksu.niimm.cll.mocassin.parser.Node;
+import ru.ksu.niimm.cll.mocassin.parser.latex.Edge;
+import ru.ksu.niimm.cll.mocassin.parser.latex.Node;
 import edu.uci.ics.jung.algorithms.scoring.PageRank;
 import edu.uci.ics.jung.graph.Graph;
 

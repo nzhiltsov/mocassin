@@ -12,7 +12,7 @@ import ru.ksu.niimm.cll.mocassin.analyzer.AnalyzerModule;
 import ru.ksu.niimm.cll.mocassin.arxiv.ArxivModule;
 import ru.ksu.niimm.cll.mocassin.fulltext.FullTextModule;
 import ru.ksu.niimm.cll.mocassin.nlp.NlpModule;
-import ru.ksu.niimm.cll.mocassin.parser.LatexParserModule;
+import ru.ksu.niimm.cll.mocassin.parser.latex.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.ui.server.MocassinUIModule;
 import ru.ksu.niimm.cll.mocassin.util.IOUtils;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;

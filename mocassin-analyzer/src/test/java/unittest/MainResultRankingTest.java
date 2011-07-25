@@ -4,8 +4,8 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import ru.ksu.niimm.cll.mocassin.parser.Edge;
-import ru.ksu.niimm.cll.mocassin.parser.Node;
+import ru.ksu.niimm.cll.mocassin.parser.latex.Edge;
+import ru.ksu.niimm.cll.mocassin.parser.latex.Node;
 import unittest.info.RankedNodeInfo;
 import edu.uci.ics.jung.graph.Graph;
 
