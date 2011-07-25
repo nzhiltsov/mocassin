@@ -1,4 +1,4 @@
-package ru.ksu.niimm.cll.mocassin.parser.latex.impl;
+package ru.ksu.niimm.cll.mocassin.parser.latex;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -23,16 +23,12 @@ import net.sourceforge.texlipse.model.ReferenceEntry;
 import net.sourceforge.texlipse.texparser.LatexLexer;
 import net.sourceforge.texlipse.texparser.LatexParser;
 import net.sourceforge.texlipse.texparser.lexer.LexerException;
-import ru.ksu.niimm.cll.mocassin.parser.Parser;
-import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
-import ru.ksu.niimm.cll.mocassin.parser.latex.NewtheoremCommand;
-import ru.ksu.niimm.cll.mocassin.parser.latex.PdfReferenceEntry;
 import ru.ksu.niimm.cll.mocassin.parser.pdf.Latex2PDFMapper;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
 
 import com.google.inject.Inject;
 
-public class LatexParserImpl implements Parser {
+class LatexParserImpl implements Parser {
 	private static final String NUMBERING_WITHIN_SECTION_FLAG = "[section]";
 	private static final String LATEX_COMMENT_SYMBOL = "%";
 	/**

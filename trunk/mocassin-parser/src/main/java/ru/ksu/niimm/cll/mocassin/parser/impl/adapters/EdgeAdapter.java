@@ -2,8 +2,8 @@ package ru.ksu.niimm.cll.mocassin.parser.impl.adapters;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
-import ru.ksu.niimm.cll.mocassin.parser.Edge;
 import ru.ksu.niimm.cll.mocassin.parser.impl.EdgeImpl;
+import ru.ksu.niimm.cll.mocassin.parser.latex.Edge;
 
 public class EdgeAdapter extends XmlAdapter<EdgeImpl, Edge> {
 

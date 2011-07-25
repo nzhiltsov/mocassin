@@ -14,8 +14,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl.NodePositionComparator;
+import ru.ksu.niimm.cll.mocassin.parser.latex.Edge;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
-import ru.ksu.niimm.cll.mocassin.parser.latex.builder.StructureBuilder;
+import ru.ksu.niimm.cll.mocassin.parser.latex.LatexParserModule;
+import ru.ksu.niimm.cll.mocassin.parser.latex.Node;
+import ru.ksu.niimm.cll.mocassin.parser.latex.Parser;
+import ru.ksu.niimm.cll.mocassin.parser.latex.StructureBuilder;
+import ru.ksu.niimm.cll.mocassin.parser.pdf.PdfParserModule;
 
 import com.google.inject.Inject;
 import com.mycila.testing.junit.MycilaJunitRunner;
@@ -24,7 +29,7 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 import edu.uci.ics.jung.graph.Hypergraph;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext({ LatexParserModule.class })
+@GuiceContext({ LatexParserModule.class, PdfParserModule.class })
 public class StructureBuilderTest {
 	@Inject
 	private Parser parser;
@@ -35,8 +40,8 @@ public class StructureBuilderTest {
 
 	@Before
 	public void init() throws LexerException, IOException {
-		InputStream in = new FileInputStream("/opt/mocassin/tex/math_0001008.tex");
-		this.model = parser.parse("math/0001008", in, true);
+		InputStream in = new FileInputStream("/opt/mocassin/tex/math_0001036.tex");
+		this.model = parser.parse("math/0001036", in, true);
 	}
 
 	@Test

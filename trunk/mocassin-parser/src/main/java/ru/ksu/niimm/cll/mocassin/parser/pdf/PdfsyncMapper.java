@@ -1,4 +1,4 @@
-package ru.ksu.niimm.cll.mocassin.parser.pdf.impl;
+package ru.ksu.niimm.cll.mocassin.parser.pdf;
 
 import java.io.IOException;
 import java.util.SortedSet;
@@ -6,8 +6,6 @@ import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import ru.ksu.niimm.cll.mocassin.parser.pdf.GeneratePdfSummaryException;
-import ru.ksu.niimm.cll.mocassin.parser.pdf.Latex2PDFMapper;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
 
 import com.csvreader.CsvReader;
@@ -20,7 +18,7 @@ import com.google.inject.name.Named;
  * implementation
  * 
  */
-public class PdfsyncMapper implements Latex2PDFMapper {
+class PdfsyncMapper implements Latex2PDFMapper {
 	@Inject
 	private Logger logger;
 

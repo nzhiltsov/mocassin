@@ -1,4 +1,4 @@
-package ru.ksu.niimm.cll.mocassin.parser;
+package ru.ksu.niimm.cll.mocassin.parser.latex;
 
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
@@ -10,7 +10,6 @@ import ru.ksu.niimm.cll.mocassin.parser.impl.adapters.EdgeAdapter;
  * @author nzhiltsov
  * 
  */
-@XmlJavaTypeAdapter(EdgeAdapter.class)
 public interface Edge {
 	void setContext(EdgeContext edgeContext);
 

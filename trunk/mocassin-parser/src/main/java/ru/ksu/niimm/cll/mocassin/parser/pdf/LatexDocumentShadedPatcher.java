@@ -1,4 +1,4 @@
-package ru.ksu.niimm.cll.mocassin.parser.latex;
+package ru.ksu.niimm.cll.mocassin.parser.pdf;
 
 public interface LatexDocumentShadedPatcher {
 	/**
