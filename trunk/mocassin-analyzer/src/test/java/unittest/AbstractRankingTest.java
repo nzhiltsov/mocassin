@@ -21,12 +21,12 @@ import ru.ksu.niimm.cll.mocassin.analyzer.AnalyzerModule;
 import ru.ksu.niimm.cll.mocassin.analyzer.importance.ImportantNodeService;
 import ru.ksu.niimm.cll.mocassin.fulltext.FullTextModule;
 import ru.ksu.niimm.cll.mocassin.nlp.NlpModule;
-import ru.ksu.niimm.cll.mocassin.parser.Edge;
-import ru.ksu.niimm.cll.mocassin.parser.LatexParserModule;
-import ru.ksu.niimm.cll.mocassin.parser.Node;
-import ru.ksu.niimm.cll.mocassin.parser.Parser;
+import ru.ksu.niimm.cll.mocassin.parser.latex.Edge;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
-import ru.ksu.niimm.cll.mocassin.parser.latex.builder.StructureBuilder;
+import ru.ksu.niimm.cll.mocassin.parser.latex.LatexParserModule;
+import ru.ksu.niimm.cll.mocassin.parser.latex.Node;
+import ru.ksu.niimm.cll.mocassin.parser.latex.Parser;
+import ru.ksu.niimm.cll.mocassin.parser.latex.StructureBuilder;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
 import ru.ksu.niimm.ose.ontology.OntologyModule;
 

@@ -16,7 +16,7 @@ import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.StructuralElementImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.recognizer.StructuralElementTypeRecognizer;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
-import ru.ksu.niimm.cll.mocassin.parser.LatexParserModule;
+import ru.ksu.niimm.cll.mocassin.parser.latex.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
 import ru.ksu.niimm.ose.ontology.OntologyModule;
 

@@ -26,7 +26,7 @@ import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateStorageException;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.ParsedDocumentImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.util.StopWordLoader;
-import ru.ksu.niimm.cll.mocassin.parser.LatexParserModule;
+import ru.ksu.niimm.cll.mocassin.parser.latex.LatexParserModule;
 import unittest.LatexStructuralElementSearcherTest.UriComparator;
 
 import com.csvreader.CsvWriter;

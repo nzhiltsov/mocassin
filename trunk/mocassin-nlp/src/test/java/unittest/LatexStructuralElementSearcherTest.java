@@ -19,7 +19,7 @@ import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.ParsedDocumentImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.latex.LatexSearcherParseException;
 import ru.ksu.niimm.cll.mocassin.nlp.latex.LatexStructuralElementSearcher;
-import ru.ksu.niimm.cll.mocassin.parser.LatexParserModule;
+import ru.ksu.niimm.cll.mocassin.parser.latex.LatexParserModule;
 
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;

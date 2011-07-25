@@ -5,9 +5,9 @@ import java.util.Map;
 import org.apache.commons.collections15.Predicate;
 import org.junit.Test;
 
-import ru.ksu.niimm.cll.mocassin.parser.Edge;
-import ru.ksu.niimm.cll.mocassin.parser.EdgeType;
-import ru.ksu.niimm.cll.mocassin.parser.Node;
+import ru.ksu.niimm.cll.mocassin.parser.latex.Edge;
+import ru.ksu.niimm.cll.mocassin.parser.latex.EdgeType;
+import ru.ksu.niimm.cll.mocassin.parser.latex.Node;
 import edu.uci.ics.jung.algorithms.filters.EdgePredicateFilter;
 import edu.uci.ics.jung.graph.Graph;
 
