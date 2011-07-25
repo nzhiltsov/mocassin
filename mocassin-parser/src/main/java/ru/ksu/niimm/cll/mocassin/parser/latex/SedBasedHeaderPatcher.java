@@ -1,22 +1,21 @@
-package ru.ksu.niimm.cll.mocassin.parser.latex.impl;
+package ru.ksu.niimm.cll.mocassin.parser.latex;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentHeaderPatcher;
 import ru.ksu.niimm.cll.mocassin.util.AbstractUnixCommandWrapper;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-public class SedBasedHeaderPatcher extends AbstractUnixCommandWrapper implements
+class SedBasedHeaderPatcher extends AbstractUnixCommandWrapper implements
 		LatexDocumentHeaderPatcher {
 
 	private final String texDocumentDir;
 
 	@Inject
-	public SedBasedHeaderPatcher(Logger logger,
+	SedBasedHeaderPatcher(Logger logger,
 			@Named("header.patcher.script.path") String patcherScriptPath,
 			@Named("bash.path") String bashPath,
 			@Named("patched.tex.document.dir") String outputDir,

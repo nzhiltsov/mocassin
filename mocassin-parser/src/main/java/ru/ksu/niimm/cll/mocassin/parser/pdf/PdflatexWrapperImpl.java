@@ -1,17 +1,15 @@
-package ru.ksu.niimm.cll.mocassin.parser.pdf.impl;
+package ru.ksu.niimm.cll.mocassin.parser.pdf;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import ru.ksu.niimm.cll.mocassin.parser.pdf.PdflatexCompilationException;
-import ru.ksu.niimm.cll.mocassin.parser.pdf.PdflatexWrapper;
 import ru.ksu.niimm.cll.mocassin.util.AbstractUnixCommandWrapper;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-public class PdflatexWrapperImpl extends AbstractUnixCommandWrapper implements
+class PdflatexWrapperImpl extends AbstractUnixCommandWrapper implements
 		PdflatexWrapper {
 	private final String PATCHED_LATEX_DIR;
 
@@ -22,7 +20,7 @@ public class PdflatexWrapperImpl extends AbstractUnixCommandWrapper implements
 	private final String AUX_PDF_DIR;
 
 	@Inject
-	public PdflatexWrapperImpl(Logger logger,
+	PdflatexWrapperImpl(Logger logger,
 			@Named("auxiliary.pdf.document.dir") String auxPdfPath,
 			@Named("patched.tex.document.dir") String patchedLatexDir,
 			@Named("shaded.tex.document.dir") String shadedLatexDir,

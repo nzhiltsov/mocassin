@@ -10,9 +10,9 @@ import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
 
-import ru.ksu.niimm.cll.mocassin.parser.LatexDocumentDAO;
-import ru.ksu.niimm.cll.mocassin.parser.Parser;
+import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentDAO;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
+import ru.ksu.niimm.cll.mocassin.parser.latex.Parser;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
 
 import com.google.inject.Inject;

@@ -1,4 +1,4 @@
-package ru.ksu.niimm.cll.mocassin.parser.latex.impl;
+package ru.ksu.niimm.cll.mocassin.parser.pdf;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -6,16 +6,15 @@ import java.util.logging.Logger;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentShadedPatcher;
 import ru.ksu.niimm.cll.mocassin.util.AbstractUnixCommandWrapper;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
 
-public class SedBasedShadedPatcher extends AbstractUnixCommandWrapper implements
+class SedBasedShadedPatcher extends AbstractUnixCommandWrapper implements
 		LatexDocumentShadedPatcher {
 	private final String PATCHED_LATEX_DIR;
 
 	@Inject
-	public SedBasedShadedPatcher(Logger logger,
+	SedBasedShadedPatcher(Logger logger,
 			@Named("shaded.patcher.script.path") String bashPath,
 			@Named("shaded.tex.document.dir") String outputDir,
 			@Named("patched.tex.document.dir") String patchedLatexDir) {

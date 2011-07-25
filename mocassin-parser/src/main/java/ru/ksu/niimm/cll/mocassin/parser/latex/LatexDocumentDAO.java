@@ -1,8 +1,7 @@
-package ru.ksu.niimm.cll.mocassin.parser;
+package ru.ksu.niimm.cll.mocassin.parser.latex;
 
 import java.io.InputStream;
 
-import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
 
 public interface LatexDocumentDAO {
 	/**

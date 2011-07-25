@@ -6,7 +6,7 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
-import ru.ksu.niimm.cll.mocassin.parser.Node;
+import ru.ksu.niimm.cll.mocassin.parser.latex.Node;
 
 import com.google.common.base.Predicate;
 

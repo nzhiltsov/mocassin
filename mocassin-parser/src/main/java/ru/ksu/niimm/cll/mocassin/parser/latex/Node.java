@@ -1,4 +1,4 @@
-package ru.ksu.niimm.cll.mocassin.parser;
+package ru.ksu.niimm.cll.mocassin.parser.latex;
 
 import java.util.List;
 

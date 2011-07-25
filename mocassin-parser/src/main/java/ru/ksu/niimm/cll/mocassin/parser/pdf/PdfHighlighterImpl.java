@@ -1,19 +1,15 @@
-package ru.ksu.niimm.cll.mocassin.parser.pdf.impl;
+package ru.ksu.niimm.cll.mocassin.parser.pdf;
 
 import com.google.inject.Inject;
 
-import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentShadedPatcher;
-import ru.ksu.niimm.cll.mocassin.parser.pdf.PdfHighlighter;
-import ru.ksu.niimm.cll.mocassin.parser.pdf.PdflatexCompilationException;
-import ru.ksu.niimm.cll.mocassin.parser.pdf.PdflatexWrapper;
 
-public class PdfHighlighterImpl implements PdfHighlighter {
+class PdfHighlighterImpl implements PdfHighlighter {
 	private final LatexDocumentShadedPatcher latexDocumentShadedPatcher;
 
 	private final PdflatexWrapper pdflatexWrapper;
 
 	@Inject
-	public PdfHighlighterImpl(
+	PdfHighlighterImpl(
 			LatexDocumentShadedPatcher latexDocumentShadedPatcher,
 			PdflatexWrapper pdflatexWrapper) {
 		this.latexDocumentShadedPatcher = latexDocumentShadedPatcher;

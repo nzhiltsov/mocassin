@@ -2,8 +2,8 @@ package ru.ksu.niimm.cll.mocassin.parser.impl.adapters;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
-import ru.ksu.niimm.cll.mocassin.parser.Node;
 import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl;
+import ru.ksu.niimm.cll.mocassin.parser.latex.Node;
 
 public class NodeAdapter extends XmlAdapter<NodeImpl, Node> {
 

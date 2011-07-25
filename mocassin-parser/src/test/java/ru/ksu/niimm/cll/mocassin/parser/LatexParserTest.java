@@ -10,13 +10,16 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
+import ru.ksu.niimm.cll.mocassin.parser.latex.LatexParserModule;
+import ru.ksu.niimm.cll.mocassin.parser.latex.Parser;
+import ru.ksu.niimm.cll.mocassin.parser.pdf.PdfParserModule;
 
 import com.google.inject.Inject;
 import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext(LatexParserModule.class)
+@GuiceContext({LatexParserModule.class, PdfParserModule.class})
 public class LatexParserTest {
 
 	@Inject
@@ -26,12 +29,12 @@ public class LatexParserTest {
 
 	@Before
 	public void init() throws FileNotFoundException {
-		this.in = new FileInputStream("/opt/mocassin/tex/math_0001008.tex");
+		this.in = new FileInputStream("/opt/mocassin/tex/math_0001036.tex");
 	}
 
 	@Test
 	public void testParse() throws Exception {
-		LatexDocumentModel model = getParser().parse("math/0001008", getInputStream(), true);
+		LatexDocumentModel model = getParser().parse("math/0001036", getInputStream(), true);
 		Assert.assertTrue(model.getReferences().size() > 0);
 	}
 

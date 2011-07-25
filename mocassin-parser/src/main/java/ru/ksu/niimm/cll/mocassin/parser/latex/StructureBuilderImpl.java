@@ -1,4 +1,4 @@
-package ru.ksu.niimm.cll.mocassin.parser.latex.builder.impl;
+package ru.ksu.niimm.cll.mocassin.parser.latex;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,18 +12,10 @@ import java.util.logging.Logger;
 
 import net.sourceforge.texlipse.model.DocumentReference;
 import net.sourceforge.texlipse.model.OutlineNode;
-import ru.ksu.niimm.cll.mocassin.parser.Edge;
-import ru.ksu.niimm.cll.mocassin.parser.EdgeContext;
-import ru.ksu.niimm.cll.mocassin.parser.EdgeType;
-import ru.ksu.niimm.cll.mocassin.parser.Node;
 import ru.ksu.niimm.cll.mocassin.parser.impl.EdgeContextImpl;
 import ru.ksu.niimm.cll.mocassin.parser.impl.EdgeImpl;
 import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl;
 import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl.NodePositionComparator;
-import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
-import ru.ksu.niimm.cll.mocassin.parser.latex.NewtheoremCommand;
-import ru.ksu.niimm.cll.mocassin.parser.latex.PdfReferenceEntry;
-import ru.ksu.niimm.cll.mocassin.parser.latex.builder.StructureBuilder;
 import ru.ksu.niimm.cll.mocassin.parser.pdf.Latex2PDFMapper;
 
 import com.google.common.collect.Iterables;
@@ -39,22 +31,17 @@ import edu.uci.ics.jung.graph.Graph;
  * @author nzhiltsov
  * 
  */
-public class StructureBuilderImpl implements StructureBuilder {
+class StructureBuilderImpl implements StructureBuilder {
 	private static final String NODE_ID_FORMAT = "%d_%d";
 	@Inject
 	private Logger logger;
 	private final Latex2PDFMapper latex2pdfMapper;
-
-	private final NumberingProcessor numberingProcessor;
-
 	private LatexDocumentModel model;
 	private Graph<Node, Edge> hypergraph;
 
 	@Inject
-	private StructureBuilderImpl(NumberingProcessor numberingProcessor,
-			Latex2PDFMapper latex2pdfMapper) {
+	StructureBuilderImpl(Latex2PDFMapper latex2pdfMapper) {
 
-		this.numberingProcessor = numberingProcessor;
 		this.latex2pdfMapper = latex2pdfMapper;
 	}
 
@@ -148,7 +135,6 @@ public class StructureBuilderImpl implements StructureBuilder {
 			node.setPdfPageNumber(pageNumber);
 		}
 	}
-
 
 	private void addEdge(Node from, OutlineNode toNode, EdgeType edgeType) {
 		Edge edge = new EdgeImpl();
@@ -400,10 +386,6 @@ public class StructureBuilderImpl implements StructureBuilder {
 
 	private List<PdfReferenceEntry> getLabels() {
 		return getModel().getLabels();
-	}
-
-	private NumberingProcessor getNumberingProcessor() {
-		return numberingProcessor;
 	}
 
 }
