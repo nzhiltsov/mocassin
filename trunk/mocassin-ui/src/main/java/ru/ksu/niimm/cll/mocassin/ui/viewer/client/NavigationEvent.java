@@ -4,11 +4,13 @@ import com.google.gwt.event.shared.GwtEvent;
 
 public class NavigationEvent extends GwtEvent<NavigationEventHandler> {
 	private final int numPage;
+	private final String currentUri;
 
 	public static final Type<NavigationEventHandler> TYPE = new Type<NavigationEventHandler>();
 
-	NavigationEvent(int numPage) {
+	NavigationEvent(String currentUri, int numPage) {
 		super();
+		this.currentUri = currentUri;
 		this.numPage = numPage;
 	}
 
@@ -21,6 +23,10 @@ public class NavigationEvent extends GwtEvent<NavigationEventHandler> {
 	protected void dispatch(NavigationEventHandler handler) {
 		handler.onChange(this);
 
+	}
+
+	public String getCurrentUri() {
+		return currentUri;
 	}
 
 	public int getNumPage() {

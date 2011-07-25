@@ -35,7 +35,7 @@ public class StructureViewer implements EntryPoint, NavigationEventHandler {
 	@UiField
 	DocumentStructureGraphPanel documentStructureGraphPanel;
 
-	private String pdfUri;
+	private String currentArxivId;
 
 	public void onModuleLoad() {
 		ScrollPanel outer = binder.createAndBindUi(this);
@@ -44,8 +44,7 @@ public class StructureViewer implements EntryPoint, NavigationEventHandler {
 		root.forceLayout();
 
 		String resourceUri = Location.getParameter("resourceuri");
-		pdfUri = Location.getParameter("pdfuri");
-		if (resourceUri == null || pdfUri == null)
+		if (resourceUri == null)
 			return;
 
 		App.eventBus.addHandler(NavigationEvent.TYPE, this);
@@ -66,12 +65,13 @@ public class StructureViewer implements EntryPoint, NavigationEventHandler {
 
 		@Override
 		public void onSuccess(ArticleInfo result) {
+			currentArxivId = result.getKey();
 			VerticalPanel metadataPanel = new VerticalPanel();
 			metadataPanel.setSpacing(5);
 
 			metadataPanel.setSize("100%", "180");
 
-			String key = result.getKey() != null ? result.getKey() : "";
+			String key = currentArxivId != null ? currentArxivId : "";
 			Label lblNewLabel = new Label("arXiv: " + key);
 			lblNewLabel.setStyleName("paper-id");
 			metadataPanel.add(lblNewLabel);
@@ -87,28 +87,33 @@ public class StructureViewer implements EntryPoint, NavigationEventHandler {
 				metadataPanel.add(lblNewLabel_2);
 			}
 
-			if (result.getCurrentPageNumber() > 0) {
-				int currentPageNumber = result.getCurrentPageNumber() - 1;
-				String url = "http://docs.google.com/viewer?url="
-						+ result.getPdfUri() + "&embedded=true#:0.page."
-						+ currentPageNumber;
-				frame.setUrl(url);
-			} else {
-				frame.setUrl("http://docs.google.com/viewer?url="
-						+ result.getPdfUri() + "&embedded=true");
-			}
+			int currentPageNumber = result.getCurrentPageNumber() > 0 ? result
+					.getCurrentPageNumber() - 1 : 0;
+
+			String currentSegmentUri = result.getCurrentSegmentUri();
+			String url = assembleUrl(currentSegmentUri, currentPageNumber);
+			frame.setUrl(url);
 
 			metadataCaptionPanel.add(metadataPanel);
 			documentStructureGraphPanel.refresh(result);
 		}
+	}
 
+	private String assembleUrl(String currentSegmentUri, int currentPageNumber) {
+		String url = "http://docs.google.com/viewer?url="
+				+ GWT.getHostPageBaseURL()
+				+ "mocassin/download/arxivid/"
+				+ currentArxivId
+				+ (currentSegmentUri != null ? "$"
+						+ currentSegmentUri.substring(currentSegmentUri
+								.lastIndexOf("/") + 1) : "")
+				+ "&embedded=true#:0.page." + currentPageNumber;
+		return url;
 	}
 
 	@Override
 	public void onChange(NavigationEvent event) {
-		frame.setUrl("http://docs.google.com/viewer?url=" + pdfUri
-				+ "&embedded=true#:0.page." + event.getNumPage());
-
+		frame.setUrl(assembleUrl(event.getCurrentUri(), event.getNumPage()));
 	}
 
 }
