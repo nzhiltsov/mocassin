@@ -132,24 +132,7 @@ public class ArXMLivAdapterImpl implements ArXMLivAdapter {
 			// Step 6
 			Graph<StructuralElement, Reference> graph = extractStructuralElements(metadata);
 			// Step 7
-			Collection<StructuralElement> structuralElements = graph
-					.getVertices();
-			for (StructuralElement element : structuralElements) {
-				int latexStartLine = element.getLatexStartLine();
-				int latexEndLine = element.getLatexEndLine();
-				if (latexStartLine != 0 && latexEndLine != 0) {
-					try {
-						pdfHighlighter.generateHighlightedPdf(arxivId,
-								element.getId(), latexStartLine, latexEndLine);
-					} catch (Exception e) {
-						logger.log(
-								Level.SEVERE,
-								String.format(
-										"failed to generate the highlighted PDF for a segment with id='%d' in the document='%s'",
-										element.getId(), arxivId));
-					}
-				}
-			}
+			generateHighlightedPdfs(arxivId, graph.getVertices());
 			// Step 8
 			Set<RDFTriple> triples = referenceTripleUtil.convert(graph);
 			ontologyResourceFacade.insert(metadata, triples);
@@ -160,6 +143,26 @@ public class ArXMLivAdapterImpl implements ArXMLivAdapter {
 					arxivId, e.getMessage());
 			logger.log(Level.SEVERE, message);
 			throw new RuntimeException(message);
+		}
+	}
+
+	private void generateHighlightedPdfs(String arxivId,
+			Collection<StructuralElement> structuralElements) {
+		for (StructuralElement element : structuralElements) {
+			int latexStartLine = element.getLatexStartLine();
+			int latexEndLine = element.getLatexEndLine();
+			if (latexStartLine != 0 && latexEndLine != 0) {
+				try {
+					pdfHighlighter.generateHighlightedPdf(arxivId,
+							element.getId(), latexStartLine, latexEndLine);
+				} catch (Exception e) {
+					logger.log(
+							Level.SEVERE,
+							String.format(
+									"failed to generate the highlighted PDF for a segment with id='%d' in the document='%s'",
+									element.getId(), arxivId));
+				}
+			}
 		}
 	}
 

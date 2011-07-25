@@ -13,6 +13,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 import com.google.common.collect.Iterables;
 
 public class StringUtil {
+	public static final String ARXIVID_SEGMENTID_DELIMITER = "$";
 	private static final Pattern STYLE_PATTERN = Pattern
 			.compile("\\\\[a-zA-Z]+\\{([^}]*)\\}");
 	private static final String REFERENCE_PATTERN_STRING = "\\\\(label|ref|cite){1}(\\[[^]]*\\])*\\{([^}]*)\\}";
@@ -124,7 +125,13 @@ public class StringUtil {
 		String name = arxivid2gateid(arxivId);
 		return String.format("%s.%s", name, extension);
 	}
-	
+
+	public static String segmentid2filename(String arxivId, int segmentId,
+			String extension) {
+		return String.format("%s%s%d.%s", StringUtil.arxivid2gateid(arxivId), ARXIVID_SEGMENTID_DELIMITER,
+				segmentId, extension);
+	}
+
 	public static String arxivid2gateid(String arxivId) {
 		return arxivId.replace("/", "_");
 	}

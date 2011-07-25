@@ -112,7 +112,7 @@ public class NodeExplorer {
 	@UiHandler({ "closeButton", "goLink" })
 	void handleClick(ClickEvent event) {
 		if (event.getSource() == goLink) {
-			NavigationEvent navigationEvent = new NavigationEvent(
+			NavigationEvent navigationEvent = new NavigationEvent(currentNode.getUri(),
 					currentNode.getNumPage() - 1);
 			App.eventBus.fireEvent(navigationEvent);
 		}

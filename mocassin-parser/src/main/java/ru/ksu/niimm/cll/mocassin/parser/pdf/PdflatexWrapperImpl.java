@@ -40,8 +40,8 @@ class PdflatexWrapperImpl extends AbstractUnixCommandWrapper implements
 	public void compileShaded(String arxivId, int structuralElementId)
 			throws PdflatexCompilationException {
 		this.cmdArray[4] = PDF_DIR;
-		this.cmdArray[5] = String.format("%s/%s$%d.tex", SHADED_LATEX_DIR,
-				StringUtil.arxivid2gateid(arxivId), structuralElementId);
+		this.cmdArray[5] = String.format("%s/%s", SHADED_LATEX_DIR, StringUtil
+				.segmentid2filename(arxivId, structuralElementId, "tex"));
 		executeCommands(arxivId);
 	}
 
