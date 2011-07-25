@@ -100,7 +100,7 @@ public class StructureViewer implements EntryPoint, NavigationEventHandler {
 	}
 
 	private String assembleUrl(String currentSegmentUri, int currentPageNumber) {
-		String url = "http://docs.google.com/viewer?url=cll.niimm.ksu.ru/"
+		String url = "http://docs.google.com/viewer?url=http://cll.niimm.ksu.ru/mocassin/"
 				+ "mocassin/download/arxivid/"
 				+ currentArxivId
 				+ (currentSegmentUri != null ? "$"
