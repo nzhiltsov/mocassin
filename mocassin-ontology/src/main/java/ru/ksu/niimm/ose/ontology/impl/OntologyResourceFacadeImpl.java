@@ -69,7 +69,7 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 			@Named("ontology.rules.set") String ontologyRuleSet) {
 		this.searchGraph = new RDFGraphImpl.Builder(graphIri)
 				.url(connectionUrl).username(username).password(password)
-				.build();
+				.inferenceRulesSetName(ontologyRuleSet).build();
 		this.ontologyRulesSetName = ontologyRuleSet;
 	}
 
@@ -112,7 +112,7 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 		String documentUri = parseDocumentUri(resource.getUri());
 		String graphQueryString = generateRetrieveStructureGraphQuery(documentUri);
 		Iterator<QuerySolution> solutionIt = getVirtuosoDAO().get(
-				graphQueryString, getSearchGraph()).iterator();
+				graphQueryString, getSearchGraph(), false).iterator();
 		if (!solutionIt.hasNext())
 			return edges;
 		final Function<QuerySolution, SGEdge> function = new SolutionFunction();
@@ -327,11 +327,7 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 	private String generateRetrieveStructureGraphQuery(String documentUri) {
 		String query = getSparqlQueryLoader().loadQueryByName(
 				"GetStructureGraph");
-		StringBuffer sb = new StringBuffer(String.format(RULES_SET_ENTRY,
-				this.ontologyRulesSetName));
-		sb.append("\n");
-		sb.append(String.format(query, documentUri));
-		return sb.toString();
+		return String.format(query, documentUri);
 	}
 
 	private RDFGraph getSearchGraph() {

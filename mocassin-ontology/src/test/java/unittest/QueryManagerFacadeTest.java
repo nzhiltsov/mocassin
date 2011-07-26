@@ -39,31 +39,6 @@ public class QueryManagerFacadeTest {
 	@Inject
 	private SparqlQueryLoader sparqlQueryLoader;
 
-	@Test
-	public void testQuery() {
-		List<Resource> resources = getQueryManagerFacade()
-				.query(
-						"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> "
-								+ "SELECT * WHERE "
-								+ "{ "
-								+ "?1 rdf:type <http://omdoc.org/ontology#Document> . ?1 <http://omdoc.org/ontology#hasPart> ?2 ."
-								+ "?2 rdf:type <http://omdoc.org/ontology#Theory> ."
-								+ "}", "?1");
-		resources.size();
-	}
-
-	@Test
-	public void testSubclassofInferenceForQuery() {
-		List<Resource> resources = getQueryManagerFacade()
-				.query(
-						"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> "
-								+ "SELECT * WHERE "
-								+ "{ "
-								+ "?1 rdf:type <http://omdoc.org/ontology#Assertion> . ?1 <http://omdoc.org/ontology#hasProperty> ?2 ."
-								+ "?2 rdf:type <http://omdoc.org/ontology#Property>."
-								+ "}", "?1");
-		resources.size();
-	}
 
 	@Test
 	public void testQueryStatement() {

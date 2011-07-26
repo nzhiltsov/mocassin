@@ -59,17 +59,15 @@ public class VirtuosoDAOTest extends AbstractTest {
 
 	@Test
 	public void testDescribe() {
-		Model model = getVirtuosoDAO()
-				.describe(
-						"<http://arxiv.org/abs/math/0005005v2>",
-						getGraph());
+		Model model = getVirtuosoDAO().describe(
+				"<http://arxiv.org/abs/math/0005005v2>", getGraph());
 		Graph describeGraph = model.getGraph();
 		ExtendedIterator<Triple> foundIt = describeGraph.find(Node.ANY,
 				Node.ANY, Node.ANY);
 		boolean contains = false;
-		Node subject = Node
-				.createURI("http://arxiv.org/abs/math/0005005v2");
-		Node predicate = Node.createURI("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
+		Node subject = Node.createURI("http://arxiv.org/abs/math/0005005v2");
+		Node predicate = Node
+				.createURI("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
 		Node object = Node
 				.createURI("http://salt.semanticauthoring.org/ontologies/sdo#Publication");
 		Triple tripleForSearch = new Triple(subject, predicate, object);
@@ -132,10 +130,11 @@ public class VirtuosoDAOTest extends AbstractTest {
 	@Test
 	public void testGet() {
 		RDFGraph graph = getConfiguredGraph();
-		Query query = QueryFactory.create("SELECT * {?s ?p ?o} limit 100");
-		List<QuerySolution> solutions = getVirtuosoDAO().get(query, graph);
+		String query = "SELECT DISTINCT ?1 "
+				+ "{ ?1 a <http://salt.semanticauthoring.org/ontologies/sdo#Publication> .}";
+		List<QuerySolution> solutions = getVirtuosoDAO().get(query, graph, true);
 		for (QuerySolution solution : solutions) {
-			Resource resource = solution.getResource("?s");
+			Resource resource = solution.getResource("?1");
 		}
 	}
 

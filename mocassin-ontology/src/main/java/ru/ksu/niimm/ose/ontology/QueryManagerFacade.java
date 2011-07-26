@@ -7,16 +7,14 @@ import com.hp.hpl.jena.rdf.model.Resource;
 
 public interface QueryManagerFacade {
 	/**
-	 * query given model with given query string
+	 * query given model with a given query statement
 	 * 
 	 * @param model
 	 *            ontology model
-	 * @param queryString
-	 *            query string
 	 * @param retrievedResourceKey
 	 *            retrieved resource key
 	 */
-	List<Resource> query(String queryString, String retrievedResourceKey);
+	List<Resource> query(QueryStatement queryStatement, String retrievedResourceKey);
 
 	/**
 	 * query given model with given query statement
