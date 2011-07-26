@@ -13,6 +13,7 @@ import ru.ksu.niimm.cll.mocassin.arxiv.ArxivModule;
 import ru.ksu.niimm.cll.mocassin.fulltext.FullTextModule;
 import ru.ksu.niimm.cll.mocassin.nlp.NlpModule;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexParserModule;
+import ru.ksu.niimm.cll.mocassin.parser.pdf.PdfParserModule;
 import ru.ksu.niimm.cll.mocassin.ui.server.MocassinUIModule;
 import ru.ksu.niimm.cll.mocassin.util.IOUtils;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
@@ -25,7 +26,7 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext({ MocassinUIModule.class, OntologyModule.class,
 		VirtuosoModule.class, ArxivModule.class, NlpModule.class,
-		LatexParserModule.class, FullTextModule.class, AnalyzerModule.class })
+		LatexParserModule.class, PdfParserModule.class, FullTextModule.class, AnalyzerModule.class })
 @Ignore("disabled because of interference with the main index")
 public class ArXMLivAdapterTest {
 	@Inject
