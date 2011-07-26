@@ -96,7 +96,7 @@ public class StructureViewer implements EntryPoint, NavigationEventHandler {
 
 			String currentSegmentUri = result.getCurrentSegmentUri();
 			String url = assembleUrl(currentSegmentUri, currentPageNumber);
-			frame.setUrl(url);
+			refreshFrame(url);
 
 			metadataCaptionPanel.add(metadataPanel);
 			documentStructureGraphPanel.refresh(result);
@@ -116,14 +116,17 @@ public class StructureViewer implements EntryPoint, NavigationEventHandler {
 
 	@Override
 	public void onChange(final NavigationEvent navEvent) {
-		frame.setUrl(assembleUrl(navEvent.getCurrentUri(),
+		refreshFrame(assembleUrl(navEvent.getCurrentUri(),
 				navEvent.getNumPage()));
+	}
+	
+	private void refreshFrame(final String url) {
+		frame.setUrl(url);
 		// using Timer is a workaround to refresh the frame
 		Timer timer = new Timer() {
 			@Override
 			public void run() {
-				frame.setUrl(assembleUrl(navEvent.getCurrentUri(),
-						navEvent.getNumPage()));
+				frame.setUrl(url);
 				cancel();
 			}
 		};
