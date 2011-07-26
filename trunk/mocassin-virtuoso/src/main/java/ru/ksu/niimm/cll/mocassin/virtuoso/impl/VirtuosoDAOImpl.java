@@ -23,12 +23,14 @@ import virtuoso.jena.driver.VirtuosoUpdateRequest;
 
 import com.google.inject.Inject;
 import com.hp.hpl.jena.query.Query;
+import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 public class VirtuosoDAOImpl implements VirtuosoDAO {
+	private static final String RULES_SET_ENTRY = "define input:inference \"%s\"\n";
 	private static final int SPARQL_LINE_NUMBER_LIMIT = 1000;
 	@Inject
 	Logger logger;
@@ -69,7 +71,7 @@ public class VirtuosoDAOImpl implements VirtuosoDAO {
 				graph.getUsername(), graph.getPassword());
 		String expression = getDeleteQueryGenerator().generate(documentUri,
 				graph);
-		throw new RuntimeException("not implemented yet");
+		throw new UnsupportedOperationException("not implemented yet");
 		// execute(virtGraph, expression);
 	}
 
@@ -100,13 +102,22 @@ public class VirtuosoDAOImpl implements VirtuosoDAO {
 
 	@Override
 	@ValidateGraph
-	public List<QuerySolution> get(String query, RDFGraph graph) {
+	public List<QuerySolution> get(String query, RDFGraph graph, boolean isInferenceOn) {
 		List<QuerySolution> solutions = new ArrayList<QuerySolution>();
 
 		VirtGraph virtGraph = new VirtGraph(graph.getUrl(),
 				graph.getUsername(), graph.getPassword());
+		Query jenaQuery = QueryFactory.create(query);
+		jenaQuery.addGraphURI("http://cll.niimm.ksu.ru/mocassintest");
+		String resultQuery;
+		if (isInferenceOn) {
+			String inferenceEntry = String.format(RULES_SET_ENTRY, graph.getInferenceRulesSetName());
+			resultQuery = inferenceEntry + jenaQuery.toString();
+		} else {
+			resultQuery = jenaQuery.toString();
+		}
 		VirtuosoQueryExecution vqe = VirtuosoQueryExecutionFactory.create(
-				query, virtGraph);
+				resultQuery, virtGraph);
 		ResultSet results = vqe.execSelect();
 		while (results.hasNext()) {
 			QuerySolution solution = results.nextSolution();

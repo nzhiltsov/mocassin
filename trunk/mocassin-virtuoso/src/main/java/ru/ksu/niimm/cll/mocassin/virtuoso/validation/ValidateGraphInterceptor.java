@@ -14,7 +14,7 @@ public class ValidateGraphInterceptor implements MethodInterceptor {
 		Object[] args = invocation.getArguments();
 		if (args == null) {
 			Method method = invocation.getMethod();
-			throw new IllegalArgumentException(String.format(
+			throw new NullPointerException(String.format(
 					"invalid call method: %s", method.getName()));
 		}
 		for (Object arg : args) {

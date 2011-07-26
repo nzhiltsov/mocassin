@@ -30,4 +30,10 @@ public interface RDFGraph {
 	 * @return URL for connection to a triple store
 	 */
 	String getUrl();
+
+	/**
+	 * 
+	 * @return URI of an inference rules set associated with the graph
+	 */
+	String getInferenceRulesSetName();
 }

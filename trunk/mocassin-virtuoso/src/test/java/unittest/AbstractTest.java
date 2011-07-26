@@ -21,10 +21,14 @@ public abstract class AbstractTest {
 
 	public AbstractTest() {
 		this.graph = new RDFGraphImpl.Builder(getProperties().getProperty(
-				"graph.iri")).username(
-				getProperties().getProperty("connection.user.name")).password(
-				getProperties().getProperty("connection.user.password")).url(
-				getProperties().getProperty("connection.url")).build();
+				"graph.iri"))
+				.username(getProperties().getProperty("connection.user.name"))
+				.password(
+						getProperties().getProperty("connection.user.password"))
+				.url(getProperties().getProperty("connection.url"))
+				.inferenceRulesSetName(
+						getProperties().getProperty("ontology.rules.set"))
+				.build();
 	}
 
 	@BeforeClass

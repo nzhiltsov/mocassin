@@ -73,7 +73,7 @@ public class ArxivDAOFacadeImpl implements ArxivDAOFacade {
 	public ArticleMetadata retrieve(String arxivId) {
 		// TODO: more subtle validation is required
 		if (arxivId == null)
-			throw new IllegalArgumentException("arxiv id cannot be null");
+			throw new NullPointerException("arxiv id cannot be null");
 		try {
 			String paramValue = arxivId;
 			String query = String.format("id_list=%s", URLEncoder.encode(

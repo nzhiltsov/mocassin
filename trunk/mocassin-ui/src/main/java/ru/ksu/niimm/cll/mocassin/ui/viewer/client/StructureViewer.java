@@ -4,8 +4,12 @@ import java.util.List;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.LoadEvent;
+import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Random;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -111,8 +115,18 @@ public class StructureViewer implements EntryPoint, NavigationEventHandler {
 	}
 
 	@Override
-	public void onChange(NavigationEvent event) {
-		frame.setUrl(assembleUrl(event.getCurrentUri(), event.getNumPage()));
+	public void onChange(final NavigationEvent navEvent) {
+		frame.setUrl(assembleUrl(navEvent.getCurrentUri(),
+				navEvent.getNumPage()));
+		// using Timer is a workaround to refresh the frame
+		Timer timer = new Timer() {
+			@Override
+			public void run() {
+				frame.setUrl(assembleUrl(navEvent.getCurrentUri(),
+						navEvent.getNumPage()));
+				cancel();
+			}
+		};
+		timer.schedule(3000);
 	}
-
 }

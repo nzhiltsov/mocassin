@@ -53,9 +53,10 @@ public interface VirtuosoDAO {
 	 * 
 	 * @param query
 	 * @param graph
+	 * @param isInferenceOn
 	 * @return
 	 */
-	List<QuerySolution> get(String query, RDFGraph graph);
+	List<QuerySolution> get(String query, RDFGraph graph, boolean isInferenceOn);
 
 	/**
 	 * get an RDF model that describes the resource with given URI

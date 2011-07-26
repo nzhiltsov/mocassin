@@ -22,7 +22,7 @@ public class DeleteQueryGeneratorTest extends AbstractTest {
 				.assertTrue(expression
 						.equalsIgnoreCase(String
 								.format(
-										"DELETE FROM %s {?s ?p ?o} WHERE {?s ?p ?o. FILTER (regex(?s, \"^%s\") || regex(?o, \"^%s\"))}",
+										"DELETE FROM <%s> {?s ?p ?o} WHERE {?s ?p ?o. FILTER (regex(?s, \"^%s\") || regex(?o, \"^%s\"))}",
 										getGraph().getIri(), DOCUMENT_URI,
 										DOCUMENT_URI)));
 	}

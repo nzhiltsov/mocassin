@@ -25,7 +25,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 public class QueryManagerFacadeImpl implements QueryManagerFacade {
 	private static final String RULES_SET_ENTRY = "define input:inference \"%s\"";
 	private static final String RDF_PREFIX_STRING = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>";
-	private static final String SELECT_STATEMENT = "SELECT DISTINCT %s WHERE";
+	private static final String SELECT_STATEMENT = "SELECT DISTINCT %s WHERE\n{\n";
 	private static final String RETRIEVED_CONCEPT_KEY = "?1";
 	@Inject
 	private OntologyLoader ontologyLoader;
@@ -44,7 +44,7 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 			@Named("graph.iri") String graphIri,
 			@Named("ontology.rules.set") String ontologyRuleSet) {
 		this.searchGraph = new RDFGraphImpl.Builder(graphIri)
-				.url(connectionUrl).username(username).password(password)
+				.url(connectionUrl).username(username).password(password).inferenceRulesSetName(ontologyRuleSet)
 				.build();
 		this.ontologyRulesSetName = ontologyRuleSet;
 	}
@@ -56,11 +56,11 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 	 * ru.ksu.niimm.ose.ontology.impl.QueryManager#query(com.hp.hpl.jena.ontology
 	 * .OntModel, java.lang.String)
 	 */
-	public List<Resource> query(String queryString, String retrievedResourceKey) {
+	public List<Resource> query(QueryStatement queryStatement, String retrievedResourceKey) {
 		List<Resource> resultResources = new ArrayList<Resource>();
-
+		String queryString = generateQuery(queryStatement);
 		List<QuerySolution> solutions = getVirtuosoDAO().get(queryString,
-				getSearchGraph());
+				getSearchGraph(), queryStatement.isInferenceOn());
 		for (QuerySolution solution : solutions) {
 			Resource resource = solution.getResource(retrievedResourceKey);
 			resultResources.add(resource);
@@ -77,8 +77,8 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 	 */
 	public List<OntologyResource> query(QueryStatement queryStatement) {
 		List<OntologyResource> ontologyResources = new ArrayList<OntologyResource>();
-		String queryString = generateQuery(queryStatement);
-		List<Resource> resources = query(queryString, RETRIEVED_CONCEPT_KEY);
+		
+		List<Resource> resources = query(queryStatement, RETRIEVED_CONCEPT_KEY);
 		for (Resource resource : resources) {
 			OntologyResource ontologyResource = new OntologyResource(resource
 					.getURI());
@@ -96,22 +96,13 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 	 */
 	public String generateQuery(QueryStatement queryStatement) {
 		StringBuffer sb = new StringBuffer();
-		if (queryStatement.isInferenceOn()) {
-			sb.append(String.format(RULES_SET_ENTRY, getOntologyRulesSetName()));
-			sb.append("\n");
-		}
-		sb.append(RDF_PREFIX_STRING);
-		sb.append("\n");
 		sb.append(String.format(SELECT_STATEMENT, RETRIEVED_CONCEPT_KEY));
-		sb.append("\n");
-		sb.append("{");
-		sb.append("\n");
 		List<OntologyTriple> retrievedTriples = queryStatement
 				.getRetrievedTriples();
 		for (OntologyTriple triple : retrievedTriples) {
 			OntologyElement tripleObject = triple.getObject();
 			String whereClause = "";
-			String subjectTypeString = String.format("?%d rdf:type <%s>",
+			String subjectTypeString = String.format("?%d a <%s>",
 					triple.getSubject().getId(), triple.getSubject().getUri());
 			boolean isIndividual = tripleObject instanceof OntologyIndividual;
 			boolean isLiteral = tripleObject instanceof OntologyLiteral;
@@ -138,7 +129,7 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 						subjectTypeString, getPredicateExpression(triple));
 			} else {
 				String objectTypeString = String
-						.format("?%d rdf:type <%s>",
+						.format("?%d a <%s>",
 								triple.getObject().getId(), triple.getObject()
 										.getUri());
 				String predicateString = getPredicateExpression(triple);

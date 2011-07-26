@@ -10,7 +10,7 @@ public enum StandardMetadataEnvironments {
 
 	public static boolean contains(String name) {
 		if (name == null)
-			throw new IllegalArgumentException(
+			throw new NullPointerException(
 					"a standard metadata name cannot be null");
 		for (StandardMetadataEnvironments e : StandardMetadataEnvironments
 				.values()) {

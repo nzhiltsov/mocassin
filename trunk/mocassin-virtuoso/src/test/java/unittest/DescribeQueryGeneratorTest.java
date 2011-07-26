@@ -17,7 +17,7 @@ public class DescribeQueryGeneratorTest extends AbstractTest {
 	public void testGenerate() {
 		String generatedExpression = getDescribeQueryGenerator().generate(
 				RESOURCE_URI, getGraph());
-		String expectedExpression = String.format("DESCRIBE %s FROM NAMED %s",
+		String expectedExpression = String.format("DESCRIBE %s FROM NAMED <%s>",
 				RESOURCE_URI, getGraph().getIri());
 		Assert.assertEquals(expectedExpression, generatedExpression);
 	}

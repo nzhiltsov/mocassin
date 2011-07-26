@@ -7,6 +7,7 @@ public class RDFGraphImpl implements RDFGraph {
 	private final String password;
 	private final String iri;
 	private final String url;
+	private String inferenceRulesSetName;
 
 	public static class Builder {
 		private final String iri;
@@ -14,6 +15,7 @@ public class RDFGraphImpl implements RDFGraph {
 		private String username;
 		private String password;
 		private String url;
+		private String inferenceRulesSetName;
 
 		public Builder(String iri) {
 			this.iri = iri;
@@ -34,6 +36,11 @@ public class RDFGraphImpl implements RDFGraph {
 			return this;
 		}
 
+		public Builder inferenceRulesSetName(String inferenceRulesSetName) {
+			this.inferenceRulesSetName = inferenceRulesSetName;
+			return this;
+		}
+
 		public RDFGraph build() {
 			return new RDFGraphImpl(this);
 		}
@@ -44,6 +51,7 @@ public class RDFGraphImpl implements RDFGraph {
 		this.username = builder.username;
 		this.password = builder.password;
 		this.url = builder.url;
+		this.inferenceRulesSetName = builder.inferenceRulesSetName;
 	}
 
 	public String getUsername() {
@@ -60,6 +68,10 @@ public class RDFGraphImpl implements RDFGraph {
 
 	public String getUrl() {
 		return url;
+	}
+
+	public String getInferenceRulesSetName() {
+		return inferenceRulesSetName;
 	}
 
 }

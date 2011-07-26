@@ -12,7 +12,7 @@ public enum StandardStyleEnvironments {
 
 	public static boolean contains(String name) {
 		if (name == null)
-			throw new IllegalArgumentException(
+			throw new NullPointerException(
 					"a standard style name cannot be null");
 		for (StandardStyleEnvironments e : StandardStyleEnvironments.values()) {
 			String canonicalName = name.toLowerCase();

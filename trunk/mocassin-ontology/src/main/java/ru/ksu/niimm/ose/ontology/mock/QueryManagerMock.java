@@ -30,7 +30,7 @@ public class QueryManagerMock implements QueryManagerFacade {
 	}
 
 	@Override
-	public List<Resource> query(String queryString, String retrievedResourceKey) {
+	public List<Resource> query(QueryStatement queryStatement, String retrievedResourceKey) {
 		throw new UnsupportedOperationException("this is a mock implementation");
 	}
 	
