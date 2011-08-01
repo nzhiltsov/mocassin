@@ -2,8 +2,11 @@ package unittest;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,8 +28,11 @@ import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateDocumentException;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateStorageException;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.ParsedDocumentImpl;
+import ru.ksu.niimm.cll.mocassin.nlp.impl.StructuralElementImpl.DescPositionComparator;
 import ru.ksu.niimm.cll.mocassin.nlp.util.StopWordLoader;
+import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexParserModule;
+import ru.ksu.niimm.cll.mocassin.parser.pdf.PdfParserModule;
 import unittest.LatexStructuralElementSearcherTest.UriComparator;
 
 import com.csvreader.CsvWriter;
@@ -41,7 +47,8 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 import edu.uci.ics.jung.graph.Graph;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext({ NlpModule.class, LatexParserModule.class, FullTextModule.class })
+@GuiceContext({ NlpModule.class, LatexParserModule.class,
+		PdfParserModule.class, FullTextModule.class })
 public class ReferenceSearcherTest {
 	@Inject
 	private Logger logger;
@@ -69,21 +76,32 @@ public class ReferenceSearcherTest {
 				.retrieveStructuralGraph(document);
 		Collection<Reference> edges = graph.getEdges();
 		Assert.assertTrue(edges.size() > 0);
+		ArrayList<Reference> displayEdges = new ArrayList<Reference>(edges);
+		Collections.sort(displayEdges,
+				new Comparator<Reference>() {
 
-		for (Reference ref : edges) {
-			System.out.println(graph.getSource(ref) + " -> "
-					+ graph.getDest(ref) + ": " + ref);
+					@Override
+					public int compare(Reference first, Reference second) {
+						return first.getPredictedRelation() != null
+								&& first.getPredictedRelation() == MocassinOntologyRelations.HAS_PART ? -1
+								: 1;
+					}
+
+				});
+		for (Reference ref : displayEdges) {
+			System.out.println(graph.getSource(ref).getUri() + " -> "
+					+ graph.getDest(ref).getUri() + ": " + ref.getPredictedRelation());
 		}
 
 		System.out.println("***");
 		Collection<StructuralElement> vertices = graph.getVertices();
 		StructuralElement[] verticesArray = Iterables.toArray(vertices,
 				StructuralElement.class);
-		Arrays.sort(verticesArray, new UriComparator());
+		Arrays.sort(verticesArray, new DescPositionComparator());
 		for (StructuralElement element : verticesArray) {
 			logger.log(Level.INFO, String.format("%s \"%s\" p%d s%d e%d",
 					element, element.getTitle(), element.getStartPageNumber(),
-					element.getLatexStartLine(), element.getLatexEndLine()));
+					element.getGateStartOffset(), element.getGateEndOffset()));
 		}
 	}
 

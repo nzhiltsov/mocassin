@@ -24,7 +24,7 @@ public class HasConsequenceRelationAnalyzerImpl extends
 	}
 
 	@Override
-	public synchronized void addRelations(
+	public void addRelations(
 			Graph<StructuralElement, Reference> graph, ParsedDocument document) {
 		this.graph = graph;
 

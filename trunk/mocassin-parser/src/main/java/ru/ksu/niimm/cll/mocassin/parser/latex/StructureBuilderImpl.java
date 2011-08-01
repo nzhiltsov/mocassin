@@ -53,13 +53,8 @@ class StructureBuilderImpl implements StructureBuilder {
 	 * .ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel)
 	 */
 	@Override
-	public synchronized Graph<Node, Edge> buildStructureGraph(
+	public Graph<Node, Edge> buildStructureGraph(
 			LatexDocumentModel parsedModel) {
-		/**
-		 * TODO: this method is declared synchronized; this leads to lower
-		 * performance; such a solution should be revised by considering the
-		 * overall application architecture
-		 **/
 
 		if (parsedModel == null) {
 			logger.log(Level.SEVERE,

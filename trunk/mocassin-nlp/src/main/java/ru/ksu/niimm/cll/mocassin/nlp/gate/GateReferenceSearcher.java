@@ -15,7 +15,7 @@ import ru.ksu.niimm.cll.mocassin.nlp.Token;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.NotInMathPredicate;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.ParsedDocumentImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.ReferenceImpl;
-import ru.ksu.niimm.cll.mocassin.nlp.impl.StructuralElementImpl.PositionComparator;
+import ru.ksu.niimm.cll.mocassin.nlp.impl.StructuralElementImpl.DescPositionComparator;
 import ru.ksu.niimm.cll.mocassin.nlp.util.AnnotationUtil;
 import ru.ksu.niimm.cll.mocassin.nlp.util.NlpModulePropertiesLoader;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
@@ -53,7 +53,7 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 	private ParsedDocument parsedDocument;
 
 	@Override
-	public synchronized Graph<StructuralElement, Reference> retrieveStructuralGraph(
+	public Graph<StructuralElement, Reference> retrieveStructuralGraph(
 			ParsedDocument parsedDocument) {
 		this.parsedDocument = parsedDocument;
 		String arxivId = StringUtil.arxivid2gateid(parsedDocument.getArxivId());
@@ -92,17 +92,17 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 			gateDocumentDAO.release(getDocument());
 		}
 	}
-
+	/**
+	 * TODO: now it wrongly handles 2-level containments
+	 */
 	private void addPartholeRelations() {
 		int size = structuralElements.size();
 		int refId = 0;
-		for (int i = 0; i < size; i++)
-			for (int j = i + 1; j < size
-					&& structuralElements.get(i).getGateEndOffset() >= structuralElements
-							.get(j).getGateStartOffset(); j++) {
-				if (structuralElements.get(i).getGateStartOffset() <= structuralElements
+		for (int i = 0; i < size - 1; i++)
+			for (int j = i + 1; j < size; j++) {
+				if (structuralElements.get(i).getGateStartOffset() >= structuralElements
 						.get(j).getGateStartOffset()
-						&& structuralElements.get(i).getGateEndOffset() >= structuralElements
+						&& structuralElements.get(i).getGateEndOffset() <= structuralElements
 								.get(j).getGateEndOffset()) {
 					long documentSize = getDocument().getContent().size();
 					ParsedDocument refDocument = new ParsedDocumentImpl(
@@ -113,8 +113,9 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 							.document(refDocument).build();
 					reference
 							.setPredictedRelation(MocassinOntologyRelations.HAS_PART);
-					addEdge(reference, structuralElements.get(i),
-							structuralElements.get(j));
+					addEdge(reference, structuralElements.get(j),
+							structuralElements.get(i));
+					break;
 				}
 			}
 
@@ -127,7 +128,7 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 	private void loadStructuralElements(ParsedDocument parsedDocument) {
 		List<StructuralElement> elements = getStructuralElementSearcher()
 				.retrieveElements(parsedDocument);
-		Collections.sort(elements, new PositionComparator());
+		Collections.sort(elements, new DescPositionComparator());
 		setStructuralElements(elements);
 	}
 
@@ -185,7 +186,7 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 		throw new RuntimeException("node not found: " + node);
 	}
 
-	private synchronized void addNavigationalRelations(
+	private void addNavigationalRelations(
 			Iterable<Annotation> annotations) {
 
 		for (Annotation annotation : annotations) {
