@@ -15,7 +15,7 @@ import ru.ksu.niimm.cll.mocassin.virtuoso.RDFTriple;
  */
 public class QueryBuilder {
 	private static final String DESCRIBE_EXPRESSION = "DESCRIBE %s FROM NAMED %s";
-	private static final String INSERT_EXPRESSION = "INSERT INTO GRAPH %s {%s}";
+	private static final String INSERT_EXPRESSION = "INSERT INTO GRAPH <%s> {%s}";
 	private static final String DELETE_EXPRESSION = "DELETE FROM %s {?s ?p ?o} WHERE {%s}";
 	private final QueryType type;
 	private String graphUri;
@@ -118,7 +118,7 @@ public class QueryBuilder {
 	private String buildInsertQuery() {
 		StringBuffer constructTemplate = new StringBuffer();
 		for (RDFTriple triple : getTriples()) {
-			String tripleStr = String.format("%s ", triple.getValue());
+			String tripleStr = String.format("%s\n", triple.getValue());
 			constructTemplate.append(tripleStr);
 		}
 		return String.format(INSERT_EXPRESSION, getGraphUri(),

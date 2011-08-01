@@ -38,34 +38,72 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 
-@Singleton
 public class GateDocumentDAOImpl implements GateDocumentDAO {
 
 	private static final String GATE_DOCUMENT_AFFIX = ".tex.xml";
-	private static final String GATE_BUILTIN_CREOLE_DIR_PROPERTY_KEY = "gate.builtin.creole.dir";
-	private static final String GATE_HOME_PROPERTY_KEY = "gate.home";
+	private final String GATE_BUILTIN_CREOLE_DIR_PROPERTY;
+	private final String GATE_HOME_PROPERTY;
 
-	private static final String GATE_DOCUMENT_LR_TYPE_PROPERTY_KEY = "gate.document.lr.type";
-	private static final String GATE_STORAGE_DIR_PROPERTY_KEY = "gate.storage.dir";
+	private final String GATE_DOCUMENT_LR_TYPE_PROPERTY;
+	private final String GATE_STORAGE_DIR_PROPERTY;
+	private final String ARXMLIV_MARKUP_NAME_PROPERTY;
+	private final String TITLE_ANNOTATION_NAME_PROPERTY;
+	private final String ARXMLIV_CREATOR_PROPERTY;
 
-	@Inject
-	private Logger logger;
+	private final Logger logger;
+
+	private final AnnotationUtil annotationUtil;
 
 	private boolean isInitialized = false;
 
 	private SerialDataStore dataStore;
 
 	@Inject
-	private NlpModulePropertiesLoader nlpModulePropertiesLoader;
-	@Inject
-	private AnnotationUtil annotationUtil;
+	public GateDocumentDAOImpl(
+			Logger logger,
+			AnnotationUtil annotationUtil,
+			@Named("gate.home") String gateHome,
+			@Named("gate.builtin.creole.dir") String gateBuiltinCreoleDir,
+			@Named("gate.storage.dir") String gateStorageDir,
+			@Named("gate.document.lr.type") String gateDocumentLrType,
+			@Named("arxmliv.markup.name") String arxmlivMarkupName,
+			@Named("title.annotation.name") String titleAnnotationName,
+			@Named("arxmliv.creator.annotation.name") String arxmlivCreatorAnnotationName) {
+		this.logger = logger;
+		this.annotationUtil = annotationUtil;
+		this.GATE_HOME_PROPERTY = gateHome;
+		this.GATE_BUILTIN_CREOLE_DIR_PROPERTY = gateBuiltinCreoleDir;
+		this.GATE_STORAGE_DIR_PROPERTY = gateStorageDir;
+		this.GATE_DOCUMENT_LR_TYPE_PROPERTY = gateDocumentLrType;
+		this.ARXMLIV_MARKUP_NAME_PROPERTY = arxmlivMarkupName;
+		this.TITLE_ANNOTATION_NAME_PROPERTY = titleAnnotationName;
+		this.ARXMLIV_CREATOR_PROPERTY = arxmlivCreatorAnnotationName;
+		initialize();
+	}
+
+	private void initialize() {
+		if (!isInitialized) {
+			isInitialized = true;
+			System.setProperty("gate.home", GATE_HOME_PROPERTY);
+			System.setProperty("gate.builtin.creole.dir",
+					GATE_BUILTIN_CREOLE_DIR_PROPERTY);
+			try {
+				Gate.init();
+				this.dataStore = new SerialDataStore(GATE_STORAGE_DIR_PROPERTY);
+				getDataStore().open();
+			} catch (GateException e) {
+				throw new RuntimeException(e);
+			}
+		}
+
+	}
 
 	@Override
-	public synchronized void save(String documentId, File file)
+	public void save(String documentId, File file)
 			throws AccessGateStorageException,
 			ru.ksu.niimm.cll.mocassin.nlp.gate.impl.PersistenceException {
-		initialize();
 		try {
 			Document document = Factory.newDocument(file.toURI().toURL());
 			Document persistedDocument = (Document) this.dataStore.adopt(
@@ -104,9 +142,8 @@ public class GateDocumentDAOImpl implements GateDocumentDAO {
 	}
 
 	@Override
-	public synchronized GateDocumentMetadata loadMetadata(String documentId)
+	public GateDocumentMetadata loadMetadata(String documentId)
 			throws AccessGateDocumentException, AccessGateStorageException {
-		initialize();
 		Document document = load(documentId);
 		GateDocumentMetadata metadata = extractMetadata(document);
 		release(document);
@@ -114,10 +151,9 @@ public class GateDocumentDAOImpl implements GateDocumentDAO {
 	}
 
 	@Override
-	public synchronized Document load(String documentId)
-			throws AccessGateDocumentException, AccessGateStorageException {
-		initialize();
-		List<String> documentIds = getDocumentIds();
+	public Document load(String documentId) throws AccessGateDocumentException,
+			AccessGateStorageException {
+		List<String> documentIds = getDocumentIds(true);
 		String foundDocumentId = Iterables.find(documentIds,
 				new DocumentNamePredicate(documentId), null);
 		if (foundDocumentId == null)
@@ -128,8 +164,8 @@ public class GateDocumentDAOImpl implements GateDocumentDAO {
 		features.put(DataStore.LR_ID_FEATURE_NAME, foundDocumentId);
 		Document document;
 		try {
-			document = (Document) Factory.createResource(getDocumentLrType(),
-					features);
+			document = (Document) Factory.createResource(
+					GATE_DOCUMENT_LR_TYPE_PROPERTY, features);
 		} catch (ResourceInstantiationException e) {
 			logger.log(Level.SEVERE, String.format(
 					"couldn't create resource with id='%s' caused by: %s",
@@ -140,75 +176,48 @@ public class GateDocumentDAOImpl implements GateDocumentDAO {
 	}
 
 	@Override
-	public synchronized List<String> getDocumentIds()
-			throws AccessGateDocumentException, AccessGateStorageException {
-		initialize();
+	public List<String> getDocumentIds() throws AccessGateDocumentException,
+			AccessGateStorageException {
+		return getDocumentIds(false);
+	}
 
+	private List<String> getDocumentIds(boolean isNativeName)
+			throws AccessGateDocumentException {
 		try {
-			Iterator it = getDataStore().getLrIds(getDocumentLrType())
-					.iterator();
+			Iterator it = getDataStore().getLrIds(
+					GATE_DOCUMENT_LR_TYPE_PROPERTY).iterator();
 			List<String> gateDocuments = new ArrayList<String>();
 			while (it.hasNext()) {
 				String documentLrId = (String) it.next();
-				gateDocuments.add(documentLrId);
+				gateDocuments.add(isNativeName ? documentLrId : documentLrId
+						.substring(0,
+								documentLrId.lastIndexOf(GATE_DOCUMENT_AFFIX)));
 			}
 
 			return gateDocuments;
 		} catch (PersistenceException e) {
 			logger.log(Level.SEVERE,
-					"couldn't get language resources identifiers");
+					"couldn't get language resource identifiers");
 			throw new AccessGateDocumentException(e);
 		}
 	}
 
 	@Override
-	public synchronized void release(Document document) {
+	public void release(Document document) {
 		if (document != null) {
 			Factory.deleteResource(document);
 		}
-	}
-
-	public NlpModulePropertiesLoader getNlpModulePropertiesLoader() {
-		return nlpModulePropertiesLoader;
 	}
 
 	private SerialDataStore getDataStore() {
 		return dataStore;
 	}
 
-	private void initialize() throws AccessGateStorageException {
-		if (!isInitialized) {
-			isInitialized = true;
-			System.setProperty(GATE_HOME_PROPERTY_KEY,
-					getNlpModulePropertiesLoader().get(GATE_HOME_PROPERTY_KEY));
-			System.setProperty(
-					GATE_BUILTIN_CREOLE_DIR_PROPERTY_KEY,
-					getNlpModulePropertiesLoader().get(
-							GATE_BUILTIN_CREOLE_DIR_PROPERTY_KEY));
-			try {
-				Gate.init();
-				this.dataStore = new SerialDataStore(
-						getNlpModulePropertiesLoader().get(
-								GATE_STORAGE_DIR_PROPERTY_KEY));
-				getDataStore().open();
-			} catch (GateException e) {
-				throw new AccessGateStorageException(e);
-			}
-		}
-
-	}
-
-	private String getDocumentLrType() {
-		return getNlpModulePropertiesLoader().get(
-				GATE_DOCUMENT_LR_TYPE_PROPERTY_KEY);
-	}
-
 	private GateDocumentMetadata extractMetadata(Document document)
 			throws AccessGateDocumentException {
-		AnnotationSet allTitleAnnotations = document
-				.getAnnotations(
-						getProperty(GateFormatConstants.ARXMLIV_MARKUP_NAME_PROPERTY_KEY))
-				.get(getProperty(GateFormatConstants.TITLE_ANNOTATION_NAME_PROPERTY_KEY));
+		AnnotationSet allTitleAnnotations = document.getAnnotations(
+				ARXMLIV_MARKUP_NAME_PROPERTY).get(
+				TITLE_ANNOTATION_NAME_PROPERTY);
 		String documentName = document.getName().substring(
 				0,
 				document.getName().lastIndexOf(GATE_DOCUMENT_AFFIX)
@@ -218,10 +227,8 @@ public class GateDocumentDAOImpl implements GateDocumentDAO {
 					"The document %s has the wrong metadata: title is absent",
 					documentName));
 		}
-		AnnotationSet allCreatorAnnotations = document
-				.getAnnotations(
-						getProperty(GateFormatConstants.ARXMLIV_MARKUP_NAME_PROPERTY_KEY))
-				.get(getProperty(GateFormatConstants.ARXMLIV_CREATOR_PROPERTY_KEY));
+		AnnotationSet allCreatorAnnotations = document.getAnnotations(
+				ARXMLIV_MARKUP_NAME_PROPERTY).get(ARXMLIV_CREATOR_PROPERTY);
 		if (!allCreatorAnnotations.iterator().hasNext()) {
 			throw new AccessGateDocumentException(
 					String.format(
@@ -249,10 +256,6 @@ public class GateDocumentDAOImpl implements GateDocumentDAO {
 		return new GateDocumentMetadata(documentName, title, authorNames);
 	}
 
-	private String getProperty(String key) {
-		return getNlpModulePropertiesLoader().get(key);
-	}
-
 	private static class DocumentNamePredicate implements Predicate<String> {
 		private final String key;
 
@@ -264,8 +267,7 @@ public class GateDocumentDAOImpl implements GateDocumentDAO {
 		public boolean apply(String input) {
 			if (input == null)
 				return false;
-			return key.equals(input.substring(0,
-					input.lastIndexOf(GATE_DOCUMENT_AFFIX)));
+			return input.startsWith(key);
 		}
 
 	}

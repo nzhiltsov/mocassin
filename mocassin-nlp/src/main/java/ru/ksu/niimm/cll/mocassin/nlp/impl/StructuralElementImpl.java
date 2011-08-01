@@ -182,19 +182,19 @@ public class StructuralElementImpl implements StructuralElement {
 	}
 
 	@SuppressWarnings("serial")
-	public static class PositionComparator implements Serializable,
+	public static class DescPositionComparator implements Serializable,
 			Comparator<StructuralElement> {
 
 		@Override
 		public int compare(StructuralElement first, StructuralElement second) {
 			if (first.getGateStartOffset() < second.getGateStartOffset())
-				return -1;
+				return 1;
 			if (first.getGateStartOffset() > second.getGateStartOffset())
-				return 1;
-			if (first.getGateEndOffset() < second.getGateEndOffset())
 				return -1;
-			if (first.getGateEndOffset() > second.getGateEndOffset())
+			if (first.getGateEndOffset() - first.getGateStartOffset() > second.getGateEndOffset() - second.getGateStartOffset())
 				return 1;
+			if (first.getGateEndOffset() - first.getGateStartOffset() < second.getGateEndOffset() - second.getGateStartOffset())
+				return -1;
 			return 0;
 		}
 	}

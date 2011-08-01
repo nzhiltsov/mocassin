@@ -76,7 +76,7 @@ public class LatexStructuralElementSearcherImpl implements
 	private final Node2ElementFunction node2ElementFunction = new Node2ElementFunction();
 
 	@Override
-	public synchronized Graph<StructuralElement, Reference> retrieveGraph(
+	public Graph<StructuralElement, Reference> retrieveGraph(
 			InputStream inputStream, ParsedDocument parsedDocument,
 			boolean shouldCloseStream) throws LatexSearcherParseException {
 		this.count = 0;
@@ -228,7 +228,7 @@ public class LatexStructuralElementSearcherImpl implements
 		return getParsedDocument().getPdfUri();
 	}
 
-	private synchronized ParsedDocument getParsedDocument() {
+	private ParsedDocument getParsedDocument() {
 		return parsedDocument;
 	}
 
@@ -246,7 +246,7 @@ public class LatexStructuralElementSearcherImpl implements
 		private static final int MINIMAL_TOKEN_COUNT = 4;
 
 		@Override
-		public synchronized StructuralElement apply(Node node) {
+		public StructuralElement apply(Node node) {
 			String uri = String.format("%s/s%s", getParsedDocument().getUri(),
 					node.getId());
 			StructuralElement element = new StructuralElementImpl.Builder(

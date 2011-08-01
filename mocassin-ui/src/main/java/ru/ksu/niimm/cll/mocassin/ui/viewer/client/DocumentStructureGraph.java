@@ -159,6 +159,7 @@ public class DocumentStructureGraph extends Composite implements
 				for (int i = 0; i < linkData.length; i++) {
 					Relations relType = Relations.fromCode(linkData[i]
 							.getType());
+					if (relType == null) continue;
 					if (relType != null && !filters.get(relType)) {
 						continue;
 					}

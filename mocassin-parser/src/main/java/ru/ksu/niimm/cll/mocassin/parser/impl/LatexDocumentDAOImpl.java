@@ -25,11 +25,14 @@ public class LatexDocumentDAOImpl implements LatexDocumentDAO {
 	private final Parser parser;
 
 	private final String LATEX_DOCUMENT_DIR;
+	
+	private final String PATCHED_LATEX_DOCUMENT_DIR;
 
 	@Inject
 	public LatexDocumentDAOImpl(Parser parser,
-			@Named("patched.tex.document.dir") String texDocumentDir) {
+			@Named("patched.tex.document.dir") String patchedTexDocumentDir, @Named("tex.document.dir") String texDocumentDir) {
 		this.parser = parser;
+		this.PATCHED_LATEX_DOCUMENT_DIR = patchedTexDocumentDir;
 		LATEX_DOCUMENT_DIR = texDocumentDir;
 	}
 
@@ -41,7 +44,7 @@ public class LatexDocumentDAOImpl implements LatexDocumentDAO {
 			model = parser.parse(
 					documentId,
 					new FileInputStream(String.format("%s/%s",
-							LATEX_DOCUMENT_DIR, filename)), true);
+							PATCHED_LATEX_DOCUMENT_DIR, filename)), true);
 
 		} catch (FileNotFoundException e) {
 			logger.log(

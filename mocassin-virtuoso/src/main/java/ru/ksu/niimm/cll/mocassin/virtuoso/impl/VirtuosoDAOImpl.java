@@ -166,7 +166,7 @@ public class VirtuosoDAOImpl implements VirtuosoDAO {
 
 			String message = String.format(
 					"failed to update the RDF graph='%s' due to: %s",
-					virtGraph.getGraphName(), e.getMessage());
+					virtGraph.getGraphName(), e.getCause().getMessage());
 			logger.log(Level.SEVERE, message);
 			throw new RuntimeException(message);
 		}

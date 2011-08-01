@@ -20,6 +20,7 @@ import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateStorageException;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.impl.PersistenceException;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexParserModule;
+import ru.ksu.niimm.cll.mocassin.parser.pdf.PdfParserModule;
 import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
 import ru.ksu.niimm.cll.mocassin.util.GateDocumentMetadata;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
@@ -31,7 +32,7 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext({ NlpModule.class, OntologyModule.class, VirtuosoModule.class,
-		LatexParserModule.class, FullTextModule.class })
+		LatexParserModule.class, PdfParserModule.class, FullTextModule.class })
 public class GateDocumentDAOTest {
 	@Inject
 	private Logger logger;

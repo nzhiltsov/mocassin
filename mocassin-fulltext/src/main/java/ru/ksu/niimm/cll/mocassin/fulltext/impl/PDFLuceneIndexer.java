@@ -48,7 +48,7 @@ public class PDFLuceneIndexer implements PDFIndexer {
 	}
 
 	@Override
-	public synchronized void save(String pdfDocumentUri,
+	public void save(String pdfDocumentUri,
 			InputStream pdfInputStream) throws PersistingDocumentException {
 		try {
 			initWriter();
