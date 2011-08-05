@@ -1,6 +1,5 @@
 package ru.ksu.niimm.cll.mocassin.virtuoso.impl;
 
-import java.io.FileWriter;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
