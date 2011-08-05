@@ -3,12 +3,16 @@ package ru.ksu.niimm.cll.mocassin.parser.pdf;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
-
 import ru.ksu.niimm.cll.mocassin.util.AbstractUnixCommandWrapper;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+
+/**
+ * TODO: the current bash script contains a bug: if the endLine is commented in
+ * the Latex source, ending 'shaded' entry is misplaced
+ */
 class SedBasedShadedPatcher extends AbstractUnixCommandWrapper implements
 		LatexDocumentShadedPatcher {
 	private final String PATCHED_LATEX_DIR;

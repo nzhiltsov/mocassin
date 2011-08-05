@@ -2,9 +2,11 @@ package ru.ksu.niimm.cll.mocassin.parser.impl;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -57,12 +59,12 @@ public class LatexDocumentDAOImpl implements LatexDocumentDAO {
 	}
 
 	@Override
-	public void save(String arxivId, InputStream inputStream) {
+	public void save(String arxivId, InputStream inputStream, String encoding) {
 		String filename = StringUtil.arxivid2filename(arxivId, "tex");
 		try {
-			FileWriter writer = new FileWriter(String.format("%s/%s",
-					LATEX_DOCUMENT_DIR, filename));
-			IOUtils.copy(inputStream, writer, "utf8");
+			Writer writer = new OutputStreamWriter(new FileOutputStream(String.format("%s/%s",
+					LATEX_DOCUMENT_DIR, filename)), encoding);
+			IOUtils.copy(inputStream, writer, encoding);
 			writer.flush();
 			writer.close();
 			inputStream.close();
