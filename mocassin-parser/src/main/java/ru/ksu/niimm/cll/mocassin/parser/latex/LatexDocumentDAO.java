@@ -19,5 +19,5 @@ public interface LatexDocumentDAO {
 	 * @param arxivId
 	 * @param inputStream
 	 */
-	void save(String arxivId, InputStream inputStream);
+	void save(String arxivId, InputStream inputStream, String encoding);
 }

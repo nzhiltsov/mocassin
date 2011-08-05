@@ -6,7 +6,6 @@ import java.util.Properties;
 import ru.ksu.niimm.cll.mocassin.parser.arxmliv.ArxmlivProducer;
 import ru.ksu.niimm.cll.mocassin.parser.arxmliv.impl.ArxmlivProducerImpl;
 import ru.ksu.niimm.cll.mocassin.parser.impl.LatexDocumentDAOImpl;
-import ru.ksu.niimm.cll.mocassin.parser.pdf.LatexDocumentShadedPatcher;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;

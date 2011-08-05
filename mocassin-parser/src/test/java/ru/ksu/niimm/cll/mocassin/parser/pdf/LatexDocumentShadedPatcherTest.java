@@ -8,7 +8,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexParserModule;
-import ru.ksu.niimm.cll.mocassin.parser.pdf.LatexDocumentShadedPatcher;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
 
 import com.google.inject.Inject;

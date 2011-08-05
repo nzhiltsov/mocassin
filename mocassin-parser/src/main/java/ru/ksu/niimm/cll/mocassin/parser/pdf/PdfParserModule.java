@@ -3,7 +3,6 @@ package ru.ksu.niimm.cll.mocassin.parser.pdf;
 import java.io.IOException;
 import java.util.Properties;
 
-
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
 
