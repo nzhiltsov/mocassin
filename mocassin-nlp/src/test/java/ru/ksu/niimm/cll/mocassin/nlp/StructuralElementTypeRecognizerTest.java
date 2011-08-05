@@ -1,4 +1,4 @@
-package unittest;
+package ru.ksu.niimm.cll.mocassin.nlp;
 
 import junit.framework.Assert;
 
@@ -6,25 +6,19 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ru.ksu.niimm.cll.mocassin.fulltext.FullTextModule;
-import ru.ksu.niimm.cll.mocassin.nlp.NlpModule;
-import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
-import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
-import ru.ksu.niimm.cll.mocassin.nlp.StructuralElementSearcher;
+import ru.ksu.niimm.cll.mocassin.nlp.gate.GateModule;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.ParsedDocumentImpl;
-import ru.ksu.niimm.cll.mocassin.nlp.recognizer.StructuralElementTypeRecognizer;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexParserModule;
-import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
-import ru.ksu.niimm.ose.ontology.OntologyModule;
+import ru.ksu.niimm.cll.mocassin.parser.pdf.PdfParserModule;
 
 import com.google.inject.Inject;
 import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext({ NlpModule.class, OntologyModule.class, VirtuosoModule.class,
-		LatexParserModule.class, FullTextModule.class })
+@GuiceContext({ NlpModule.class, GateModule.class,
+		LatexParserModule.class, PdfParserModule.class })
 public class StructuralElementTypeRecognizerTest {
 
 	@Inject

@@ -1,4 +1,4 @@
-package ru.ksu.niimm.cll.mocassin.nlp.gate.impl;
+package ru.ksu.niimm.cll.mocassin.nlp.gate;
 
 import gate.Corpus;
 import gate.Document;
@@ -12,18 +12,11 @@ import gate.security.SecurityException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateDocumentException;
-import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateStorageException;
-import ru.ksu.niimm.cll.mocassin.nlp.gate.AnnieControllerCreationException;
-import ru.ksu.niimm.cll.mocassin.nlp.gate.AnnieControllerProvider;
-import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
-import ru.ksu.niimm.cll.mocassin.nlp.gate.GateProcessingFacade;
-import ru.ksu.niimm.cll.mocassin.nlp.gate.ProcessException;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
 
 import com.google.inject.Inject;
 
-public class GateProcessingFacadeImpl implements GateProcessingFacade {
+class GateProcessingFacadeImpl implements GateProcessingFacade {
 	@Inject
 	private Logger logger;
 
@@ -32,7 +25,7 @@ public class GateProcessingFacadeImpl implements GateProcessingFacade {
 	private final GateDocumentDAO gateDocumentDAO;
 
 	@Inject
-	public GateProcessingFacadeImpl(
+	GateProcessingFacadeImpl(
 			AnnieControllerProvider<SerialAnalyserController> annieControllerProvider,
 			GateDocumentDAO gateDocumentDAO) {
 		this.annieControllerProvider = annieControllerProvider;

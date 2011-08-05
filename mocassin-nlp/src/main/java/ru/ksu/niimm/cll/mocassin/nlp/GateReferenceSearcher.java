@@ -1,29 +1,25 @@
-package ru.ksu.niimm.cll.mocassin.nlp.gate;
+package ru.ksu.niimm.cll.mocassin.nlp;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
-import ru.ksu.niimm.cll.mocassin.nlp.Reference;
-import ru.ksu.niimm.cll.mocassin.nlp.ReferenceSearcher;
-import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
-import ru.ksu.niimm.cll.mocassin.nlp.StructuralElementSearcher;
-import ru.ksu.niimm.cll.mocassin.nlp.Token;
-import ru.ksu.niimm.cll.mocassin.nlp.impl.NotInMathPredicate;
+import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateDocumentException;
+import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateStorageException;
+import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.ParsedDocumentImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.ReferenceImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.StructuralElementImpl.DescPositionComparator;
 import ru.ksu.niimm.cll.mocassin.nlp.util.AnnotationUtil;
-import ru.ksu.niimm.cll.mocassin.nlp.util.NlpModulePropertiesLoader;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
 import ru.ksu.niimm.cll.mocassin.parser.arxmliv.ArxmlivFormatConstants;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
 
-import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 import edu.uci.ics.jung.graph.DirectedSparseMultigraph;
 import edu.uci.ics.jung.graph.Graph;
@@ -31,16 +27,18 @@ import gate.Annotation;
 import gate.AnnotationSet;
 import gate.Document;
 
-public class GateReferenceSearcher implements ReferenceSearcher {
+class GateReferenceSearcher implements ReferenceSearcher {
+	private final String ARXMLIV_MARKUP_NAME;
+	private final String ARXMLIV_REF_ANNOTATION_NAME;
+	private final String ARXMLIV_MATH_ANNOTATION_NAME;
+
+	private final boolean USE_STEMMING;
 	@Inject
 	private Logger logger;
 	@Inject
 	private StructuralElementSearcher structuralElementSearcher;
 	@Inject
-	private NlpModulePropertiesLoader nlpModulePropertiesLoader;
-	@Inject
 	private AnnotationUtil annotationUtil;
-
 	@Inject
 	private GateDocumentDAO gateDocumentDAO;
 
@@ -51,6 +49,19 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 	private Document document;
 
 	private ParsedDocument parsedDocument;
+
+	@Inject
+	GateReferenceSearcher(
+			@Named("arxmliv.markup.name") String arxmlivMarkupName,
+			@Named("arxmliv.ref.annotation.name") String arxmlivRefAnnotationName,
+			@Named("arxmliv.math.annotation.name") String arxmlivMathAnnotationName,
+			@Named("useStemming") String useStemming) {
+		this.ARXMLIV_MARKUP_NAME = arxmlivMarkupName;
+		this.ARXMLIV_REF_ANNOTATION_NAME = arxmlivRefAnnotationName;
+		this.ARXMLIV_MATH_ANNOTATION_NAME = arxmlivMathAnnotationName;
+
+		this.USE_STEMMING = Boolean.parseBoolean(useStemming);
+	}
 
 	@Override
 	public Graph<StructuralElement, Reference> retrieveStructuralGraph(
@@ -66,13 +77,19 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 
 			addPartholeRelations();
 
-			AnnotationSet refAnnotations = document
-					.getAnnotations(
-							getProperty(GateFormatConstants.ARXMLIV_MARKUP_NAME_PROPERTY_KEY))
-					.get(getProperty(GateFormatConstants.ARXMLIV_REF_ANNOTATION_PROPERTY_KEY));
-			Iterable<Annotation> filteredRefAnnotations = Iterables.filter(
-					refAnnotations, new NotInMathPredicate(
-							getNlpModulePropertiesLoader(), getDocument()));
+			AnnotationSet refAnnotations = document.getAnnotations(
+					ARXMLIV_MARKUP_NAME).get(ARXMLIV_REF_ANNOTATION_NAME);
+			List<Annotation> filteredRefAnnotations = new ArrayList<Annotation>();
+			for (Annotation refAnnotation : refAnnotations) {
+				AnnotationSet coveringMathAnnotations = getDocument()
+						.getAnnotations(ARXMLIV_MARKUP_NAME).getCovering(
+								ARXMLIV_MATH_ANNOTATION_NAME,
+								refAnnotation.getStartNode().getOffset(),
+								refAnnotation.getEndNode().getOffset());
+				if (coveringMathAnnotations.isEmpty()) {
+					filteredRefAnnotations.add(refAnnotation);
+				}
+			}
 
 			addNavigationalRelations(filteredRefAnnotations);
 
@@ -92,6 +109,7 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 			gateDocumentDAO.release(getDocument());
 		}
 	}
+
 	/**
 	 * TODO: now it wrongly handles 2-level containments
 	 */
@@ -136,14 +154,6 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 		return structuralElementSearcher;
 	}
 
-	public String getProperty(String key) {
-		return getNlpModulePropertiesLoader().get(key);
-	}
-
-	public NlpModulePropertiesLoader getNlpModulePropertiesLoader() {
-		return nlpModulePropertiesLoader;
-	}
-
 	public Document getDocument() {
 		return document;
 	}
@@ -159,7 +169,7 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 	public List<Token> getTokensForAnnotation(Document document,
 			Annotation annotation) {
 		return getAnnotationUtil().getTokensForAnnotation(document, annotation,
-				getNlpModulePropertiesLoader().useStemming());
+				USE_STEMMING);
 	}
 
 	private void addEdge(Reference edge, final StructuralElement from,
@@ -186,8 +196,7 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 		throw new RuntimeException("node not found: " + node);
 	}
 
-	private void addNavigationalRelations(
-			Iterable<Annotation> annotations) {
+	private void addNavigationalRelations(Iterable<Annotation> annotations) {
 
 		for (Annotation annotation : annotations) {
 			int id = annotation.getId();
@@ -197,7 +206,8 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 			StructuralElement from = getEnclosingElement(annotation);
 			if (to == null || from == null)
 				continue;
-			Annotation enclosingSentence = getEnclosingSentence(annotation);
+			Annotation enclosingSentence = getAnnotationUtil()
+					.getEnclosingSentence(getDocument(), annotation);
 			List<Token> sentenceTokens = getTokensForAnnotation(getDocument(),
 					enclosingSentence);
 			long documentSize = getDocument().getContent().size();
@@ -213,42 +223,6 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 			reference.setSentenceTokens(sentenceTokens);
 			addEdge(reference, from, to);
 		}
-	}
-
-	private Annotation getEnclosingSentence(Annotation annotation) {
-		AnnotationSet sentenceSet = getDocument()
-				.getAnnotations(GateFormatConstants.DEFAULT_ANNOTATION_SET_NAME)
-				.getCovering(
-						getProperty(GateFormatConstants.SENTENCE_ANNOTATION_NAME_PROPERTY_KEY),
-						annotation.getStartNode().getOffset(),
-						annotation.getEndNode().getOffset());
-		if (sentenceSet.size() == 0) {
-			AnnotationSet allSentences = getDocument()
-					.getAnnotations(
-							GateFormatConstants.DEFAULT_ANNOTATION_SET_NAME)
-					.get(getProperty(GateFormatConstants.SENTENCE_ANNOTATION_NAME_PROPERTY_KEY));
-			long distance = Long.MAX_VALUE;
-			Annotation closestSentence = null;
-			for (Annotation sentence : allSentences) {
-				long endDistance = Math.abs(sentence.getEndNode().getOffset()
-						- annotation.getStartNode().getOffset());
-				long startDistance = Math.abs(sentence.getStartNode()
-						.getOffset() - annotation.getStartNode().getOffset());
-				long minDistance = Math.min(endDistance, startDistance);
-				if (minDistance < distance) {
-					closestSentence = sentence;
-					distance = minDistance;
-				}
-			}
-			if (closestSentence == null) {
-				throw new RuntimeException(String.format(
-						"couldn't locate sentence for annotation with id='%s'",
-						annotation.getId()));
-			} else {
-				return closestSentence;
-			}
-		}
-		return sentenceSet.iterator().next();
 	}
 
 	private StructuralElement getEnclosingElement(Annotation annotation) {

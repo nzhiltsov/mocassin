@@ -1,6 +1,5 @@
-package ru.ksu.niimm.cll.mocassin.nlp.recognizer.impl;
+package ru.ksu.niimm.cll.mocassin.nlp;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
@@ -8,23 +7,21 @@ import java.util.SortedMap;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 
-import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
-import ru.ksu.niimm.cll.mocassin.nlp.recognizer.StructuralElementTypeRecognizer;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.util.StringSimilarityEvaluator;
 import ru.ksu.niimm.cll.mocassin.util.StringSimilarityEvaluator.SimilarityMetrics;
 
-public class StructuralElementTypeRecognizerImpl implements
+class StructuralElementTypeRecognizerImpl implements
 		StructuralElementTypeRecognizer {
 	/**
 	 * threshold for checking prediction
 	 */
 	private float threshold = 0.501f;
 
-	private Set<String> structuralElementTypes;
+	private Set<String> structuralElementTypes = MocassinOntologyClasses
+			.toSet();
 
-	public StructuralElementTypeRecognizerImpl() throws IOException {
-		this.structuralElementTypes = MocassinOntologyClasses.toSet();
+	StructuralElementTypeRecognizerImpl() {
 	}
 
 	@Override
@@ -37,8 +34,8 @@ public class StructuralElementTypeRecognizerImpl implements
 
 		String name = structuralElement.getTitle() == null
 				|| structuralElement.getTitle().length() == 0 ? structuralElement
-				.getName()
-				: new StringTokenizer(structuralElement.getTitle()).nextToken();
+				.getName() : new StringTokenizer(structuralElement.getTitle())
+				.nextToken();
 		SortedMap<String, Float> similarityVector = computeSimilarityVector(name);
 		float maxValue = Float.NEGATIVE_INFINITY;
 		String maxName = null;
