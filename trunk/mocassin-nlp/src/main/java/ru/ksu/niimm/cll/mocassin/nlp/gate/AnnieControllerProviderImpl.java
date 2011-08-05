@@ -1,4 +1,4 @@
-package ru.ksu.niimm.cll.mocassin.nlp.gate.impl;
+package ru.ksu.niimm.cll.mocassin.nlp.gate;
 
 import gate.Gate;
 import gate.creole.ANNIEConstants;
@@ -6,9 +6,6 @@ import gate.creole.SerialAnalyserController;
 import gate.util.persistence.PersistenceManager;
 
 import java.io.File;
-
-import ru.ksu.niimm.cll.mocassin.nlp.gate.AnnieControllerCreationException;
-import ru.ksu.niimm.cll.mocassin.nlp.gate.AnnieControllerProvider;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;

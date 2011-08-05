@@ -1,4 +1,4 @@
-package unittest;
+package ru.ksu.niimm.cll.mocassin.nlp;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -17,23 +17,16 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ru.ksu.niimm.cll.mocassin.fulltext.FullTextModule;
-import ru.ksu.niimm.cll.mocassin.nlp.NlpModule;
-import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
-import ru.ksu.niimm.cll.mocassin.nlp.Reference;
-import ru.ksu.niimm.cll.mocassin.nlp.ReferenceSearcher;
-import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
-import ru.ksu.niimm.cll.mocassin.nlp.Token;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateDocumentException;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateStorageException;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
+import ru.ksu.niimm.cll.mocassin.nlp.gate.GateModule;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.ParsedDocumentImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.StructuralElementImpl.DescPositionComparator;
 import ru.ksu.niimm.cll.mocassin.nlp.util.StopWordLoader;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.parser.pdf.PdfParserModule;
-import unittest.LatexStructuralElementSearcherTest.UriComparator;
 
 import com.csvreader.CsvWriter;
 import com.google.common.collect.HashMultiset;
@@ -47,8 +40,8 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 import edu.uci.ics.jung.graph.Graph;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext({ NlpModule.class, LatexParserModule.class,
-		PdfParserModule.class, FullTextModule.class })
+@GuiceContext({ NlpModule.class, GateModule.class, LatexParserModule.class,
+		PdfParserModule.class})
 public class ReferenceSearcherTest {
 	@Inject
 	private Logger logger;

@@ -1,4 +1,4 @@
-package ru.ksu.niimm.cll.mocassin.nlp.gate.impl;
+package ru.ksu.niimm.cll.mocassin.nlp.gate;
 
 @SuppressWarnings("serial")
 public class PersistenceException extends Exception {

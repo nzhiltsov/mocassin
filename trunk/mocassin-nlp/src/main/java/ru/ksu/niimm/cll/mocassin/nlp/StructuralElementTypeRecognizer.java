@@ -1,6 +1,5 @@
-package ru.ksu.niimm.cll.mocassin.nlp.recognizer;
+package ru.ksu.niimm.cll.mocassin.nlp;
 
-import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
 
 public interface StructuralElementTypeRecognizer {

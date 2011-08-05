@@ -1,4 +1,4 @@
-package ru.ksu.niimm.cll.mocassin.nlp.gate;
+package ru.ksu.niimm.cll.mocassin.nlp;
 
 import edu.uci.ics.jung.graph.Graph;
 import gate.Annotation;
@@ -15,24 +15,20 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
-import ru.ksu.niimm.cll.mocassin.nlp.Reference;
-import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
-import ru.ksu.niimm.cll.mocassin.nlp.StructuralElementSearcher;
+import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateDocumentException;
+import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateStorageException;
+import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.StructuralElementByLocationComparator;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.StructuralElementImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.StructuralElementImpl.IdPredicate;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.StructuralElementImpl.TypeFilterPredicate;
-import ru.ksu.niimm.cll.mocassin.nlp.recognizer.StructuralElementTypeRecognizer;
 import ru.ksu.niimm.cll.mocassin.nlp.util.AnnotationUtil;
-import ru.ksu.niimm.cll.mocassin.nlp.util.NlpModulePropertiesLoader;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.parser.arxmliv.ArxmlivFormatConstants;
 import ru.ksu.niimm.cll.mocassin.parser.arxmliv.ArxmlivStructureElementTypes;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentDAO;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
 import ru.ksu.niimm.cll.mocassin.parser.latex.Node;
-import ru.ksu.niimm.cll.mocassin.parser.latex.PdfReferenceEntry;
 import ru.ksu.niimm.cll.mocassin.parser.latex.StructureBuilder;
 import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
@@ -43,12 +39,13 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
-public class GateStructuralElementSearcher implements StructuralElementSearcher {
+class GateStructuralElementSearcher implements StructuralElementSearcher {
+	private final String ARXMLIV_MARKUP_NAME;
+	private final String TITLE_ANNOTATION_NAME;
 	@Inject
 	private Logger logger;
-	@Inject
-	private NlpModulePropertiesLoader nlpModulePropertiesLoader;
 	@Inject
 	private AnnotationUtil annotationUtil;
 	@Inject
@@ -70,6 +67,14 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 	private LatexDocumentModel latexDocumentModel;
 	private Collection<Node> latexNodes;
 
+	@Inject
+	GateStructuralElementSearcher(
+			@Named("arxmliv.markup.name") String arxmlivMarkupName,
+			@Named("title.annotation.name") String titleAnnotationName) {
+		this.ARXMLIV_MARKUP_NAME = arxmlivMarkupName;
+		this.TITLE_ANNOTATION_NAME = titleAnnotationName;
+	}
+
 	@Override
 	public List<StructuralElement> retrieveElements(
 			ParsedDocument parsedDocument) {
@@ -83,10 +88,8 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 			latexNodes = structureBuilder.buildStructureGraph(
 					latexDocumentModel).getVertices();
 
-			setStructuralAnnotations(gateDocument
-					.getAnnotations(
-							getProperty(GateFormatConstants.ARXMLIV_MARKUP_NAME_PROPERTY_KEY))
-					.get(NAME_SET));
+			setStructuralAnnotations(gateDocument.getAnnotations(
+					ARXMLIV_MARKUP_NAME).get(NAME_SET));
 
 			Function<Annotation, StructuralElement> extractFunction = new ExtractionFunction(
 					gateDocument);
@@ -168,14 +171,6 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 		return structuralElementTypeRecognizer;
 	}
 
-	public String getProperty(String key) {
-		return getNlpModulePropertiesLoader().get(key);
-	}
-
-	public NlpModulePropertiesLoader getNlpModulePropertiesLoader() {
-		return nlpModulePropertiesLoader;
-	}
-
 	public AnnotationUtil getAnnotationUtil() {
 		return annotationUtil;
 	}
@@ -188,10 +183,6 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 			Annotation annotation) {
 		return getAnnotationUtil().getTextContentsForAnnotation(document,
 				annotation);
-	}
-
-	public String getPdfUri() {
-		return parsedDocument.getPdfUri();
 	}
 
 	public String[] getPureTokensForAnnotation(Document document,
@@ -269,9 +260,8 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 			List<String> labels = collectLabels(annotation);
 
 			AnnotationSet titleSet = getDocument()
-					.getAnnotations(
-							getProperty(GateFormatConstants.ARXMLIV_MARKUP_NAME_PROPERTY_KEY))
-					.get(getProperty(GateFormatConstants.TITLE_ANNOTATION_NAME_PROPERTY_KEY))
+					.getAnnotations(ARXMLIV_MARKUP_NAME)
+					.get(TITLE_ANNOTATION_NAME)
 
 					.getContained(annotation.getStartNode().getOffset(),
 							annotation.getEndNode().getOffset());
@@ -314,11 +304,10 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 		 */
 		private List<String> collectLabels(Annotation annotation) {
 			List<String> labels = extractLabels(annotation);
-			AnnotationSet containedElementSet = getDocument()
-					.getAnnotations(
-							getProperty(GateFormatConstants.ARXMLIV_MARKUP_NAME_PROPERTY_KEY))
-					.getContained(annotation.getStartNode().getOffset(),
-							annotation.getEndNode().getOffset());
+			AnnotationSet containedElementSet = getDocument().getAnnotations(
+					ARXMLIV_MARKUP_NAME).getContained(
+					annotation.getStartNode().getOffset(),
+					annotation.getEndNode().getOffset());
 			ImmutableSet<Annotation> containedAxiliaryElements = Sets
 					.difference(containedElementSet, getStructuralAnnotations())
 					.immutableCopy();

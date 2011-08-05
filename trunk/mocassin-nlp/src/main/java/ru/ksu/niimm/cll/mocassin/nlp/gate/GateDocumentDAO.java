@@ -6,7 +6,6 @@ import gate.util.GateException;
 import java.io.File;
 import java.util.List;
 
-import ru.ksu.niimm.cll.mocassin.nlp.gate.impl.PersistenceException;
 import ru.ksu.niimm.cll.mocassin.util.GateDocumentMetadata;
 
 public interface GateDocumentDAO {
@@ -17,7 +16,7 @@ public interface GateDocumentDAO {
 	 * @param file
 	 * @throws PersistenceException
 	 */
-	void save(String documentId, File file) throws AccessGateStorageException, PersistenceException;
+	void save(String documentId, File file, String encoding) throws AccessGateStorageException, PersistenceException;
 
 	/**
 	 * returns identifiers of all the documents from given corpus (see
@@ -44,7 +43,7 @@ public interface GateDocumentDAO {
 
 	/**
 	 * releases resources connected with given document. <br/>
-	 * If the document is null, nothing will be done
+	 * If the document is null, the method does nothing
 	 * 
 	 * @param document
 	 */

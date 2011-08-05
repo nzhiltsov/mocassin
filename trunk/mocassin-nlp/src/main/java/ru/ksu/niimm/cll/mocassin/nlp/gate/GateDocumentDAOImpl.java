@@ -1,4 +1,4 @@
-package ru.ksu.niimm.cll.mocassin.nlp.gate.impl;
+package ru.ksu.niimm.cll.mocassin.nlp.gate;
 
 import gate.Annotation;
 import gate.AnnotationSet;
@@ -25,22 +25,16 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateDocumentException;
-import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateStorageException;
-import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
-import ru.ksu.niimm.cll.mocassin.nlp.gate.GateFormatConstants;
 import ru.ksu.niimm.cll.mocassin.nlp.util.AnnotationUtil;
-import ru.ksu.niimm.cll.mocassin.nlp.util.NlpModulePropertiesLoader;
 import ru.ksu.niimm.cll.mocassin.util.GateDocumentMetadata;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
-public class GateDocumentDAOImpl implements GateDocumentDAO {
+class GateDocumentDAOImpl implements GateDocumentDAO {
 
 	private static final String GATE_DOCUMENT_AFFIX = ".tex.xml";
 	private final String GATE_BUILTIN_CREOLE_DIR_PROPERTY;
@@ -56,12 +50,10 @@ public class GateDocumentDAOImpl implements GateDocumentDAO {
 
 	private final AnnotationUtil annotationUtil;
 
-	private boolean isInitialized = false;
-
 	private SerialDataStore dataStore;
 
 	@Inject
-	public GateDocumentDAOImpl(
+	GateDocumentDAOImpl(
 			Logger logger,
 			AnnotationUtil annotationUtil,
 			@Named("gate.home") String gateHome,
@@ -84,28 +76,26 @@ public class GateDocumentDAOImpl implements GateDocumentDAO {
 	}
 
 	private void initialize() {
-		if (!isInitialized) {
-			isInitialized = true;
-			System.setProperty("gate.home", GATE_HOME_PROPERTY);
-			System.setProperty("gate.builtin.creole.dir",
-					GATE_BUILTIN_CREOLE_DIR_PROPERTY);
-			try {
-				Gate.init();
-				this.dataStore = new SerialDataStore(GATE_STORAGE_DIR_PROPERTY);
-				getDataStore().open();
-			} catch (GateException e) {
-				throw new RuntimeException(e);
-			}
+		System.setProperty("gate.home", GATE_HOME_PROPERTY);
+		System.setProperty("gate.builtin.creole.dir",
+				GATE_BUILTIN_CREOLE_DIR_PROPERTY);
+		try {
+			Gate.init();
+			this.dataStore = new SerialDataStore(GATE_STORAGE_DIR_PROPERTY);
+			getDataStore().open();
+		} catch (GateException e) {
+			throw new RuntimeException(e);
 		}
 
 	}
 
 	@Override
-	public void save(String documentId, File file)
+	public void save(String documentId, File file, String encoding)
 			throws AccessGateStorageException,
-			ru.ksu.niimm.cll.mocassin.nlp.gate.impl.PersistenceException {
+			ru.ksu.niimm.cll.mocassin.nlp.gate.PersistenceException {
 		try {
-			Document document = Factory.newDocument(file.toURI().toURL());
+			Document document = Factory.newDocument(file.toURI().toURL(),
+					encoding);
 			Document persistedDocument = (Document) this.dataStore.adopt(
 					document, null);
 			persistedDocument.setName(StringUtil.arxivid2filename(documentId,
@@ -116,7 +106,7 @@ public class GateDocumentDAOImpl implements GateDocumentDAO {
 					"failed to create a GATE document for the file='%s'",
 					file.getAbsolutePath());
 			logger.log(Level.SEVERE, message);
-			throw new ru.ksu.niimm.cll.mocassin.nlp.gate.impl.PersistenceException(
+			throw new ru.ksu.niimm.cll.mocassin.nlp.gate.PersistenceException(
 					message);
 		} catch (MalformedURLException e) {
 			String message = String
@@ -129,14 +119,14 @@ public class GateDocumentDAOImpl implements GateDocumentDAO {
 					"failed to save a GATE document for the file='%s'",
 					file.getAbsolutePath());
 			logger.log(Level.SEVERE, message);
-			throw new ru.ksu.niimm.cll.mocassin.nlp.gate.impl.PersistenceException(
+			throw new ru.ksu.niimm.cll.mocassin.nlp.gate.PersistenceException(
 					message);
 		} catch (SecurityException e) {
 			String message = String
 					.format("failed to save a GATE document for the file='%s' due to security reasons",
 							file.getAbsolutePath());
 			logger.log(Level.SEVERE, message);
-			throw new ru.ksu.niimm.cll.mocassin.nlp.gate.impl.PersistenceException(
+			throw new ru.ksu.niimm.cll.mocassin.nlp.gate.PersistenceException(
 					message);
 		}
 	}
@@ -239,7 +229,7 @@ public class GateDocumentDAOImpl implements GateDocumentDAO {
 				allTitleAnnotations);
 		Collections.sort(titleList, new OffsetComparator());
 		Annotation titleAnnotation = titleList.iterator().next();
-		String[] strTokens = annotationUtil.getTokenWithMathAnnotation(
+		String[] strTokens = annotationUtil.getTokensWithMathAnnotation(
 				document, titleAnnotation);
 		String title = StringUtil.asString(strTokens);
 
