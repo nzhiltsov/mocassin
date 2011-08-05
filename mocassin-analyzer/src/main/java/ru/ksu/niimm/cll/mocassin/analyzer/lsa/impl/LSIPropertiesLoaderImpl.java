@@ -6,7 +6,6 @@ import java.net.URL;
 import java.util.Properties;
 
 import ru.ksu.niimm.cll.mocassin.analyzer.lsa.LSIPropertiesLoader;
-import ru.ksu.niimm.cll.mocassin.nlp.util.impl.NlpModulePropertiesLoaderImpl;
 
 public class LSIPropertiesLoaderImpl implements LSIPropertiesLoader {
 	private static final String REGULARIZATION_PARAMETER_NAME = "regularization";
@@ -80,8 +79,7 @@ public class LSIPropertiesLoaderImpl implements LSIPropertiesLoader {
 
 	private Properties loadProperties() throws IOException {
 		Properties properties = new Properties();
-		ClassLoader loader = NlpModulePropertiesLoaderImpl.class
-				.getClassLoader();
+		ClassLoader loader = LSIPropertiesLoaderImpl.class.getClassLoader();
 		URL url = loader.getResource(PROPERTIES_FILENAME);
 		InputStream stream = url.openStream();
 		try {
