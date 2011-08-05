@@ -7,7 +7,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
-import ru.ksu.niimm.cll.mocassin.nlp.recognizer.StructuralElementTypeRecognizer;
+import ru.ksu.niimm.cll.mocassin.nlp.StructuralElementTypeRecognizer;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
 import unittest.info.PredictedPairInfo;
 
