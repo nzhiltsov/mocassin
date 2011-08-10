@@ -4,6 +4,7 @@ import ru.ksu.niimm.cll.mocassin.analyzer.AnalyzerModule;
 import ru.ksu.niimm.cll.mocassin.arxiv.ArxivModule;
 import ru.ksu.niimm.cll.mocassin.fulltext.FullTextModule;
 import ru.ksu.niimm.cll.mocassin.nlp.NlpModule;
+import ru.ksu.niimm.cll.mocassin.nlp.gate.GateModule;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.parser.pdf.PdfParserModule;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
@@ -24,12 +25,12 @@ public class MocassinUIContextListener extends GuiceServletContextListener {
 	private Injector forProduction() {
 		return Guice.createInjector(new MocassinUIModule(),
 				new OntologyModule(), new VirtuosoModule(), new ArxivModule(),
-				new NlpModule(), new LatexParserModule(), new FullTextModule(), new AnalyzerModule(), new PdfParserModule());
+				new NlpModule(), new GateModule(), new LatexParserModule(), new FullTextModule(), new AnalyzerModule(), new PdfParserModule());
 	}
 
 	private Injector forMock() {
 		return Guice.createInjector(new OntologyModuleMock(),
-				new MocassinUIModule(), new ArxivModule(), new NlpModule(),
+				new MocassinUIModule(), new ArxivModule(), new NlpModule(), new GateModule(),
 				new LatexParserModule(), new FullTextModule(), new AnalyzerModule(), new PdfParserModule());
 	}
 

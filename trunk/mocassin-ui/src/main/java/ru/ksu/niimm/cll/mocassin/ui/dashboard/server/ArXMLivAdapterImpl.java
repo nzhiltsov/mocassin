@@ -119,7 +119,7 @@ public class ArXMLivAdapterImpl implements ArXMLivAdapter {
 			metadata.setArxivId(arxivId);
 			// Step 2
 			InputStream latexSourceStream = arxivDAOFacade.loadSource(metadata);
-			latexDocumentDAO.save(arxivId, latexSourceStream);
+			latexDocumentDAO.save(arxivId, latexSourceStream, "utf8");
 			// Step 3 & partial Step 7
 			latexDocumentHeaderPatcher.patch(arxivId);
 			pdflatexWrapper.compilePatched(arxivId);
@@ -127,7 +127,7 @@ public class ArXMLivAdapterImpl implements ArXMLivAdapter {
 			// Step 4
 			String arxmlivFilePath = arxmlivProducer.produce(arxivId);
 			// Step 5
-			gateDocumentDAO.save(arxivId, new File(arxmlivFilePath));
+			gateDocumentDAO.save(arxivId, new File(arxmlivFilePath), "utf8");
 			gateProcessingFacade.process(arxivId);
 			// Step 6
 			Graph<StructuralElement, Reference> graph = extractStructuralElements(metadata);
