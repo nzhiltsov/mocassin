@@ -107,7 +107,9 @@ public class VirtuosoDAOImpl implements VirtuosoDAO {
 		VirtGraph virtGraph = new VirtGraph(graph.getUrl(),
 				graph.getUsername(), graph.getPassword());
 		Query jenaQuery = QueryFactory.create(query);
-		jenaQuery.addGraphURI("http://cll.niimm.ksu.ru/mocassintest");
+		if (!query.contains("bif:contains")) {// TODO: workaround for Virtuoso's bug with full-text indexes
+			jenaQuery.addGraphURI("http://cll.niimm.ksu.ru/mocassintest");
+		}
 		String resultQuery;
 		if (isInferenceOn) {
 			String inferenceEntry = String.format(RULES_SET_ENTRY, graph.getInferenceRulesSetName());
