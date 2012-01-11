@@ -1,9 +1,11 @@
 #labels Featured
 =Information about release dates=
-Planned date for 1.0.0.1 version milestone: 25.01.2010. This milestone has no application build.
+The planned date for 1.0.0.1 version milestone: 25.01.2010. This milestone has no application build.
 
-Planned date for 1.0.0.2 version milestone: 14.02.2010. This milestone has no application build.
+The planned date for 1.0.0.2 version milestone: 14.02.2010. This milestone has no application build.
 
 1.0.0.3 version (ESWC'10 milestone): 20.02.2010. See [http://cll.niimm.ksu.ru:8080/artifactory/libs-releases-local/ru/ksu/niimm/cll/mocassin/mocassin-ui/1.0.0.3/mocassin-ui-1.0.0.3.war WAR application build].
 
 1.0.0.5 version (WIMS'11 milestone): 8.06.2011. See '[http://code.google.com/p/mocassin/downloads/list Downloads]' section.
+
+The planned date for 1.0.0.6 version (TEL'12 milestone): 23.01.2012.
