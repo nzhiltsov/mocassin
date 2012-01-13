@@ -1,6 +1,9 @@
 package ru.ksu.niimm.cll.mocassin.ui.dashboard.server;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.Before;
@@ -12,10 +15,12 @@ import ru.ksu.niimm.cll.mocassin.analyzer.AnalyzerModule;
 import ru.ksu.niimm.cll.mocassin.arxiv.ArxivModule;
 import ru.ksu.niimm.cll.mocassin.fulltext.FullTextModule;
 import ru.ksu.niimm.cll.mocassin.nlp.NlpModule;
+import ru.ksu.niimm.cll.mocassin.nlp.gate.GateModule;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.parser.pdf.PdfParserModule;
 import ru.ksu.niimm.cll.mocassin.ui.server.MocassinUIModule;
-import ru.ksu.niimm.cll.mocassin.util.IOUtils;
+import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
+import ru.ksu.niimm.cll.mocassin.util.IOUtil;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
 import ru.ksu.niimm.ose.ontology.OntologyModule;
 
@@ -26,8 +31,8 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext({ MocassinUIModule.class, OntologyModule.class,
 		VirtuosoModule.class, ArxivModule.class, NlpModule.class,
-		LatexParserModule.class, PdfParserModule.class, FullTextModule.class, AnalyzerModule.class })
-@Ignore("disabled because of interference with the main index")
+		LatexParserModule.class, PdfParserModule.class, FullTextModule.class,
+		AnalyzerModule.class, GateModule.class })
 public class ArXMLivAdapterTest {
 	@Inject
 	private ArXMLivAdapter arXMLivAdapter;
@@ -36,13 +41,15 @@ public class ArXMLivAdapterTest {
 
 	@Before
 	public void init() throws IOException {
-		this.ids = IOUtils.readLineSet(this.getClass().getClassLoader()
-				.getResourceAsStream("arxiv_ids_list.txt"));
+		this.ids = IOUtil.readLineSet(this.getClass().getClassLoader()
+				.getResourceAsStream("mathnet_ids_list.txt"));
 	}
 
 	@Test
 	public void testHandle() {
-		int number = arXMLivAdapter.handle(ids);
+		List sample = CollectionUtil
+				.sampleRandomSublist(new ArrayList(ids), 10);
+		int number = arXMLivAdapter.handle(new HashSet(sample));
 		System.out.println(number
 				+ " document(s) have been processed successfully");
 	}

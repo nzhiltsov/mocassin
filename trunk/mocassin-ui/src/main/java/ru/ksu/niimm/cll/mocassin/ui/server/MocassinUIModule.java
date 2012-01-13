@@ -4,8 +4,9 @@ import ru.ksu.niimm.cll.mocassin.ui.client.OntologyService;
 import ru.ksu.niimm.cll.mocassin.ui.client.QueryService;
 import ru.ksu.niimm.cll.mocassin.ui.dashboard.client.ArxivService;
 import ru.ksu.niimm.cll.mocassin.ui.dashboard.server.ArXMLivAdapter;
-import ru.ksu.niimm.cll.mocassin.ui.dashboard.server.ArXMLivAdapterImpl;
+import ru.ksu.niimm.cll.mocassin.ui.dashboard.server.ArxivAdapter;
 import ru.ksu.niimm.cll.mocassin.ui.dashboard.server.ArXMLivAdapterService;
+import ru.ksu.niimm.cll.mocassin.ui.dashboard.server.MathnetAdapter;
 import ru.ksu.niimm.cll.mocassin.ui.dashboard.server.UploadArxivListServlet;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.ViewerService;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.server.ViewerServiceImpl;
@@ -28,6 +29,6 @@ public class MocassinUIModule extends ServletModule {
 		bind(ViewerService.class).to(ViewerServiceImpl.class);
 		bind(OntologyElementConverter.class).to(
 				OntologyElementConverterImpl.class);
-		bind(ArXMLivAdapter.class).to(ArXMLivAdapterImpl.class);
+		bind(ArXMLivAdapter.class).to(MathnetAdapter.class);
 	}
 }
