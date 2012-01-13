@@ -48,8 +48,10 @@ public class ArxivMetadataUtil {
 					RDFS_TYPE, ATOM_RDF_SCHEMA));
 			triples.add(createTriple("%s <%s/linkType> \"%s\" .", linkNode,
 					ATOM_RDF_SCHEMA, link.getType()));
-			triples.add(createTriple("%s <%s/linkHref> <%s> .", linkNode,
-					ATOM_RDF_SCHEMA, link.getHref()));
+			if (link.getHref() != null && link.getHref().length() > 0) {
+				triples.add(createTriple("%s <%s/linkHref> <%s> .", linkNode,
+						ATOM_RDF_SCHEMA, link.getHref()));
+			}
 		}
 	}
 
