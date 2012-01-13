@@ -1,5 +1,6 @@
 package ru.ksu.niimm.cll.mocassin.arxiv;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ru.ksu.niimm.cll.mocassin.arxiv.impl.Link;
@@ -21,11 +22,11 @@ public class ArticleMetadata {
 	 */
 	private String id;
 
-	private List<Link> links;
+	private List<Link> links = new ArrayList<Link>();
 
 	private String title;
 
-	private List<Author> authors;
+	private List<Author> authors = new ArrayList<Author>();
 
 	private String currentSegmentUri;
 
