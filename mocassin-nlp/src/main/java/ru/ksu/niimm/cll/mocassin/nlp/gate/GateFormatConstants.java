@@ -10,7 +10,6 @@ public class GateFormatConstants {
 	public static final String ARXMLIV_MATH_ANNOTATION_PROPERTY_KEY = "arxmliv.math.annotation.name";
 	public static final String ARXMLIV_DOCUMENT_ANNOTATION_PROPERTY_KEY = "arxmliv.document.annotation.name";
 	public static final String ARXMLIV_REF_ANNOTATION_PROPERTY_KEY = "arxmliv.ref.annotation.name";
-	public static final String ARXMLIV_MATH_TEX_PROPERTY_KEY = "arxmliv.math.tex.annotation.name";
 	public static final String ARXMLIV_CREATOR_PROPERTY_KEY = "arxmliv.creator.annotation.name";
 
 	public static final String DEFAULT_ANNOTATION_SET_NAME = "";
