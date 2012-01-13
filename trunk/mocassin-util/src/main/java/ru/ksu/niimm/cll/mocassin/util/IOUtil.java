@@ -1,14 +1,16 @@
 package ru.ksu.niimm.cll.mocassin.util;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
-public class IOUtils {
-	private IOUtils() {
+public class IOUtil {
+	private IOUtil() {
 	}
 
 	/**
@@ -33,5 +35,23 @@ public class IOUtils {
 			stream.close();
 		}
 
+	}
+
+	public static String readContents(URL url) throws IOException {
+		InputStream inputStream = url.openStream();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(
+				inputStream));
+		StringBuffer contentsBuffer = new StringBuffer();
+		try {
+			String value;
+			while ((value = reader.readLine()) != null) {
+				contentsBuffer.append(value);
+				contentsBuffer.append("\n");
+			}
+		} finally {
+			reader.close();
+			inputStream.close();
+		}
+		return contentsBuffer.toString();
 	}
 }
