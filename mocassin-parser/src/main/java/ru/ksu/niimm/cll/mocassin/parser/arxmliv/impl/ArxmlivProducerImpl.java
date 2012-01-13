@@ -1,5 +1,6 @@
 package ru.ksu.niimm.cll.mocassin.parser.arxmliv.impl;
 
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,7 +27,7 @@ public class ArxmlivProducerImpl extends AbstractUnixCommandWrapper implements
 		this.ARXMLIV_DOCUMENT_DIR = arxmlivDocumentsDir;
 		this.LATEX_DIR = latexDir;
 		this.cmdArray[0] = "latexml";
-		this.cmdArray[1] = String.format("--path=%s/sty", arxmlivPath);
+		this.cmdArray[1] = String.format("--path=%s/sty/", arxmlivPath);
 	}
 
 	@Override
@@ -41,6 +42,12 @@ public class ArxmlivProducerImpl extends AbstractUnixCommandWrapper implements
 		try {
 			execute();
 			return arxmlivDocFilePath;
+		} catch (TimeoutException e) {
+			String message = String
+					.format("failed to produce the arxmliv document for an arXiv identifier='%s' due to timeout",
+							arxivId);
+			logger.log(Level.SEVERE, message);
+			throw new RuntimeException(message);
 		} catch (Exception e) {
 			String message = String
 					.format("failed to produce the arxmliv document for an arXiv identifier='%s' due to: %s",
