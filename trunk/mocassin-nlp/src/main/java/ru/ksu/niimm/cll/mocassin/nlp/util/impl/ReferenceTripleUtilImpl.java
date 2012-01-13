@@ -82,8 +82,9 @@ public class ReferenceTripleUtilImpl implements ReferenceTripleUtil {
 			sb.append(str);
 			sb.append(" ");
 		}
+		String textContents = sb
+		.toString().replace("\n", "");
 		return new RDFTripleImpl(String.format(LITERAL_PATTERN, element
-				.getUri(), MocassinOntologyRelations.HAS_TEXT.getUri(), sb
-				.toString()));
+				.getUri(), MocassinOntologyRelations.HAS_TEXT.getUri(), textContents));
 	}
 }

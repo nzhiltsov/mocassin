@@ -5,7 +5,7 @@ import java.net.URL;
 import java.util.Set;
 
 import ru.ksu.niimm.cll.mocassin.nlp.util.StopWordLoader;
-import ru.ksu.niimm.cll.mocassin.util.IOUtils;
+import ru.ksu.niimm.cll.mocassin.util.IOUtil;
 
 import com.google.common.base.Predicate;
 
@@ -17,7 +17,7 @@ public class StopWordLoaderImpl implements StopWordLoader {
 	public StopWordLoaderImpl() throws IOException {
 		ClassLoader loader = StopWordLoaderImpl.class.getClassLoader();
 		URL url = loader.getResource(STOP_LIST_FILENAME);
-		this.stopWords = IOUtils.readLineSet(url.openStream());
+		this.stopWords = IOUtil.readLineSet(url.openStream());
 	}
 
 	@Override
