@@ -15,7 +15,7 @@ import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
-import ru.ksu.niimm.cll.mocassin.util.IOUtils;
+import ru.ksu.niimm.cll.mocassin.util.IOUtil;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -37,7 +37,7 @@ public class UploadArxivListServlet extends HttpServlet {
 			FileItemIterator it = upload.getItemIterator(req);
 			if (it.hasNext()) {
 				FileItemStream item = it.next();
-				Set<String> ids = IOUtils.readLineSet(item.openStream());
+				Set<String> ids = IOUtil.readLineSet(item.openStream());
 				int numberOfSuccesses = arXMLivAdapter.handle(ids);
 				resp.setContentType("text/html");
 				resp.getWriter().printf("{ \"numberOfSuccesses\": %d}", numberOfSuccesses);

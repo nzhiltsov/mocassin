@@ -1,7 +1,5 @@
 package ru.ksu.niimm.cll.mocassin.ui.dashboard.server;
 
-import java.io.File;
-import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -14,9 +12,9 @@ import ru.ksu.niimm.cll.mocassin.analyzer.relation.ExemplifiesRelationAnalyzer;
 import ru.ksu.niimm.cll.mocassin.analyzer.relation.HasConsequenceRelationAnalyzer;
 import ru.ksu.niimm.cll.mocassin.analyzer.relation.ProvesRelationAnalyzer;
 import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
-import ru.ksu.niimm.cll.mocassin.arxiv.ArxivDAOFacade;
 import ru.ksu.niimm.cll.mocassin.arxiv.impl.Link;
 import ru.ksu.niimm.cll.mocassin.arxiv.impl.Link.PdfLinkPredicate;
+import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.ReferenceSearcher;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
@@ -32,7 +30,6 @@ import ru.ksu.niimm.cll.mocassin.parser.pdf.PdfHighlighter;
 import ru.ksu.niimm.cll.mocassin.parser.pdf.PdflatexWrapper;
 import ru.ksu.niimm.cll.mocassin.ui.dashboard.client.ArxivArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
-import ru.ksu.niimm.cll.mocassin.virtuoso.RDFTriple;
 import ru.ksu.niimm.ose.ontology.OntologyResourceFacade;
 
 import com.google.common.base.Function;
@@ -41,43 +38,43 @@ import com.google.inject.Inject;
 
 import edu.uci.ics.jung.graph.Graph;
 
-public class ArXMLivAdapterImpl implements ArXMLivAdapter {
+public abstract class AbstractArXMLivAdapter implements ArXMLivAdapter {
 	@Inject
-	private Logger logger;
+	protected Logger logger;
 	@Inject
-	private ArxivDAOFacade arxivDAOFacade;
+	protected OntologyResourceFacade ontologyResourceFacade;
 	@Inject
-	private OntologyResourceFacade ontologyResourceFacade;
+	protected ReferenceSearcher referenceSearcher;
 	@Inject
-	private ReferenceSearcher referenceSearcher;
+	protected ReferenceTripleUtil referenceTripleUtil;
 	@Inject
-	private ReferenceTripleUtil referenceTripleUtil;
+	protected NavigationalRelationClassifier navigationalRelationClassifier;
 	@Inject
-	private NavigationalRelationClassifier navigationalRelationClassifier;
+	protected ProvesRelationAnalyzer provesRelationAnalyzer;
 	@Inject
-	private ProvesRelationAnalyzer provesRelationAnalyzer;
+	protected HasConsequenceRelationAnalyzer hasConsequenceRelationAnalyzer;
 	@Inject
-	private HasConsequenceRelationAnalyzer hasConsequenceRelationAnalyzer;
+	protected ExemplifiesRelationAnalyzer exemplifiesRelationAnalyzer;
 	@Inject
-	private ExemplifiesRelationAnalyzer exemplifiesRelationAnalyzer;
+	protected LatexDocumentHeaderPatcher latexDocumentHeaderPatcher;
 	@Inject
-	private LatexDocumentHeaderPatcher latexDocumentHeaderPatcher;
+	protected LatexDocumentDAO latexDocumentDAO;
 	@Inject
-	private LatexDocumentDAO latexDocumentDAO;
+	protected ArxmlivProducer arxmlivProducer;
 	@Inject
-	private ArxmlivProducer arxmlivProducer;
+	protected GateDocumentDAO gateDocumentDAO;
 	@Inject
-	private GateDocumentDAO gateDocumentDAO;
+	protected GateProcessingFacade gateProcessingFacade;
 	@Inject
-	private GateProcessingFacade gateProcessingFacade;
+	protected PdflatexWrapper pdflatexWrapper;
 	@Inject
-	private PdflatexWrapper pdflatexWrapper;
+	protected Latex2PDFMapper latex2pdfMapper;
 	@Inject
-	Latex2PDFMapper latex2pdfMapper;
-	@Inject
-	PdfHighlighter pdfHighlighter;
+	protected PdfHighlighter pdfHighlighter;
 
-	@Override
+	public AbstractArXMLivAdapter() {
+	}
+
 	public int handle(Set<String> arxivIds) {
 		int numberOfSuccesses = 0;
 		for (String arxivId : arxivIds) {
@@ -97,56 +94,7 @@ public class ArXMLivAdapterImpl implements ArXMLivAdapter {
 		return numberOfSuccesses;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * ru.ksu.niimm.cll.mocassin.ui.dashboard.server.ArXMLivAdapter#handle(java
-	 * .lang.String)
-	 */
-	@Override
-	public void handle(String arxivId) {
-		if (arxivId == null || arxivId.length() == 0)
-			throw new RuntimeException("arXiv id cannot be null or empty");
-		/*
-		 * TODO: refactor this method to decouple this class from a bunch of
-		 * classes; see Issue 70 for numbering
-		 */
-		// Step 1
-		ArticleMetadata metadata;
-		try {
-			metadata = arxivDAOFacade.retrieve(arxivId);
-			metadata.setArxivId(arxivId);
-			// Step 2
-			InputStream latexSourceStream = arxivDAOFacade.loadSource(metadata);
-			latexDocumentDAO.save(arxivId, latexSourceStream, "utf8");
-			// Step 3 & partial Step 7
-			latexDocumentHeaderPatcher.patch(arxivId);
-			pdflatexWrapper.compilePatched(arxivId);
-			latex2pdfMapper.generateSummary(arxivId);
-			// Step 4
-			String arxmlivFilePath = arxmlivProducer.produce(arxivId);
-			// Step 5
-			gateDocumentDAO.save(arxivId, new File(arxmlivFilePath), "utf8");
-			gateProcessingFacade.process(arxivId);
-			// Step 6
-			Graph<StructuralElement, Reference> graph = extractStructuralElements(metadata);
-			// Step 7
-			generateHighlightedPdfs(arxivId, graph.getVertices());
-			// Step 8
-			Set<RDFTriple> triples = referenceTripleUtil.convert(graph);
-			ontologyResourceFacade.insert(metadata, triples);
-
-		} catch (Exception e) {
-			String message = String.format(
-					"failed to handle document with id='%s' due to: %s",
-					arxivId, e.getMessage());
-			logger.log(Level.SEVERE, message);
-			throw new RuntimeException(message);
-		}
-	}
-
-	private void generateHighlightedPdfs(String arxivId,
+	protected void generateHighlightedPdfs(String arxivId,
 			Collection<StructuralElement> structuralElements) {
 		for (StructuralElement element : structuralElements) {
 			int latexStartLine = element.getLatexStartLine();
@@ -166,9 +114,9 @@ public class ArXMLivAdapterImpl implements ArXMLivAdapter {
 		}
 	}
 
-	private Graph<StructuralElement, Reference> extractStructuralElements(
+	protected Graph<StructuralElement, Reference> extractStructuralElements(
 			ArticleMetadata metadata) {
-		ParsedDocumentImpl document = getParsedDocument(metadata);
+		ParsedDocument document = getParsedDocument(metadata);
 		Graph<StructuralElement, Reference> graph = referenceSearcher
 				.retrieveStructuralGraph(document);
 		Collection<Reference> edges = graph.getEdges();
@@ -187,10 +135,10 @@ public class ArXMLivAdapterImpl implements ArXMLivAdapter {
 		return graph;
 	}
 
-	private ParsedDocumentImpl getParsedDocument(ArticleMetadata metadata) {
+	private ParsedDocument getParsedDocument(ArticleMetadata metadata) {
 		Link pdfLink = Iterables.find(metadata.getLinks(),
 				new PdfLinkPredicate());
-		ParsedDocumentImpl document = new ParsedDocumentImpl(
+		ParsedDocument document = new ParsedDocumentImpl(
 				metadata.getArxivId(), metadata.getId(), pdfLink.getHref());
 		return document;
 	}
@@ -221,5 +169,4 @@ public class ArXMLivAdapterImpl implements ArXMLivAdapter {
 		}
 
 	}
-
 }
