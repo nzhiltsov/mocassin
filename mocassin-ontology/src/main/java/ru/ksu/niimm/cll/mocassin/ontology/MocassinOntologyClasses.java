@@ -15,13 +15,13 @@ import com.google.common.collect.ImmutableBiMap;
  * 
  */
 public enum MocassinOntologyClasses {
-	AXIOM(0, "axiom"), CLAIM(1, "claim", "assertion", "statement"), CONJECTURE(
-			2, "conjecture", "hypothesis"), COROLLARY(3, "corollary"), DEFINITION(
-			4, "definition"), EQUATION(5, "equation", "equationgroup"), EXAMPLE(
-			6, "example"), FIGURE(7, "figure"), LEMMA(8, "lemma"), PROOF(9,
-			"proof"), PROPOSITION(10, "proposition"), REMARK(11, "remark",
-			"note", "comment"), SECTION(12, "section", "subsection", "subsubsection"), THEOREM(
-			13, "theorem"), UNRECOGNIZED_DOCUMENT_SEGMENT(14, "");
+	AXIOM(0, "axiom", "аксиома"), CLAIM(1, "claim", "assertion", "statement", "утверждение"), CONJECTURE(
+			2, "conjecture", "hypothesis", "гипотеза"), COROLLARY(3, "corollary", "следствие"), DEFINITION(
+			4, "definition", "определение"), EQUATION(5, "equation", "equationgroup"), EXAMPLE(
+			6, "example", "пример"), FIGURE(7, "figure"), LEMMA(8, "lemma", "лемма"), PROOF(9,
+			"proof"), PROPOSITION(10, "proposition", "предложение"), REMARK(11, "remark",
+			"note", "comment", "замечание", "комментарий"), SECTION(12, "section", "subsection", "subsubsection"), THEOREM(
+			13, "theorem", "теорема"), UNRECOGNIZED_DOCUMENT_SEGMENT(14, "");
 
 	private String[] labels;
 	/**

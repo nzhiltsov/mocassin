@@ -59,8 +59,8 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 	public List<Resource> query(QueryStatement queryStatement, String retrievedResourceKey) {
 		List<Resource> resultResources = new ArrayList<Resource>();
 		String queryString = generateQuery(queryStatement);
-		List<QuerySolution> solutions = getVirtuosoDAO().get(queryString,
-				getSearchGraph(), queryStatement.isInferenceOn());
+		List<QuerySolution> solutions = getVirtuosoDAO().get(getSearchGraph(),
+				queryString, queryStatement.isInferenceOn());
 		for (QuerySolution solution : solutions) {
 			Resource resource = solution.getResource(retrievedResourceKey);
 			resultResources.add(resource);
@@ -158,7 +158,7 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 	@Override
 	public Model describe(String resourceUri) {
 		String uri = String.format("<%s>", resourceUri);
-		return getVirtuosoDAO().describe(uri, getSearchGraph());
+		return getVirtuosoDAO().describe(getSearchGraph(), uri);
 	}
 
 	public OntologyLoader getOntologyLoader() {

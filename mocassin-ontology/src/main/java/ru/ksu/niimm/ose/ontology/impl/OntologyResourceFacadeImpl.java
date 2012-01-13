@@ -84,8 +84,8 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 					.getUri());
 			Query query = QueryFactory.create(segmentInfoQueryString);
 
-			List<QuerySolution> solutions = getVirtuosoDAO().get(query,
-					getSearchGraph());
+			List<QuerySolution> solutions = getVirtuosoDAO().get(getSearchGraph(),
+					query);
 			if (solutions.isEmpty()) {
 				logger.log(Level.SEVERE,
 						"none of a title and publication metadata was found for a segment: "
@@ -112,7 +112,7 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 		String documentUri = parseDocumentUri(resource.getUri());
 		String graphQueryString = generateRetrieveStructureGraphQuery(documentUri);
 		Iterator<QuerySolution> solutionIt = getVirtuosoDAO().get(
-				graphQueryString, getSearchGraph(), false).iterator();
+				getSearchGraph(), graphQueryString, false).iterator();
 		if (!solutionIt.hasNext())
 			return edges;
 		final Function<QuerySolution, SGEdge> function = new SolutionFunction();
@@ -164,7 +164,7 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 		List<RDFTriple> triples = ArxivMetadataUtil
 				.convertToTriples(articleMetadata);
 		triples.addAll(data);
-		getVirtuosoDAO().insert(triples, getSearchGraph());
+		getVirtuosoDAO().insert(getSearchGraph(), triples);
 	}
 
 	private ArticleMetadata loadPublication(String documentUri) {
@@ -186,8 +186,8 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 		List<String> publicationsUris = new ArrayList<String>();
 		String pubQueryString = generatePubQuery();
 		Query query = QueryFactory.create(pubQueryString);
-		List<QuerySolution> solutions = getVirtuosoDAO().get(query,
-				getSearchGraph());
+		List<QuerySolution> solutions = getVirtuosoDAO().get(getSearchGraph(),
+				query);
 		for (QuerySolution solution : solutions) {
 			String uri = solution.getResource(
 					RETRIEVED_PUBLICATION_URI_ELEMENT_KEY).toString();
@@ -200,8 +200,8 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 		List<Link> links = new ArrayList<Link>();
 		String linkQueryString = generateLinkQuery(documentUri);
 		Query query = QueryFactory.create(linkQueryString);
-		List<QuerySolution> solutions = getVirtuosoDAO().get(query,
-				getSearchGraph());
+		List<QuerySolution> solutions = getVirtuosoDAO().get(getSearchGraph(),
+				query);
 		for (QuerySolution solution : solutions) {
 			Link link = new Link();
 			String linkType = solution.getResource(
@@ -220,8 +220,8 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 		List<Author> authors = new ArrayList<Author>();
 		String authorQueryString = generateAuthorQuery(documentUri);
 		Query query = QueryFactory.create(authorQueryString);
-		List<QuerySolution> solutions = getVirtuosoDAO().get(query,
-				getSearchGraph());
+		List<QuerySolution> solutions = getVirtuosoDAO().get(getSearchGraph(),
+				query);
 		for (QuerySolution solution : solutions) {
 			Resource resource = solution
 					.getResource(RETRIEVED_AUTHOR_NAME_ELEMENT_KEY);
@@ -239,8 +239,8 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 
 		Query query = QueryFactory.create(titleQueryString);
 
-		List<QuerySolution> solutions = getVirtuosoDAO().get(query,
-				getSearchGraph());
+		List<QuerySolution> solutions = getVirtuosoDAO().get(getSearchGraph(),
+				query);
 		if (solutions.isEmpty()) {
 			return null;
 		}
@@ -255,8 +255,8 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 
 		Query query = QueryFactory.create(idQueryString);
 
-		List<QuerySolution> solutions = getVirtuosoDAO().get(query,
-				getSearchGraph());
+		List<QuerySolution> solutions = getVirtuosoDAO().get(getSearchGraph(),
+				query);
 		if (solutions.isEmpty()) {
 			return null;
 		}
@@ -270,8 +270,8 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 		String typeQueryString = generateTypeQueryString(uri);
 		Query query = QueryFactory.create(typeQueryString);
 
-		List<QuerySolution> solutions = getVirtuosoDAO().get(query,
-				getSearchGraph());
+		List<QuerySolution> solutions = getVirtuosoDAO().get(getSearchGraph(),
+				query);
 		boolean isPublication = false;
 		for (QuerySolution solution : solutions) {
 			String typeUri = solution.getResource("?t").toString();

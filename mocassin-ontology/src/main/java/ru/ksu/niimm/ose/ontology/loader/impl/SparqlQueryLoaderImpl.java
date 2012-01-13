@@ -11,6 +11,8 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
 
+import ru.ksu.niimm.cll.mocassin.util.IOUtil;
+import ru.ksu.niimm.cll.mocassin.util.StringUtil;
 import ru.ksu.niimm.ose.ontology.loader.SparqlQueryLoader;
 
 import com.google.inject.Inject;
@@ -43,18 +45,7 @@ public class SparqlQueryLoaderImpl implements SparqlQueryLoader {
 	private String readContents(String path) throws IOException {
 		ClassLoader loader = SparqlQueryLoaderImpl.class.getClassLoader();
 		URL url = loader.getResource(path);
-		InputStream inputStream = url.openStream();
-		BufferedReader reader = new BufferedReader(new InputStreamReader(
-				inputStream));
-		StringBuffer contentsBuffer = new StringBuffer();
-		String value;
-		while ((value = reader.readLine()) != null) {
-			contentsBuffer.append(value);
-		}
-		reader.close();
-		inputStream.close();
-		return contentsBuffer.toString();
-
+		return IOUtil.readContents(url);
 	}
 
 	@Override
