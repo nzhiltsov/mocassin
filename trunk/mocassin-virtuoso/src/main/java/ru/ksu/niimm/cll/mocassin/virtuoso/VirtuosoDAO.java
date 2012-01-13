@@ -14,57 +14,63 @@ import com.hp.hpl.jena.rdf.model.Model;
  */
 public interface VirtuosoDAO {
 	/**
-	 * delete all the triples that relate to a document with given URI
+	 * update the given graph using a given expression
 	 * 
-	 * @param documentUri
 	 * @param graph
+	 * @param expression
 	 */
-	void delete(String documentUri, RDFGraph graph);
+	void executeUpdate(RDFGraph graph, String expression);
+
+	/**
+	 * delete all the triples that relate to a document with given URI
+	 * @param graph
+	 * @param documentUri
+	 */
+	void delete(RDFGraph graph, String documentUri);
 
 	/**
 	 * insert the triples into a given graph. <br/>
 	 * Deprecated. Use {@link #insert(List)} instead
-	 * 
-	 * @param triples
 	 * @param graph
+	 * @param triples
 	 */
-	void insert(List<RDFTriple> triples, RDFGraph graph);
+	void insert(RDFGraph graph, List<RDFTriple> triples);
 
 	/**
 	 * update the triples that relate to a document with given URI
-	 * 
+	 * @param graph
 	 * @param documentUri
 	 * @param triples
-	 * @param graph
 	 */
-	void update(String documentUri, List<RDFTriple> triples, RDFGraph graph);
+	void update(RDFGraph graph, String documentUri, List<RDFTriple> triples);
 
 	/**
 	 * get resources by a given query
-	 * 
-	 * @param query
 	 * @param graph
+	 * @param query
+	 * 
 	 * @return
 	 */
-	List<QuerySolution> get(Query query, RDFGraph graph);
+	List<QuerySolution> get(RDFGraph graph, Query query);
 
 	/**
 	 * get resources by a given query expression
-	 * 
-	 * @param query
 	 * @param graph
+	 * @param query
 	 * @param isInferenceOn
+	 * 
 	 * @return
 	 */
-	List<QuerySolution> get(String query, RDFGraph graph, boolean isInferenceOn);
+	List<QuerySolution> get(RDFGraph graph, String query, boolean isInferenceOn);
 
 	/**
 	 * get an RDF model that describes the resource with given URI
-	 * 
+	 * @param graph
 	 * @param resourceUri
 	 *            resource URI
-	 * @param graph
+	 * 
 	 * @return
 	 */
-	Model describe(String resourceUri, RDFGraph graph);
+	Model describe(RDFGraph graph, String resourceUri);
+
 }

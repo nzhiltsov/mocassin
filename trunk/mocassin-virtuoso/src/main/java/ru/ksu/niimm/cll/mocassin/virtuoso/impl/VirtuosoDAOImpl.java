@@ -42,30 +42,27 @@ public class VirtuosoDAOImpl implements VirtuosoDAO {
 
 	@Override
 	@ValidateGraph
-	public void insert(List<RDFTriple> triples, RDFGraph graph) {
-		VirtGraph virtGraph = new VirtGraph(graph.getUrl(),
-				graph.getUsername(), graph.getPassword());
+	public void insert(RDFGraph graph, List<RDFTriple> triples) {
 		if (triples.size() > SPARQL_LINE_NUMBER_LIMIT) {
 			int i = 0;
 			while (i < triples.size() / SPARQL_LINE_NUMBER_LIMIT) {
 
-				executeUpdate(virtGraph, graph, triples.subList(
-						SPARQL_LINE_NUMBER_LIMIT * i + 1,
-						SPARQL_LINE_NUMBER_LIMIT * (i + 1)));
+				executeUpdate(graph, triples.subList(SPARQL_LINE_NUMBER_LIMIT
+						* i + 1, SPARQL_LINE_NUMBER_LIMIT * (i + 1)));
 				i++;
 			}
 			List<RDFTriple> subList = triples.subList(SPARQL_LINE_NUMBER_LIMIT
 					* i + 1, triples.size() - 1);
 			subList.add(triples.get(0));
-			executeUpdate(virtGraph, graph, subList);
+			executeUpdate(graph, subList);
 		} else {
-			executeUpdate(virtGraph, graph, triples);
+			executeUpdate(graph, triples);
 		}
 	}
 
 	@Override
 	@ValidateGraph
-	public void delete(String documentUri, RDFGraph graph) {
+	public void delete(RDFGraph graph, String documentUri) {
 		VirtGraph virtGraph = new VirtGraph(graph.getUrl(),
 				graph.getUsername(), graph.getPassword());
 		String expression = getDeleteQueryGenerator().generate(documentUri,
@@ -76,15 +73,15 @@ public class VirtuosoDAOImpl implements VirtuosoDAO {
 
 	@Override
 	@ValidateGraph
-	public void update(String documentUri, List<RDFTriple> triples,
-			RDFGraph graph) {
-		delete(documentUri, graph);
-		insert(triples, graph);
+	public void update(RDFGraph graph, String documentUri,
+			List<RDFTriple> triples) {
+		delete(graph, documentUri);
+		insert(graph, triples);
 	}
 
 	@Override
 	@ValidateGraph
-	public List<QuerySolution> get(Query query, RDFGraph graph) {
+	public List<QuerySolution> get(RDFGraph graph, Query query) {
 		List<QuerySolution> solutions = new ArrayList<QuerySolution>();
 
 		VirtGraph virtGraph = new VirtGraph(graph.getUrl(),
@@ -101,18 +98,21 @@ public class VirtuosoDAOImpl implements VirtuosoDAO {
 
 	@Override
 	@ValidateGraph
-	public List<QuerySolution> get(String query, RDFGraph graph, boolean isInferenceOn) {
+	public List<QuerySolution> get(RDFGraph graph, String query,
+			boolean isInferenceOn) {
 		List<QuerySolution> solutions = new ArrayList<QuerySolution>();
 
 		VirtGraph virtGraph = new VirtGraph(graph.getUrl(),
 				graph.getUsername(), graph.getPassword());
 		Query jenaQuery = QueryFactory.create(query);
-		if (!query.contains("bif:contains")) {// TODO: workaround for Virtuoso's bug with full-text indexes
+		if (!query.contains("bif:contains")) {// TODO: workaround for Virtuoso's
+												// bug with full-text indexes
 			jenaQuery.addGraphURI("http://cll.niimm.ksu.ru/mocassintest");
 		}
 		String resultQuery;
 		if (isInferenceOn) {
-			String inferenceEntry = String.format(RULES_SET_ENTRY, graph.getInferenceRulesSetName());
+			String inferenceEntry = String.format(RULES_SET_ENTRY,
+					graph.getInferenceRulesSetName());
 			resultQuery = inferenceEntry + jenaQuery.toString();
 		} else {
 			resultQuery = jenaQuery.toString();
@@ -129,7 +129,7 @@ public class VirtuosoDAOImpl implements VirtuosoDAO {
 
 	@Override
 	@ValidateGraph
-	public Model describe(String resourceUri, RDFGraph graph) {
+	public Model describe(RDFGraph graph, String resourceUri) {
 		String query = getDescribeQueryGenerator().generate(resourceUri, graph);
 		VirtGraph virtGraph = new VirtGraph(graph.getUrl(),
 				graph.getUsername(), graph.getPassword());
@@ -151,24 +151,33 @@ public class VirtuosoDAOImpl implements VirtuosoDAO {
 		return describeQueryGenerator;
 	}
 
-	private void executeUpdate(VirtGraph virtGraph, RDFGraph graph,
-			List<RDFTriple> triples) {
+	private void executeUpdate(RDFGraph graph, List<RDFTriple> triples) {
 		String n3Expression = N3Util.getExpression(triples);
-		try {
-			Model model = ModelFactory.createDefaultModel();
-			model.read(new StringReader(n3Expression), "", "N3");
-			String insertExpression = getInsertQueryGenerator().generate(
-					triples, graph);
-			VirtuosoUpdateRequest request = VirtuosoUpdateFactory.create(
-					insertExpression, virtGraph); // TODO: use the model defined above and virtGraph.getBulkUpdateHandler()
-			request.exec();
-			
-		} catch (Exception e) {
+		String insertExpression = null;
 
+		Model model = ModelFactory.createDefaultModel();
+		model.read(new StringReader(n3Expression), "", "N3");
+		insertExpression = getInsertQueryGenerator().generate(triples, graph);
+		executeUpdate(graph, insertExpression);
+	}
+
+	@Override
+	public void executeUpdate(RDFGraph graph, String expression) {
+		VirtGraph virtGraph = new VirtGraph(graph.getUrl(),
+				graph.getUsername(), graph.getPassword());
+		VirtuosoUpdateRequest request = VirtuosoUpdateFactory.create(
+				expression, virtGraph); // TODO: use the model
+															// defined
+		// above and
+		// virtGraph.getBulkUpdateHandler()
+		try {
+			request.exec();
+		} catch (Exception e) {
 			String message = String.format(
 					"failed to update the RDF graph='%s' due to: %s",
-					virtGraph.getGraphName(), e.getMessage());
+					graph.getIri(), e.getCause());
 			logger.log(Level.SEVERE, message);
+			logger.log(Level.INFO, expression);
 			throw new RuntimeException(e);
 		}
 	}
