@@ -1,12 +1,15 @@
 package unittest;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.Before;
 import org.junit.Test;
 
+import ru.ksu.niimm.cll.mocassin.util.IOUtil;
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFGraph;
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFTriple;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoDAO;
@@ -26,21 +29,34 @@ public class VirtuosoDAOTest extends AbstractTest {
 	@Inject
 	private VirtuosoDAO virtuosoDAO;
 
+	private String largeInsertQuery;
+
+	@Before
+	public void initialize() throws IOException {
+		ClassLoader classLoader = VirtuosoDAOTest.class.getClassLoader();
+		largeInsertQuery = IOUtil.readContents(classLoader
+				.getResource("LargeInsertQuery.sparql"));
+	}
+
 	@Test
 	public void testInsert() {
 		List<RDFTriple> triples = new ArrayList<RDFTriple>();
 		RDFTriple triple = new RDFTripleImpl(
 				"<http://linkeddata.tntbase.org/temp> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://omdoc.org/ontology#Document> .");
 		triples.add(triple);
-		RDFGraph graph = getConfiguredGraph();
 
-		getVirtuosoDAO().insert(triples, graph);
+		getVirtuosoDAO().insert(getConfiguredGraph(), triples);
+	}
+
+	@Test
+	public void testLargeUpdateExpression() {
+		getVirtuosoDAO().executeUpdate(getConfiguredGraph(), largeInsertQuery);
 	}
 
 	@Test
 	public void testDelete() {
 		RDFGraph graph = getConfiguredGraph();
-		getVirtuosoDAO().delete("all1.omdoc", graph);
+		getVirtuosoDAO().delete(graph, "all1.omdoc");
 	}
 
 	@Test
@@ -51,14 +67,14 @@ public class VirtuosoDAOTest extends AbstractTest {
 
 		RDFGraph graph = getConfiguredGraph();
 
-		getVirtuosoDAO().update("all.omdoc", triples, graph);
+		getVirtuosoDAO().update(graph, "all.omdoc", triples);
 
 	}
 
 	@Test
 	public void testDescribe() {
-		Model model = getVirtuosoDAO().describe(
-				"<http://arxiv.org/abs/math/0005005v2>", getGraph());
+		Model model = getVirtuosoDAO().describe(getGraph(),
+				"<http://arxiv.org/abs/math/0005005v2>");
 		Graph describeGraph = model.getGraph();
 		ExtendedIterator<Triple> foundIt = describeGraph.find(Node.ANY,
 				Node.ANY, Node.ANY);
@@ -130,7 +146,8 @@ public class VirtuosoDAOTest extends AbstractTest {
 		RDFGraph graph = getConfiguredGraph();
 		String query = "SELECT DISTINCT ?1 "
 				+ "{ ?1 a <http://salt.semanticauthoring.org/ontologies/sdo#Publication> .}";
-		List<QuerySolution> solutions = getVirtuosoDAO().get(query, graph, true);
+		List<QuerySolution> solutions = getVirtuosoDAO()
+				.get(graph, query, true);
 		for (QuerySolution solution : solutions) {
 			Resource resource = solution.getResource("?1");
 		}
