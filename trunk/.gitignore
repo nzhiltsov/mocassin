@@ -1,0 +1,13 @@
+*/.settings/
+mocassin-pom/.settings/org.maven.ide.eclipse.prefs
+mocassin-ui/.settings/com.google.gwt.eclipse.core.prefs
+mocassin-ui/.classpath
+.metadata/
+*/.project
+*/.classpath
+*/target/
+/commit.txt
+/*/logs/
+*/effective-pom.xml
+*/effective-settings.xml
+
