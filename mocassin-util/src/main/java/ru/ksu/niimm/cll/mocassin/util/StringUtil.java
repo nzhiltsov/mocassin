@@ -23,6 +23,9 @@ public class StringUtil {
 	private static final String DOLLAR_PATTERN_STRING = "\\$.[^$]*\\$";
 	private static final String BACKSLASH_PATTERN = "\\\\[a-z]+";
 
+	private static final Pattern MATHNET_JOURNAL_PREFIX = Pattern
+			.compile("([a-z]+)([0-9]+)");
+
 	private StringUtil() {
 	}
 
@@ -128,11 +131,28 @@ public class StringUtil {
 
 	public static String segmentid2filename(String arxivId, int segmentId,
 			String extension) {
-		return String.format("%s%s%d.%s", StringUtil.arxivid2gateid(arxivId), ARXIVID_SEGMENTID_DELIMITER,
-				segmentId, extension);
+		return String.format("%s%s%d.%s", StringUtil.arxivid2gateid(arxivId),
+				ARXIVID_SEGMENTID_DELIMITER, segmentId, extension);
 	}
 
 	public static String arxivid2gateid(String arxivId) {
 		return arxivId.replace("/", "_");
 	}
+
+	public static String extractJournalPrefixFromMathnetKey(String mathnetKey) {
+		Matcher styleMatcher = MATHNET_JOURNAL_PREFIX.matcher(mathnetKey);
+		if (!styleMatcher.matches())
+			throw new RuntimeException("the string '" + mathnetKey
+					+ "' is not a Mathnet key");
+		return styleMatcher.group(1);
+	}
+
+	public static String extractPaperNumberFromMathnetKey(String mathnetKey) {
+		Matcher styleMatcher = MATHNET_JOURNAL_PREFIX.matcher(mathnetKey);
+		if (!styleMatcher.matches())
+			throw new RuntimeException("the string '" + mathnetKey
+					+ "' is not a Mathnet key");
+		return styleMatcher.group(2);
+	}
+
 }
