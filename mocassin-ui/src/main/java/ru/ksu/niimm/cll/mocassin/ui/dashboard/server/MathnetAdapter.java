@@ -14,10 +14,15 @@ import ru.ksu.niimm.cll.mocassin.arxiv.impl.Link;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.ui.dashboard.client.ArxivArticleMetadata;
+import ru.ksu.niimm.cll.mocassin.util.StringUtil;
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFTriple;
 
 public class MathnetAdapter extends AbstractArXMLivAdapter implements
 		ArXMLivAdapter {
+	/**
+	 * TODO: move to a configuration file
+	 */
+	private static final String MATHNET_DOWNLOAD_PDF_URL = "http://www.mathnet.ru/php/getFT.phtml?jrnid=%s&paperid=%s&what=fullt&option_lang=rus";
 
 	@Override
 	public void handle(String mathnetKey) {
@@ -33,8 +38,10 @@ public class MathnetAdapter extends AbstractArXMLivAdapter implements
 			metadata.setId("http://mathnet.ru/" + mathnetKey);
 			metadata.setArxivId(mathnetKey);
 			ArrayList<Link> links = new ArrayList<Link>();
-			links.add(Link.nullPdfLink()); // TODO : use the real link to PDF on
-											// MathNet.Ru
+
+			links.add(Link.pdfLink(String.format(MATHNET_DOWNLOAD_PDF_URL,
+					StringUtil.extractJournalPrefixFromMathnetKey(mathnetKey),
+					StringUtil.extractPaperNumberFromMathnetKey(mathnetKey))));
 			metadata.setLinks(links);
 			// Step 3 & partial Step 7
 			latexDocumentHeaderPatcher.patch(mathnetKey);
@@ -54,9 +61,11 @@ public class MathnetAdapter extends AbstractArXMLivAdapter implements
 			ontologyResourceFacade.insert(metadata, triples);
 
 		} catch (Exception e) {
-			/*String message = String.format(
-					"failed to handle document with id='%s' due to: %s",
-					mathnetKey, e.getMessage());*/
+			/*
+			 * String message = String.format(
+			 * "failed to handle document with id='%s' due to: %s", mathnetKey,
+			 * e.getMessage());
+			 */
 			logger.log(Level.SEVERE, e.toString());
 			throw new RuntimeException(e);
 		}
