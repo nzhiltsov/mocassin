@@ -3,6 +3,7 @@ package ru.ksu.niimm.cll.mocassin.arxiv.impl;
 import com.google.common.base.Predicate;
 
 public class Link {
+	private static final String PDF_MIME_TYPE = "application/pdf";
 	/**
 	 * URL of a version, e.g. 'http://arxiv.org/pdf/math/0205003v1'
 	 */
@@ -31,7 +32,14 @@ public class Link {
 	public static Link nullPdfLink() {
 		Link link = new Link();
 		link.setHref("");
-		link.setType("application/pdf");
+		link.setType(PDF_MIME_TYPE);
+		return link;
+	}
+	
+	public static Link pdfLink(String href) {
+		Link link = new Link();
+		link.setHref(href);
+		link.setType(PDF_MIME_TYPE);
 		return link;
 	}
 
@@ -39,7 +47,7 @@ public class Link {
 
 		@Override
 		public boolean apply(Link link) {
-			return link.getType().equals("application/pdf");
+			return link.getType().equals(PDF_MIME_TYPE);
 		}
 
 	}
