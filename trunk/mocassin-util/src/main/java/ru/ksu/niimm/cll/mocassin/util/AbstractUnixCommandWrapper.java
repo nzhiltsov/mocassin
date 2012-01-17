@@ -20,13 +20,6 @@ public abstract class AbstractUnixCommandWrapper {
 		ExpectJ expectinator = new ExpectJ(TIMEOUT_IN_SECONDS);
 		Spawn shell = expectinator.spawn(StringUtil.asString(cmdArray));
 		shell.expectClose();
-		
-		if (shell.getExitValue() == 0) {
-			return;
-		} else {
-			logger.log(Level.SEVERE, shell.getCurrentStandardErrContents());
-			throw new Exception("Process termination hasn't been normal. See the error log above.");
-		}
 	}
 
 }
