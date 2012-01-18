@@ -1,37 +1,99 @@
-INSERT INTO GRAPH <http://cll.niimm.ksu.ru/mocassintest> {<http://mathnet.ru/ivm228> <http://djpowell.net/schemas/atomrdf/0.3/title> _:bnode-700053051 .
-_:bnode-700053051 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://djpowell.net/schemas/atomrdf/0.3/PlainText> .
-<http://mathnet.ru/ivm228> <http://djpowell.net/schemas/atomrdf/0.3/link> _:bnode-700053050 .
-_:bnode-700053050 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://djpowell.net/schemas/atomrdf/0.3/Link> .
-_:bnode-700053050 <http://djpowell.net/schemas/atomrdf/0.3/linkType> "application/pdf" .
-<http://mathnet.ru/ivm228> <http://arxiv.org/schema#id> "ivm228" .
-<http://mathnet.ru/ivm228/14043> <http://cll.niimm.ksu.ru/ontologies/mocassin#hasPart> <http://mathnet.ru/ivm228/14179> .
-<http://mathnet.ru/ivm228/11808> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://cll.niimm.ksu.ru/ontologies/mocassin#Equation> .
-<http://mathnet.ru/ivm228/1623> <http://cll.niimm.ksu.ru/ontologies/mocassin#hasText> "" .
-<http://mathnet.ru/ivm228/15989> <http://cll.niimm.ksu.ru/ontologies/mocassin#hasPart> <http://mathnet.ru/ivm228/15990> .
-<http://mathnet.ru/ivm228/10654> <http://cll.niimm.ksu.ru/ontologies/mocassin#hasPart> <http://mathnet.ru/ivm228/10655> .
-<http://mathnet.ru/ivm228/18898> <http://cll.niimm.ksu.ru/ontologies/mocassin#hasPart> <http://mathnet.ru/ivm228/18899> .
-<http://mathnet.ru/ivm228/2409> <http://cll.niimm.ksu.ru/ontologies/mocassin#hasPart> <http://mathnet.ru/ivm228/11924> .
-<http://mathnet.ru/ivm228/0> <http://cll.niimm.ksu.ru/ontologies/mocassin#hasPart> <http://mathnet.ru/ivm228/32> .
-<http://mathnet.ru/ivm228/17900> <http://cll.niimm.ksu.ru/ontologies/mocassin#hasText> "" .
-<http://mathnet.ru/ivm228/3642> <http://cll.niimm.ksu.ru/ontologies/mocassin#hasText> "" .
-<http://mathnet.ru/ivm228> <http://cll.niimm.ksu.ru/ontologies/mocassin#hasSegment> <http://mathnet.ru/ivm228/7986> .
-<http://mathnet.ru/ivm228/10357> <http://cll.niimm.ksu.ru/ontologies/mocassin#hasTitle> "equation" .
-<http://mathnet.ru/ivm228/12648> <http://cll.niimm.ksu.ru/ontologies/mocassin#hasStartPageNumber> "0"^^<http://www.w3.org/2001/XMLSchema#integer> .
-<http://mathnet.ru/ivm228/11085> <http://cll.niimm.ksu.ru/ontologies/mocassin#hasText> "" .
-<http://mathnet.ru/ivm228/14690> <http://cll.niimm.ksu.ru/ontologies/mocassin#hasText> "" .
-<http://mathnet.ru/ivm228/8922> <http://cll.niimm.ksu.ru/ontologies/mocassin#hasText> "Лемма Пусть выполнены условия леммы Тогда решение задачи удовлетворяет неравенствам " .
-<http://mathnet.ru/ivm228/1508> <http://cll.niimm.ksu.ru/ontologies/mocassin#hasText> "" .
-<http://mathnet.ru/ivm228/16205> <http://cll.niimm.ksu.ru/ontologies/mocassin#hasStartPageNumber> "0"^^<http://www.w3.org/2001/XMLSchema#integer> .
-<http://mathnet.ru/ivm228/13377> <http://cll.niimm.ksu.ru/ontologies/mocassin#hasText> "" .
-<http://mathnet.ru/ivm228/10028> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://cll.niimm.ksu.ru/ontologies/mocassin#Equation> .
-<http://mathnet.ru/ivm228/2409> <http://cll.niimm.ksu.ru/ontologies/mocassin#hasPart> <http://mathnet.ru/ivm228/12137> .
-<http://mathnet.ru/ivm228> <http://cll.niimm.ksu.ru/ontologies/mocassin#hasSegment> <http://mathnet.ru/ivm228/2761> .
-<http://mathnet.ru/ivm228> <http://cll.niimm.ksu.ru/ontologies/mocassin#hasSegment> <http://mathnet.ru/ivm228/15151> .
-<http://mathnet.ru/ivm228/18785> <http://cll.niimm.ksu.ru/ontologies/mocassin#hasStartPageNumber> "0"^^<http://www.w3.org/2001/XMLSchema#integer> .
-<http://mathnet.ru/ivm228/6122> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://cll.niimm.ksu.ru/ontologies/mocassin#DocumentSegment> .
-<http://mathnet.ru/ivm228/10655> <http://cll.niimm.ksu.ru/ontologies/mocassin#hasTitle> "equation 37" .
-<http://mathnet.ru/ivm228/1623> <http://cll.niimm.ksu.ru/ontologies/mocassin#hasTitle> "equation 9" .
-<http://mathnet.ru/ivm228/11808> <http://cll.niimm.ksu.ru/ontologies/mocassin#hasTitle> "equation" .
-<http://mathnet.ru/ivm228/2593> <http://cll.niimm.ksu.ru/ontologies/mocassin#hasTitle> "Определение 2.1 ." .
-<http://mathnet.ru/ivm228/932> <http://cll.niimm.ksu.ru/ontologies/mocassin#hasPart> <http://mathnet.ru/ivm228/1107> .
+PREFIX support: <http://www.aktors.org/ontology/support#>
+PREFIX akt: <http://www.aktors.org/ontology/portal#>
+INSERT INTO GRAPH <http://cll.niimm.ksu.ru/mocassintest> {
+<http://mathnet.ru/#Year1997> support:year-of "1997";
+	a support:Calendar-Date.
+<http://mathnet.ru/#Year1998> support:year-of "1998";
+	a support:Calendar-Date.
+<http://mathnet.ru/#Year1999> support:year-of "1999";
+	a support:Calendar-Date.
+<http://mathnet.ru/#Year2000> support:year-of "2000";
+	a support:Calendar-Date.
+<http://mathnet.ru/#Year2001> support:year-of "2001";
+	a support:Calendar-Date.
+<http://mathnet.ru/#Year2002> support:year-of "2002";
+	a support:Calendar-Date.
+<http://mathnet.ru/#Year2003> support:year-of "2003";
+	a support:Calendar-Date.
+<http://mathnet.ru/#Year2004> support:year-of "2004";
+	a support:Calendar-Date.
+<http://mathnet.ru/#Year2005> support:year-of "2005";
+	a support:Calendar-Date.
+<http://mathnet.ru/#Year2006> support:year-of "2006";
+	a support:Calendar-Date.
+<http://mathnet.ru/#Year2007> support:year-of "2007";
+	a support:Calendar-Date.
+<http://mathnet.ru/#Year2008> support:year-of "2008";
+	a support:Calendar-Date.
+<http://mathnet.ru/#Year2009> support:year-of "2009";
+	a support:Calendar-Date.
+<http://mathnet.ru/AA/Scheglova> akt:full-name "\u0410. \u0410. \u0429\u0435\u0433\u043B\u043E\u0432\u0430 ";
+	akt:has-affiliation <http://mathnet.ru/InstitutdinamikisistemiteoriiupravlenijaSORAN>;
+	a akt:Affiliated-Person.
+<http://mathnet.ru/AAAkimov> akt:full-name "\u0410. \u0410. \u0410\u043A\u0438\u043C\u043E\u0432 ";
+	a akt:Person.
+<http://mathnet.ru/AAAmosov> akt:full-name "\u0410. \u0410. \u0410\u043C\u043E\u0441\u043E\u0432 ";
+	akt:has-affiliation <http://mathnet.ru/Moskovskijjenergeticheskijinstitut(texnicheskijuniversitet)>;
+	a akt:Affiliated-Person.
+<http://mathnet.ru/AAAndrianova> akt:full-name "\u0410. \u0410. \u0410\u043D\u0434\u0440\u0438\u0430\u043D\u043E\u0432\u0430 ";
+	akt:has-affiliation <http://mathnet.ru/Kazanskijgosudarstvennyjuniversitet>;
+	a akt:Affiliated-Person.
+<http://mathnet.ru/AADemchenko> akt:full-name "\u0410. \u0410. \u0414\u0435\u043C\u0447\u0435\u043D\u043A\u043E ";
+	akt:has-affiliation <http://mathnet.ru/Voronezhskijgosudarstvennyjuniversitet>;
+	a akt:Affiliated-Person.
+<http://mathnet.ru/AAEfremov> akt:full-name "\u0410. \u0410. \u0415\u0444\u0440\u0435\u043C\u043E\u0432 ";
+	akt:has-affiliation <http://mathnet.ru/Kazanskijgosudarstvennyjuniversitet>;
+	a akt:Affiliated-Person.
+<http://mathnet.ru/AAEgorov> akt:full-name "\u0410. \u0410. \u0415\u0433\u043E\u0440\u043E\u0432 ";
+	a akt:Person.
+<http://mathnet.ru/AAErmolickij> akt:full-name "\u0410. \u0410. \u0415\u0440\u043C\u043E\u043B\u0438\u0446\u043A\u0438\u0439 ";
+	akt:has-affiliation <http://mathnet.ru/Belorusskijinstitutpravovedenija>;
+	a akt:Affiliated-Person.
+<http://mathnet.ru/AAGolikov> akt:full-name "\u0410. \u0410. \u0413\u043E\u043B\u0438\u043A\u043E\u0432 ";
+	akt:has-affiliation <http://mathnet.ru/Vychislitel'nyjcentrimAADorodnicynaRAN>;
+	a akt:Affiliated-Person.
+<http://mathnet.ru/AAGrigor'janc> akt:full-name "\u0410. \u0410. \u0413\u0440\u0438\u0433\u043E\u0440\u044C\u044F\u043D\u0446 ";
+	akt:has-affiliation <http://mathnet.ru/GosudarstvennyjinzhenernyjuniversitetArmenii>;
+	a akt:Affiliated-Person.
+<http://mathnet.ru/AAGusenkova> akt:full-name "\u0410. \u0410. \u0413\u0443\u0441\u0435\u043D\u043A\u043E\u0432\u0430 ";
+	akt:has-affiliation <http://mathnet.ru/Kazanskijgosudarstvennyjuniversitet>;
+	a akt:Affiliated-Person.
+<http://mathnet.ru/AAJacenko> akt:full-name "\u0410. \u0410. \u042F\u0446\u0435\u043D\u043A\u043E ";
+	akt:has-affiliation <http://mathnet.ru/OdesskijgosudarstvennyjuniversitetimIIMechnikova>;
+	a akt:Affiliated-Person.
+<http://mathnet.ru/AAKalinkina> akt:full-name "\u0410. \u0410. \u041A\u0430\u043B\u0438\u043D\u043A\u0438\u043D\u0430 ";
+	akt:has-affiliation <http://mathnet.ru/NizhegorodskijgosudarstvennyjuniversitetimNILobachevskogo>;
+	a akt:Affiliated-Person.
+<http://mathnet.ru/AAKaramova> akt:full-name "\u0410. \u0410. \u041A\u0430\u0440\u0430\u043C\u043E\u0432\u0430 ";
+	a akt:Person.
+<http://mathnet.ru/AAKarelin> akt:full-name "\u0410. \u0410. \u041A\u0430\u0440\u0435\u043B\u0438\u043D ";
+	akt:has-affiliation <http://mathnet.ru/AvtonomnyjuniversitetshtataIdal'go>;
+	a akt:Affiliated-Person.
+<http://mathnet.ru/AAKel'zon> akt:full-name "\u0410. \u0410. \u041A\u0435\u043B\u044C\u0437\u043E\u043D ";
+	akt:has-affiliation <http://mathnet.ru/GosudarstvennajamorskajaakademijaimadmiralaSOMakarova>;
+	a akt:Affiliated-Person.
+<http://mathnet.ru/AAKolokolov> akt:full-name "\u0410. \u0410. \u041A\u043E\u043B\u043E\u043A\u043E\u043B\u043E\u0432 ";
+	akt:has-affiliation <http://mathnet.ru/OmskijfilialInstitutamatematikiimSLSobolevaSORAN>;
+	a akt:Affiliated-Person.
+<http://mathnet.ru/AAKosov> akt:full-name "\u0410. \u0410. \u041A\u043E\u0441\u043E\u0432 ";
+	akt:has-affiliation <http://mathnet.ru/Irkutskijgosudarstvennyjuniversitet>;
+	a akt:Affiliated-Person.
+<http://mathnet.ru/AAKungurcev> akt:full-name "\u0410. \u0410. \u041A\u0443\u043D\u0433\u0443\u0440\u0446\u0435\u0432 ";
+	akt:has-affiliation <http://mathnet.ru/Kazanskijgosudarstvennyjuniversitet>;
+	a akt:Affiliated-Person.
+<http://mathnet.ru/AAKuznecova> akt:full-name "\u0410. \u0410. \u041A\u0443\u0437\u043D\u0435\u0446\u043E\u0432\u0430 ";
+	akt:has-affiliation <http://mathnet.ru/InstitutdinamikisistemiteoriiupravlenijaSORAN>;
+	a akt:Affiliated-Person.
+<http://mathnet.ru/AAKytmanov> akt:full-name "\u0410. \u0410. \u041A\u044B\u0442\u043C\u0430\u043D\u043E\u0432 ";
+	akt:has-affiliation <http://mathnet.ru/Krasnojarskijgosudarstvennyjuniversitet>;
+	a akt:Affiliated-Person.
+<http://mathnet.ru/AAMagazev> akt:full-name "\u0410. \u0410. \u041C\u0430\u0433\u0430\u0437\u0435\u0432 ";
+	akt:has-affiliation <http://mathnet.ru/OmskijgosudarstvennyjuniversitetimFMDostoevskogo>;
+	a akt:Affiliated-Person.
+<http://mathnet.ru/AAMedovikov> akt:full-name "\u0410. \u0410. \u041C\u0435\u0434\u043E\u0432\u0438\u043A\u043E\u0432 ";
+	akt:has-affiliation <http://mathnet.ru/Institutvychislitel'nojmatematikiRAN>;
+	a akt:Affiliated-Person.
+<http://mathnet.ru/AANazipov> akt:full-name "\u0410. \u0410. \u041D\u0430\u0437\u0438\u043F\u043E\u0432 ";
+	akt:has-affiliation <http://mathnet.ru/Kazanskijgosudarstvennyjuniversitet>;
+	a akt:Affiliated-Person.
 }
