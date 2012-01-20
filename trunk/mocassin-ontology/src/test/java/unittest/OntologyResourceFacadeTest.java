@@ -23,25 +23,26 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 @GuiceContext({ OntologyModule.class, VirtuosoModule.class })
 public class OntologyResourceFacadeTest {
 	@Inject
-	private OntologyResourceFacade omdocResourceFacade;
+	private OntologyResourceFacade ontologyResourceFacade;
 
 	public OntologyResourceFacade getOntologyResourceFacade() {
-		return omdocResourceFacade;
+		return ontologyResourceFacade;
 	}
 
 	@Test
 	public void testLoadArticleMetadataResource() {
 		OntologyResource resource = new OntologyResource(
-				"http://arxiv.org/abs/math/0005005v2");
+				"http://mathnet.ru/ivm537");
 		ArticleMetadata articleMetadata = getOntologyResourceFacade().load(
 				resource);
-		Assert.assertEquals("http://arxiv.org/abs/math/0005005v2",
-				articleMetadata.getId());
-		boolean titleEquals = "The Derived Picard Group is a Locally Algebraic Group"
+		Assert.assertEquals("ivm537", articleMetadata.getCollectionId());
+		boolean titleEquals = "Неточный комбинированный релаксационный метод для многозначных включений"
 				.equals(articleMetadata.getTitle());
 
 		Assert.assertTrue(titleEquals);
-		Assert.assertTrue(articleMetadata.getAuthors() != null);
+		Assert.assertEquals(1, articleMetadata.getAuthors().size());
+		Assert.assertEquals("И. В. Коннов ", articleMetadata.getAuthors().get(0)
+				.getName());
 	}
 
 	@Test
