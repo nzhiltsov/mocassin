@@ -19,7 +19,7 @@ public enum MocassinOntologyClasses {
 			2, "conjecture", "hypothesis", "гипотеза"), COROLLARY(3, "corollary", "следствие"), DEFINITION(
 			4, "definition", "определение"), EQUATION(5, "equation", "equationgroup"), EXAMPLE(
 			6, "example", "пример"), FIGURE(7, "figure"), LEMMA(8, "lemma", "лемма"), PROOF(9,
-			"proof"), PROPOSITION(10, "proposition", "предложение"), REMARK(11, "remark",
+			"proof", "доказательство"), PROPOSITION(10, "proposition", "предложение"), REMARK(11, "remark",
 			"note", "comment", "замечание", "комментарий"), SECTION(12, "section", "subsection", "subsubsection"), THEOREM(
 			13, "theorem", "теорема"), UNRECOGNIZED_DOCUMENT_SEGMENT(14, "");
 
