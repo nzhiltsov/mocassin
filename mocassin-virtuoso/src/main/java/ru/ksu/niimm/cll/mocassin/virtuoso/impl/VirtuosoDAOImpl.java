@@ -82,6 +82,11 @@ public class VirtuosoDAOImpl implements VirtuosoDAO {
 	@Override
 	@ValidateGraph
 	public List<QuerySolution> get(RDFGraph graph, Query query) {
+		if (!query.toString().contains("bif:contains")) {// TODO: workaround for
+															// Virtuoso's
+			// bug with full-text indexes
+			query.addGraphURI(graph.getIri());
+		}
 		List<QuerySolution> solutions = new ArrayList<QuerySolution>();
 
 		VirtGraph virtGraph = new VirtGraph(graph.getUrl(),
@@ -117,7 +122,7 @@ public class VirtuosoDAOImpl implements VirtuosoDAO {
 		} else {
 			resultQuery = jenaQuery.toString();
 		}
-		
+
 		VirtuosoQueryExecution vqe = VirtuosoQueryExecutionFactory.create(
 				resultQuery, virtGraph);
 		ResultSet results = vqe.execSelect();
