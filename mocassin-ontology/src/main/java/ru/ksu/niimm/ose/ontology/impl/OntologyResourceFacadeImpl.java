@@ -12,6 +12,7 @@ import ru.ksu.niimm.cll.mocassin.arxiv.Author;
 import ru.ksu.niimm.cll.mocassin.arxiv.impl.Link;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
+import ru.ksu.niimm.cll.mocassin.util.StringUtil;
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFGraph;
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFTriple;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoDAO;
@@ -30,10 +31,11 @@ import com.google.inject.name.Named;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.QuerySolution;
+import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Resource;
 
 public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
-	private static final String PUBLICATION_TYPE_URI = "http://salt.semanticauthoring.org/ontologies/sdo#Publication";
+	private static final String PUBLICATION_TYPE_URI = "http://www.aktors.org/ontology/portal#Article-Reference";
 	private static final String RETRIEVED_OBJECT_CLASS = "?oclass";
 	private static final String RETRIEVED_SUBJECT_CLASS = "?sclass";
 	private static final String RETRIEVED_OBJECT_GRAPH_NODE = "?o";
@@ -84,8 +86,8 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 					.getUri());
 			Query query = QueryFactory.create(segmentInfoQueryString);
 
-			List<QuerySolution> solutions = getVirtuosoDAO().get(getSearchGraph(),
-					query);
+			List<QuerySolution> solutions = getVirtuosoDAO().get(
+					getSearchGraph(), query);
 			if (solutions.isEmpty()) {
 				logger.log(Level.SEVERE,
 						"none of a title and publication metadata was found for a segment: "
@@ -169,12 +171,14 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 
 	private ArticleMetadata loadPublication(String documentUri) {
 		String title = retrieveTitle(documentUri);
-		String arxivId = retrieveArxivId(documentUri);
+		// String arxivId = retrieveArxivId(documentUri); // TODO: workaround
+		// for Mathnet keys
+		String mathnetKey = StringUtil.extractMathnetKeyFromURI(documentUri);
 		List<Author> authors = retrieveAuthors(documentUri);
 		List<Link> links = retrieveLinks(documentUri);
 
 		ArticleMetadata articleMetadata = new ArticleMetadata();
-		articleMetadata.setArxivId(arxivId);
+		articleMetadata.setCollectionId(mathnetKey);
 		articleMetadata.setId(documentUri);
 		articleMetadata.setTitle(title);
 		articleMetadata.setAuthors(authors);
@@ -223,8 +227,8 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 		List<QuerySolution> solutions = getVirtuosoDAO().get(getSearchGraph(),
 				query);
 		for (QuerySolution solution : solutions) {
-			Resource resource = solution
-					.getResource(RETRIEVED_AUTHOR_NAME_ELEMENT_KEY);
+			Literal resource = solution
+					.getLiteral(RETRIEVED_AUTHOR_NAME_ELEMENT_KEY);
 			String authorName = resource.toString();
 			/**
 			 * TODO extract an author's affiliation, either
@@ -244,10 +248,10 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 		if (solutions.isEmpty()) {
 			return null;
 		}
-		Resource resource = solutions.get(0).getResource(
+		Literal literal = solutions.get(0).getLiteral(
 				RETRIEVED_TITLE_ELEMENT_KEY);
 
-		return resource.toString();
+		return literal.toString();
 	}
 
 	private String retrieveArxivId(String documentUri) {

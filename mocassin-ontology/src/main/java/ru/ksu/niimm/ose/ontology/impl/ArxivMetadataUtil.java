@@ -88,6 +88,6 @@ public class ArxivMetadataUtil {
 	private static void convertKey(List<RDFTriple> triples,
 			ArticleMetadata metadata) {
 		triples.add(createTriple("<%s> <%s> \"%s\" .", metadata.getId(),
-				ARXIV_IDENTIFIER, metadata.getArxivId()));
+				ARXIV_IDENTIFIER, metadata.getCollectionId()));
 	}
 }

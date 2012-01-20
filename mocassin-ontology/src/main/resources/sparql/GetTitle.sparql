@@ -1,7 +1,5 @@
 SELECT * {
-?1 a <http://salt.semanticauthoring.org/ontologies/sdo#Publication> .
-?1 <http://djpowell.net/schemas/atomrdf/0.3/title> ?2 .
-?2 a <http://djpowell.net/schemas/atomrdf/0.3/PlainText> .
-?2 <http://djpowell.net/schemas/atomrdf/0.3/textValue> ?3 .
+?1 a <http://www.aktors.org/ontology/portal#Article-Reference> .
+?1 <http://www.aktors.org/ontology/portal#has-title> ?3 .
 FILTER (str(?1) = "%s") .
 }
