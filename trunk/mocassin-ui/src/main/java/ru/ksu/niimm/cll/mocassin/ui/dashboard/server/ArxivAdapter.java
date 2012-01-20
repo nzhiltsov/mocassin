@@ -51,7 +51,7 @@ public class ArxivAdapter extends AbstractArXMLivAdapter implements
 		ArticleMetadata metadata;
 		try {
 			metadata = arxivDAOFacade.retrieve(arxivId);
-			metadata.setArxivId(arxivId);
+			metadata.setCollectionId(arxivId);
 			// Step 2
 			InputStream latexSourceStream = arxivDAOFacade.loadSource(metadata);
 			latexDocumentDAO.save(arxivId, latexSourceStream, "utf8");
