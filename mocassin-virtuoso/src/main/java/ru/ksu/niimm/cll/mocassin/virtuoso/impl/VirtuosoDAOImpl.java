@@ -107,7 +107,7 @@ public class VirtuosoDAOImpl implements VirtuosoDAO {
 		Query jenaQuery = QueryFactory.create(query);
 		if (!query.contains("bif:contains")) {// TODO: workaround for Virtuoso's
 												// bug with full-text indexes
-			jenaQuery.addGraphURI("http://cll.niimm.ksu.ru/mocassintest");
+			jenaQuery.addGraphURI(graph.getIri());
 		}
 		String resultQuery;
 		if (isInferenceOn) {
@@ -117,6 +117,7 @@ public class VirtuosoDAOImpl implements VirtuosoDAO {
 		} else {
 			resultQuery = jenaQuery.toString();
 		}
+		
 		VirtuosoQueryExecution vqe = VirtuosoQueryExecutionFactory.create(
 				resultQuery, virtGraph);
 		ResultSet results = vqe.execSelect();
@@ -167,7 +168,7 @@ public class VirtuosoDAOImpl implements VirtuosoDAO {
 				graph.getUsername(), graph.getPassword());
 		VirtuosoUpdateRequest request = VirtuosoUpdateFactory.create(
 				expression, virtGraph); // TODO: use the model
-															// defined
+										// defined
 		// above and
 		// virtGraph.getBulkUpdateHandler()
 		try {
