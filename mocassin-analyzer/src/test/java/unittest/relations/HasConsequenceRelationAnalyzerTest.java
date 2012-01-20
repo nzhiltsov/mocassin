@@ -17,9 +17,11 @@ import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.ReferenceSearcher;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
+import ru.ksu.niimm.cll.mocassin.nlp.gate.GateModule;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.ParsedDocumentImpl;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexParserModule;
+import ru.ksu.niimm.cll.mocassin.parser.pdf.PdfParserModule;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
 import ru.ksu.niimm.ose.ontology.OntologyModule;
 
@@ -31,7 +33,7 @@ import edu.uci.ics.jung.graph.Graph;
 
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext({ AnalyzerModule.class, NlpModule.class, LatexParserModule.class,
-		OntologyModule.class, VirtuosoModule.class, FullTextModule.class })
+		OntologyModule.class, VirtuosoModule.class, FullTextModule.class, GateModule.class, PdfParserModule.class })
 public class HasConsequenceRelationAnalyzerTest {
 	@Inject
 	private HasConsequenceRelationAnalyzer hasConsequenceRelationAnalyzer;
@@ -44,9 +46,9 @@ public class HasConsequenceRelationAnalyzerTest {
 
 	@Before
 	public void init() {
-		document = new ParsedDocumentImpl("math/0205003",
-				"http://arxiv.org/abs/math/0205003",
-				"http://arxiv.org/pdf/math/0205003");
+		document = new ParsedDocumentImpl("ivm537",
+				"http://mathnet.ru/ivm537",
+				"http://mathnet.ru/ivm537");
 		graph = this.referenceSearcher.retrieveStructuralGraph(document);
 	}
 
@@ -59,8 +61,8 @@ public class HasConsequenceRelationAnalyzerTest {
 			if (ref.getPredictedRelation() == MocassinOntologyRelations.HAS_CONSEQUENCE) {
 				StructuralElement from = graph.getSource(ref);
 				StructuralElement to = graph.getDest(ref);
-				Assert.assertEquals(1167, from.getId());
-				Assert.assertEquals(2949, to.getId());
+				Assert.assertEquals(2359, from.getId());
+				Assert.assertEquals(2941, to.getId());
 				found = true;
 				break;
 			}

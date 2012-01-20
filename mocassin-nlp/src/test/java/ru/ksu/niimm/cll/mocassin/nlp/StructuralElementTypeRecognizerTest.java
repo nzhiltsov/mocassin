@@ -17,8 +17,8 @@ import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext({ NlpModule.class, GateModule.class,
-		LatexParserModule.class, PdfParserModule.class })
+@GuiceContext({ NlpModule.class, GateModule.class, LatexParserModule.class,
+		PdfParserModule.class })
 public class StructuralElementTypeRecognizerTest {
 
 	@Inject
@@ -32,10 +32,9 @@ public class StructuralElementTypeRecognizerTest {
 	@Before
 	public void init() throws Exception {
 
-		ParsedDocument parsedDocument = new ParsedDocumentImpl("math/0205003",
-				"http://arxiv.org/abs/math/0205003",
-				"http://arxiv.org/pdf/math/0205003");
-		testElement = structuralElementSearcher.findById(parsedDocument, 402);
+		ParsedDocument parsedDocument = new ParsedDocumentImpl("ivm537",
+				"http://mathnet.ru/ivm537", "http://mathnet.ru/ivm537");
+		testElement = structuralElementSearcher.findById(parsedDocument, 1082);
 
 	}
 
@@ -44,7 +43,7 @@ public class StructuralElementTypeRecognizerTest {
 
 		MocassinOntologyClasses prediction = getStructuralElementTypeRecognizer()
 				.predict(testElement);
-		Assert.assertEquals(MocassinOntologyClasses.THEOREM, prediction);
+		Assert.assertEquals(MocassinOntologyClasses.PROOF, prediction);
 	}
 
 	public StructuralElementTypeRecognizer getStructuralElementTypeRecognizer() {
