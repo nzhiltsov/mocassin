@@ -7,6 +7,7 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import ru.ksu.niimm.cll.mocassin.util.IOUtil;
@@ -21,7 +22,6 @@ import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.util.iterator.ExtendedIterator;
 
 public class VirtuosoDAOTest extends AbstractTest {
@@ -42,24 +42,31 @@ public class VirtuosoDAOTest extends AbstractTest {
 	public void testInsert() {
 		List<RDFTriple> triples = new ArrayList<RDFTriple>();
 		RDFTriple triple = new RDFTripleImpl(
-				"<http://linkeddata.tntbase.org/temp> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://omdoc.org/ontology#Document> .");
+				"<http://mathnet.ru/TestAuthor> <http://www.aktors.org/ontology/portal#full-name> \"Test Author\" .");
 		triples.add(triple);
-
 		getVirtuosoDAO().insert(getConfiguredGraph(), triples);
+		List<QuerySolution> solutions = getVirtuosoDAO()
+				.get(getConfiguredGraph(),
+						"select * {<http://mathnet.ru/TestAuthor> <http://www.aktors.org/ontology/portal#full-name> \"Test Author\" }",
+						false);
+		Assert.assertTrue(solutions.size() >= 1);
 	}
 
 	@Test
+	@Ignore("The data have already been loaded")
 	public void testLargeUpdateExpression() {
 		getVirtuosoDAO().executeUpdate(getConfiguredGraph(), largeInsertQuery);
 	}
 
 	@Test
-	public void testDelete() {
+	@Ignore("Not supported operation")
+	public void testCreateAndDelete() {
 		RDFGraph graph = getConfiguredGraph();
-		getVirtuosoDAO().delete(graph, "all1.omdoc");
+		getVirtuosoDAO().delete(graph, "test");
 	}
 
 	@Test
+	@Ignore("Not supported operation")
 	public void testUpdate() {
 		List<RDFTriple> triples = createTriplesForUpdate();
 
@@ -74,25 +81,23 @@ public class VirtuosoDAOTest extends AbstractTest {
 	@Test
 	public void testDescribe() {
 		Model model = getVirtuosoDAO().describe(getGraph(),
-				"<http://arxiv.org/abs/math/0005005v2>");
+				"http://mathnet.ru/AAAkimov");
 		Graph describeGraph = model.getGraph();
-		ExtendedIterator<Triple> foundIt = describeGraph.find(Node.ANY,
-				Node.ANY, Node.ANY);
-		boolean contains = false;
-		Node subject = Node.createURI("http://arxiv.org/abs/math/0005005v2");
-		Node predicate = Node
-				.createURI("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
-		Node object = Node
-				.createURI("http://salt.semanticauthoring.org/ontologies/sdo#Publication");
-		Triple tripleForSearch = new Triple(subject, predicate, object);
-		while (foundIt.hasNext()) {
-			Triple triple = foundIt.next();
-			if (triple.equals(tripleForSearch)) {
-				contains = true;
-				break;
-			}
-		}
-		Assert.assertTrue(contains);
+		ExtendedIterator<Triple> foundIt = describeGraph.find(Node
+				.createURI("http://mathnet.ru/AAAkimov"), Node
+				.createURI("http://www.aktors.org/ontology/portal#full-name"),
+				Node.createLiteral("А. А. Акимов "));
+
+		Assert.assertTrue(foundIt.hasNext());
+	}
+
+	@Test
+	public void testGet() {
+		RDFGraph graph = getConfiguredGraph();
+		String query = "select distinct ?p where {?p a <http://www.aktors.org/ontology/portal#Person>} limit 10";
+		List<QuerySolution> solutions = getVirtuosoDAO().get(graph, query,
+				false);
+		Assert.assertEquals(10, solutions.size());
 	}
 
 	private List<RDFTriple> createTheoremTextTriples() {
@@ -139,18 +144,6 @@ public class VirtuosoDAOTest extends AbstractTest {
 				"<all.omdoc> <http://purl.org/dc/elements/1.1/creator> \"Author2\" .");
 		triples.add(triple9);
 		return triples;
-	}
-
-	@Test
-	public void testGet() {
-		RDFGraph graph = getConfiguredGraph();
-		String query = "SELECT DISTINCT ?1 "
-				+ "{ ?1 a <http://salt.semanticauthoring.org/ontologies/sdo#Publication> .}";
-		List<QuerySolution> solutions = getVirtuosoDAO()
-				.get(graph, query, true);
-		for (QuerySolution solution : solutions) {
-			Resource resource = solution.getResource("?1");
-		}
 	}
 
 	public VirtuosoDAO getVirtuosoDAO() {

@@ -1,6 +1,6 @@
 PREFIX support: <http://www.aktors.org/ontology/support#>
 PREFIX akt: <http://www.aktors.org/ontology/portal#>
-INSERT INTO GRAPH <http://cll.niimm.ksu.ru/mocassintest> {
+INSERT INTO GRAPH <http://cll.niimm.ksu.ru/mocassinfortest> {
 <http://mathnet.ru/#Year1997> support:year-of "1997";
 	a support:Calendar-Date.
 <http://mathnet.ru/#Year1998> support:year-of "1998";
