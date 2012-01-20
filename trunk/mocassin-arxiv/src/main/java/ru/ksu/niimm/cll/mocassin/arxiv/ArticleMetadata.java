@@ -13,9 +13,9 @@ import ru.ksu.niimm.cll.mocassin.arxiv.impl.Link;
  */
 public class ArticleMetadata {
 	/**
-	 * arXiv id, e.g. 'math/0205003'
+	 * arXiv id, e.g. 'math/0205003' or 'ivm537'
 	 */
-	private String arxivId;
+	private String collectionId;
 	/**
 	 * full id, e.g. 'http://arxiv.org/abs/math/0205003v1' where the 'v1' suffix
 	 * is a pointer of the version
@@ -90,12 +90,12 @@ public class ArticleMetadata {
 		this.currentSegmentTitle = currentSegmentTitle;
 	}
 
-	public String getArxivId() {
-		return arxivId;
+	public String getCollectionId() {
+		return collectionId;
 	}
 
-	public void setArxivId(String arxivId) {
-		this.arxivId = arxivId;
+	public void setCollectionId(String collectionId) {
+		this.collectionId = collectionId;
 	}
 
 }
