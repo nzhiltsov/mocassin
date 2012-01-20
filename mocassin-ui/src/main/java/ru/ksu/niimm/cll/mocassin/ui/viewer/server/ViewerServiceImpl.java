@@ -28,7 +28,7 @@ public class ViewerServiceImpl implements ViewerService {
 		ArticleMetadata metadata = ontologyResourceFacade
 				.load(new OntologyResource(uri));
 		ArticleInfo info = new ArticleInfo();
-		info.setKey(metadata.getArxivId());
+		info.setKey(metadata.getCollectionId());
 		info.setUri(metadata.getId());
 		info.setTitle(metadata.getTitle());
 		info.setCurrentSegmentUri(metadata.getCurrentSegmentUri());
