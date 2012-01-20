@@ -36,7 +36,7 @@ public class MathnetAdapter extends AbstractArXMLivAdapter implements
 		try {
 			ArticleMetadata metadata = new ArticleMetadata();
 			metadata.setId("http://mathnet.ru/" + mathnetKey);
-			metadata.setArxivId(mathnetKey);
+			metadata.setCollectionId(mathnetKey);
 			ArrayList<Link> links = new ArrayList<Link>();
 
 			links.add(Link.pdfLink(String.format(MATHNET_DOWNLOAD_PDF_URL,
