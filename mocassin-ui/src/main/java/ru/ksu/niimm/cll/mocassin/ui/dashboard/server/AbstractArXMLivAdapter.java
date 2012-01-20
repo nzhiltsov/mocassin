@@ -139,7 +139,7 @@ public abstract class AbstractArXMLivAdapter implements ArXMLivAdapter {
 		Link pdfLink = Iterables.find(metadata.getLinks(),
 				new PdfLinkPredicate());
 		ParsedDocument document = new ParsedDocumentImpl(
-				metadata.getArxivId(), metadata.getId(), pdfLink.getHref());
+				metadata.getCollectionId(), metadata.getId(), pdfLink.getHref());
 		return document;
 	}
 
