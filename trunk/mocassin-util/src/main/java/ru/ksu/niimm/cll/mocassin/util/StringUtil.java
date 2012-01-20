@@ -155,4 +155,10 @@ public class StringUtil {
 		return styleMatcher.group(2);
 	}
 
+	public static String extractMathnetKeyFromURI(String uri) {
+		if (uri == null || uri.length() == 0)
+			throw new IllegalArgumentException("URI cannot be null or empty");
+		return uri.substring(uri.lastIndexOf("/") + 1);
+	}
+
 }
