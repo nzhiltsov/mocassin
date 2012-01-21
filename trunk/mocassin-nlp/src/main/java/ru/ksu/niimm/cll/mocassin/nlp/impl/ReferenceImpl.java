@@ -1,5 +1,6 @@
 package ru.ksu.niimm.cll.mocassin.nlp.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
@@ -11,7 +12,7 @@ public class ReferenceImpl implements Reference {
 	private final int id;
 	private final ParsedDocument document;
 	private final String additionalRefid;
-	private List<Token> sentenceTokens;
+	private List<Token> sentenceTokens = new ArrayList<Token>();
 	private MocassinOntologyRelations relation;
 
 	public static class Builder {

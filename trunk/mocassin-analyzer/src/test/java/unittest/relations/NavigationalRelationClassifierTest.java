@@ -1,8 +1,7 @@
 package unittest.relations;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.Iterator;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -18,8 +17,11 @@ import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.ReferenceSearcher;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
+import ru.ksu.niimm.cll.mocassin.nlp.gate.GateModule;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.ParsedDocumentImpl;
+import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexParserModule;
+import ru.ksu.niimm.cll.mocassin.parser.pdf.PdfParserModule;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
 import ru.ksu.niimm.ose.ontology.OntologyModule;
 
@@ -30,43 +32,65 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 import edu.uci.ics.jung.graph.Graph;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext( { AnalyzerModule.class, NlpModule.class,
-		LatexParserModule.class, OntologyModule.class, VirtuosoModule.class,
-		FullTextModule.class })
+@GuiceContext({ AnalyzerModule.class, NlpModule.class, LatexParserModule.class,
+		OntologyModule.class, VirtuosoModule.class, FullTextModule.class,
+		GateModule.class, PdfParserModule.class })
 public class NavigationalRelationClassifierTest {
 	@Inject
 	private NavigationalRelationClassifier navigationalRelationClassifier;
 	@Inject
 	private ReferenceSearcher referenceSearcher;
 
-	private final List<Reference> references = new ArrayList<Reference>();
 	private Graph<StructuralElement, Reference> graph;
+
+	private Reference knownRefersToReference;
+
+	private Reference knownDependsOnReference;
+
 
 	@Before
 	public void init() throws Exception {
-		ParsedDocument document = new ParsedDocumentImpl("math/0205003", "http://arxiv.org/abs/math/0205003",
-				"http://arxiv.org/pdf/math/0205003");
+		ParsedDocument document = new ParsedDocumentImpl("ivm18",
+				"http://mathnet.ru/ivm18", "http://mathnet.ru/ivm18");
 		graph = this.referenceSearcher.retrieveStructuralGraph(document);
-		Collection<Reference> edges = graph.getEdges();
-		Assert.assertTrue(edges.size() > 0);
+		Collection<Reference> references = graph.getEdges();
+		Assert.assertTrue(references.size() > 0);
 
-		for (Reference ref : edges) {
-			if (ref.getPredictedRelation() == null) {
-				this.references.add(ref);
+		boolean foundFirst = false;
+
+		boolean foundSecond = false;
+
+		Iterator<Reference> it = references.iterator();
+
+		while (it.hasNext() && !(foundFirst && foundSecond)) {
+			Reference ref = it.next();
+			if (ref.getId() == 5086) {
+				this.knownRefersToReference = ref;
+				foundFirst = true;
+			} else if (ref.getId() == 4766) {
+				this.knownDependsOnReference = ref;
+				foundSecond = true;
 			}
-
 		}
+		Assert.assertNotNull(this.knownRefersToReference);
+		Assert.assertNotNull(this.knownDependsOnReference);
 	}
 
 	@Test
-	public void testPredict() {
-		for (Reference reference : references) {
-			Prediction prediction = navigationalRelationClassifier.predict(
-					reference, graph);
-			Assert.assertNotNull(prediction);
-			System.out.println(reference.getAdditionalRefid() + " "
-					+ prediction.getRelation() + " " + prediction.getConfidence());
-		}
+	public void testPredictRefersTo() {
+		Prediction prediction = navigationalRelationClassifier.predict(
+				knownRefersToReference, graph);
+		Assert.assertEquals(MocassinOntologyRelations.REFERS_TO,
+				prediction.getRelation());
 
 	}
+
+	@Test
+	public void testPredictDependsOn() {
+		Prediction prediction = navigationalRelationClassifier.predict(
+				knownDependsOnReference, graph);
+		Assert.assertEquals(MocassinOntologyRelations.DEPENDS_ON,
+				prediction.getRelation());
+	}
+
 }
