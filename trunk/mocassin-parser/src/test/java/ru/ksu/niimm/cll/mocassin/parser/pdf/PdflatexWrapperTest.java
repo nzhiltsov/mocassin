@@ -63,14 +63,14 @@ public class PdflatexWrapperTest {
 
 	@Test
 	public void testCompilePatched() throws PdflatexCompilationException {
-		String arxivId = "math/0002188";
+		String arxivId = "ivm18";
 		pdflatexWrapper.compilePatched(arxivId);
 
 		Assert.assertTrue(new File("/opt/mocassin/aux-pdf/"
 				+ StringUtil.arxivid2filename(arxivId, "pdf")).exists());
 		Assert.assertTrue(new File("/opt/mocassin/aux-pdf/"
 				+ StringUtil.arxivid2filename(arxivId, "pdfsync")).exists());
-		arxivId = "math/0001036";
+		arxivId = "ivm537";
 		pdflatexWrapper.compilePatched(arxivId);
 
 		Assert.assertTrue(new File("/opt/mocassin/aux-pdf/"
@@ -80,14 +80,7 @@ public class PdflatexWrapperTest {
 	}
 
 	@Test
-	public void testCompileShaded() throws PdflatexCompilationException {
-		String arxivId = "math/0001036";
-		pdflatexWrapper.compileShaded(arxivId, 1009);
-		Assert.assertTrue(new File(String.format("/opt/mocassin/pdf/%s$%d.pdf",
-				StringUtil.arxivid2gateid(arxivId), 1009)).exists());
-	}
-
-	@Test @Ignore
+	@Ignore
 	public void testCompileMathnetArticles() {
 		for (String mathnetKey : id2filename.keySet()) {
 			try {
