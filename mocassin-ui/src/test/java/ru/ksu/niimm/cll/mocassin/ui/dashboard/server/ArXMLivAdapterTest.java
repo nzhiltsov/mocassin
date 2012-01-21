@@ -48,7 +48,7 @@ public class ArXMLivAdapterTest {
 	@Test
 	public void testHandle() {
 		List sample = CollectionUtil
-				.sampleRandomSublist(new ArrayList(ids), 10);
+				.sampleRandomSublist(new ArrayList(ids), 2);
 		int number = arXMLivAdapter.handle(new HashSet(sample));
 		System.out.println(number
 				+ " document(s) have been processed successfully");
