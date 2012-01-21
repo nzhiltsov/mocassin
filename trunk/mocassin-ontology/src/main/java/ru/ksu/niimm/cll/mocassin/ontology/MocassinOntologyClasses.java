@@ -15,13 +15,17 @@ import com.google.common.collect.ImmutableBiMap;
  * 
  */
 public enum MocassinOntologyClasses {
-	AXIOM(0, "axiom", "аксиома"), CLAIM(1, "claim", "assertion", "statement", "утверждение"), CONJECTURE(
-			2, "conjecture", "hypothesis", "гипотеза"), COROLLARY(3, "corollary", "следствие"), DEFINITION(
-			4, "definition", "определение"), EQUATION(5, "equation", "equationgroup"), EXAMPLE(
-			6, "example", "пример"), FIGURE(7, "figure"), LEMMA(8, "lemma", "лемма"), PROOF(9,
-			"proof", "доказательство"), PROPOSITION(10, "proposition", "предложение"), REMARK(11, "remark",
-			"note", "comment", "замечание", "комментарий"), SECTION(12, "section", "subsection", "subsubsection"), THEOREM(
-			13, "theorem", "теорема"), UNRECOGNIZED_DOCUMENT_SEGMENT(14, "");
+	AXIOM(0, "axiom", "аксиома"), CLAIM(1, "claim", "assertion", "statement",
+			"утверждение"), CONJECTURE(2, "conjecture", "hypothesis",
+			"гипотеза"), COROLLARY(3, "corollary", "следствие"), DEFINITION(4,
+			"definition", "определение"), EQUATION(5, "equation",
+			"equationgroup"), EXAMPLE(6, "example", "пример"), FIGURE(7,
+			"figure", "рисунок", "график", "изображение"), LEMMA(8, "lemma", "лемма"), PROOF(9, "proof",
+			"доказательство"), PROPOSITION(10, "proposition", "предложение"), REMARK(
+			11, "remark", "note", "comment", "замечание", "комментарий"), SECTION(
+			12, "section", "subsection", "subsubsection"), THEOREM(13,
+			"theorem", "теорема"), UNRECOGNIZED_DOCUMENT_SEGMENT(14, ""), TABLE(
+			15, "tabular", "table", "таблица");
 
 	private String[] labels;
 	/**
@@ -57,7 +61,8 @@ public enum MocassinOntologyClasses {
 			.put(SECTION,
 					"http://salt.semanticauthoring.org/ontologies/sdo#Section")
 			.put(THEOREM, "http://cll.niimm.ksu.ru/ontologies/mocassin#Theorem")
-			.put(UNRECOGNIZED_DOCUMENT_SEGMENT, "http://cll.niimm.ksu.ru/ontologies/mocassin#DocumentSegment")
+			.put(UNRECOGNIZED_DOCUMENT_SEGMENT,
+					"http://cll.niimm.ksu.ru/ontologies/mocassin#DocumentSegment")
 			.build();
 
 	public String[] getLabels() {
