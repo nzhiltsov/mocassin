@@ -49,14 +49,14 @@ public class ArxmlivProducerTest {
 
 	@Test
 	public void testProduce() {
-		String arxivId = "math/0002188";
+		String arxivId = "ivm18";
 		String path = arxmlivProducer.produce(arxivId);
-		Assert.assertEquals("/opt/mocassin/arxmliv/math_0002188.tex.xml", path);
+		Assert.assertEquals("/opt/mocassin/arxmliv/ivm18.tex.xml", path);
 		Assert.assertTrue(new File("/opt/mocassin/arxmliv/"
 				+ StringUtil.arxivid2filename(arxivId, "tex.xml")).exists());
-		arxivId = "math/0001036";
+		arxivId = "ivm537";
 		path = arxmlivProducer.produce(arxivId);
-		Assert.assertEquals("/opt/mocassin/arxmliv/math_0001036.tex.xml", path);
+		Assert.assertEquals("/opt/mocassin/arxmliv/ivm537.tex.xml", path);
 		Assert.assertTrue(new File("/opt/mocassin/arxmliv/"
 				+ StringUtil.arxivid2filename(arxivId, "tex.xml")).exists());
 	}
