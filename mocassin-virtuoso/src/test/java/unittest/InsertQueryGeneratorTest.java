@@ -14,8 +14,8 @@ import ru.ksu.niimm.cll.mocassin.virtuoso.impl.RDFTripleImpl;
 import com.google.inject.Inject;
 
 public class InsertQueryGeneratorTest extends AbstractTest {
-	private static final String TRIPLE_2 = "<all.omdoc#whatislogic> <http://salt.semanticauthoring.org/onto/abstract-document-ontology#hasPart> <all.omdoc#whatislogic.p11> .";
-	private static final String TRIPLE_1 = "<all.omdoc#whatislogic> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://omdoc.org/ontology#Theory> .";
+	private static final String TRIPLE_2 = "<http://mathnet.ru/ivm18> a <http://www.aktors.org/ontology/portal#Article-Reference> .";
+	private static final String TRIPLE_1 = "<http://mathnet.ru/ivm18> <http://www.aktors.org/ontology/portal#has-author> <http://mathnet.ru/FakeAuthor>.";
 
 	@Inject
 	private InsertQueryGenerator insertQueryGenerator;
@@ -27,11 +27,12 @@ public class InsertQueryGeneratorTest extends AbstractTest {
 		RDFTriple triple2 = new RDFTripleImpl(TRIPLE_2);
 		triples.add(triple);
 		triples.add(triple2);
-		String expression = getInsertQueryGenerator().generate(triples,
+		String generatedExpression = getInsertQueryGenerator().generate(triples,
 				getGraph());
-		Assert.assertTrue(expression.equalsIgnoreCase(String.format(
-				"INSERT INTO GRAPH %s {%s %s }", getProperties().getProperty(
-						"graph.iri"), TRIPLE_1, TRIPLE_2)));
+		String initialExpression = String.format(
+				"INSERT INTO GRAPH <%s> {%s\n%s\n}",
+				getProperties().getProperty("graph.iri"), TRIPLE_1, TRIPLE_2);
+		Assert.assertTrue(generatedExpression.equalsIgnoreCase(initialExpression));
 	}
 
 	public InsertQueryGenerator getInsertQueryGenerator() {
