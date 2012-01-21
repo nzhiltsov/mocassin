@@ -76,18 +76,18 @@ public class LatexDocumentHeaderPatcherTest {
 
 	@Test
 	public void testPatch() throws FileNotFoundException {
-		String arxivId = "math/0107167";
-		this.latexDocumentHeaderPatcher.patch(arxivId);
-		checkIfFound(arxivId);
-		arxivId = "math/0002188";
-		this.latexDocumentHeaderPatcher.patch(arxivId);
-		checkIfFound(arxivId);
+		String collectionId = "ivm18";
+		this.latexDocumentHeaderPatcher.patch(collectionId);
+		checkIfFound(collectionId);
+		collectionId = "ivm537";
+		this.latexDocumentHeaderPatcher.patch(collectionId);
+		checkIfFound(collectionId);
 	}
 
 	private void checkIfFound(final String arxivId)
 			throws FileNotFoundException {
 		Scanner scanner = new Scanner(new File("/opt/mocassin/patched-tex/"
-				+ StringUtil.arxivid2filename(arxivId, "tex")));
+				+ StringUtil.arxivid2filename(arxivId, "tex")), "cp866");
 		boolean found = false;
 		boolean foundPdfsync = false;
 		boolean foundXcolor = false;
