@@ -29,12 +29,12 @@ public class LatexParserTest {
 
 	@Before
 	public void init() throws FileNotFoundException {
-		this.in = new FileInputStream("/opt/mocassin/tex/math_0001036.tex");
+		this.in = new FileInputStream("/opt/mocassin/tex/ivm18.tex");
 	}
 
 	@Test
 	public void testParse() throws Exception {
-		LatexDocumentModel model = getParser().parse("math/0001036", getInputStream(), true);
+		LatexDocumentModel model = getParser().parse("ivm18", getInputStream(), true);
 		Assert.assertTrue(model.getReferences().size() > 0);
 	}
 
