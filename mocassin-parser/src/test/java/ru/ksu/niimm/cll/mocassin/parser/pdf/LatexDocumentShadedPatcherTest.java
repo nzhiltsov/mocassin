@@ -22,9 +22,9 @@ public class LatexDocumentShadedPatcherTest {
 
 	@Test
 	public void testPatch() {
-		String arxivId = "math/0001036";
-		latexDocumentShadedPatcher.patch(arxivId, 181, 184, 1009);
+		String collectionId = "ivm537";
+		latexDocumentShadedPatcher.patch(collectionId, 1082, 240, 305);
 		Assert.assertTrue(new File("/opt/mocassin/shaded-tex/"
-				+ StringUtil.arxivid2gateid(arxivId) + "$1009.tex").exists());
+				+ StringUtil.arxivid2gateid(collectionId) + "$1082.tex").exists());
 	}
 }
