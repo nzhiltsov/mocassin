@@ -27,23 +27,37 @@ public class StructuralElementTypeRecognizerTest {
 	@Inject
 	private StructuralElementSearcher structuralElementSearcher;
 
-	private StructuralElement testElement;
+	private StructuralElement testProofElement;
+
+	private StructuralElement testTableElement;
 
 	@Before
 	public void init() throws Exception {
 
 		ParsedDocument parsedDocument = new ParsedDocumentImpl("ivm537",
 				"http://mathnet.ru/ivm537", "http://mathnet.ru/ivm537");
-		testElement = structuralElementSearcher.findById(parsedDocument, 1082);
-
+		testProofElement = structuralElementSearcher.findById(parsedDocument,
+				1082);
+		parsedDocument = new ParsedDocumentImpl("ivm18",
+				"http://mathnet.ru/ivm18", "http://mathnet.ru/ivm18");
+		testTableElement = structuralElementSearcher.findById(parsedDocument,
+				5498);
 	}
 
 	@Test
-	public void testPredict() {
+	public void testPredictProof() {
 
 		MocassinOntologyClasses prediction = getStructuralElementTypeRecognizer()
-				.predict(testElement);
+				.predict(testProofElement);
 		Assert.assertEquals(MocassinOntologyClasses.PROOF, prediction);
+	}
+
+	@Test
+	public void testPredictTable() {
+
+		MocassinOntologyClasses prediction = getStructuralElementTypeRecognizer()
+				.predict(testTableElement);
+		Assert.assertEquals(MocassinOntologyClasses.TABLE, prediction);
 	}
 
 	public StructuralElementTypeRecognizer getStructuralElementTypeRecognizer() {

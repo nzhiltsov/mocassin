@@ -5,7 +5,8 @@ import java.util.Set;
 
 public enum ArxmlivStructureElementTypes {
 	SECTION("section"), SUBSECTION("subsection"), THEOREM("theorem"), PROOF(
-			"proof"), EQUATION("equation"), EQUATION_GROUP("equationgroup"), FIGURE("figure"), DOCUMENT("document");
+			"proof"), EQUATION("equation"), EQUATION_GROUP("equationgroup"), FIGURE(
+			"figure"), DOCUMENT("document"), TABLE("tabular");
 
 	private String label;
 

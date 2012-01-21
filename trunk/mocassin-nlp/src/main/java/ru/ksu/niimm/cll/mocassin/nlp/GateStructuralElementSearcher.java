@@ -255,7 +255,9 @@ class GateStructuralElementSearcher implements StructuralElementSearcher {
 			String classFeature = (String) annotation.getFeatures().get(
 					ArxmlivFormatConstants.CLASS_ATTRIBUTE_NAME);
 
-			String name = classFeature != null ? classFeature : type;
+			String name = classFeature != null
+					&& !type.equals(ArxmlivStructureElementTypes.TABLE
+							.toString()) ? classFeature : type;
 
 			List<String> labels = collectLabels(annotation);
 
