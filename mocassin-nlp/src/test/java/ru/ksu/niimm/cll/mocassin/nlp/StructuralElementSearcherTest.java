@@ -17,8 +17,8 @@ import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext( { NlpModule.class, GateModule.class,
-		LatexParserModule.class, PdfParserModule.class })
+@GuiceContext({ NlpModule.class, GateModule.class, LatexParserModule.class,
+		PdfParserModule.class })
 public class StructuralElementSearcherTest {
 
 	@Inject
@@ -28,17 +28,17 @@ public class StructuralElementSearcherTest {
 
 	@Before
 	public void init() throws Exception {
-		this.parsedDocument = new ParsedDocumentImpl("math/0002188", "http://arxiv.org/abs/math/0002188",
-		"http://arxiv.org/pdf/math/0002188");
+		this.parsedDocument = new ParsedDocumentImpl("ivm18",
+				"http://mathnet.ru/ivm18", "http://mathnet.ru/ivm18");
 	}
 
 	@Test
 	public void testFindById() throws Exception {
 
 		StructuralElement foundElement = getStructuralElementSearcher()
-				.findById(parsedDocument, 2799);
+				.findById(parsedDocument, 5498);
 		Assert.assertNotNull(foundElement);
-		Assert.assertEquals(7, foundElement.getStartPageNumber());
+		
 	}
 
 	@Test
@@ -54,6 +54,5 @@ public class StructuralElementSearcherTest {
 	public StructuralElementSearcher getStructuralElementSearcher() {
 		return structuralElementSearcher;
 	}
-
 
 }
