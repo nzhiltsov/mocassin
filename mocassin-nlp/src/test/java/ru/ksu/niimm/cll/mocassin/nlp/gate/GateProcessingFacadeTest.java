@@ -44,6 +44,12 @@ public class GateProcessingFacadeTest {
 		gateProcessingFacade.process("math/0002188");
 		gateProcessingFacade.process("math/0001036");
 	}
+	
+	@Test
+	public void testProcessTestDocumnet() throws AccessGateDocumentException,
+			AccessGateStorageException, ProcessException {
+		gateProcessingFacade.process("testdoc");
+	}
 
 	@Test @Ignore
 	public void testProcessMathnetArticles() {

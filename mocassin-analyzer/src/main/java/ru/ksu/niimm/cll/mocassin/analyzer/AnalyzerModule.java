@@ -3,6 +3,7 @@ package ru.ksu.niimm.cll.mocassin.analyzer;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Properties;
 
 import ru.ksu.niimm.cll.mocassin.analyzer.classifier.NavRelClassifierImpl;
 import ru.ksu.niimm.cll.mocassin.analyzer.classifier.NavigationalRelationClassifier;
@@ -34,9 +35,19 @@ import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
 
 public class AnalyzerModule extends AbstractModule {
+	private Properties properties;
 
 	@Override
 	protected void configure() {
+		try {
+			this.properties = new Properties();
+			this.properties.load(this.getClass().getClassLoader()
+					.getResourceAsStream("analyzer-module.properties"));
+			Names.bindProperties(binder(), this.properties);
+		} catch (IOException ex) {
+			throw new RuntimeException(
+					"failed to load the Analyzer module configuration");
+		}
 		bind(Matcher.class).to(NameMatcher.class);
 		bind(NameMatcherPropertiesLoader.class).to(
 				NameMatcherPropertiesLoaderImpl.class);
@@ -63,9 +74,7 @@ public class AnalyzerModule extends AbstractModule {
 	}
 
 	private void bindTrainingSetHeader() {
-		BufferedReader reader = new BufferedReader(new InputStreamReader(this
-				.getClass().getClassLoader().getResourceAsStream(
-						"mocassin-nav-relation-training-set.arff")));
+		BufferedReader reader = getHeaderReader();
 		try {
 			Instances data = new Instances(reader);
 			reader.close();
@@ -78,12 +87,25 @@ public class AnalyzerModule extends AbstractModule {
 		}
 	}
 
+	private BufferedReader getHeaderReader() {
+		return new BufferedReader(new InputStreamReader(this
+				.getClass()
+				.getClassLoader()
+				.getResourceAsStream(
+						this.properties
+								.getProperty("training.set.header.filename"))));
+	}
+
 	private void bindClassifier() {
 		Classifier classifier;
 		try {
-			classifier = (Classifier) SerializationHelper.read(this.getClass()
-					.getClassLoader().getResourceAsStream(
-							"mocassin-nav-relations-j48.model"));
+			classifier = (Classifier) SerializationHelper
+					.read(this
+							.getClass()
+							.getClassLoader()
+							.getResourceAsStream(
+									this.properties
+											.getProperty("persisted.learning.model.filename")));
 		} catch (Exception e) {
 			throw new RuntimeException(
 					"couldn't read the navigation relations learning model");

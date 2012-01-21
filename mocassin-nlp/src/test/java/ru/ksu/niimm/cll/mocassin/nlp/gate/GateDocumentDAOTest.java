@@ -1,10 +1,15 @@
 package ru.ksu.niimm.cll.mocassin.nlp.gate;
 
+import gate.Annotation;
+import gate.AnnotationSet;
 import gate.Document;
+import gate.util.OffsetComparator;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -28,7 +33,7 @@ import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext({ GateModule.class})
+@GuiceContext({ GateModule.class })
 public class GateDocumentDAOTest {
 	@Inject
 	private Logger logger;
@@ -130,8 +135,41 @@ public class GateDocumentDAOTest {
 				.get(1));
 	}
 
+	@Test
+	public void testSaveTestDocument() throws AccessGateStorageException,
+			PersistenceException, AccessGateDocumentException {
+		gateDocumentDAO.save("testdoc",
+				new File("/opt/mocassin/rustestdoc.txt"), "utf8");
+		List<String> documentIds = gateDocumentDAO.getDocumentIds();
+		Assert.assertTrue(documentIds.contains("testdoc"));
+	}
+
 	public GateDocumentDAO getGateDocumentDAO() {
 		return gateDocumentDAO;
 	}
 
+	@Test
+	public void testExtractRussianStems() throws AccessGateDocumentException,
+			AccessGateStorageException {
+		Document testDoc = null;
+		try {
+			testDoc = gateDocumentDAO.load("testdoc");
+			AnnotationSet tokenAnnotations = testDoc.getAnnotations(
+					GateFormatConstants.DEFAULT_ANNOTATION_SET_NAME).get(
+					"Token");
+			List<Annotation> tokenList = new ArrayList<Annotation>(
+					tokenAnnotations);
+			Collections.sort(tokenList, new OffsetComparator());
+			for (Annotation token : tokenList) {
+				String tokenValue = (String) token.getFeatures().get(
+						GateFormatConstants.STEM_FEATURE_NAME);
+				System.out.println(String.format("@attribute verb_%s numeric",
+						tokenValue));
+			}
+		} finally {
+			if (testDoc != null) {
+				gateDocumentDAO.release(testDoc);
+			}
+		}
+	}
 }

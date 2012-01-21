@@ -19,4 +19,11 @@ public class Prediction {
 		return confidence;
 	}
 
+	@Override
+	public String toString() {
+		return "Prediction [relation=" + relation + ", confidence="
+				+ confidence + "]";
+	}
+
+	
 }
