@@ -26,7 +26,7 @@ public class ArxmlivProducerImpl extends AbstractUnixCommandWrapper implements
 		super(logger, 4);
 		this.ARXMLIV_DOCUMENT_DIR = arxmlivDocumentsDir;
 		this.LATEX_DIR = latexDir;
-		this.cmdArray[0] = "latexml";
+		this.cmdArray[0] = "/usr/local/bin/latexml";
 		this.cmdArray[1] = String.format("--path=%s/sty/", arxmlivPath);
 	}
 
