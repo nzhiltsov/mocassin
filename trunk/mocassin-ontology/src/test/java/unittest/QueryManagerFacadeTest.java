@@ -66,26 +66,7 @@ public class QueryManagerFacadeTest {
 		// TODO : add checking for equality of queries
 	}
 
-	@Test
-	public void testDescribe() {
-		Model model = getQueryManagerFacade().describe("http://arxiv.org/abs/math/0005005v2");
-		Graph describeGraph = model.getGraph();
-		ExtendedIterator<Triple> foundIt = describeGraph.find(Node.ANY,
-				Node.ANY, Node.ANY);
-		boolean contains = false;
-		Node subject = Node.createURI("http://arxiv.org/abs/math/0005005v2");
-		Node predicate = Node.createURI("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
-		Node object = Node.createURI("http://salt.semanticauthoring.org/ontologies/sdo#Publication");
-		Triple tripleForSearch = new Triple(subject, predicate, object);
-		while (foundIt.hasNext()) {
-			Triple triple = foundIt.next();
-			if (triple.equals(tripleForSearch)) {
-				contains = true;
-				break;
-			}
-		}
-		Assert.assertTrue(contains);
-	}
+	
 
 	@Test
 	public void testGenerateFullTextQuery() {
@@ -96,38 +77,7 @@ public class QueryManagerFacadeTest {
 		queryString.length();
 	}
 
-	/*@Test
-	public void testQueryWithInference() {
-		List<OntologyResource> resources = getQueryManagerFacade().query(
-				makeQueryWithInferenceStatement());
-		String lemmaUri = "http://linkeddata.tntbase.org/slides/pl0/en/compact-acc#compact-acc.thm";
-		boolean contains = false;
-		for (OntologyResource resource : resources) {
-			if (lemmaUri.equals(resource.getUri())) {
-				contains = true;
-				break;
-			}
-		}
-		Assert.assertTrue(contains);
-	}
-
-	private QueryStatement makeQueryWithInferenceStatement() {
-		List<OntologyTriple> triples = new ArrayList<OntologyTriple>();
-		OntologyConcept subject = new OntologyConcept(
-				"http://omdoc.org/ontology#Assertion", "assertion");
-		subject.setId(1);
-		OntologyBlankNode predicate = new OntologyBlankNode();
-		predicate.setId(2);
-		OntologyBlankNode object = new OntologyBlankNode();
-		object.setId(3);
-		OntologyTriple triple = new OntologyTriple(subject, predicate, object);
-		triples.add(triple);
-
-		QueryStatement queryStatement = new QueryStatement(triples);
-		queryStatement.setInferenceOn(false);
-		return queryStatement;
-
-	}*/
+	
 
 	private QueryStatement makeWildcardStatement() {
 		List<OntologyTriple> triples = new ArrayList<OntologyTriple>();
