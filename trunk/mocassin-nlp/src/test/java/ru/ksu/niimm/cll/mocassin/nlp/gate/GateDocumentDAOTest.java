@@ -114,7 +114,6 @@ public class GateDocumentDAOTest {
 					logger.log(Level.INFO,
 							String.format("document %s is OK", id));
 					getGateDocumentDAO().release(document);
-					document = null;
 				}
 			}
 
@@ -124,52 +123,17 @@ public class GateDocumentDAOTest {
 	@Test
 	public void testLoadMetadata() throws AccessGateDocumentException,
 			AccessGateStorageException {
-		GateDocumentMetadata metadata = gateDocumentDAO
-				.loadMetadata("math_0410002");
-		Assert.assertEquals("math_0410002.tex.xml", metadata.getName());
-		Assert.assertEquals("On certain multiplicity one theorems",
-				metadata.getTitle());
-		Assert.assertEquals(2, metadata.getAuthorNames().size());
-		Assert.assertEquals("Jeffrey D Adler", metadata.getAuthorNames().get(0));
-		Assert.assertEquals("Dipendra Prasad School", metadata.getAuthorNames()
-				.get(1));
-	}
-
-	@Test
-	public void testSaveTestDocument() throws AccessGateStorageException,
-			PersistenceException, AccessGateDocumentException {
-		gateDocumentDAO.save("testdoc",
-				new File("/opt/mocassin/rustestdoc.txt"), "utf8");
-		List<String> documentIds = gateDocumentDAO.getDocumentIds();
-		Assert.assertTrue(documentIds.contains("testdoc"));
+		GateDocumentMetadata metadata = gateDocumentDAO.loadMetadata("ivm18");
+		Assert.assertEquals("Metadata file name is incorrect.",
+				"ivm18.tex.xml", metadata.getName());
+		Assert.assertEquals("Number of the authors is incorrect.", 1, metadata
+				.getAuthorNames().size());
+		Assert.assertEquals("The author name is incorrect", "И В Олемской",
+				metadata.getAuthorNames().get(0));
 	}
 
 	public GateDocumentDAO getGateDocumentDAO() {
 		return gateDocumentDAO;
 	}
 
-	@Test
-	public void testExtractRussianStems() throws AccessGateDocumentException,
-			AccessGateStorageException {
-		Document testDoc = null;
-		try {
-			testDoc = gateDocumentDAO.load("testdoc");
-			AnnotationSet tokenAnnotations = testDoc.getAnnotations(
-					GateFormatConstants.DEFAULT_ANNOTATION_SET_NAME).get(
-					"Token");
-			List<Annotation> tokenList = new ArrayList<Annotation>(
-					tokenAnnotations);
-			Collections.sort(tokenList, new OffsetComparator());
-			for (Annotation token : tokenList) {
-				String tokenValue = (String) token.getFeatures().get(
-						GateFormatConstants.STEM_FEATURE_NAME);
-				System.out.println(String.format("@attribute verb_%s numeric",
-						tokenValue));
-			}
-		} finally {
-			if (testDoc != null) {
-				gateDocumentDAO.release(testDoc);
-			}
-		}
-	}
 }
