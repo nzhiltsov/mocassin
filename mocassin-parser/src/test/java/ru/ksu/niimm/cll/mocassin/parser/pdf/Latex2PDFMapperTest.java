@@ -20,17 +20,13 @@ public class Latex2PDFMapperTest {
 	Latex2PDFMapper latex2pdfMapper;
 
 	@Test
-	public void testGetPdfPageNumber() {
-		int pdfPageNumber = latex2pdfMapper.getPDFPageNumber(443,
-				"ivm18");
-		Assert.assertEquals(5, pdfPageNumber);
-	}
-
-	@Test
-	public void testGenerateSummary() throws GeneratePdfSummaryException {
+	public void testGenerateSummaryAndGetPageNumber()
+			throws GeneratePdfSummaryException {
 		String arxivId = "ivm18";
 		latex2pdfMapper.generateSummary(arxivId);
 		Assert.assertTrue(new File("/opt/mocassin/pdfsync/"
 				+ StringUtil.arxivid2filename(arxivId, "pdfsync")).exists());
+		int pdfPageNumber = latex2pdfMapper.getPDFPageNumber(443, "ivm18");
+		Assert.assertEquals(5, pdfPageNumber);
 	}
 }
