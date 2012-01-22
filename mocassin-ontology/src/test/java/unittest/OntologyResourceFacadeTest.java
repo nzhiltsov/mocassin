@@ -41,8 +41,8 @@ public class OntologyResourceFacadeTest {
 
 		Assert.assertTrue(titleEquals);
 		Assert.assertEquals(1, articleMetadata.getAuthors().size());
-		Assert.assertEquals("И. В. Коннов ", articleMetadata.getAuthors().get(0)
-				.getName());
+		Assert.assertEquals("И. В. Коннов ", articleMetadata.getAuthors()
+				.get(0).getName());
 	}
 
 	@Test
@@ -54,19 +54,17 @@ public class OntologyResourceFacadeTest {
 	public void testRetrieveGraph() {
 		List<SGEdge> edges = getOntologyResourceFacade()
 				.retrieveStructureGraph(
-						new OntologyResource(
-								"http://arxiv.org/abs/math/0005005v2"));
+						new OntologyResource("http://mathnet.ru/ivm18"));
 		Assert.assertTrue(!edges.isEmpty());
 		boolean found = false;
 		for (SGEdge edge : edges) {
 			OntologyIndividual subject = edge.getSubject();
-			found = subject.getUri().equals(
-					"http://arxiv.org/abs/math/0005005v2/1208")
-					&& subject.getType() == MocassinOntologyClasses.PROOF
+			found = subject.getUri().equals("http://mathnet.ru/ivm18/1017")
+					&& subject.getType() == MocassinOntologyClasses.SECTION
 					&& edge.getPredicate().getUri().contains("dependsOn")
 					&& edge.getObject().getUri()
-							.equals("http://arxiv.org/abs/math/0005005v2/636")
-					&& edge.getFromNumPage() == 2 && edge.getToNumPage() == 2;
+							.equals("http://mathnet.ru/ivm18/1442")
+					&& edge.getObject().getType() == MocassinOntologyClasses.EQUATION;
 			if (found)
 				break;
 		}
