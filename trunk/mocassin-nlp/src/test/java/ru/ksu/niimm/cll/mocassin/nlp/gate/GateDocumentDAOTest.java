@@ -34,6 +34,7 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext({ GateModule.class })
+@Ignore("Arxmliv files can't be compiled at the moment")
 public class GateDocumentDAOTest {
 	@Inject
 	private Logger logger;
