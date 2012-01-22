@@ -1,9 +1,13 @@
 package ru.ksu.niimm.cll.mocassin.parser.pdf;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.LineNumberReader;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
 
@@ -26,6 +30,8 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext({ LatexParserModule.class, PdfParserModule.class })
 public class PdflatexWrapperTest {
+	private static final String FIFTH_PAGE_MARK = "s 5";
+	private static final String SEVENTH_PAGE_MARK = "s 7";
 	@Inject
 	Logger logger;
 	@Inject
@@ -62,31 +68,55 @@ public class PdflatexWrapperTest {
 	}
 
 	@Test
-	public void testCompilePatched() throws PdflatexCompilationException {
-		String arxivId = "ivm18";
-		pdflatexWrapper.compilePatched(arxivId);
+	public void testCompilePatched() throws PdflatexCompilationException,
+			IOException {
+		String collectionId = "ivm18";
+		pdflatexWrapper.compilePatched(collectionId);
+		checkIfPDFGenerated(collectionId);
+		checkIfPdfsyncGenerated(collectionId, SEVENTH_PAGE_MARK);
 
-		Assert.assertTrue(new File("/opt/mocassin/aux-pdf/"
-				+ StringUtil.arxivid2filename(arxivId, "pdf")).exists());
-		Assert.assertTrue(new File("/opt/mocassin/aux-pdf/"
-				+ StringUtil.arxivid2filename(arxivId, "pdfsync")).exists());
-		arxivId = "ivm537";
-		pdflatexWrapper.compilePatched(arxivId);
-
-		Assert.assertTrue(new File("/opt/mocassin/aux-pdf/"
-				+ StringUtil.arxivid2filename(arxivId, "pdf")).exists());
-		Assert.assertTrue(new File("/opt/mocassin/aux-pdf/"
-				+ StringUtil.arxivid2filename(arxivId, "pdfsync")).exists());
+		collectionId = "ivm537";
+		pdflatexWrapper.compilePatched(collectionId);
+		checkIfPDFGenerated(collectionId);
+		checkIfPdfsyncGenerated(collectionId, FIFTH_PAGE_MARK);
 	}
 
-	@Test
-	@Ignore
-	public void testCompileMathnetArticles() {
-		for (String mathnetKey : id2filename.keySet()) {
-			try {
-				pdflatexWrapper.compilePatched(mathnetKey);
-			} catch (Exception e) { // nothing
+	private static void checkIfPdfsyncGenerated(String collectionId, String mark)
+			throws IOException {
+		File pdfsyncFile = new File("/opt/mocassin/aux-pdf/"
+				+ StringUtil.arxivid2filename(collectionId, "pdfsync"));
+		Assert.assertTrue(String.format(
+				"The pdfsync file='%s' hasn't been generated.",
+				pdfsyncFile.getName()), pdfsyncFile.exists());
+		checkIfFound(pdfsyncFile, mark);
+	}
+
+	private static void checkIfPDFGenerated(String collectionId) {
+		File pdfFile = new File("/opt/mocassin/aux-pdf/"
+				+ StringUtil.arxivid2filename(collectionId, "pdf"));
+		Assert.assertTrue(String.format(
+				"The PDF file='%s' hasn't been generated.", pdfFile.getName()),
+				pdfFile.exists());
+	}
+
+	private static void checkIfFound(File file, String mark) throws IOException {
+		boolean found = false;
+		LineNumberReader lineReader = new LineNumberReader(new FileReader(file));
+		try {
+
+			String line = null;
+			while ((line = lineReader.readLine()) != null) {
+				found = line.contains(mark);
+				if (found) {
+					break;
+				}
 			}
+		} finally {
+			lineReader.close();
 		}
+		Assert.assertTrue(
+				String.format(
+						"The necessary page mark='%s' for the file='%s' hasn't been found.",
+						mark, file.getName()), found);
 	}
 }
