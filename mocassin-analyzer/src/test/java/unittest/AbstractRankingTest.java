@@ -21,12 +21,14 @@ import ru.ksu.niimm.cll.mocassin.analyzer.AnalyzerModule;
 import ru.ksu.niimm.cll.mocassin.analyzer.importance.ImportantNodeService;
 import ru.ksu.niimm.cll.mocassin.fulltext.FullTextModule;
 import ru.ksu.niimm.cll.mocassin.nlp.NlpModule;
+import ru.ksu.niimm.cll.mocassin.nlp.gate.GateModule;
 import ru.ksu.niimm.cll.mocassin.parser.latex.Edge;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.parser.latex.Node;
 import ru.ksu.niimm.cll.mocassin.parser.latex.Parser;
 import ru.ksu.niimm.cll.mocassin.parser.latex.StructureBuilder;
+import ru.ksu.niimm.cll.mocassin.parser.pdf.PdfParserModule;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
 import ru.ksu.niimm.ose.ontology.OntologyModule;
 
@@ -38,7 +40,7 @@ import edu.uci.ics.jung.graph.Graph;
 
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext({ AnalyzerModule.class, NlpModule.class, LatexParserModule.class,
-		OntologyModule.class, VirtuosoModule.class, FullTextModule.class })
+		OntologyModule.class, VirtuosoModule.class, FullTextModule.class, GateModule.class, PdfParserModule.class })
 @Ignore
 public class AbstractRankingTest {
 	@Inject
