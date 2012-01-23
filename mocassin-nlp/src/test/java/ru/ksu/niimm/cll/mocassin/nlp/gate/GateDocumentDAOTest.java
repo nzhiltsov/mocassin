@@ -34,7 +34,6 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext({ GateModule.class })
-@Ignore("Arxmliv files can't be compiled at the moment")
 public class GateDocumentDAOTest {
 	@Inject
 	private Logger logger;
@@ -71,38 +70,21 @@ public class GateDocumentDAOTest {
 		}
 	}
 
-	@Ignore
 	@Test
-	public void testSave() throws AccessGateStorageException,
+	public void testDeleteAndSave() throws AccessGateStorageException,
 			PersistenceException {
-		gateDocumentDAO.save("math/0002188", new File(
-				"/opt/mocassin/arxmliv/math_0002188.tex.xml"), "utf8");
-		gateDocumentDAO.save("math/0001036", new File(
-				"/opt/mocassin/arxmliv/math_0001036.tex.xml"), "utf8");
-	}
-
-	@Test
-	@Ignore
-	public void testSaveMathnetArticles() {
-		int i = 0;
-		for (String mathnetKey : id2filename.keySet()) {
-			try {
-				File file = new File(String.format(
-						"/opt/mocassin/arxmliv/%s.tex.xml", mathnetKey));
-				if (file.exists()) {
-					gateDocumentDAO.save(mathnetKey, file, "utf8");
-					i++;
-				}
-			} catch (Exception e) { // nothing
-			}
-		}
-		logger.log(Level.INFO, i + " document(s) have been saved");
+		gateDocumentDAO.delete("ivm18");
+		gateDocumentDAO.delete("ivm537");
+		gateDocumentDAO.save("ivm18", new File(
+				"/opt/mocassin/arxmliv/ivm18.tex.xml"), "utf8");
+		gateDocumentDAO.save("ivm537", new File(
+				"/opt/mocassin/arxmliv/ivm537.tex.xml"), "utf8");
 	}
 
 	@Test
 	public void testLoad() throws Exception {
 		List<String> ids = CollectionUtil.sampleRandomSublist(
-				getGateDocumentDAO().getDocumentIds(), 5);
+				getGateDocumentDAO().getDocumentIds(), 2);
 		for (String id : ids) {
 			Document document = null;
 			try {
@@ -119,18 +101,6 @@ public class GateDocumentDAOTest {
 			}
 
 		}
-	}
-
-	@Test
-	public void testLoadMetadata() throws AccessGateDocumentException,
-			AccessGateStorageException {
-		GateDocumentMetadata metadata = gateDocumentDAO.loadMetadata("ivm18");
-		Assert.assertEquals("Metadata file name is incorrect.",
-				"ivm18.tex.xml", metadata.getName());
-		Assert.assertEquals("Number of the authors is incorrect.", 1, metadata
-				.getAuthorNames().size());
-		Assert.assertEquals("The author name is incorrect", "И В Олемской",
-				metadata.getAuthorNames().get(0));
 	}
 
 	public GateDocumentDAO getGateDocumentDAO() {

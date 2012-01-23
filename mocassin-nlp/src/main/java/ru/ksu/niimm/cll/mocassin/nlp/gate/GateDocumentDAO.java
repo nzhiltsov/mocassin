@@ -16,7 +16,18 @@ public interface GateDocumentDAO {
 	 * @param file
 	 * @throws PersistenceException
 	 */
-	void save(String documentId, File file, String encoding) throws AccessGateStorageException, PersistenceException;
+	void save(String documentId, File file, String encoding)
+			throws AccessGateStorageException, PersistenceException;
+
+	/**
+	 * delete a file with a given id if it exists; otherwise, nothing will be
+	 * done
+	 * 
+	 * @param documentId
+	 * @throws AccessGateDocumentException
+	 * @throws PersistenceException
+	 */
+	void delete(String documentId) throws AccessGateDocumentException, PersistenceException;
 
 	/**
 	 * returns identifiers of all the documents from given corpus (see
@@ -36,10 +47,11 @@ public interface GateDocumentDAO {
 	 * 
 	 * @param documentId
 	 * @return
-	 * @throws AccessGateStorageException 
+	 * @throws AccessGateStorageException
 	 * @throws GateException
 	 */
-	Document load(String documentId) throws AccessGateDocumentException, AccessGateStorageException;
+	Document load(String documentId) throws AccessGateDocumentException,
+			AccessGateStorageException;
 
 	/**
 	 * releases resources connected with given document. <br/>
@@ -55,7 +67,7 @@ public interface GateDocumentDAO {
 	 * @param documentId
 	 * @return
 	 * @throws AccessGateDocumentException
-	 * @throws AccessGateStorageException 
+	 * @throws AccessGateStorageException
 	 */
 	GateDocumentMetadata loadMetadata(String documentId)
 			throws AccessGateDocumentException, AccessGateStorageException;

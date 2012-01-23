@@ -132,6 +132,31 @@ class GateDocumentDAOImpl implements GateDocumentDAO {
 	}
 
 	@Override
+	public void delete(String documentId) throws AccessGateDocumentException,
+			ru.ksu.niimm.cll.mocassin.nlp.gate.PersistenceException {
+		List<String> documentIds = getDocumentIds(true);
+		String foundDocumentId = Iterables.find(documentIds,
+				new DocumentNamePredicate(documentId), null);
+		if (foundDocumentId == null) {
+			logger.log(Level.INFO, String.format(
+					"The document='%s' asked for deleting does not exist.",
+					documentId));
+			return;
+		}
+		try {
+			this.dataStore.delete(GATE_DOCUMENT_LR_TYPE_PROPERTY,
+					foundDocumentId);
+		} catch (PersistenceException e) {
+			String message = String
+					.format("Failed to delete a GATE document with id='%s'",
+							documentId);
+			logger.log(Level.SEVERE, message);
+			throw new ru.ksu.niimm.cll.mocassin.nlp.gate.PersistenceException(
+					message);
+		}
+	}
+
+	@Override
 	public GateDocumentMetadata loadMetadata(String documentId)
 			throws AccessGateDocumentException, AccessGateStorageException {
 		Document document = load(documentId);
