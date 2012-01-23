@@ -47,7 +47,6 @@ public class NavigationalRelationClassifierTest {
 
 	private Reference knownDependsOnReference;
 
-
 	@Before
 	public void init() throws Exception {
 		ParsedDocument document = new ParsedDocumentImpl("ivm18",
@@ -72,15 +71,17 @@ public class NavigationalRelationClassifierTest {
 				foundSecond = true;
 			}
 		}
-		Assert.assertNotNull(this.knownRefersToReference);
-		Assert.assertNotNull(this.knownDependsOnReference);
+		Assert.assertNotNull("The known 'refersTo' reference is null",
+				this.knownRefersToReference);
+		Assert.assertNotNull("The known 'dependsOn' reference is null",
+				this.knownDependsOnReference);
 	}
 
 	@Test
 	public void testPredictRefersTo() {
 		Prediction prediction = navigationalRelationClassifier.predict(
 				knownRefersToReference, graph);
-		Assert.assertEquals(MocassinOntologyRelations.REFERS_TO,
+		Assert.assertEquals("The predicted relation is not of the expected type.", MocassinOntologyRelations.REFERS_TO,
 				prediction.getRelation());
 
 	}
@@ -89,7 +90,7 @@ public class NavigationalRelationClassifierTest {
 	public void testPredictDependsOn() {
 		Prediction prediction = navigationalRelationClassifier.predict(
 				knownDependsOnReference, graph);
-		Assert.assertEquals(MocassinOntologyRelations.DEPENDS_ON,
+		Assert.assertEquals("The predicted relation is not of the expected type.", MocassinOntologyRelations.DEPENDS_ON,
 				prediction.getRelation());
 	}
 
