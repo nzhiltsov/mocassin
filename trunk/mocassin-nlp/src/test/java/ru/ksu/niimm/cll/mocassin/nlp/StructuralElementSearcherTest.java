@@ -37,7 +37,7 @@ public class StructuralElementSearcherTest {
 
 		StructuralElement foundElement = getStructuralElementSearcher()
 				.findById(parsedDocument, 5498);
-		Assert.assertNotNull(foundElement);
+		Assert.assertNotNull("The found element is null", foundElement);
 
 	}
 
