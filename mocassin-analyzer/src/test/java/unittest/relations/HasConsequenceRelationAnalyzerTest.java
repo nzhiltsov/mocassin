@@ -33,7 +33,8 @@ import edu.uci.ics.jung.graph.Graph;
 
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext({ AnalyzerModule.class, NlpModule.class, LatexParserModule.class,
-		OntologyModule.class, VirtuosoModule.class, FullTextModule.class, GateModule.class, PdfParserModule.class })
+		OntologyModule.class, VirtuosoModule.class, FullTextModule.class,
+		GateModule.class, PdfParserModule.class })
 public class HasConsequenceRelationAnalyzerTest {
 	@Inject
 	private HasConsequenceRelationAnalyzer hasConsequenceRelationAnalyzer;
@@ -46,8 +47,7 @@ public class HasConsequenceRelationAnalyzerTest {
 
 	@Before
 	public void init() {
-		document = new ParsedDocumentImpl("ivm537",
-				"http://mathnet.ru/ivm537",
+		document = new ParsedDocumentImpl("ivm537", "http://mathnet.ru/ivm537",
 				"http://mathnet.ru/ivm537");
 		graph = this.referenceSearcher.retrieveStructuralGraph(document);
 	}
@@ -61,8 +61,12 @@ public class HasConsequenceRelationAnalyzerTest {
 			if (ref.getPredictedRelation() == MocassinOntologyRelations.HAS_CONSEQUENCE) {
 				StructuralElement from = graph.getSource(ref);
 				StructuralElement to = graph.getDest(ref);
-				Assert.assertEquals(2359, from.getId());
-				Assert.assertEquals(2941, to.getId());
+				Assert.assertEquals(
+						"The source id of the 'hasConsequence' relation does not equal to the expected one.",
+						2359, from.getId());
+				Assert.assertEquals(
+						"The range id of the 'hasConsequence' relation does not equal to the expected one.",
+						2941, to.getId());
 				found = true;
 				break;
 			}
