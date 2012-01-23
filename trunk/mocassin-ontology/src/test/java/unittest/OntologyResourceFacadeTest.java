@@ -35,7 +35,7 @@ public class OntologyResourceFacadeTest {
 				"http://mathnet.ru/ivm537");
 		ArticleMetadata articleMetadata = getOntologyResourceFacade().load(
 				resource);
-		Assert.assertEquals("ivm537", articleMetadata.getCollectionId());
+		Assert.assertEquals("Article id does not equal to the expected one.", "ivm537", articleMetadata.getCollectionId());
 		boolean titleEquals = "Неточный комбинированный релаксационный метод для многозначных включений"
 				.equals(articleMetadata.getTitle());
 
