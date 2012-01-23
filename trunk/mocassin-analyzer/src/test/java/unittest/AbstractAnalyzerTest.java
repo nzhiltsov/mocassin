@@ -22,8 +22,10 @@ import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.ReferenceSearcher;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
+import ru.ksu.niimm.cll.mocassin.nlp.gate.GateModule;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.ParsedDocumentImpl;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexParserModule;
+import ru.ksu.niimm.cll.mocassin.parser.pdf.PdfParserModule;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
 import ru.ksu.niimm.ose.ontology.OntologyModule;
 
@@ -35,16 +37,11 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 import edu.uci.ics.jung.graph.Graph;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext( { AnalyzerModule.class, NlpModule.class,
-		LatexParserModule.class, OntologyModule.class, VirtuosoModule.class,
-		FullTextModule.class })
+@GuiceContext({ AnalyzerModule.class, NlpModule.class, LatexParserModule.class,
+		OntologyModule.class, VirtuosoModule.class, FullTextModule.class,
+		GateModule.class, PdfParserModule.class })
 @Ignore("references should be read from a store")
 public abstract class AbstractAnalyzerTest {
-	private static final String REF_CONTEXT_DATA_INPUT_FOLDER = "/tmp/refcontexts-data";
-
-	@Inject
-	private Logger logger;
-
 	@Inject
 	private ReferenceSearcher referenceSearcher;
 
@@ -52,19 +49,24 @@ public abstract class AbstractAnalyzerTest {
 
 	@Before
 	public void init() throws Exception {
-		ParsedDocument document = new ParsedDocumentImpl("math/0205003", "http://arxiv.org/abs/math/0205003",
-				"http://arxiv.org/pdf/math/0205003");
+		ParsedDocument document = new ParsedDocumentImpl("ivm18",
+				"http://mathnet.ru/ivm18", "http://mathnet.ru/ivm18");
 		Graph<StructuralElement, Reference> graph = this.referenceSearcher
 				.retrieveStructuralGraph(document);
 		Collection<Reference> edges = graph.getEdges();
-		Assert.assertTrue(edges.size() > 0);
+		Assert.assertTrue("Extracted edge list is empty.", edges.size() > 0);
 
 		for (Reference ref : edges) {
-			if (ref.getPredictedRelation() == null) {
+			if (ref.getId() == 5086 || ref.getId() == 4766) {
 				this.references.add(ref);
+				if (this.references.size() == 2) {
+					break;
+				}
 			}
-
 		}
+
+		Assert.assertEquals("Both the references haven't been found.", 2,
+				this.references.size());
 	}
 
 	protected <T> void print(Map<T, Vector> map, String outputPath,
