@@ -72,7 +72,7 @@ public class GateDocumentDAOTest {
 
 	@Test
 	public void testDeleteAndSave() throws AccessGateStorageException,
-			PersistenceException {
+			PersistenceException, AccessGateDocumentException {
 		gateDocumentDAO.delete("ivm18");
 		gateDocumentDAO.delete("ivm537");
 		gateDocumentDAO.save("ivm18", new File(
