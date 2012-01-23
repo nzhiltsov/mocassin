@@ -208,7 +208,7 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 				query);
 		for (QuerySolution solution : solutions) {
 			Link link = new Link();
-			String linkType = solution.getResource(
+			String linkType = solution.getLiteral(
 					RETRIEVED_LINK_TYPE_ELEMENT_KEY).toString();
 			link.setType(linkType);
 			String linkHref = solution.getResource(
