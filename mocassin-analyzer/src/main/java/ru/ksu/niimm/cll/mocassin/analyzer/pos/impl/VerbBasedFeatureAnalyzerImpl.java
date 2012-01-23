@@ -68,21 +68,30 @@ public class VerbBasedFeatureAnalyzerImpl extends AbstractScoringIndexer
 
 	@Override
 	protected List<Token> filterTokens(List<Token> tokens) {
+
 		Predicate<Token> filter = new Predicate<Token>() {
 
 			@Override
-			public boolean apply(Token token) {
-				if (token.getValue() == null || isStopWord(token.getValue()))
-					return false;
-				String pos = token.getPos();
-				if (pos == null)
-					return false;
-				return pos.toLowerCase().startsWith(
-						GateFormatConstants.VERB_POS_TAG_PREFIX);
+			public boolean apply(Token input) {
+				return true; // TODO: replace it with VerbPredicate when Russian
+								// POS tags become available
 			}
-		};
 
+		};
 		return CollectionUtil.asList(Iterables.filter(tokens, filter));
+	}
+
+	private class VerbPredicate implements Predicate<Token> {
+		@Override
+		public boolean apply(Token token) {
+			if (token.getValue() == null || isStopWord(token.getValue()))
+				return false;
+			String pos = token.getPos();
+			if (pos == null)
+				return false;
+			return pos.toLowerCase().startsWith(
+					GateFormatConstants.VERB_POS_TAG_PREFIX);
+		}
 	}
 
 }
