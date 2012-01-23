@@ -38,7 +38,7 @@ public class StructuralElementSearcherTest {
 		StructuralElement foundElement = getStructuralElementSearcher()
 				.findById(parsedDocument, 5498);
 		Assert.assertNotNull(foundElement);
-		
+
 	}
 
 	@Test
@@ -46,9 +46,11 @@ public class StructuralElementSearcherTest {
 		MocassinOntologyClasses[] hasConsequenceDomains = MocassinOntologyRelations
 				.getValidDomains(MocassinOntologyRelations.HAS_CONSEQUENCE);
 		StructuralElement predecessor = getStructuralElementSearcher()
-				.findClosestPredecessor(parsedDocument, 2787,
+				.findClosestPredecessor(parsedDocument, 5498,
 						hasConsequenceDomains);
-		Assert.assertEquals(2708, predecessor.getId());
+		Assert.assertEquals(
+				"The found predecessor id does not equal to the expected one.",
+				3460, predecessor.getId());
 	}
 
 	public StructuralElementSearcher getStructuralElementSearcher() {
