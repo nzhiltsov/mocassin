@@ -78,6 +78,20 @@
 				<scope>compile</scope>
 			</dependency>
 			<dependency>
+				<groupId>com.google.inject.extensions</groupId>
+				<artifactId>guice-assistedinject</artifactId>
+				<version>3.0</version>
+				<type>jar</type>
+				<scope>compile</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.google.inject.extensions</groupId>
+				<artifactId>guice-throwingproviders</artifactId>
+				<version>3.0</version>
+				<type>jar</type>
+				<scope>compile</scope>
+			</dependency>
+			<dependency>
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-io</artifactId>
 				<version>1.3.2</version>
@@ -133,13 +147,7 @@
 				<type>jar</type>
 				<scope>compile</scope>
 			</dependency>
-			<dependency>
-				<groupId>com.google.inject.extensions</groupId>
-				<artifactId>guice-assistedinject</artifactId>
-				<version>3.0</version>
-				<type>jar</type>
-				<scope>compile</scope>
-			</dependency>
+
 			<dependency>
 				<groupId>com.google.guava</groupId>
 				<artifactId>guava</artifactId>
