@@ -22,6 +22,7 @@ import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateProcessingFacade;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.ParsedDocumentImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.util.ReferenceTripleUtil;
+import ru.ksu.niimm.cll.mocassin.ontology.OntologyResourceFacade;
 import ru.ksu.niimm.cll.mocassin.parser.arxmliv.ArxmlivProducer;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentDAO;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentHeaderPatcher;
@@ -30,7 +31,6 @@ import ru.ksu.niimm.cll.mocassin.parser.pdf.PdfHighlighter;
 import ru.ksu.niimm.cll.mocassin.parser.pdf.PdflatexWrapper;
 import ru.ksu.niimm.cll.mocassin.ui.dashboard.client.ArxivArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
-import ru.ksu.niimm.ose.ontology.OntologyResourceFacade;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;

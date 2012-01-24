@@ -3,9 +3,9 @@ package ru.ksu.niimm.cll.mocassin.analyzer.mapping;
 import java.util.HashMap;
 import java.util.Map;
 
+import ru.ksu.niimm.cll.mocassin.ontology.OntologyConcept;
 import ru.ksu.niimm.cll.mocassin.parser.latex.Node;
 import ru.ksu.niimm.cll.mocassin.util.StringSimilarityEvaluator.SimilarityMetrics;
-import ru.ksu.niimm.ose.ontology.OntologyConcept;
 
 public class MappingElement {
 	private Node node;

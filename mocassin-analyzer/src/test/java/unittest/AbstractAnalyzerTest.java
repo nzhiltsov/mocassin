@@ -24,10 +24,10 @@ import ru.ksu.niimm.cll.mocassin.nlp.ReferenceSearcher;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateModule;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.ParsedDocumentImpl;
+import ru.ksu.niimm.cll.mocassin.ontology.OntologyModule;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.parser.pdf.PdfParserModule;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
-import ru.ksu.niimm.ose.ontology.OntologyModule;
 
 import com.aliasi.matrix.Vector;
 import com.google.inject.Inject;
