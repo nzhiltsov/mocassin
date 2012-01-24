@@ -1,15 +1,18 @@
-package ru.ksu.niimm.ose.ontology.impl;
+package ru.ksu.niimm.cll.mocassin.ontology.impl;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
-import ru.ksu.niimm.ose.ontology.OntologyConcept;
-import ru.ksu.niimm.ose.ontology.OntologyFacade;
-import ru.ksu.niimm.ose.ontology.OntologyRelation;
-import ru.ksu.niimm.ose.ontology.loader.OntologyLoader;
+import ru.ksu.niimm.cll.mocassin.ontology.OntologyConcept;
+import ru.ksu.niimm.cll.mocassin.ontology.OntologyFacade;
+import ru.ksu.niimm.cll.mocassin.ontology.OntologyRelation;
+import ru.ksu.niimm.cll.mocassin.ontology.provider.OntologyProvider;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -20,18 +23,22 @@ import com.hp.hpl.jena.ontology.OntResource;
 import com.hp.hpl.jena.util.iterator.ExtendedIterator;
 
 public class OntologyFacadeImpl implements OntologyFacade {
+	private final Logger logger;
+
+	private final OntologyProvider<OntModel> ontologyProvider;
+
+	private final String ontologyUri;
+
+	private final String ontologyLabelLocale;
+
 	@Inject
-	private OntologyLoader ontologyLoader;
-
-	private String ontologyUri;
-
-	private String ontologyLabelLocale;
-
-	@Inject
-	public OntologyFacadeImpl(@Named("ontology.uri") String ontologyUri,
-			@Named("ontology.label.locale") String locale) {
+	public OntologyFacadeImpl(OntologyProvider<OntModel> ontologyProvider,
+			@Named("ontology.uri") String ontologyUri,
+			@Named("ontology.label.locale") String locale, Logger logger) {
+		this.ontologyProvider = ontologyProvider;
 		this.ontologyUri = ontologyUri;
 		this.ontologyLabelLocale = locale;
+		this.logger = logger;
 	}
 
 	/*
@@ -145,8 +152,8 @@ public class OntologyFacadeImpl implements OntologyFacade {
 		for (OntClass currentClass : set) {
 			String uri = currentClass.getURI();
 			if (uri != null) {
-				OntologyConcept concept = new OntologyConcept(uri, currentClass
-						.getLabel(getLocale()));
+				OntologyConcept concept = new OntologyConcept(uri,
+						currentClass.getLabel(getLocale()));
 				concepts.add(concept);
 			}
 
@@ -164,11 +171,14 @@ public class OntologyFacadeImpl implements OntologyFacade {
 	}
 
 	public OntModel getOntology() {
-		return getOntologyLoader().getOntology();
+		try {
+			return this.ontologyProvider.get();
+		} catch (IOException e) {
+			logger.log(
+					Level.SEVERE,
+					"Couldn't get the ontology instance due to: "
+							+ e.getCause());
+			throw new RuntimeException(e);
+		}
 	}
-
-	public OntologyLoader getOntologyLoader() {
-		return ontologyLoader;
-	}
-
 }

@@ -8,12 +8,12 @@ import org.junit.runner.RunWith;
 
 import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
+import ru.ksu.niimm.cll.mocassin.ontology.OntologyIndividual;
+import ru.ksu.niimm.cll.mocassin.ontology.OntologyModule;
+import ru.ksu.niimm.cll.mocassin.ontology.OntologyResource;
+import ru.ksu.niimm.cll.mocassin.ontology.OntologyResourceFacade;
+import ru.ksu.niimm.cll.mocassin.ontology.SGEdge;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
-import ru.ksu.niimm.ose.ontology.OntologyIndividual;
-import ru.ksu.niimm.ose.ontology.OntologyModule;
-import ru.ksu.niimm.ose.ontology.OntologyResource;
-import ru.ksu.niimm.ose.ontology.OntologyResourceFacade;
-import ru.ksu.niimm.ose.ontology.SGEdge;
 
 import com.google.inject.Inject;
 import com.mycila.testing.junit.MycilaJunitRunner;

@@ -1,4 +1,4 @@
-package ru.ksu.niimm.ose.ontology;
+package ru.ksu.niimm.cll.mocassin.ontology;
 
 import java.util.List;
 import java.util.Set;

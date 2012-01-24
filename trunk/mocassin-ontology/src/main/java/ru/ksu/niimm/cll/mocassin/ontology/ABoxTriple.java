@@ -1,6 +1,5 @@
-package ru.ksu.niimm.ose.ontology;
+package ru.ksu.niimm.cll.mocassin.ontology;
 
-import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
 
 public class ABoxTriple {
 	private OntologyIndividual subject;

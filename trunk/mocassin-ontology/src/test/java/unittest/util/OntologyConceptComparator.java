@@ -3,7 +3,7 @@ package unittest.util;
 import java.io.Serializable;
 import java.util.Comparator;
 
-import ru.ksu.niimm.ose.ontology.OntologyConcept;
+import ru.ksu.niimm.cll.mocassin.ontology.OntologyConcept;
 
 @SuppressWarnings("serial")
 public class OntologyConceptComparator implements Serializable, Comparator<OntologyConcept> {

@@ -1,4 +1,4 @@
-package ru.ksu.niimm.ose.ontology;
+package ru.ksu.niimm.cll.mocassin.ontology;
 
 public class OntologyTriple {
 	private OntologyElement subject;

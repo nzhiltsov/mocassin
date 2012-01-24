@@ -1,20 +1,19 @@
-package ru.ksu.niimm.ose.ontology.impl;
+package ru.ksu.niimm.cll.mocassin.ontology.impl;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.ksu.niimm.cll.mocassin.ontology.OntologyBlankNode;
+import ru.ksu.niimm.cll.mocassin.ontology.OntologyElement;
+import ru.ksu.niimm.cll.mocassin.ontology.OntologyIndividual;
+import ru.ksu.niimm.cll.mocassin.ontology.OntologyLiteral;
+import ru.ksu.niimm.cll.mocassin.ontology.OntologyResource;
+import ru.ksu.niimm.cll.mocassin.ontology.OntologyTriple;
+import ru.ksu.niimm.cll.mocassin.ontology.QueryManagerFacade;
+import ru.ksu.niimm.cll.mocassin.ontology.QueryStatement;
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFGraph;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoDAO;
 import ru.ksu.niimm.cll.mocassin.virtuoso.impl.RDFGraphImpl;
-import ru.ksu.niimm.ose.ontology.OntologyBlankNode;
-import ru.ksu.niimm.ose.ontology.OntologyElement;
-import ru.ksu.niimm.ose.ontology.OntologyIndividual;
-import ru.ksu.niimm.ose.ontology.OntologyLiteral;
-import ru.ksu.niimm.ose.ontology.OntologyResource;
-import ru.ksu.niimm.ose.ontology.OntologyTriple;
-import ru.ksu.niimm.ose.ontology.QueryManagerFacade;
-import ru.ksu.niimm.ose.ontology.QueryStatement;
-import ru.ksu.niimm.ose.ontology.loader.OntologyLoader;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -27,25 +26,24 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 	private static final String RDF_PREFIX_STRING = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>";
 	private static final String SELECT_STATEMENT = "SELECT DISTINCT %s WHERE\n{\n";
 	private static final String RETRIEVED_CONCEPT_KEY = "?1";
-	@Inject
-	private OntologyLoader ontologyLoader;
-	@Inject
+
 	private VirtuosoDAO virtuosoDAO;
 
 	private RDFGraph searchGraph;
-	
+
 	private String ontologyRulesSetName;
 
 	@Inject
-	public QueryManagerFacadeImpl(
+	public QueryManagerFacadeImpl(VirtuosoDAO virtuosoDAO,
 			@Named("connection.url") String connectionUrl,
 			@Named("connection.user.name") String username,
 			@Named("connection.user.password") String password,
 			@Named("graph.iri") String graphIri,
 			@Named("ontology.rules.set") String ontologyRuleSet) {
+		this.virtuosoDAO = virtuosoDAO;
 		this.searchGraph = new RDFGraphImpl.Builder(graphIri)
-				.url(connectionUrl).username(username).password(password).inferenceRulesSetName(ontologyRuleSet)
-				.build();
+				.url(connectionUrl).username(username).password(password)
+				.inferenceRulesSetName(ontologyRuleSet).build();
 		this.ontologyRulesSetName = ontologyRuleSet;
 	}
 
@@ -56,7 +54,8 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 	 * ru.ksu.niimm.ose.ontology.impl.QueryManager#query(com.hp.hpl.jena.ontology
 	 * .OntModel, java.lang.String)
 	 */
-	public List<Resource> query(QueryStatement queryStatement, String retrievedResourceKey) {
+	public List<Resource> query(QueryStatement queryStatement,
+			String retrievedResourceKey) {
 		List<Resource> resultResources = new ArrayList<Resource>();
 		String queryString = generateQuery(queryStatement);
 		List<QuerySolution> solutions = getVirtuosoDAO().get(getSearchGraph(),
@@ -77,11 +76,11 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 	 */
 	public List<OntologyResource> query(QueryStatement queryStatement) {
 		List<OntologyResource> ontologyResources = new ArrayList<OntologyResource>();
-		
+
 		List<Resource> resources = query(queryStatement, RETRIEVED_CONCEPT_KEY);
 		for (Resource resource : resources) {
-			OntologyResource ontologyResource = new OntologyResource(resource
-					.getURI());
+			OntologyResource ontologyResource = new OntologyResource(
+					resource.getURI());
 			ontologyResources.add(ontologyResource);
 		}
 		return ontologyResources;
@@ -102,8 +101,8 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 		for (OntologyTriple triple : retrievedTriples) {
 			OntologyElement tripleObject = triple.getObject();
 			String whereClause = "";
-			String subjectTypeString = String.format("?%d a <%s>",
-					triple.getSubject().getId(), triple.getSubject().getUri());
+			String subjectTypeString = String.format("?%d a <%s>", triple
+					.getSubject().getId(), triple.getSubject().getUri());
 			boolean isIndividual = tripleObject instanceof OntologyIndividual;
 			boolean isLiteral = tripleObject instanceof OntologyLiteral;
 			boolean isBlankNode = tripleObject instanceof OntologyBlankNode;
@@ -128,10 +127,8 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 						subjectTypeString) : String.format("%s .\n %s .\n",
 						subjectTypeString, getPredicateExpression(triple));
 			} else {
-				String objectTypeString = String
-						.format("?%d a <%s>",
-								triple.getObject().getId(), triple.getObject()
-										.getUri());
+				String objectTypeString = String.format("?%d a <%s>", triple
+						.getObject().getId(), triple.getObject().getUri());
 				String predicateString = getPredicateExpression(triple);
 				whereClause = String.format("%s .\n %s .\n %s.",
 						subjectTypeString, objectTypeString, predicateString);
@@ -148,7 +145,7 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 		return this.ontologyRulesSetName;
 	}
 
-	private String getPredicateExpression(OntologyTriple triple) {
+	private static String getPredicateExpression(OntologyTriple triple) {
 		String predicateString = String.format("?%d <%s> ?%d", triple
 				.getSubject().getId(), triple.getPredicate().getUri(), triple
 				.getObject().getId());
@@ -161,10 +158,6 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 		return getVirtuosoDAO().describe(getSearchGraph(), uri);
 	}
 
-	public OntologyLoader getOntologyLoader() {
-		return ontologyLoader;
-	}
-
 	public VirtuosoDAO getVirtuosoDAO() {
 		return virtuosoDAO;
 	}
@@ -173,5 +166,4 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 		return this.searchGraph;
 	}
 
-	
 }

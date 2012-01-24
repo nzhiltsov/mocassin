@@ -8,10 +8,10 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ru.ksu.niimm.cll.mocassin.ontology.OntologyConcept;
+import ru.ksu.niimm.cll.mocassin.ontology.OntologyFacade;
+import ru.ksu.niimm.cll.mocassin.ontology.OntologyRelation;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
-import ru.ksu.niimm.ose.ontology.OntologyConcept;
-import ru.ksu.niimm.ose.ontology.OntologyFacade;
-import ru.ksu.niimm.ose.ontology.OntologyRelation;
 import unittest.util.OntologyConceptComparator;
 import unittest.util.OntologyTestModule;
 

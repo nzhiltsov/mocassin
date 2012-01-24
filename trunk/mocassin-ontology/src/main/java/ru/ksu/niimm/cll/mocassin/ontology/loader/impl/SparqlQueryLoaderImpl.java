@@ -1,4 +1,4 @@
-package ru.ksu.niimm.ose.ontology.loader.impl;
+package ru.ksu.niimm.cll.mocassin.ontology.loader.impl;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,9 +11,9 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
 
+import ru.ksu.niimm.cll.mocassin.ontology.loader.SparqlQueryLoader;
 import ru.ksu.niimm.cll.mocassin.util.IOUtil;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
-import ru.ksu.niimm.ose.ontology.loader.SparqlQueryLoader;
 
 import com.google.inject.Inject;
 
