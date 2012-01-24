@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import ru.ksu.niimm.ose.ontology.QueryManagerFacade;
+import ru.ksu.niimm.cll.mocassin.ontology.QueryManagerFacade;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;

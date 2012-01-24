@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
+import ru.ksu.niimm.cll.mocassin.ontology.OntologyIndividual;
+import ru.ksu.niimm.cll.mocassin.ontology.SGEdge;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.Graph;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.Node;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.protovis.LinkAdapter;
-import ru.ksu.niimm.ose.ontology.OntologyIndividual;
-import ru.ksu.niimm.ose.ontology.SGEdge;
 
 public class OntologyElementConverterImpl implements OntologyElementConverter {
 

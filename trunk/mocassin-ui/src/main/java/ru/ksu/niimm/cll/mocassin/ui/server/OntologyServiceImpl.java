@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import ru.ksu.niimm.cll.mocassin.ontology.OntologyConcept;
+import ru.ksu.niimm.cll.mocassin.ontology.OntologyFacade;
+import ru.ksu.niimm.cll.mocassin.ontology.OntologyRelation;
 import ru.ksu.niimm.cll.mocassin.ui.client.OntConcept;
 import ru.ksu.niimm.cll.mocassin.ui.client.OntElement;
 import ru.ksu.niimm.cll.mocassin.ui.client.OntRelation;
 import ru.ksu.niimm.cll.mocassin.ui.client.OntologyService;
-import ru.ksu.niimm.ose.ontology.OntologyConcept;
-import ru.ksu.niimm.ose.ontology.OntologyFacade;
-import ru.ksu.niimm.ose.ontology.OntologyRelation;
 
 import com.google.inject.Inject;
 

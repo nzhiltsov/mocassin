@@ -6,13 +6,13 @@ import java.util.List;
 import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.arxiv.Author;
 import ru.ksu.niimm.cll.mocassin.arxiv.impl.Link;
+import ru.ksu.niimm.cll.mocassin.ontology.OntologyResource;
+import ru.ksu.niimm.cll.mocassin.ontology.OntologyResourceFacade;
+import ru.ksu.niimm.cll.mocassin.ontology.SGEdge;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.ArticleInfo;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.Graph;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.ViewerService;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.server.util.OntologyElementConverter;
-import ru.ksu.niimm.ose.ontology.OntologyResource;
-import ru.ksu.niimm.ose.ontology.OntologyResourceFacade;
-import ru.ksu.niimm.ose.ontology.SGEdge;
 
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
