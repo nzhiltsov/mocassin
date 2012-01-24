@@ -1,4 +1,4 @@
-package ru.ksu.niimm.ose.ontology.loader.impl;
+package ru.ksu.niimm.cll.mocassin.ontology.provider.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,18 +7,20 @@ import java.util.logging.Logger;
 
 import org.mindswap.pellet.jena.PelletReasonerFactory;
 
-import ru.ksu.niimm.ose.ontology.loader.OntologyLoader;
+import ru.ksu.niimm.cll.mocassin.ontology.provider.OntologyProvider;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.hp.hpl.jena.ontology.OntModel;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 
-public class OntologyPelletLoader implements OntologyLoader {
+@Singleton
+public class OntologyPelletProvider implements OntologyProvider<OntModel> {
+	private static final String ONTOLOGY_LOADING_MODE_PARAMETER_NAME = "ontology.loading.mode";
+
 	@Inject
 	private Logger logger;
-
-	private OntModel omdocOntology;
 
 	private final String ontologyLoadingMode;
 
@@ -27,30 +29,31 @@ public class OntologyPelletLoader implements OntologyLoader {
 	private final String ontologyLocalFilename;
 
 	@Inject
-	public OntologyPelletLoader(
-			@Named("ontology.loading.mode") String ontologyLoadingMode,
+	public OntologyPelletProvider(
+			@Named(ONTOLOGY_LOADING_MODE_PARAMETER_NAME) String ontologyLoadingMode,
 			@Named("ontology.uri") String ontologyUri,
-			@Named("ontology.local.filename") String ontologyLocalFilename)
-			throws IOException {
+			@Named("ontology.local.filename") String ontologyLocalFilename) {
 		this.ontologyLoadingMode = ontologyLoadingMode;
 		this.ontologyUri = ontologyUri;
 		this.ontologyLocalFilename = ontologyLocalFilename;
-		this.omdocOntology = load();
 	}
 
 	@Override
-	public OntModel getOntology() {
-		return omdocOntology;
-	}
-
-	protected OntModel load() throws IOException {
+	public OntModel get() throws IOException {
 		OntModel model = ModelFactory
 				.createOntologyModel(PelletReasonerFactory.THE_SPEC);
 		return readOntology(model);
 	}
 
 	private OntModel readOntology(OntModel model) {
-		OntologyLoadingMode mode = OntologyLoadingMode.getModeFromString(this.ontologyLoadingMode);
+		OntologyLoadingMode mode = OntologyLoadingMode
+				.getModeFromString(this.ontologyLoadingMode);
+		if (mode == null) {
+			throw new IllegalArgumentException(
+					String.format(
+							"The ontology loading mode is null. Please check the '%s' parameter in the configuration. ",
+							ONTOLOGY_LOADING_MODE_PARAMETER_NAME));
+		}
 		switch (mode) {
 		case REMOTE:
 			return loadAsRemote(model);
@@ -64,7 +67,7 @@ public class OntologyPelletLoader implements OntologyLoader {
 	}
 
 	private OntModel loadAsLocal(OntModel model) {
-		ClassLoader classLoader = OntologyPelletLoader.class.getClassLoader();
+		ClassLoader classLoader = OntologyPelletProvider.class.getClassLoader();
 		try {
 			InputStream stream = classLoader
 					.getResourceAsStream(this.ontologyLocalFilename);
@@ -87,8 +90,9 @@ public class OntologyPelletLoader implements OntologyLoader {
 		REMOTE, LOCAL;
 
 		public static OntologyLoadingMode getModeFromString(String modeStr) {
-			if (modeStr == null)
+			if (modeStr == null) {
 				return null;
+			}
 			for (OntologyLoadingMode mode : values()) {
 				if (mode.toString().toLowerCase().equals(modeStr)) {
 					return mode;

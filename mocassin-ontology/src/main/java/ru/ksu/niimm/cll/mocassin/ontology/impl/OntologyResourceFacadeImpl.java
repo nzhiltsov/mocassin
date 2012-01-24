@@ -1,4 +1,4 @@
-package ru.ksu.niimm.ose.ontology.impl;
+package ru.ksu.niimm.cll.mocassin.ontology.impl;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -10,20 +10,20 @@ import java.util.logging.Logger;
 import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.arxiv.Author;
 import ru.ksu.niimm.cll.mocassin.arxiv.impl.Link;
+import ru.ksu.niimm.cll.mocassin.ontology.ABoxTriple;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
+import ru.ksu.niimm.cll.mocassin.ontology.OntologyFacade;
+import ru.ksu.niimm.cll.mocassin.ontology.OntologyIndividual;
+import ru.ksu.niimm.cll.mocassin.ontology.OntologyResource;
+import ru.ksu.niimm.cll.mocassin.ontology.OntologyResourceFacade;
+import ru.ksu.niimm.cll.mocassin.ontology.SGEdge;
+import ru.ksu.niimm.cll.mocassin.ontology.loader.SparqlQueryLoader;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFGraph;
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFTriple;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoDAO;
 import ru.ksu.niimm.cll.mocassin.virtuoso.impl.RDFGraphImpl;
-import ru.ksu.niimm.ose.ontology.ABoxTriple;
-import ru.ksu.niimm.ose.ontology.OntologyFacade;
-import ru.ksu.niimm.ose.ontology.OntologyIndividual;
-import ru.ksu.niimm.ose.ontology.OntologyResource;
-import ru.ksu.niimm.ose.ontology.OntologyResourceFacade;
-import ru.ksu.niimm.ose.ontology.SGEdge;
-import ru.ksu.niimm.ose.ontology.loader.SparqlQueryLoader;
 
 import com.google.common.base.Function;
 import com.google.inject.Inject;

@@ -36,6 +36,14 @@
 			<artifactId>guice</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>com.google.inject.extensions</groupId>
+			<artifactId>guice-assistedinject</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.inject.extensions</groupId>
+			<artifactId>guice-throwingproviders</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.hp.hpl.jena</groupId>
 			<artifactId>jena</artifactId>
 		</dependency>
@@ -83,6 +91,12 @@
 			<groupId>aterm</groupId>
 			<artifactId>aterm-java</artifactId>
 			<version>1.6</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openrdf.sesame</groupId>
+			<artifactId>sesame-runtime</artifactId>
+			<version>2.6.3</version>
+			<scope>test</scope>
 		</dependency>
 		<!-- for Unit testing -->
 		<dependency>

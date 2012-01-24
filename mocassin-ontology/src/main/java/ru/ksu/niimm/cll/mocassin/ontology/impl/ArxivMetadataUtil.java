@@ -1,4 +1,4 @@
-package ru.ksu.niimm.ose.ontology.impl;
+package ru.ksu.niimm.cll.mocassin.ontology.impl;
 
 import java.util.LinkedList;
 import java.util.List;

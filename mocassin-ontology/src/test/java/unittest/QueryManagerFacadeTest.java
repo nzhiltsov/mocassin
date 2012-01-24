@@ -8,17 +8,17 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ru.ksu.niimm.cll.mocassin.ontology.OntologyBlankNode;
+import ru.ksu.niimm.cll.mocassin.ontology.OntologyConcept;
+import ru.ksu.niimm.cll.mocassin.ontology.OntologyIndividual;
+import ru.ksu.niimm.cll.mocassin.ontology.OntologyLiteral;
+import ru.ksu.niimm.cll.mocassin.ontology.OntologyRelation;
+import ru.ksu.niimm.cll.mocassin.ontology.OntologyResource;
+import ru.ksu.niimm.cll.mocassin.ontology.OntologyTriple;
+import ru.ksu.niimm.cll.mocassin.ontology.QueryManagerFacade;
+import ru.ksu.niimm.cll.mocassin.ontology.QueryStatement;
+import ru.ksu.niimm.cll.mocassin.ontology.loader.SparqlQueryLoader;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
-import ru.ksu.niimm.ose.ontology.OntologyBlankNode;
-import ru.ksu.niimm.ose.ontology.OntologyConcept;
-import ru.ksu.niimm.ose.ontology.OntologyIndividual;
-import ru.ksu.niimm.ose.ontology.OntologyLiteral;
-import ru.ksu.niimm.ose.ontology.OntologyRelation;
-import ru.ksu.niimm.ose.ontology.OntologyResource;
-import ru.ksu.niimm.ose.ontology.OntologyTriple;
-import ru.ksu.niimm.ose.ontology.QueryManagerFacade;
-import ru.ksu.niimm.ose.ontology.QueryStatement;
-import ru.ksu.niimm.ose.ontology.loader.SparqlQueryLoader;
 import unittest.util.OntologyTestModule;
 
 import com.google.inject.Inject;

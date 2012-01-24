@@ -1,11 +1,8 @@
-package unittest.util;
+package ru.ksu.niimm.cll.mocassin.ontology;
 
 import java.io.IOException;
 import java.util.Properties;
 
-import ru.ksu.niimm.cll.mocassin.ontology.OntologyFacade;
-import ru.ksu.niimm.cll.mocassin.ontology.OntologyResourceFacade;
-import ru.ksu.niimm.cll.mocassin.ontology.QueryManagerFacade;
 import ru.ksu.niimm.cll.mocassin.ontology.impl.OntologyFacadeImpl;
 import ru.ksu.niimm.cll.mocassin.ontology.impl.OntologyResourceFacadeImpl;
 import ru.ksu.niimm.cll.mocassin.ontology.impl.QueryManagerFacadeImpl;
@@ -20,18 +17,18 @@ import com.google.inject.name.Names;
 import com.google.inject.throwingproviders.ThrowingProviderBinder;
 import com.hp.hpl.jena.ontology.OntModel;
 
-public class OntologyTestModule extends AbstractModule {
+public class OntologyModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
 		try {
 			Properties properties = new Properties();
 			properties.load(this.getClass().getClassLoader()
-					.getResourceAsStream("test_ontology_config.properties"));
+					.getResourceAsStream("ontology_config.properties"));
 			Names.bindProperties(binder(), properties);
 		} catch (IOException ex) {
 			throw new RuntimeException(
-					"failed to load the Virtuoso module configuration");
+					"failed to load the Ontology module configuration");
 		}
 
 		bind(OntologyFacade.class).to(OntologyFacadeImpl.class);
@@ -39,8 +36,8 @@ public class OntologyTestModule extends AbstractModule {
 		bind(OntologyResourceFacade.class).to(OntologyResourceFacadeImpl.class);
 		bind(SparqlQueryLoader.class).to(SparqlQueryLoaderImpl.class);
 		ThrowingProviderBinder.create(binder())
-		.bind(OntologyProvider.class, OntModel.class)
-		.to(OntologyPelletProvider.class).in(Singleton.class);
+				.bind(OntologyProvider.class, OntModel.class)
+				.to(OntologyPelletProvider.class).in(Singleton.class);
 
 	}
 
