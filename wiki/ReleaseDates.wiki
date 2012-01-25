@@ -1,4 +1,3 @@
-#labels Featured
 ==Road Map==
 
 || *Release* || *Milestone name* || *New Main Features* || *Planned date* ||
