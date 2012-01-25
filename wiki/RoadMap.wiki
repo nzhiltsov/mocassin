@@ -1,7 +1,7 @@
 #labels Featured
 ==Road Map==
 
-|| *Release* || *Milestone name* || *New Main Features* || *Planned date* ||
+|| *Release* || *Milestone Name* || *New Main Features* || *Planned Date* ||
 || 1.0.0.6 || TEL'12 || 1) Complete indexing implementation || 7.02.2012 ||
 || ||  || 2) Limited support of Russian language || ||
 || ||  || || ||
