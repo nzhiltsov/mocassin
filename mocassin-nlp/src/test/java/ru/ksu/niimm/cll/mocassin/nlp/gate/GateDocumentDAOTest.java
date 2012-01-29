@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -19,20 +20,28 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext({ GateModule.class })
 public class GateDocumentDAOTest {
+	private static final String SECOND_DOC = "ivm537";
+	private static final String FIRST_DOC = "ivm18";
 	@Inject
 	private Logger logger;
 	@Inject
 	private GateDocumentDAO gateDocumentDAO;
+	@Inject
+	private GateProcessingFacade gateProcessingFacade;
 
 	@Test
 	public void testDeleteAndSave() throws AccessGateStorageException,
 			PersistenceException, AccessGateDocumentException {
-		gateDocumentDAO.delete("ivm18");
-		gateDocumentDAO.delete("ivm537");
-		gateDocumentDAO.save("ivm18", new File(
-				"/opt/mocassin/arxmliv/ivm18.tex.xml"), "utf8");
-		gateDocumentDAO.save("ivm537", new File(
-				"/opt/mocassin/arxmliv/ivm537.tex.xml"), "utf8");
+		gateDocumentDAO.delete(FIRST_DOC);
+		gateDocumentDAO.delete(SECOND_DOC);
+		gateDocumentDAO.save(
+				FIRST_DOC,
+				new File(String.format("/opt/mocassin/arxmliv/%s.tex.xml",
+						FIRST_DOC)), "utf8");
+		gateDocumentDAO.save(
+				SECOND_DOC,
+				new File(String.format("/opt/mocassin/arxmliv/%s.tex.xml",
+						SECOND_DOC)), "utf8");
 	}
 
 	@Test
@@ -55,6 +64,13 @@ public class GateDocumentDAOTest {
 			}
 
 		}
+	}
+
+	@After
+	public void after() throws AccessGateDocumentException,
+			AccessGateStorageException, ProcessException {
+		gateProcessingFacade.process(FIRST_DOC);
+		gateProcessingFacade.process(SECOND_DOC);
 	}
 
 	public GateDocumentDAO getGateDocumentDAO() {
