@@ -4,11 +4,15 @@ import java.io.IOException;
 import java.util.Collection;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateDocumentException;
+import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateStorageException;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateModule;
+import ru.ksu.niimm.cll.mocassin.nlp.gate.GateProcessingFacade;
+import ru.ksu.niimm.cll.mocassin.nlp.gate.ProcessException;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.ParsedDocumentImpl;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexParserModule;
@@ -26,12 +30,22 @@ import edu.uci.ics.jung.graph.Graph;
 public class ReferenceSearcherTest {
 	@Inject
 	private ReferenceSearcher referenceSearcher;
+	@Inject
+	private GateProcessingFacade gateProcessingFacade;
+
+	private ParsedDocument document;
+
+	@Before
+	public void init() throws AccessGateDocumentException,
+			AccessGateStorageException, ProcessException {
+		document = new ParsedDocumentImpl("ivm18", "http://mathnet.ru/ivm18",
+				"http://mathnet.ru/ivm18");
+		gateProcessingFacade.process(document.getCollectionId());
+	}
 
 	@Test
 	public void testRetrieveReferences() throws AccessGateDocumentException,
-			IOException {
-		ParsedDocument document = new ParsedDocumentImpl("ivm18",
-				"http://mathnet.ru/ivm18", "http://mathnet.ru/ivm18");
+			IOException, AccessGateStorageException, ProcessException {
 		Graph<StructuralElement, Reference> graph = this.referenceSearcher
 				.retrieveStructuralGraph(document);
 		Collection<Reference> edges = graph.getEdges();
