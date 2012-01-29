@@ -16,7 +16,7 @@ public abstract class AbstractUnixCommandWrapper {
 		this.logger = logger;
 	}
 
-	public void execute() throws Exception {
+	public final void execute() throws Exception {
 		ExpectJ expectinator = new ExpectJ(TIMEOUT_IN_SECONDS);
 		Spawn shell = expectinator.spawn(StringUtil.asString(cmdArray));
 		shell.expectClose();
