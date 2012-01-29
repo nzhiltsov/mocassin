@@ -33,7 +33,7 @@ public class ParsedDocumentImpl implements ParsedDocument {
 		return pdfUri;
 	}
 
-	public String getArxivId() {
+	public String getCollectionId() {
 		return arxivId;
 	}
 

@@ -13,5 +13,5 @@ public interface ParsedDocument {
 
 	long getSize();
 	
-	String getArxivId();
+	String getCollectionId();
 }

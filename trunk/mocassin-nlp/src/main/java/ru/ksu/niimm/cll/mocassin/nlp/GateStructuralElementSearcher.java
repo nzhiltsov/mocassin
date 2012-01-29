@@ -80,11 +80,11 @@ class GateStructuralElementSearcher implements StructuralElementSearcher {
 			ParsedDocument parsedDocument) {
 		this.parsedDocument = parsedDocument;
 		Document gateDocument = null;
-		String arxivId = parsedDocument.getArxivId().replace("/", "_");
+		String arxivId = parsedDocument.getCollectionId().replace("/", "_");
 		try {
 			gateDocument = gateDocumentDAO.load(arxivId);
 			latexDocumentModel = latexDocumentDAO.load(parsedDocument
-					.getArxivId());
+					.getCollectionId());
 			latexNodes = structureBuilder.buildStructureGraph(
 					latexDocumentModel).getVertices();
 
