@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateModule;
+import ru.ksu.niimm.cll.mocassin.nlp.gate.GateProcessingFacade;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.ParsedDocumentImpl;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
@@ -23,6 +24,9 @@ public class StructuralElementSearcherTest {
 
 	@Inject
 	private StructuralElementSearcher structuralElementSearcher;
+	
+	@Inject
+	private GateProcessingFacade gateProcessingFacade;
 
 	private ParsedDocument parsedDocument;
 
@@ -30,6 +34,7 @@ public class StructuralElementSearcherTest {
 	public void init() throws Exception {
 		this.parsedDocument = new ParsedDocumentImpl("ivm18",
 				"http://mathnet.ru/ivm18", "http://mathnet.ru/ivm18");
+		gateProcessingFacade.process(parsedDocument.getCollectionId());
 	}
 
 	@Test
