@@ -34,14 +34,14 @@ public class StructuralElementSearcherTest {
 	public void init() throws Exception {
 		this.parsedDocument = new ParsedDocumentImpl("ivm18",
 				"http://mathnet.ru/ivm18", "http://mathnet.ru/ivm18");
-		gateProcessingFacade.process(parsedDocument.getCollectionId());
+//		gateProcessingFacade.process(parsedDocument.getCollectionId());
 	}
 
 	@Test
 	public void testFindById() throws Exception {
 
 		StructuralElement foundElement = getStructuralElementSearcher()
-				.findById(parsedDocument, 5498);
+				.findById(parsedDocument, 5499);
 		Assert.assertNotNull("The found element is null", foundElement);
 
 	}
@@ -51,7 +51,7 @@ public class StructuralElementSearcherTest {
 		MocassinOntologyClasses[] hasConsequenceDomains = MocassinOntologyRelations
 				.getValidDomains(MocassinOntologyRelations.HAS_CONSEQUENCE);
 		StructuralElement predecessor = getStructuralElementSearcher()
-				.findClosestPredecessor(parsedDocument, 5498,
+				.findClosestPredecessor(parsedDocument, 5499,
 						hasConsequenceDomains);
 		Assert.assertEquals(
 				"The found predecessor id does not equal to the expected one.",

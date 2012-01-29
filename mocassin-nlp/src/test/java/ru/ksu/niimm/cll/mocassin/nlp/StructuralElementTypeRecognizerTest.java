@@ -47,7 +47,7 @@ public class StructuralElementTypeRecognizerTest {
 				"http://mathnet.ru/ivm18", "http://mathnet.ru/ivm18");
 		gateProcessingFacade.process(parsedDocument.getCollectionId());
 		testTableElement = structuralElementSearcher.findById(parsedDocument,
-				5498);
+				5499);
 	}
 
 	@Test
