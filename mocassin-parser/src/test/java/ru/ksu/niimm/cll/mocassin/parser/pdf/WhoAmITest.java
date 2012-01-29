@@ -17,10 +17,17 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 public class WhoAmITest {
 	@Inject
 	WhoAmIChecker whoAmIChecker;
+	@Inject
+	HomeChecker homeChecker;
 
 	@Test
 	public void testExecute() throws Exception {
 		this.whoAmIChecker.execute();
+	}
+
+	@Test
+	public void testHome() throws Exception {
+		this.homeChecker.execute();
 	}
 
 	private static class WhoAmIChecker extends AbstractUnixCommandWrapper {
@@ -29,6 +36,15 @@ public class WhoAmITest {
 		public WhoAmIChecker(Logger logger) {
 			super(logger, 1);
 			this.cmdArray[0] = "whoami";
+		}
+
+	}
+
+	private static class HomeChecker extends AbstractUnixCommandWrapper {
+		@Inject
+		public HomeChecker(Logger logger) {
+			super(logger, 1);
+			this.cmdArray[0] = "printenv";
 		}
 
 	}
