@@ -67,7 +67,7 @@ class GateReferenceSearcher implements ReferenceSearcher {
 	public Graph<StructuralElement, Reference> retrieveStructuralGraph(
 			ParsedDocument parsedDocument) {
 		this.parsedDocument = parsedDocument;
-		String arxivId = StringUtil.arxivid2gateid(parsedDocument.getArxivId());
+		String arxivId = StringUtil.arxivid2gateid(parsedDocument.getCollectionId());
 		try {
 			this.graph = new DirectedSparseMultigraph<StructuralElement, Reference>();
 
@@ -124,7 +124,7 @@ class GateReferenceSearcher implements ReferenceSearcher {
 								.get(j).getGateEndOffset()) {
 					long documentSize = getDocument().getContent().size();
 					ParsedDocument refDocument = new ParsedDocumentImpl(
-							getParsedDocument().getArxivId(),
+							getParsedDocument().getCollectionId(),
 							getParsedDocument().getUri(), getParsedDocument()
 									.getPdfUri(), documentSize);
 					Reference reference = new ReferenceImpl.Builder(refId--)
@@ -212,7 +212,7 @@ class GateReferenceSearcher implements ReferenceSearcher {
 					enclosingSentence);
 			long documentSize = getDocument().getContent().size();
 			ParsedDocument refDocument = new ParsedDocumentImpl(
-					getParsedDocument().getArxivId(), getParsedDocument()
+					getParsedDocument().getCollectionId(), getParsedDocument()
 							.getUri(), getParsedDocument().getPdfUri(),
 					documentSize);
 			String additionalRefid = (String) annotation.getFeatures().get(
