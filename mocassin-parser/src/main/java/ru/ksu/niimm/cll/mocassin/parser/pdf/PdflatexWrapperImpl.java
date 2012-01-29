@@ -61,8 +61,8 @@ class PdflatexWrapperImpl extends AbstractUnixCommandWrapper implements
 			execute(); // double calling is necessary for right cross-references
 		} catch (Exception e) {
 			String message = String
-					.format("failed to compile the PDF document for an arXiv identifier='%s'",
-							arxivId);
+					.format("failed to compile the PDF document for an arXiv identifier='%s' due to %s",
+							arxivId, e.getCause());
 			logger.log(Level.SEVERE, message);
 			throw new PdflatexCompilationException(message);
 		}
