@@ -40,9 +40,9 @@ import edu.uci.ics.jung.graph.Graph;
 
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext({ AnalyzerModule.class, NlpModule.class, LatexParserModule.class,
-		OntologyModule.class, VirtuosoModule.class, FullTextModule.class, GateModule.class, PdfParserModule.class })
-@Ignore
-public class AbstractRankingTest {
+		OntologyModule.class, VirtuosoModule.class, FullTextModule.class,
+		GateModule.class, PdfParserModule.class })
+public abstract class AbstractRankingTest {
 	@Inject
 	private Parser parser;
 	@Inject
@@ -55,7 +55,8 @@ public class AbstractRankingTest {
 	@Before
 	public void init() throws LexerException, IOException {
 		InputStream in = this.getClass().getResourceAsStream("/example.tex");
-		LatexDocumentModel latexDocumentModel = this.parser.parse("example", in, true);
+		LatexDocumentModel latexDocumentModel = this.parser.parse("example",
+				in, true);
 
 		this.models.add(this.structureBuilder
 				.buildStructureGraph(latexDocumentModel));
