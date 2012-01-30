@@ -40,7 +40,6 @@ import edu.uci.ics.jung.graph.Graph;
 @GuiceContext({ AnalyzerModule.class, NlpModule.class, LatexParserModule.class,
 		OntologyModule.class, VirtuosoModule.class, FullTextModule.class,
 		GateModule.class, PdfParserModule.class })
-@Ignore("references should be read from a store")
 public abstract class AbstractAnalyzerTest {
 	@Inject
 	private ReferenceSearcher referenceSearcher;
@@ -57,7 +56,7 @@ public abstract class AbstractAnalyzerTest {
 		Assert.assertTrue("Extracted edge list is empty.", edges.size() > 0);
 
 		for (Reference ref : edges) {
-			if (ref.getId() == 5086 || ref.getId() == 4766) {
+			if (ref.getId() == 5087 || ref.getId() == 4766) {
 				this.references.add(ref);
 				if (this.references.size() == 2) {
 					break;
