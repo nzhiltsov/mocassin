@@ -185,6 +185,26 @@ public class AnnotationUtilImpl implements AnnotationUtil {
 		return sb.toString().trim();
 	}
 
+	@Override
+	public String getTextContentsForAnnotationWithReplacements(
+			Document document, Annotation annotation,
+			Annotation annotationForReplace, final String replacementString) {
+		List<Annotation> tokenList = getSortedTokenList(document, annotation,
+				true);
+		StringBuffer sb = new StringBuffer();
+		for (Annotation tokenAnnotation : tokenList) {
+			if (tokenAnnotation.equals(annotationForReplace)) {
+				sb.append(replacementString);
+			} else {
+				String tokenValue = (String) tokenAnnotation.getFeatures().get(
+						GateFormatConstants.TOKEN_FEATURE_NAME);
+				sb.append(tokenValue);
+			}
+			sb.append(" ");
+		}
+		return sb.toString().trim();
+	}
+
 	private List<Annotation> getSortedTokenList(Document document,
 			Annotation annotation, boolean withSpaces) {
 		AnnotationSet tokenSet = getTokenSetWithoutSpaces(document, annotation);
