@@ -66,7 +66,7 @@ public class HasConsequenceRelationAnalyzerTest {
 						2359, from.getId());
 				Assert.assertEquals(
 						"The range id of the 'hasConsequence' relation does not equal to the expected one.",
-						2941, to.getId());
+						2926, to.getId());
 				found = true;
 				break;
 			}
