@@ -37,8 +37,10 @@ public class CitationSearcherTest {
 	}
 
 	@Test
-	public void testGetCitationSentences() throws IOException {
+	public void testGetCitations() throws IOException {
 		LinkedList<Citation> citations = citationSearcher.getCitations(DOC_ID);
-		Assert.assertTrue(citations.size() > 0);
+		Assert.assertEquals(
+				"Number of extracted citations does not equal to the expected one.",
+				8, citations.size());
 	}
 }
