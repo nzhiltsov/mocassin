@@ -1,0 +1,3 @@
+@prefix akt: <http://www.aktors.org/ontology/portal#> .
+<http://mathnet.ru/ivm537> akt:has-title "Неточный комбинированный релаксационный метод для многозначных включений";
+a akt:Article-Reference .
