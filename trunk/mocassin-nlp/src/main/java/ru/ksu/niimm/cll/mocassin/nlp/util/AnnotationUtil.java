@@ -22,15 +22,19 @@ public interface AnnotationUtil {
 	 * @param annotation
 	 * @return
 	 */
-	String[] getTokensWithMathAnnotation(Document document, Annotation annotation);
+	String[] getTokensWithMathAnnotation(Document document,
+			Annotation annotation);
+
 	/**
-	 * extracts text tokens along with math expressions templated according to a given symbol 
+	 * extracts text tokens along with math expressions templated according to a
+	 * given symbol
 	 * 
 	 * @param document
 	 * @param annotation
 	 * @return
 	 */
-	String[] getTokensWithTemplatedMathAnnotations(Document document, Annotation annotation, char symbol);
+	String[] getTokensWithTemplatedMathAnnotations(Document document,
+			Annotation annotation, char symbol);
 
 	/**
 	 * returns a string of concatenated tokens contained by a given annotation
@@ -40,9 +44,23 @@ public interface AnnotationUtil {
 	 * @return
 	 */
 	String getTextContentsForAnnotation(Document document, Annotation annotation);
-	
+
 	/**
-	 * returns the enclosing sentence annotation (if any, otherwise null) for a given annotation
+	 * returns a string of concatenated tokens contained by a given annotation
+	 * with replacement of given annotation's occurrences with a given
+	 * replacement string
+	 * 
+	 * @param document
+	 * @param annotation
+	 * @return
+	 */
+	String getTextContentsForAnnotationWithReplacements(Document document,
+			Annotation annotation, Annotation annotationForReplace,
+			String replacementString);
+
+	/**
+	 * returns the enclosing sentence annotation (if any, otherwise null) for a
+	 * given annotation
 	 * 
 	 * @param annotation
 	 * @return
