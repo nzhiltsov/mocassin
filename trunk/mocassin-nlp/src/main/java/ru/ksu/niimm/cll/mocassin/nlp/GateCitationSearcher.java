@@ -3,6 +3,7 @@ package ru.ksu.niimm.cll.mocassin.nlp;
 import gate.Annotation;
 import gate.AnnotationSet;
 import gate.Document;
+import gate.util.OffsetComparator;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -91,8 +92,10 @@ class GateCitationSearcher implements CitationSearcher {
 			AnnotationSet tokenSet = gateDocument.getAnnotations(
 					GateFormatConstants.DEFAULT_ANNOTATION_SET_NAME).get(
 					TOKEN_ANNOTATION_NAME);
+			ArrayList<Annotation> tokenList = new ArrayList<Annotation>(tokenSet);
+			Collections.sort(tokenList, new OffsetComparator());
 			StreamHandler<Annotation> streamHandler = new StreamHandler<Annotation>(
-					tokenSet, new OpenCitationPredicate(),
+					tokenList, new OpenCitationPredicate(),
 					new NumberCitationPredicate(),
 					new ClosingCitationPredicate());
 			List<Annotation> citationNumberAnnotations = streamHandler
@@ -143,10 +146,11 @@ class GateCitationSearcher implements CitationSearcher {
 		String numberStr = (String) citation.getFeatures().get(
 				GateFormatConstants.TOKEN_FEATURE_NAME);
 		int number = Integer.parseInt(numberStr);
+		String toKey = bibliographyExtractor.getToKey(documentId, number);
 		String sentence = annotationUtil
 				.getTextContentsForAnnotationWithReplacements(gateDocument,
 						enclosingSentence, citation,
-						bibliographyExtractor.getToKey(documentId, number));
+						toKey != null ? toKey : numberStr);
 
 		return sentence;
 	}
