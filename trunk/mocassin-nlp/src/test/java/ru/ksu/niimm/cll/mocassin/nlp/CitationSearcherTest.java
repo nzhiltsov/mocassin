@@ -1,7 +1,9 @@
 package ru.ksu.niimm.cll.mocassin.nlp;
 
 import java.io.IOException;
+import java.util.LinkedList;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -22,6 +24,8 @@ public class CitationSearcherTest {
 
 	@Test
 	public void testGetCitationSentences() throws IOException {
-		
+		LinkedList<Citation> citations = citationSearcher
+				.getCitations("ivm537");
+		Assert.assertTrue(citations.size() > 0);
 	}
 }
