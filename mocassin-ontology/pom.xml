@@ -92,11 +92,17 @@
 			<artifactId>aterm-java</artifactId>
 			<version>1.6</version>
 		</dependency>
+		<!-- Sesame framework -->
 		<dependency>
 			<groupId>org.openrdf.sesame</groupId>
 			<artifactId>sesame-runtime</artifactId>
 			<version>2.6.3</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.5.6</version>
 		</dependency>
 		<!-- for Unit testing -->
 		<dependency>

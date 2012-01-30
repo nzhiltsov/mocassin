@@ -1,10 +1,20 @@
 package unittest;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openrdf.repository.Repository;
+import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.repository.RepositoryException;
+import org.openrdf.repository.sail.SailRepository;
+import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.RDFParseException;
+import org.openrdf.sail.memory.MemoryStore;
 
 import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
@@ -29,13 +39,28 @@ public class OntologyResourceFacadeTest {
 		return ontologyResourceFacade;
 	}
 
+	@Before
+	public void init() throws RepositoryException, RDFParseException,
+			IOException {
+		Repository repository = new SailRepository(new MemoryStore());
+		repository.initialize();
+		RepositoryConnection connection = repository.getConnection();
+		try {
+			connection.add(getClass().getResourceAsStream("/testmetadata.rdf"),
+					"http://cll.niimm.ksu.ru/mocassinfortest", RDFFormat.N3);
+		} finally {
+			connection.close();
+		}
+	}
+
 	@Test
 	public void testLoadArticleMetadataResource() {
 		OntologyResource resource = new OntologyResource(
 				"http://mathnet.ru/ivm537");
 		ArticleMetadata articleMetadata = getOntologyResourceFacade().load(
 				resource);
-		Assert.assertEquals("Article id does not equal to the expected one.", "ivm537", articleMetadata.getCollectionId());
+		Assert.assertEquals("Article id does not equal to the expected one.",
+				"ivm537", articleMetadata.getCollectionId());
 		boolean titleEquals = "Неточный комбинированный релаксационный метод для многозначных включений"
 				.equals(articleMetadata.getTitle());
 
