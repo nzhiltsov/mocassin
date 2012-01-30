@@ -4,10 +4,15 @@ import java.io.IOException;
 import java.util.LinkedList;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateDocumentException;
+import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateStorageException;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateModule;
+import ru.ksu.niimm.cll.mocassin.nlp.gate.GateProcessingFacade;
+import ru.ksu.niimm.cll.mocassin.nlp.gate.ProcessException;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.parser.pdf.PdfParserModule;
 
@@ -19,13 +24,21 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 @GuiceContext({ NlpModule.class, GateModule.class, LatexParserModule.class,
 		PdfParserModule.class })
 public class CitationSearcherTest {
+	private static final String DOC_ID = "ivm18";
 	@Inject
 	private CitationSearcher citationSearcher;
+	@Inject
+	private GateProcessingFacade gateProcessingFacade;
+
+	@Before
+	public void init() throws AccessGateDocumentException,
+			AccessGateStorageException, ProcessException {
+		gateProcessingFacade.process(DOC_ID);
+	}
 
 	@Test
 	public void testGetCitationSentences() throws IOException {
-		LinkedList<Citation> citations = citationSearcher
-				.getCitations("ivm537");
+		LinkedList<Citation> citations = citationSearcher.getCitations(DOC_ID);
 		Assert.assertTrue(citations.size() > 0);
 	}
 }
