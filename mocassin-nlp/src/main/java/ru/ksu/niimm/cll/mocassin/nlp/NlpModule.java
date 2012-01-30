@@ -35,6 +35,7 @@ public class NlpModule extends AbstractModule {
 				StructuralElementTypeRecognizerImpl.class);
 		bind(ReferenceTripleUtil.class).to(ReferenceTripleUtilImpl.class);
 		bind(CitationSearcher.class).to(GateCitationSearcher.class);
+		bind(BibliographyExtractor.class).to(FakeBibliographyExtractor.class);
 	}
 
 }
