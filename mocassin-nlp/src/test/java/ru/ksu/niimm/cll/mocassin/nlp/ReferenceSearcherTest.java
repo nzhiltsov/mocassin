@@ -53,8 +53,8 @@ public class ReferenceSearcherTest {
 
 		boolean foundHasPartInstance = false;
 		for (Reference ref : edges) {
-			foundHasPartInstance = graph.getSource(ref).getId() == 4860
-					&& graph.getDest(ref).getId() == 4965;
+			foundHasPartInstance = graph.getSource(ref).getId() == 1017
+					&& graph.getDest(ref).getId() == 2900;
 			if (foundHasPartInstance) {
 				break;
 			}
@@ -63,15 +63,16 @@ public class ReferenceSearcherTest {
 		Assert.assertTrue("The 'hasPart' instance hasn't been found.",
 				foundHasPartInstance);
 
-		boolean foundTableInstance = false;
+		int tableCount = 0;
 		Collection<StructuralElement> elements = graph.getVertices();
 		for (StructuralElement element : elements) {
-			foundTableInstance = element.getId() == 5632
-					&& element.getPredictedClass() == MocassinOntologyClasses.TABLE;
-			if (foundTableInstance) {
-				break;
+			if (element.getPredictedClass() == MocassinOntologyClasses.TABLE) {
+				tableCount++;
 			}
 		}
+		Assert.assertEquals(
+				"The number of tables in the document does not equal to the expected one.",
+				3, tableCount);
 	}
 
 }
