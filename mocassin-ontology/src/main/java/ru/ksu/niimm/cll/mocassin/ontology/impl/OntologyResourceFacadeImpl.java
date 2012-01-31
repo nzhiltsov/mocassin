@@ -7,6 +7,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.openrdf.repository.Repository;
+
 import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.arxiv.Author;
 import ru.ksu.niimm.cll.mocassin.arxiv.impl.Link;
@@ -19,6 +21,7 @@ import ru.ksu.niimm.cll.mocassin.ontology.OntologyResource;
 import ru.ksu.niimm.cll.mocassin.ontology.OntologyResourceFacade;
 import ru.ksu.niimm.cll.mocassin.ontology.SGEdge;
 import ru.ksu.niimm.cll.mocassin.ontology.loader.SparqlQueryLoader;
+import ru.ksu.niimm.cll.mocassin.ontology.provider.RepositoryProvider;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFGraph;
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFTriple;
@@ -51,10 +54,12 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 	private static final String RETRIEVED_ARXIV_ID_ELEMENT_KEY = "?2";
 	@Inject
 	private VirtuosoDAO virtuosoDAO;
-	@Inject
-	private SparqlQueryLoader sparqlQueryLoader;
-	@Inject
-	private OntologyFacade ontologyFacade;
+
+	private final SparqlQueryLoader sparqlQueryLoader;
+
+	private final OntologyFacade ontologyFacade;
+
+	private final RepositoryProvider<Repository> repositoryProvider;
 	@Inject
 	private Logger logger;
 
@@ -63,12 +68,17 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 	private String ontologyRulesSetName;
 
 	@Inject
-	public OntologyResourceFacadeImpl(
+	public OntologyResourceFacadeImpl(SparqlQueryLoader sparqlQueryLoader,
+			OntologyFacade ontologyFacade,
+			RepositoryProvider<Repository> repositoryProvider,
 			@Named("connection.url") String connectionUrl,
 			@Named("connection.user.name") String username,
 			@Named("connection.user.password") String password,
 			@Named("graph.iri") String graphIri,
 			@Named("ontology.rules.set") String ontologyRuleSet) {
+		this.sparqlQueryLoader = sparqlQueryLoader;
+		this.ontologyFacade = ontologyFacade;
+		this.repositoryProvider = repositoryProvider;
 		this.searchGraph = new RDFGraphImpl.Builder(graphIri)
 				.url(connectionUrl).username(username).password(password)
 				.inferenceRulesSetName(ontologyRuleSet).build();
