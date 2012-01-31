@@ -3,12 +3,16 @@ package ru.ksu.niimm.cll.mocassin.ontology;
 import java.io.IOException;
 import java.util.Properties;
 
+import org.openrdf.repository.Repository;
+
 import ru.ksu.niimm.cll.mocassin.ontology.impl.OntologyFacadeImpl;
 import ru.ksu.niimm.cll.mocassin.ontology.impl.OntologyResourceFacadeImpl;
 import ru.ksu.niimm.cll.mocassin.ontology.impl.QueryManagerFacadeImpl;
 import ru.ksu.niimm.cll.mocassin.ontology.loader.SparqlQueryLoader;
 import ru.ksu.niimm.cll.mocassin.ontology.loader.impl.SparqlQueryLoaderImpl;
 import ru.ksu.niimm.cll.mocassin.ontology.provider.OntologyProvider;
+import ru.ksu.niimm.cll.mocassin.ontology.provider.RepositoryProvider;
+import ru.ksu.niimm.cll.mocassin.ontology.provider.impl.InMemoryRepositoryProvider;
 import ru.ksu.niimm.cll.mocassin.ontology.provider.impl.OntologyPelletProvider;
 
 import com.google.inject.AbstractModule;
@@ -38,7 +42,9 @@ public class OntologyModule extends AbstractModule {
 		ThrowingProviderBinder.create(binder())
 				.bind(OntologyProvider.class, OntModel.class)
 				.to(OntologyPelletProvider.class).in(Singleton.class);
-
+		ThrowingProviderBinder.create(binder())
+				.bind(RepositoryProvider.class, Repository.class)
+				.to(InMemoryRepositoryProvider.class).in(Singleton.class);
 	}
 
 }
