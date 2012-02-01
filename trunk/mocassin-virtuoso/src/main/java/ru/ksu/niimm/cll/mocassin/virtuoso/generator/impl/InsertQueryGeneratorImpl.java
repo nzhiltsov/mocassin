@@ -15,6 +15,11 @@ public class InsertQueryGeneratorImpl implements InsertQueryGenerator {
 		QueryBuilder queryBuilder = new QueryBuilder(QueryType.INSERT);
 		String graphIri = graph.getIri();
 		return queryBuilder.addGraphUri(graphIri).addTriples(triples).build();
+	}
 
+	@Override
+	public String generate(List<RDFTriple> triples) {
+		QueryBuilder queryBuilder = new QueryBuilder(QueryType.INSERT);
+		return queryBuilder.addTriples(triples).build();
 	}
 }

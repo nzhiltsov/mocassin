@@ -7,4 +7,6 @@ import ru.ksu.niimm.cll.mocassin.virtuoso.RDFTriple;
 
 public interface InsertQueryGenerator {
 	String generate(List<RDFTriple> triple, RDFGraph graph);
+	
+	String generate(List<RDFTriple> triple);
 }

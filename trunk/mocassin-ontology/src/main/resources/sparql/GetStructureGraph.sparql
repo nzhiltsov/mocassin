@@ -6,8 +6,8 @@ SELECT DISTINCT ?snumpage ?stitle ?sclass ?s ?p ?o ?oclass ?otitle ?onumpage {
 ?o a ?oclass .
 ?s <http://cll.niimm.ksu.ru/ontologies/mocassin#hasStartPageNumber> ?snumpage .
 ?o <http://cll.niimm.ksu.ru/ontologies/mocassin#hasStartPageNumber> ?onumpage .
-?s <http://cll.niimm.ksu.ru/ontologies/mocassin#hasTitle> ?stitle .
-?o <http://cll.niimm.ksu.ru/ontologies/mocassin#hasTitle> ?otitle .
+OPTIONAL {?s <http://cll.niimm.ksu.ru/ontologies/mocassin#hasTitle> ?stitle } .
+OPTIONAL {?o <http://cll.niimm.ksu.ru/ontologies/mocassin#hasTitle> ?otitle} .
 FILTER (STR(?d) = "%s") 
 FILTER (REGEX(STR(?p), 'ontologies/mocassin'))
 }
