@@ -1,5 +1,5 @@
 SELECT ?p ?s ?stitle ?snumpage {
-?s <http://cll.niimm.ksu.ru/ontologies/mocassin#hasTitle> ?stitle .
+OPTIONAL {?s <http://cll.niimm.ksu.ru/ontologies/mocassin#hasTitle> ?stitle } .
 ?s <http://cll.niimm.ksu.ru/ontologies/mocassin#hasStartPageNumber> ?snumpage .
 ?p <http://cll.niimm.ksu.ru/ontologies/mocassin#hasSegment> ?s .
 FILTER (STR(?s) = "%s") 

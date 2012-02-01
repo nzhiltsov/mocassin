@@ -12,7 +12,7 @@ public interface OntologyResourceFacade {
 	 * 
 	 * @param resource
 	 *            resource
-	 * @return
+	 * @return null, if metadata is absent or couldn't be retrieved
 	 */
 	ArticleMetadata load(OntologyResource resource);
 
@@ -26,6 +26,12 @@ public interface OntologyResourceFacade {
 	 */
 	List<SGEdge> retrieveStructureGraph(OntologyResource resource);
 
-	void insert(ArticleMetadata articleMetadata, Set<RDFTriple> triples);
+	/**
+	 * 
+	 * @param articleMetadata
+	 * @param triples
+	 * @return true, if update was successful
+	 */
+	boolean insert(ArticleMetadata articleMetadata, Set<RDFTriple> triples);
 
 }

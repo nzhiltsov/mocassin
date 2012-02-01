@@ -1,13 +1,23 @@
 package ru.ksu.niimm.cll.mocassin.ontology.impl;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.openrdf.model.Literal;
+import org.openrdf.model.Value;
+import org.openrdf.query.BindingSet;
+import org.openrdf.query.MalformedQueryException;
+import org.openrdf.query.QueryEvaluationException;
+import org.openrdf.query.QueryLanguage;
+import org.openrdf.query.TupleQuery;
+import org.openrdf.query.TupleQueryResult;
+import org.openrdf.query.Update;
 import org.openrdf.repository.Repository;
+import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.repository.RepositoryException;
 
 import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.arxiv.Author;
@@ -26,34 +36,30 @@ import ru.ksu.niimm.cll.mocassin.util.StringUtil;
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFGraph;
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFTriple;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoDAO;
+import ru.ksu.niimm.cll.mocassin.virtuoso.generator.InsertQueryGenerator;
 import ru.ksu.niimm.cll.mocassin.virtuoso.impl.RDFGraphImpl;
 
 import com.google.common.base.Function;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.QueryFactory;
-import com.hp.hpl.jena.query.QuerySolution;
-import com.hp.hpl.jena.rdf.model.Literal;
-import com.hp.hpl.jena.rdf.model.Resource;
 
 public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 	private static final String PUBLICATION_TYPE_URI = "http://www.aktors.org/ontology/portal#Article-Reference";
-	private static final String RETRIEVED_OBJECT_CLASS = "?oclass";
-	private static final String RETRIEVED_SUBJECT_CLASS = "?sclass";
-	private static final String RETRIEVED_OBJECT_GRAPH_NODE = "?o";
-	private static final String RETRIEVED_PREDICATE_GRAPH_NODE = "?p";
-	private static final String RETRIEVED_SUBJECT_GRAPH_NODE = "?s";
-	private static final String RETRIEVED_TITLE_ELEMENT_KEY = "?3";
+	private static final String RETRIEVED_OBJECT_CLASS = "oclass";
+	private static final String RETRIEVED_SUBJECT_CLASS = "sclass";
+	private static final String RETRIEVED_OBJECT_GRAPH_NODE = "o";
+	private static final String RETRIEVED_PREDICATE_GRAPH_NODE = "p";
+	private static final String RETRIEVED_SUBJECT_GRAPH_NODE = "s";
+	private static final String RETRIEVED_TITLE_ELEMENT_KEY = "3";
 	private static final String DELIMITER = "#";
-	private static final String RETRIEVED_AUTHOR_NAME_ELEMENT_KEY = "?3";
-	private static final String RETRIEVED_LINK_TYPE_ELEMENT_KEY = "?3";
-	private static final String RETRIEVED_LINK_HREF_ELEMENT_KEY = "?4";
-	private static final String RETRIEVED_PUBLICATION_URI_ELEMENT_KEY = "?1";
+	private static final String RETRIEVED_AUTHOR_NAME_ELEMENT_KEY = "3";
+	private static final String RETRIEVED_LINK_TYPE_ELEMENT_KEY = "3";
+	private static final String RETRIEVED_LINK_HREF_ELEMENT_KEY = "4";
+	private static final String RETRIEVED_PUBLICATION_URI_ELEMENT_KEY = "1";
 	private static final String RULES_SET_ENTRY = "define input:inference \"%s\"";
-	private static final String RETRIEVED_ARXIV_ID_ELEMENT_KEY = "?2";
-	@Inject
-	private VirtuosoDAO virtuosoDAO;
+	private static final String RETRIEVED_ARXIV_ID_ELEMENT_KEY = "2";
+
+	private final InsertQueryGenerator insertQueryGenerator;
 
 	private final SparqlQueryLoader sparqlQueryLoader;
 
@@ -68,14 +74,16 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 	private String ontologyRulesSetName;
 
 	@Inject
-	public OntologyResourceFacadeImpl(SparqlQueryLoader sparqlQueryLoader,
-			OntologyFacade ontologyFacade,
+	public OntologyResourceFacadeImpl(
+			InsertQueryGenerator insertQueryGenerator,
+			SparqlQueryLoader sparqlQueryLoader, OntologyFacade ontologyFacade,
 			RepositoryProvider<Repository> repositoryProvider,
 			@Named("connection.url") String connectionUrl,
 			@Named("connection.user.name") String username,
 			@Named("connection.user.password") String password,
 			@Named("graph.iri") String graphIri,
 			@Named("ontology.rules.set") String ontologyRuleSet) {
+		this.insertQueryGenerator = insertQueryGenerator;
 		this.sparqlQueryLoader = sparqlQueryLoader;
 		this.ontologyFacade = ontologyFacade;
 		this.repositoryProvider = repositoryProvider;
@@ -87,35 +95,73 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 
 	@Override
 	public ArticleMetadata load(OntologyResource resource) {
-
-		if (isPublication(resource.getUri())) {
-			return loadPublication(resource.getUri());
-		} else {
-
-			String segmentInfoQueryString = generateSegmentInfoQuery(resource
-					.getUri());
-			Query query = QueryFactory.create(segmentInfoQueryString);
-
-			List<QuerySolution> solutions = getVirtuosoDAO().get(
-					getSearchGraph(), query);
-			if (solutions.isEmpty()) {
-				logger.log(Level.SEVERE,
-						"none of a title and publication metadata was found for a segment: "
-								+ resource.getUri());
+		/**
+		 * TODO: simplify; consider reduce SPARQL queries executed merging
+		 * related functionality
+		 */
+		String resourceUri = resource.getUri();
+		boolean isPublication = false;
+		try {
+			isPublication = isPublication(resourceUri);
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, String.format(
+					"Failed to check if the document='%s' is a publication",
+					resourceUri, e.getCause()));
+			return null;
+		}
+		if (isPublication) {
+			try {
+				return loadPublication(resourceUri);
+			} catch (Exception e) {
+				logger.log(Level.SEVERE, String.format(
+						"Failed to load the document='%s' due to %s",
+						resourceUri, e.getCause()));
 				return null;
 			}
-			Resource titleResource = solutions.get(0).getResource("?stitle");
-			String segmentTitle = titleResource.toString();
-			Resource docResource = solutions.get(0).getResource("?p");
-			String documentUri = docResource.toString();
-			int numPage = solutions.get(0).getLiteral("?snumpage").getInt();
+		} else {
+			return loadSegmentInfo(resourceUri);
+		}
+
+	}
+
+	private ArticleMetadata loadSegmentInfo(String resourceUri) {
+		try {
+			String segmentInfoQueryString = generateSegmentInfoQuery(resourceUri);
+			RepositoryConnection connection = getRepository().getConnection();
+			TupleQuery segmentTupleQuery = connection.prepareTupleQuery(
+					QueryLanguage.SPARQL, segmentInfoQueryString);
+			TupleQueryResult segmentInfoResult = segmentTupleQuery.evaluate();
+			String segmentTitle;
+			String documentUri;
+			int numPage;
+			try {
+				if (!segmentInfoResult.hasNext()) {
+					logger.log(Level.SEVERE,
+							"none of a title and publication metadata was found for a segment: "
+									+ resourceUri);
+					return null;
+				}
+				BindingSet segmentInfoBindingSet = segmentInfoResult.next();
+				segmentTitle = segmentInfoBindingSet.getValue("stitle")
+						.stringValue();
+				documentUri = segmentInfoBindingSet.getValue("p").stringValue();
+				numPage = ((Literal) segmentInfoBindingSet.getValue("snumpage"))
+						.intValue();
+			} finally {
+				segmentInfoResult.close();
+			}
+
 			ArticleMetadata containedPublication = loadPublication(documentUri);
-			containedPublication.setCurrentSegmentUri(resource.getUri());
+			containedPublication.setCurrentSegmentUri(resourceUri);
 			containedPublication.setCurrentSegmentTitle(segmentTitle);
 			containedPublication.setCurrentPageNumber(numPage);
 			return containedPublication;
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, String.format(
+					"Failed to load info of the segment='%s' due to %s",
+					resourceUri, e.getCause()));
+			return null;
 		}
-
 	}
 
 	@Override
@@ -123,41 +169,57 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 		List<SGEdge> edges = new ArrayList<SGEdge>();
 		String documentUri = parseDocumentUri(resource.getUri());
 		String graphQueryString = generateRetrieveStructureGraphQuery(documentUri);
-		Iterator<QuerySolution> solutionIt = getVirtuosoDAO().get(
-				getSearchGraph(), graphQueryString, false).iterator();
-		if (!solutionIt.hasNext())
-			return edges;
-		final Function<QuerySolution, SGEdge> function = new SolutionFunction();
-		SGEdge curEdge = function.apply(solutionIt.next());
+		try {
+			RepositoryConnection connection = getRepository().getConnection();
+			TupleQuery tupleQuery = connection.prepareTupleQuery(
+					QueryLanguage.SPARQL, graphQueryString);
+			TupleQueryResult result = tupleQuery.evaluate();
+			try {
+				if (!result.hasNext())
+					return edges;
+				final Function<BindingSet, SGEdge> function = new SolutionFunction();
+				SGEdge curEdge = function.apply(result.next());
 
-		while (solutionIt.hasNext()) {
-			SGEdge nextEdge = function.apply(solutionIt.next());
-			if (nextEdge.equals(curEdge)) {
-				MocassinOntologyClasses curSubjectType = curEdge.getSubject()
-						.getType();
-				MocassinOntologyClasses curObjectType = curEdge.getObject()
-						.getType();
-				MocassinOntologyClasses subjectType = nextEdge.getSubject()
-						.getType();
-				MocassinOntologyClasses objectType = nextEdge.getObject()
-						.getType();
-				boolean isMoreSpecificSubject = subjectType
-						.equals(this.ontologyFacade.getMoreSpecific(
-								curSubjectType, subjectType));
-				boolean isMoreSpecificObject = objectType
-						.equals(this.ontologyFacade.getMoreSpecific(
-								curObjectType, objectType));
-				if (isMoreSpecificSubject && isMoreSpecificObject) {
-					curEdge = nextEdge;
+				while (result.hasNext()) {
+					SGEdge nextEdge = function.apply(result.next());
+					if (nextEdge.equals(curEdge)) {
+						MocassinOntologyClasses curSubjectType = curEdge
+								.getSubject().getType();
+						MocassinOntologyClasses curObjectType = curEdge
+								.getObject().getType();
+						MocassinOntologyClasses subjectType = nextEdge
+								.getSubject().getType();
+						MocassinOntologyClasses objectType = nextEdge
+								.getObject().getType();
+						boolean isMoreSpecificSubject = subjectType
+								.equals(this.ontologyFacade.getMoreSpecific(
+										curSubjectType, subjectType));
+						boolean isMoreSpecificObject = objectType
+								.equals(this.ontologyFacade.getMoreSpecific(
+										curObjectType, objectType));
+						if (isMoreSpecificSubject && isMoreSpecificObject) {
+							curEdge = nextEdge;
+						}
+					} else {
+						edges.add(curEdge);
+						curEdge = nextEdge;
+					}
 				}
-			} else {
-				edges.add(curEdge);
-				curEdge = nextEdge;
+
+				if (!edges.contains(curEdge))
+					edges.add(curEdge);
+			} finally {
+				result.close();
 			}
+			return edges;
+		} catch (Exception e) {
+			logger.log(
+					Level.SEVERE,
+					String.format(
+							"Failed to retrieve the structural graph of the document='%s' due to %s",
+							resource.getUri(), e.getCause()));
+			return null;
 		}
-		if (!edges.contains(curEdge))
-			edges.add(curEdge);
-		return edges;
 	}
 
 	@Override
@@ -165,21 +227,45 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 		List<ArticleMetadata> list = new ArrayList<ArticleMetadata>();
 		List<String> publicationsUris = retrievePublications();
 		for (String uri : publicationsUris) {
-			ArticleMetadata metadata = loadPublication(uri);
-			list.add(metadata);
+			try {
+				ArticleMetadata metadata = loadPublication(uri);
+				list.add(metadata);
+			} catch (Exception e) {
+				logger.log(
+						Level.SEVERE,
+						String.format(
+								"Couldn't load metadata of the document='%s' due to %s",
+								uri, e.getCause()));
+			}
 		}
 		return list;
 	}
 
 	@Override
-	public void insert(ArticleMetadata articleMetadata, Set<RDFTriple> data) {
+	public boolean insert(ArticleMetadata articleMetadata, Set<RDFTriple> data) {
 		List<RDFTriple> triples = ArxivMetadataUtil
 				.convertToTriples(articleMetadata);
 		triples.addAll(data);
-		getVirtuosoDAO().insert(getSearchGraph(), triples);
+		String insertQuery = insertQueryGenerator.generate(triples);
+		try {
+			RepositoryConnection connection = getRepository().getConnection();
+			Update updateQuery = connection.prepareUpdate(QueryLanguage.SPARQL,
+					insertQuery);
+			updateQuery.execute();
+			connection.close();
+			return true;
+		} catch (Exception e) {
+			logger.log(
+					Level.SEVERE,
+					String.format("Failed to insert triples due to %s",
+							e.getCause()));
+			return false;
+		}
 	}
 
-	private ArticleMetadata loadPublication(String documentUri) {
+	private ArticleMetadata loadPublication(String documentUri)
+			throws RepositoryException, MalformedQueryException,
+			QueryEvaluationException {
 		String title = retrieveTitle(documentUri);
 		// String arxivId = retrieveArxivId(documentUri); // TODO: workaround
 		// for Mathnet keys
@@ -199,30 +285,48 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 	private List<String> retrievePublications() {
 		List<String> publicationsUris = new ArrayList<String>();
 		String pubQueryString = generatePubQuery();
-		Query query = QueryFactory.create(pubQueryString);
-		List<QuerySolution> solutions = getVirtuosoDAO().get(getSearchGraph(),
-				query);
-		for (QuerySolution solution : solutions) {
-			String uri = solution.getResource(
-					RETRIEVED_PUBLICATION_URI_ELEMENT_KEY).toString();
-			publicationsUris.add(uri);
+		try {
+			RepositoryConnection connection = getRepository().getConnection();
+			TupleQuery tupleQuery = connection.prepareTupleQuery(
+					QueryLanguage.SPARQL, pubQueryString);
+			TupleQueryResult result = tupleQuery.evaluate();
+			try {
+				while (result.hasNext()) {
+					String uri = result.next()
+							.getValue(RETRIEVED_PUBLICATION_URI_ELEMENT_KEY)
+							.stringValue();
+					publicationsUris.add(uri);
+				}
+			} finally {
+				result.close();
+			}
+		} catch (Exception e) {
+			logger.log(
+					Level.SEVERE,
+					String.format(
+							"The publications list will be probably incomplete due to %s",
+							e.getCause()));
 		}
 		return publicationsUris;
 	}
 
-	private List<Link> retrieveLinks(String documentUri) {
+	private List<Link> retrieveLinks(String documentUri)
+			throws QueryEvaluationException, RepositoryException,
+			MalformedQueryException {
 		List<Link> links = new ArrayList<Link>();
 		String linkQueryString = generateLinkQuery(documentUri);
-		Query query = QueryFactory.create(linkQueryString);
-		List<QuerySolution> solutions = getVirtuosoDAO().get(getSearchGraph(),
-				query);
-		for (QuerySolution solution : solutions) {
+		RepositoryConnection connection = getRepository().getConnection();
+		TupleQuery tupleQuery = connection.prepareTupleQuery(
+				QueryLanguage.SPARQL, linkQueryString);
+		TupleQueryResult result = tupleQuery.evaluate();
+		while (result.hasNext()) {
 			Link link = new Link();
-			String linkType = solution.getLiteral(
-					RETRIEVED_LINK_TYPE_ELEMENT_KEY).toString();
+			BindingSet solution = result.next();
+			String linkType = solution
+					.getValue(RETRIEVED_LINK_TYPE_ELEMENT_KEY).stringValue();
 			link.setType(linkType);
-			String linkHref = solution.getResource(
-					RETRIEVED_LINK_HREF_ELEMENT_KEY).toString();
+			String linkHref = solution
+					.getValue(RETRIEVED_LINK_HREF_ELEMENT_KEY).stringValue();
 			link.setHref(linkHref);
 			links.add(link);
 
@@ -230,69 +334,102 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 		return links;
 	}
 
-	private List<Author> retrieveAuthors(String documentUri) {
+	private List<Author> retrieveAuthors(String documentUri)
+			throws QueryEvaluationException, RepositoryException,
+			MalformedQueryException {
 		List<Author> authors = new ArrayList<Author>();
 		String authorQueryString = generateAuthorQuery(documentUri);
-		Query query = QueryFactory.create(authorQueryString);
-		List<QuerySolution> solutions = getVirtuosoDAO().get(getSearchGraph(),
-				query);
-		for (QuerySolution solution : solutions) {
-			Literal resource = solution
-					.getLiteral(RETRIEVED_AUTHOR_NAME_ELEMENT_KEY);
-			String authorName = resource.toString();
-			/**
-			 * TODO extract an author's affiliation, either
-			 */
-			authors.add(new Author(authorName, ""));
+
+		RepositoryConnection connection = getRepository().getConnection();
+		TupleQuery tupleQuery = connection.prepareTupleQuery(
+				QueryLanguage.SPARQL, authorQueryString);
+		TupleQueryResult result = tupleQuery.evaluate();
+
+		try {
+			while (result.hasNext()) {
+				Value resource = result.next().getValue(
+						RETRIEVED_AUTHOR_NAME_ELEMENT_KEY);
+				String authorName = resource.stringValue();
+				/**
+				 * TODO extract an author's affiliation, either
+				 */
+				authors.add(new Author(authorName, ""));
+			}
+		} finally {
+			result.close();
 		}
 		return authors;
 	}
 
-	private String retrieveTitle(String documentUri) {
+	private String retrieveTitle(String documentUri)
+			throws RepositoryException, MalformedQueryException,
+			QueryEvaluationException {
 		String titleQueryString = generateTitleQuery(documentUri);
 
-		Query query = QueryFactory.create(titleQueryString);
-
-		List<QuerySolution> solutions = getVirtuosoDAO().get(getSearchGraph(),
-				query);
-		if (solutions.isEmpty()) {
+		RepositoryConnection connection = getRepository().getConnection();
+		TupleQuery tupleQuery = connection.prepareTupleQuery(
+				QueryLanguage.SPARQL, titleQueryString);
+		TupleQueryResult result = tupleQuery.evaluate();
+		if (!result.hasNext())
 			return null;
+		BindingSet titleBindingSet = result.next();
+		Value value = titleBindingSet.getValue(RETRIEVED_TITLE_ELEMENT_KEY);
+		if (result.hasNext()) {
+			logger.log(Level.INFO, String.format(
+					"The document='%s' has more than one title.", documentUri));
 		}
-		Literal literal = solutions.get(0).getLiteral(
-				RETRIEVED_TITLE_ELEMENT_KEY);
 
-		return literal.toString();
+		return value.stringValue();
+
 	}
 
-	private String retrieveArxivId(String documentUri) {
+	private Repository getRepository() throws RepositoryException {
+		return this.repositoryProvider.get();
+	}
+
+	private String retrieveArxivId(String documentUri)
+			throws RepositoryException, MalformedQueryException,
+			QueryEvaluationException {
 		String idQueryString = generateArxivIdQuery(documentUri);
 
-		Query query = QueryFactory.create(idQueryString);
+		RepositoryConnection connection = getRepository().getConnection();
+		TupleQuery tupleQuery = connection.prepareTupleQuery(
+				QueryLanguage.SPARQL, idQueryString);
+		TupleQueryResult result = tupleQuery.evaluate();
 
-		List<QuerySolution> solutions = getVirtuosoDAO().get(getSearchGraph(),
-				query);
-		if (solutions.isEmpty()) {
-			return null;
+		try {
+			if (!result.hasNext()) {
+				return null;
+			}
+			Value resource = result.next().getValue(
+					RETRIEVED_ARXIV_ID_ELEMENT_KEY);
+			return resource.stringValue();
+		} finally {
+			result.close();
 		}
-		Resource resource = solutions.get(0).getResource(
-				RETRIEVED_ARXIV_ID_ELEMENT_KEY);
 
-		return resource.toString();
 	}
 
-	private boolean isPublication(String uri) {
+	private boolean isPublication(String uri) throws QueryEvaluationException,
+			RepositoryException, MalformedQueryException {
 		String typeQueryString = generateTypeQueryString(uri);
-		Query query = QueryFactory.create(typeQueryString);
 
-		List<QuerySolution> solutions = getVirtuosoDAO().get(getSearchGraph(),
-				query);
+		RepositoryConnection connection = getRepository().getConnection();
+		TupleQuery tupleQuery = connection.prepareTupleQuery(
+				QueryLanguage.SPARQL, typeQueryString);
+		TupleQueryResult result = tupleQuery.evaluate();
+
 		boolean isPublication = false;
-		for (QuerySolution solution : solutions) {
-			String typeUri = solution.getResource("?t").toString();
-			if (typeUri.equals(PUBLICATION_TYPE_URI)) {
-				isPublication = true;
-				break;
+		try {
+			while (result.hasNext()) {
+				String typeUri = result.next().getValue("t").stringValue();
+				if (typeUri.equals(PUBLICATION_TYPE_URI)) {
+					isPublication = true;
+					break;
+				}
 			}
+		} finally {
+			result.close();
 		}
 		return isPublication;
 	}
@@ -348,34 +485,36 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 		return this.searchGraph;
 	}
 
-	private VirtuosoDAO getVirtuosoDAO() {
-		return virtuosoDAO;
-	}
-
 	public SparqlQueryLoader getSparqlQueryLoader() {
 		return sparqlQueryLoader;
 	}
 
 	private static class SolutionFunction implements
-			Function<QuerySolution, SGEdge> {
+			Function<BindingSet, SGEdge> {
 
 		@Override
-		public SGEdge apply(QuerySolution solution) {
-			int fromNumPage = solution.getLiteral("?snumpage").getInt();
-			int toNumPage = solution.getLiteral("?onumpage").getInt();
-			String fromTitle = solution.getResource("?stitle").toString();
-			String toTitle = solution.getResource("?otitle").toString();
-			String subjectUri = solution.getResource(
-					RETRIEVED_SUBJECT_GRAPH_NODE).toString();
-			String predicateUri = solution.getResource(
-					RETRIEVED_PREDICATE_GRAPH_NODE).toString();
-			String objectUri = solution
-					.getResource(RETRIEVED_OBJECT_GRAPH_NODE).toString();
+		public SGEdge apply(BindingSet solution) {
+			int fromNumPage = ((Literal) solution.getValue("snumpage"))
+					.intValue();
+			int toNumPage = ((Literal) solution.getValue("onumpage"))
+					.intValue();
+			Value fromTitleValue = solution.getValue("stitle");
+			String fromTitle = fromTitleValue != null ? fromTitleValue
+					.stringValue() : null;
+			Value toTitleValue = solution.getValue("otitle");
+			String toTitle = toTitleValue != null ? toTitleValue.stringValue()
+					: null;
+			String subjectUri = solution.getValue(RETRIEVED_SUBJECT_GRAPH_NODE)
+					.stringValue();
+			String predicateUri = solution.getValue(
+					RETRIEVED_PREDICATE_GRAPH_NODE).stringValue();
+			String objectUri = solution.getValue(RETRIEVED_OBJECT_GRAPH_NODE)
+					.stringValue();
 			// TODO : retrieve titles of segments
-			String subjectClass = solution.getResource(RETRIEVED_SUBJECT_CLASS)
-					.toString();
-			String objectClass = solution.getResource(RETRIEVED_OBJECT_CLASS)
-					.toString();
+			String subjectClass = solution.getValue(RETRIEVED_SUBJECT_CLASS)
+					.stringValue();
+			String objectClass = solution.getValue(RETRIEVED_OBJECT_CLASS)
+					.stringValue();
 			MocassinOntologyClasses subjectType = MocassinOntologyClasses
 					.fromUri(subjectClass);
 			MocassinOntologyClasses objectType = MocassinOntologyClasses
