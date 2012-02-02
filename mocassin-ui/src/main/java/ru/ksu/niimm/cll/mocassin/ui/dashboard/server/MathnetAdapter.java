@@ -58,7 +58,7 @@ public class MathnetAdapter extends AbstractArXMLivAdapter implements
 			generateHighlightedPdfs(mathnetKey, graph.getVertices());
 			// Step 8
 			Set<RDFTriple> triples = referenceTripleUtil.convert(graph);
-			ontologyResourceFacade.insert(metadata, triples);
+			ontologyResourceFacade.insert(triples);
 
 		} catch (Exception e) {
 			/*
