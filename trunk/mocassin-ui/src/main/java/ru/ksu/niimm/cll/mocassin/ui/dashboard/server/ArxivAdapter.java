@@ -70,7 +70,9 @@ public class ArxivAdapter extends AbstractArXMLivAdapter implements
 			generateHighlightedPdfs(arxivId, graph.getVertices());
 			// Step 8
 			Set<RDFTriple> triples = referenceTripleUtil.convert(graph);
-			ontologyResourceFacade.insert(metadata, triples);
+			ontologyResourceFacade.insert(triples); // TODO: Arxiv article
+													// metadata must be inserted
+													// into a store beforehand
 
 		} catch (Exception e) {
 			String message = String.format(
@@ -80,6 +82,5 @@ public class ArxivAdapter extends AbstractArXMLivAdapter implements
 			throw new RuntimeException(message);
 		}
 	}
-
 
 }
