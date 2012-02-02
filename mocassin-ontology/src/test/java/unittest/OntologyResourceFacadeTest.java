@@ -14,6 +14,7 @@ import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.rio.RDFFormat;
 
 import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
+import ru.ksu.niimm.cll.mocassin.arxiv.Author;
 import ru.ksu.niimm.cll.mocassin.arxiv.impl.Link;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
@@ -63,24 +64,18 @@ public class OntologyResourceFacadeTest {
 				.equals(articleMetadata.getTitle());
 
 		Assert.assertTrue(titleEquals);
-		Assert.assertEquals(1, articleMetadata.getAuthors().size());
-		Assert.assertEquals("И. В. Коннов", articleMetadata.getAuthors().get(0)
-				.getName());
+		Assert.assertEquals("Number of authors does not equal to the expected one.", 1, articleMetadata.getAuthors().size());
+		Author singleAuthor = articleMetadata.getAuthors().get(0);
+		Assert.assertEquals("И. В. Коннов", singleAuthor.getName());
+		Assert.assertEquals(
+				"Author's affiliation does not equal to the expected one.",
+				"Казанский государственный университет",
+				singleAuthor.getAffiliation());
 	}
 
 	@Test
-	public void testInsertArticleMetadata() {
+	public void testInsert() {
 
-		ArticleMetadata articleMetadata = new ArticleMetadata();
-		articleMetadata.setId("http://mathnet.ru/ivm18");
-		articleMetadata.setCollectionId("ivm18");
-		articleMetadata.setCurrentPageNumber(1);
-		final String expectedTitle = "Конструирование явных методов типа Рунге–Кутта интегрирования систем специального вида";
-		articleMetadata.setTitle(expectedTitle);
-		List<Link> links = new ArrayList<Link>();
-		links.add(Link
-				.pdfLink("http://www.mathnet.ru/php/getFT.phtml?jrnid=ivm&paperid=18&what=fullt&option_lang=rus"));
-		articleMetadata.setLinks(links);
 		Set<RDFTriple> triples = new HashSet<RDFTriple>();
 		triples.add(new RDFTripleImpl(
 				"<http://mathnet.ru/ivm18/1> a <http://cll.niimm.ksu.ru/ontologies/mocassin#Theorem> ."));
@@ -92,9 +87,14 @@ public class OntologyResourceFacadeTest {
 				"<http://mathnet.ru/ivm18> <http://cll.niimm.ksu.ru/ontologies/mocassin#hasSegment> <http://mathnet.ru/ivm18/1> ."));
 		triples.add(new RDFTripleImpl(
 				"<http://mathnet.ru/ivm18> <http://cll.niimm.ksu.ru/ontologies/mocassin#hasSegment> <http://mathnet.ru/ivm18/2> ."));
+		triples.add(new RDFTripleImpl(
+				"<http://mathnet.ru/ivm18/1> <http://cll.niimm.ksu.ru/ontologies/mocassin#hasStartPageNumber> 1 ."));
+		triples.add(new RDFTripleImpl(
+				"<http://mathnet.ru/ivm18/2> <http://cll.niimm.ksu.ru/ontologies/mocassin#hasStartPageNumber> 2 ."));
 		Assert.assertTrue("Failed to insert data.", getOntologyResourceFacade()
-				.insert(articleMetadata, triples));
-
+				.insert(triples));
+		final String expectedAuthorName = "И. В. Олемской";
+		final String expectedTitle = "Конструирование явных методов типа Рунге–Кутта интегрирования систем специального вида";
 		ArticleMetadata retrievedArticleMetadata = getOntologyResourceFacade()
 				.load(new OntologyResource("http://mathnet.ru/ivm18"));
 		Assert.assertEquals("Article id does not equal to the expected one.",
@@ -102,6 +102,13 @@ public class OntologyResourceFacadeTest {
 		Assert.assertEquals(
 				"The retrieved title does not equal to the expected one.",
 				expectedTitle, retrievedArticleMetadata.getTitle());
+		Assert.assertEquals("Number of authors does not equal to the expected one.", 1, retrievedArticleMetadata.getAuthors().size());
+		Author singleAuthor = retrievedArticleMetadata.getAuthors().get(0);
+		Assert.assertEquals(expectedAuthorName, singleAuthor.getName());
+		Assert.assertEquals(
+				"Author's affiliation does not equal to the expected one.",
+				null,
+				singleAuthor.getAffiliation());
 
 		List<SGEdge> graph = getOntologyResourceFacade()
 				.retrieveStructureGraph(

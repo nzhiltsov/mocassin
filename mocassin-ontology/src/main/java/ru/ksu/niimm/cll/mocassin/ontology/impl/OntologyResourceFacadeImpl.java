@@ -44,6 +44,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
+	private static final String AFFILIATION_ELEMENT_KEY = "5";
 	private static final String PUBLICATION_TYPE_URI = "http://www.aktors.org/ontology/portal#Article-Reference";
 	private static final String RETRIEVED_OBJECT_CLASS = "oclass";
 	private static final String RETRIEVED_SUBJECT_CLASS = "sclass";
@@ -242,11 +243,8 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 	}
 
 	@Override
-	public boolean insert(ArticleMetadata articleMetadata, Set<RDFTriple> data) {
-		List<RDFTriple> triples = ArxivMetadataUtil
-				.convertToTriples(articleMetadata);
-		triples.addAll(data);
-		String insertQuery = insertQueryGenerator.generate(triples);
+	public boolean insert(Set<RDFTriple> data) {
+		String insertQuery = insertQueryGenerator.generate(new ArrayList(data));
 		try {
 			RepositoryConnection connection = getRepository().getConnection();
 			Update updateQuery = connection.prepareUpdate(QueryLanguage.SPARQL,
@@ -347,13 +345,15 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 
 		try {
 			while (result.hasNext()) {
-				Value resource = result.next().getValue(
-						RETRIEVED_AUTHOR_NAME_ELEMENT_KEY);
-				String authorName = resource.stringValue();
-				/**
-				 * TODO extract an author's affiliation, either
-				 */
-				authors.add(new Author(authorName, ""));
+				BindingSet author = result.next();
+				Value authorNameValue = author
+						.getValue(RETRIEVED_AUTHOR_NAME_ELEMENT_KEY);
+				String authorName = authorNameValue.stringValue();
+				Value affiliationValue = author
+						.getValue(AFFILIATION_ELEMENT_KEY);
+				String affiliation = affiliationValue != null ? affiliationValue
+						.stringValue() : null;
+				authors.add(new Author(authorName, affiliation));
 			}
 		} finally {
 			result.close();
