@@ -6,15 +6,6 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 
 public interface QueryManagerFacade {
-	/**
-	 * query given model with a given query statement
-	 * 
-	 * @param model
-	 *            ontology model
-	 * @param retrievedResourceKey
-	 *            retrieved resource key
-	 */
-	List<Resource> query(QueryStatement queryStatement, String retrievedResourceKey);
 
 	/**
 	 * query given model with given query statement
@@ -35,11 +26,12 @@ public interface QueryManagerFacade {
 	String generateQuery(QueryStatement queryStatement);
 
 	/**
-	 * get RDF description of resource with given URI
+	 * get RDF description of resource with given URI as a string
 	 * 
 	 * @param resourceUri
-	 *            resource URI, e.g."http://linkeddata.tntbase.org/slides/atp0/en/resolution-complete#resolution-disjunction-lemma"
+	 *            resource URI, e.g.
+	 *            "http://linkeddata.tntbase.org/slides/atp0/en/resolution-complete#resolution-disjunction-lemma"
 	 * @return
 	 */
-	Model describe(String resourceUri);
+	String describe(String resourceUri);
 }

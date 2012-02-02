@@ -1,7 +1,28 @@
 package ru.ksu.niimm.cll.mocassin.ontology.impl;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.openrdf.query.BindingSet;
+import org.openrdf.query.GraphQuery;
+import org.openrdf.query.GraphQueryResult;
+import org.openrdf.query.MalformedQueryException;
+import org.openrdf.query.QueryEvaluationException;
+import org.openrdf.query.QueryLanguage;
+import org.openrdf.query.TupleQuery;
+import org.openrdf.query.TupleQueryResult;
+import org.openrdf.query.resultio.QueryResultIO;
+import org.openrdf.repository.Repository;
+import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.repository.RepositoryException;
+import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.RDFHandlerException;
+import org.openrdf.rio.UnsupportedRDFormatException;
 
 import ru.ksu.niimm.cll.mocassin.ontology.OntologyBlankNode;
 import ru.ksu.niimm.cll.mocassin.ontology.OntologyElement;
@@ -11,60 +32,51 @@ import ru.ksu.niimm.cll.mocassin.ontology.OntologyResource;
 import ru.ksu.niimm.cll.mocassin.ontology.OntologyTriple;
 import ru.ksu.niimm.cll.mocassin.ontology.QueryManagerFacade;
 import ru.ksu.niimm.cll.mocassin.ontology.QueryStatement;
+import ru.ksu.niimm.cll.mocassin.ontology.provider.RepositoryProvider;
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFGraph;
-import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoDAO;
+import ru.ksu.niimm.cll.mocassin.virtuoso.generator.DescribeQueryGenerator;
 import ru.ksu.niimm.cll.mocassin.virtuoso.impl.RDFGraphImpl;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
 
 public class QueryManagerFacadeImpl implements QueryManagerFacade {
-	private static final String RULES_SET_ENTRY = "define input:inference \"%s\"";
+	private static final String RULES_SET_ENTRY = "define input:inference \"%s\"\n %s";
 	private static final String RDF_PREFIX_STRING = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>";
 	private static final String SELECT_STATEMENT = "SELECT DISTINCT %s WHERE\n{\n";
 	private static final String RETRIEVED_CONCEPT_KEY = "?1";
 
-	private VirtuosoDAO virtuosoDAO;
+	private final RepositoryProvider<Repository> repositoryProvider;
+
+	private final Logger logger;
+
+	private final DescribeQueryGenerator describeQueryGenerator;
 
 	private RDFGraph searchGraph;
 
 	private String ontologyRulesSetName;
 
 	@Inject
-	public QueryManagerFacadeImpl(VirtuosoDAO virtuosoDAO,
+	public QueryManagerFacadeImpl(Logger logger,
+			RepositoryProvider<Repository> repositoryProvider,
+			DescribeQueryGenerator describeQueryGenerator,
 			@Named("connection.url") String connectionUrl,
 			@Named("connection.user.name") String username,
 			@Named("connection.user.password") String password,
 			@Named("graph.iri") String graphIri,
 			@Named("ontology.rules.set") String ontologyRuleSet) {
-		this.virtuosoDAO = virtuosoDAO;
+		this.describeQueryGenerator = describeQueryGenerator;
+		this.logger = logger;
+		this.repositoryProvider = repositoryProvider;
 		this.searchGraph = new RDFGraphImpl.Builder(graphIri)
 				.url(connectionUrl).username(username).password(password)
 				.inferenceRulesSetName(ontologyRuleSet).build();
 		this.ontologyRulesSetName = ontologyRuleSet;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * ru.ksu.niimm.ose.ontology.impl.QueryManager#query(com.hp.hpl.jena.ontology
-	 * .OntModel, java.lang.String)
-	 */
-	public List<Resource> query(QueryStatement queryStatement,
-			String retrievedResourceKey) {
-		List<Resource> resultResources = new ArrayList<Resource>();
-		String queryString = generateQuery(queryStatement);
-		List<QuerySolution> solutions = getVirtuosoDAO().get(getSearchGraph(),
-				queryString, queryStatement.isInferenceOn());
-		for (QuerySolution solution : solutions) {
-			Resource resource = solution.getResource(retrievedResourceKey);
-			resultResources.add(resource);
-		}
-		return resultResources;
+	private Repository getRepository() throws RepositoryException {
+		return this.repositoryProvider.get();
 	}
 
 	/*
@@ -77,11 +89,35 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 	public List<OntologyResource> query(QueryStatement queryStatement) {
 		List<OntologyResource> ontologyResources = new ArrayList<OntologyResource>();
 
-		List<Resource> resources = query(queryStatement, RETRIEVED_CONCEPT_KEY);
-		for (Resource resource : resources) {
-			OntologyResource ontologyResource = new OntologyResource(
-					resource.getURI());
-			ontologyResources.add(ontologyResource);
+		String queryString = generateQuery(queryStatement);
+		try {
+			RepositoryConnection connection = getRepository().getConnection();
+			if (queryStatement.isInferenceOn()) {
+				queryString = String.format(RULES_SET_ENTRY,
+						searchGraph.getInferenceRulesSetName(), queryString);
+			}
+			TupleQuery tupleQuery = connection.prepareTupleQuery(
+					QueryLanguage.SPARQL, queryString);
+
+			TupleQueryResult result = tupleQuery.evaluate();
+
+			try {
+				while (result.hasNext()) {
+					BindingSet resource = result.next();
+					OntologyResource ontologyResource = new OntologyResource(
+							resource.getValue("1").stringValue());
+					ontologyResources.add(ontologyResource);
+				}
+
+			} finally {
+				result.close();
+				connection.close();
+			}
+		} catch (Exception e) {
+			logger.log(
+					Level.SEVERE,
+					String.format("Failed to execute a query due to %s. Empty will be returned."),
+					e.getCause());
 		}
 		return ontologyResources;
 	}
@@ -153,17 +189,37 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 	}
 
 	@Override
-	public Model describe(String resourceUri) {
-		String uri = String.format("<%s>", resourceUri);
-		return getVirtuosoDAO().describe(getSearchGraph(), uri);
-	}
-
-	public VirtuosoDAO getVirtuosoDAO() {
-		return virtuosoDAO;
+	public String describe(String resourceUri) {
+		String query = getDescribeQueryGenerator().generate(resourceUri);
+		try {
+			RepositoryConnection connection = getRepository().getConnection();
+			try {
+				GraphQuery graphQuery = connection.prepareGraphQuery(
+						QueryLanguage.SPARQL, query);
+				GraphQueryResult graphQueryResult = graphQuery.evaluate();
+				ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+				QueryResultIO.write(graphQueryResult, RDFFormat.RDFXML,
+						outputStream);
+				return outputStream.toString("utf8");
+			} finally {
+				connection.close();
+			}
+		} catch (Exception e) {
+			logger.log(
+					Level.SEVERE,
+					String.format(
+							"Failed to execute a desribe query due to %s. Null string will be returned.",
+							e.getCause()));
+			return null;
+		}
 	}
 
 	public RDFGraph getSearchGraph() {
 		return this.searchGraph;
+	}
+
+	public DescribeQueryGenerator getDescribeQueryGenerator() {
+		return describeQueryGenerator;
 	}
 
 }

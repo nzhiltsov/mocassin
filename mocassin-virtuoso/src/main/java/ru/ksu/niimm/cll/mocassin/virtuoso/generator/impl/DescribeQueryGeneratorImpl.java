@@ -15,4 +15,9 @@ public class DescribeQueryGeneratorImpl implements DescribeQueryGenerator {
 				.build();
 	}
 
+	@Override
+	public String generate(String resourceUri) {
+		QueryBuilder queryBuilder = new QueryBuilder(QueryType.DESCRIBE);
+		return queryBuilder.addResourceUri(resourceUri).build();
+	}
 }
