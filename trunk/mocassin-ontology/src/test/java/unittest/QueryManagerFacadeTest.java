@@ -5,52 +5,74 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openrdf.repository.Repository;
+import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.rio.RDFFormat;
 
+import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
+import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
 import ru.ksu.niimm.cll.mocassin.ontology.OntologyBlankNode;
 import ru.ksu.niimm.cll.mocassin.ontology.OntologyConcept;
-import ru.ksu.niimm.cll.mocassin.ontology.OntologyIndividual;
 import ru.ksu.niimm.cll.mocassin.ontology.OntologyLiteral;
 import ru.ksu.niimm.cll.mocassin.ontology.OntologyRelation;
 import ru.ksu.niimm.cll.mocassin.ontology.OntologyResource;
 import ru.ksu.niimm.cll.mocassin.ontology.OntologyTriple;
 import ru.ksu.niimm.cll.mocassin.ontology.QueryManagerFacade;
 import ru.ksu.niimm.cll.mocassin.ontology.QueryStatement;
+import ru.ksu.niimm.cll.mocassin.ontology.TestOntologyModule;
 import ru.ksu.niimm.cll.mocassin.ontology.loader.SparqlQueryLoader;
+import ru.ksu.niimm.cll.mocassin.ontology.provider.RepositoryProvider;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
-import unittest.util.OntologyTestModule;
 
 import com.google.inject.Inject;
-import com.hp.hpl.jena.graph.Graph;
-import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.graph.Triple;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.util.iterator.ExtendedIterator;
 import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext( { OntologyTestModule.class, VirtuosoModule.class })
+@GuiceContext({ TestOntologyModule.class, VirtuosoModule.class })
 public class QueryManagerFacadeTest {
 	@Inject
 	private QueryManagerFacade queryManagerFacade;
 	@Inject
 	private SparqlQueryLoader sparqlQueryLoader;
+	@Inject
+	private RepositoryProvider<Repository> repositoryProvider;
 
+	@Before
+	public void init() throws Exception {
+		Repository repository = repositoryProvider.get();
+		RepositoryConnection connection = repository.getConnection();
+		try {
+			connection.add(getClass().getResourceAsStream("/testmetadata.rdf"),
+					"http://cll.niimm.ksu.ru/mocassinfortest", RDFFormat.N3);
+		} finally {
+			connection.close();
+		}
+	}
 
 	@Test
 	public void testQueryStatement() {
-		QueryStatement queryStatement = makeExampleStatement();
+		QueryStatement queryStatement = makeInstanceStatement();
 		List<OntologyResource> resources = getQueryManagerFacade().query(
 				queryStatement);
-		// TODO : add more non-trivial test case
-		resources.size();
+		Assert.assertTrue("Retrieved instances list is empty.",
+				resources.size() > 0);
+		boolean found = false;
+		for (OntologyResource resource : resources) {
+			found = resource.getUri().equals("http://mathnet.ru/ivm537/1017");
+			if (found) {
+				break;
+			}
+		}
+		Assert.assertTrue("The expected instance is not found.", found);
 	}
 
 	@Test
 	public void testGenerateQuery() {
-		QueryStatement queryStatement = makeExampleStatement();
+		QueryStatement queryStatement = makeInstanceStatement();
 		String queryString = getQueryManagerFacade().generateQuery(
 				queryStatement);
 		// TODO : add more sophisticated check of equals to correct string
@@ -66,8 +88,6 @@ public class QueryManagerFacadeTest {
 		// TODO : add checking for equality of queries
 	}
 
-	
-
 	@Test
 	public void testGenerateFullTextQuery() {
 		QueryStatement queryStatement = makeFullTextStatement();
@@ -76,8 +96,6 @@ public class QueryManagerFacadeTest {
 				queryStatement);
 		queryString.length();
 	}
-
-	
 
 	private QueryStatement makeWildcardStatement() {
 		List<OntologyTriple> triples = new ArrayList<OntologyTriple>();
@@ -119,48 +137,22 @@ public class QueryManagerFacadeTest {
 		return new QueryStatement(triples);
 	}
 
-	private QueryStatement makeExampleStatement() {
+	private QueryStatement makeInstanceStatement() {
 		List<OntologyTriple> retrievedTriples = new ArrayList<OntologyTriple>();
 		OntologyRelation predicate = new OntologyRelation(
-				"http://omdoc.org/ontology#hasProperty", "hasProperty");
+				MocassinOntologyRelations.DEPENDS_ON.getUri(),
+				MocassinOntologyRelations.DEPENDS_ON.toString());
 		predicate.setId(3);
 		OntologyConcept subject = new OntologyConcept(
-				"http://omdoc.org/ontology#Lemma", "lemma");
+				MocassinOntologyClasses.getUri(MocassinOntologyClasses.SECTION),
+				"Section");
 		subject.setId(1);
 		OntologyConcept object = new OntologyConcept(
-				"http://omdoc.org/ontology#Property", "property");
+				MocassinOntologyClasses
+						.getUri(MocassinOntologyClasses.EQUATION),
+				"Equation");
 		object.setId(5);
 		retrievedTriples.add(new OntologyTriple(subject, predicate, object));
-		OntologyRelation predicate2 = new OntologyRelation(
-				"http://omdoc.org/ontology#usesSymbol", "usesSymbol");
-		predicate2.setId(6);
-		OntologyConcept subject2 = new OntologyConcept(
-				"http://omdoc.org/ontology#Property", "property");
-		subject2.setId(5);
-		OntologyIndividual object2 = new OntologyIndividual(
-				"http://www.openmath.org/cd/latexml#set", "set");
-		object2.setId(8);
-		retrievedTriples.add(new OntologyTriple(subject2, predicate2, object2));
-		OntologyRelation predicate3 = new OntologyRelation(
-				"http://omdoc.org/ontology#usesSymbol", "usesSymbol");
-		predicate.setId(7);
-		OntologyConcept subject3 = new OntologyConcept(
-				"http://omdoc.org/ontology#Property", "property");
-		subject3.setId(5);
-		OntologyIndividual object3 = new OntologyIndividual(
-				"http://www.openmath.org/cd/relation1#eq", "eq");
-		object3.setId(9);
-		retrievedTriples.add(new OntologyTriple(subject3, predicate3, object3));
-		OntologyRelation predicate4 = new OntologyRelation(
-				"http://omdoc.org/ontology#homeTheory", "has home Theory");
-		predicate4.setId(2);
-		OntologyConcept subject4 = new OntologyConcept(
-				"http://omdoc.org/ontology#Lemma", "lemma");
-		subject4.setId(1);
-		OntologyConcept object4 = new OntologyConcept(
-				"http://omdoc.org/ontology#Theory", "theory");
-		object4.setId(4);
-		retrievedTriples.add(new OntologyTriple(subject4, predicate4, object4));
 
 		QueryStatement queryStatement = new QueryStatement(retrievedTriples);
 		return queryStatement;

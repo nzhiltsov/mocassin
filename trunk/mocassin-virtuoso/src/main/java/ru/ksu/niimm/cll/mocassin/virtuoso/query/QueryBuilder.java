@@ -15,6 +15,7 @@ import ru.ksu.niimm.cll.mocassin.virtuoso.RDFTriple;
  */
 public class QueryBuilder {
 	private static final String DESCRIBE_EXPRESSION = "DESCRIBE <%s> FROM NAMED <%s>";
+	private static final String SIMPLE_DESCRIBE_EXPRESSION = "DESCRIBE <%s>";
 	private static final String INSERT_EXPRESSION = "INSERT INTO GRAPH <%s> {%s}";
 	private static final String SIMPLE_INSERT_EXPRESSION = "INSERT {%s} WHERE {?x ?y ?z}";
 	private static final String DELETE_EXPRESSION = "DELETE FROM <%s> {?s ?p ?o} WHERE {%s}";
@@ -105,8 +106,8 @@ public class QueryBuilder {
 	}
 
 	private String buildDescribeQuery() {
-		return String.format(DESCRIBE_EXPRESSION, getResourceUri(),
-				getGraphUri());
+		return getGraphUri() != null ? String.format(DESCRIBE_EXPRESSION, getResourceUri(),
+				getGraphUri()) : String.format(SIMPLE_DESCRIBE_EXPRESSION, getResourceUri());
 	}
 
 	private String buildDeleteQuery() {
@@ -142,8 +143,6 @@ public class QueryBuilder {
 	}
 
 	private boolean validateDescribe() {
-		if (!validateGraphUri())
-			return false;
 		if (!validateResourceUri())
 			return false;
 		return true;

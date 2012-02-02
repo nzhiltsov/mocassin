@@ -150,6 +150,7 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 						.intValue();
 			} finally {
 				segmentInfoResult.close();
+				connection.close();
 			}
 
 			ArticleMetadata containedPublication = loadPublication(documentUri);
@@ -211,6 +212,7 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 					edges.add(curEdge);
 			} finally {
 				result.close();
+				connection.close();
 			}
 			return edges;
 		} catch (Exception e) {
@@ -297,6 +299,7 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 				}
 			} finally {
 				result.close();
+				connection.close();
 			}
 		} catch (Exception e) {
 			logger.log(
@@ -317,17 +320,22 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 		TupleQuery tupleQuery = connection.prepareTupleQuery(
 				QueryLanguage.SPARQL, linkQueryString);
 		TupleQueryResult result = tupleQuery.evaluate();
-		while (result.hasNext()) {
-			Link link = new Link();
-			BindingSet solution = result.next();
-			String linkType = solution
-					.getValue(RETRIEVED_LINK_TYPE_ELEMENT_KEY).stringValue();
-			link.setType(linkType);
-			String linkHref = solution
-					.getValue(RETRIEVED_LINK_HREF_ELEMENT_KEY).stringValue();
-			link.setHref(linkHref);
-			links.add(link);
+		try {
+			while (result.hasNext()) {
+				Link link = new Link();
+				BindingSet solution = result.next();
+				String linkType = solution.getValue(
+						RETRIEVED_LINK_TYPE_ELEMENT_KEY).stringValue();
+				link.setType(linkType);
+				String linkHref = solution.getValue(
+						RETRIEVED_LINK_HREF_ELEMENT_KEY).stringValue();
+				link.setHref(linkHref);
+				links.add(link);
 
+			}
+		} finally {
+			result.close();
+			connection.close();
 		}
 		return links;
 	}
@@ -357,6 +365,7 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 			}
 		} finally {
 			result.close();
+			connection.close();
 		}
 		return authors;
 	}
@@ -370,17 +379,22 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 		TupleQuery tupleQuery = connection.prepareTupleQuery(
 				QueryLanguage.SPARQL, titleQueryString);
 		TupleQueryResult result = tupleQuery.evaluate();
-		if (!result.hasNext())
-			return null;
-		BindingSet titleBindingSet = result.next();
-		Value value = titleBindingSet.getValue(RETRIEVED_TITLE_ELEMENT_KEY);
-		if (result.hasNext()) {
-			logger.log(Level.INFO, String.format(
-					"The document='%s' has more than one title.", documentUri));
+		try {
+			if (!result.hasNext())
+				return null;
+			BindingSet titleBindingSet = result.next();
+			Value value = titleBindingSet.getValue(RETRIEVED_TITLE_ELEMENT_KEY);
+			if (result.hasNext()) {
+				logger.log(Level.INFO, String.format(
+						"The document='%s' has more than one title.",
+						documentUri));
+			}
+
+			return value.stringValue();
+		} finally {
+			result.close();
+			connection.close();
 		}
-
-		return value.stringValue();
-
 	}
 
 	private Repository getRepository() throws RepositoryException {
@@ -406,6 +420,7 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 			return resource.stringValue();
 		} finally {
 			result.close();
+			connection.close();
 		}
 
 	}
@@ -430,6 +445,7 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 			}
 		} finally {
 			result.close();
+			connection.close();
 		}
 		return isPublication;
 	}
