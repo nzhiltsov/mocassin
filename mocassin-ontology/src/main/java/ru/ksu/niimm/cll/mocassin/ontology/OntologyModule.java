@@ -14,6 +14,7 @@ import ru.ksu.niimm.cll.mocassin.ontology.provider.OntologyProvider;
 import ru.ksu.niimm.cll.mocassin.ontology.provider.RepositoryProvider;
 import ru.ksu.niimm.cll.mocassin.ontology.provider.impl.InMemoryRepositoryProvider;
 import ru.ksu.niimm.cll.mocassin.ontology.provider.impl.OntologyPelletProvider;
+import ru.ksu.niimm.cll.mocassin.ontology.provider.impl.VirtuosoRepositoryProvider;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
@@ -42,9 +43,13 @@ public class OntologyModule extends AbstractModule {
 		ThrowingProviderBinder.create(binder())
 				.bind(OntologyProvider.class, OntModel.class)
 				.to(OntologyPelletProvider.class).in(Singleton.class);
+		configureStore();
+	}
+
+	protected void configureStore() {
 		ThrowingProviderBinder.create(binder())
 				.bind(RepositoryProvider.class, Repository.class)
-				.to(InMemoryRepositoryProvider.class).in(Singleton.class);
+				.to(VirtuosoRepositoryProvider.class).in(Singleton.class);
 	}
 
 }
