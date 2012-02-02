@@ -75,8 +75,8 @@ public class OntologyResourceFacadeTest {
 		articleMetadata.setId("http://mathnet.ru/ivm18");
 		articleMetadata.setCollectionId("ivm18");
 		articleMetadata.setCurrentPageNumber(1);
-		articleMetadata
-				.setTitle("Конструирование явных методов типа Рунге–Кутта интегрирования систем специального вида ");
+		final String expectedTitle = "Конструирование явных методов типа Рунге–Кутта интегрирования систем специального вида";
+		articleMetadata.setTitle(expectedTitle);
 		List<Link> links = new ArrayList<Link>();
 		links.add(Link
 				.pdfLink("http://www.mathnet.ru/php/getFT.phtml?jrnid=ivm&paperid=18&what=fullt&option_lang=rus"));
@@ -99,6 +99,9 @@ public class OntologyResourceFacadeTest {
 				.load(new OntologyResource("http://mathnet.ru/ivm18"));
 		Assert.assertEquals("Article id does not equal to the expected one.",
 				"ivm18", retrievedArticleMetadata.getCollectionId());
+		Assert.assertEquals(
+				"The retrieved title does not equal to the expected one.",
+				expectedTitle, retrievedArticleMetadata.getTitle());
 
 		List<SGEdge> graph = getOntologyResourceFacade()
 				.retrieveStructureGraph(

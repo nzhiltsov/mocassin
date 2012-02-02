@@ -31,7 +31,7 @@ public class ArxivMetadataUtil {
 
 	public static List<RDFTriple> convertToTriples(ArticleMetadata metadata) {
 		List<RDFTriple> triples = new LinkedList<RDFTriple>();
-		triples.add(createTriple("<%s> <%s> <%s#Article-Reference> .",
+		triples.add(createTriple("<%s> <%s> <%sArticle-Reference> .",
 				metadata.getId(), RDFS_TYPE, AKT_SCHEMA));
 		convertTitle(triples, metadata);
 		convertAuthors(triples, metadata);
@@ -76,15 +76,10 @@ public class ArxivMetadataUtil {
 
 	private static void convertTitle(List<RDFTriple> triples,
 			ArticleMetadata metadata) {
-		String titleNode = StringUtil.generateBlankNodeId();
-		triples.add(createTriple("<%s> <%s/title> %s .", metadata.getId(),
-				ATOM_RDF_SCHEMA, titleNode));
-		triples.add(createTriple("%s <%s> <%s/PlainText> .", titleNode,
-				RDFS_TYPE, ATOM_RDF_SCHEMA));
 		String title = metadata.getTitle() != null ? metadata.getTitle()
 				.replaceAll("\n", "") : "";
-		triples.add(createTriple("%s <%s/textValue> \"%s\" .", titleNode,
-				ATOM_RDF_SCHEMA, title));
+		triples.add(createTriple("<%s> <%shas-title> \"%s\" .", metadata.getId(),
+				AKT_SCHEMA, title));
 	}
 
 	private static void convertKey(List<RDFTriple> triples,
