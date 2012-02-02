@@ -22,7 +22,7 @@ import ru.ksu.niimm.cll.mocassin.ontology.OntologyResource;
 import ru.ksu.niimm.cll.mocassin.ontology.OntologyTriple;
 import ru.ksu.niimm.cll.mocassin.ontology.QueryManagerFacade;
 import ru.ksu.niimm.cll.mocassin.ontology.QueryStatement;
-import ru.ksu.niimm.cll.mocassin.ontology.TestOntologyModule;
+import ru.ksu.niimm.cll.mocassin.ontology.OntologyTestModule;
 import ru.ksu.niimm.cll.mocassin.ontology.loader.SparqlQueryLoader;
 import ru.ksu.niimm.cll.mocassin.ontology.provider.RepositoryProvider;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
@@ -32,7 +32,7 @@ import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext({ TestOntologyModule.class, VirtuosoModule.class })
+@GuiceContext({ OntologyTestModule.class, VirtuosoModule.class })
 public class QueryManagerFacadeTest {
 	@Inject
 	private QueryManagerFacade queryManagerFacade;

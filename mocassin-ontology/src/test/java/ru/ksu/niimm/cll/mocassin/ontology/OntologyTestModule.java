@@ -9,7 +9,7 @@ import com.google.inject.Singleton;
 import com.google.inject.throwingproviders.ThrowingProviderBinder;
 
 
-public class TestOntologyModule extends OntologyModule {
+public class OntologyTestModule extends OntologyModule {
 
 	@Override
 	protected void configureStore() {
