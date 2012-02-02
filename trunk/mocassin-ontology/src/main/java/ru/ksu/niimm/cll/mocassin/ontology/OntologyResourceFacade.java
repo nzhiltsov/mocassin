@@ -28,10 +28,9 @@ public interface OntologyResourceFacade {
 
 	/**
 	 * 
-	 * @param articleMetadata
 	 * @param triples
-	 * @return true, if update was successful
+	 * @return true, if insert was successful
 	 */
-	boolean insert(ArticleMetadata articleMetadata, Set<RDFTriple> triples);
+	boolean insert(Set<RDFTriple> triples);
 
 }

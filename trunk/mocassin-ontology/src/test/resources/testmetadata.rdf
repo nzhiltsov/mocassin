@@ -13,5 +13,14 @@ a m:DocumentSegment .
 <http://mathnet.ru/ivm537/1442> a m:Equation;
 m:hasStartPageNumber 2;
 a m:DocumentSegment . 
-<http://mathnet.ru/IVKonnov> akt:full-name "И. В. Коннов".
+<http://mathnet.ru/IVKonnov> akt:full-name "И. В. Коннов";
+akt:has-affiliation <http://mathnet.ru/Kazanskijgosudarstvennyjuniversitet>;
+a akt:Affiliated-Person.
+<http://mathnet.ru/ivm18> akt:has-title "Конструирование явных методов типа Рунге–Кутта интегрирования систем специального вида";
+akt:has-author <http://mathnet.ru/IVOlemskoj>;
+a akt:Article-Reference.
+<http://mathnet.ru/IVOlemskoj> akt:full-name "И. В. Олемской";
+a akt:Person.
+<http://mathnet.ru/Kazanskijgosudarstvennyjuniversitet> akt:name "Казанский государственный университет";
+a akt:Organization.
 
