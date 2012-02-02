@@ -13,7 +13,6 @@ import ru.ksu.niimm.cll.mocassin.ontology.QueryManagerFacade;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.hp.hpl.jena.rdf.model.Model;
 
 @SuppressWarnings("serial")
 @Singleton
@@ -33,8 +32,8 @@ public class DescriptionServlet extends HttpServlet {
 				resourceUri));
 		resp.setContentType(CONTENT_TYPE);
 		ServletOutputStream outputStream = resp.getOutputStream();
-		Model model = getQueryManagerFacade().describe(resourceUri);
-		model.write(outputStream);
+		String model = getQueryManagerFacade().describe(resourceUri);
+		outputStream.print(model);
 		outputStream.close();
 	}
 
