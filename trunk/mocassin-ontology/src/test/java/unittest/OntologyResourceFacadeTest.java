@@ -1,6 +1,5 @@
 package unittest;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -15,14 +14,13 @@ import org.openrdf.rio.RDFFormat;
 
 import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.arxiv.Author;
-import ru.ksu.niimm.cll.mocassin.arxiv.impl.Link;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
 import ru.ksu.niimm.cll.mocassin.ontology.OntologyIndividual;
-import ru.ksu.niimm.cll.mocassin.ontology.OntologyModule;
 import ru.ksu.niimm.cll.mocassin.ontology.OntologyResource;
 import ru.ksu.niimm.cll.mocassin.ontology.OntologyResourceFacade;
 import ru.ksu.niimm.cll.mocassin.ontology.SGEdge;
+import ru.ksu.niimm.cll.mocassin.ontology.TestOntologyModule;
 import ru.ksu.niimm.cll.mocassin.ontology.provider.RepositoryProvider;
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFTriple;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
@@ -33,7 +31,7 @@ import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext({ OntologyModule.class, VirtuosoModule.class })
+@GuiceContext({ TestOntologyModule.class, VirtuosoModule.class })
 public class OntologyResourceFacadeTest {
 	@Inject
 	private OntologyResourceFacade ontologyResourceFacade;
