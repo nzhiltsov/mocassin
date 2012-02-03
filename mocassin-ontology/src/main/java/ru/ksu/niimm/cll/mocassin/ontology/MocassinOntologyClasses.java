@@ -5,7 +5,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.ArrayUtils;
+
 import com.google.common.collect.ImmutableBiMap;
+import com.google.common.collect.Sets;
+import com.google.common.collect.Sets.SetView;
 
 /**
  * Mocassin Ontology classes with their synonyms and classes imported from SALT
@@ -20,12 +24,12 @@ public enum MocassinOntologyClasses {
 			"гипотеза"), COROLLARY(3, "corollary", "следствие"), DEFINITION(4,
 			"definition", "определение"), EQUATION(5, "equation",
 			"equationgroup"), EXAMPLE(6, "example", "пример"), FIGURE(7,
-			"figure", "рисунок", "график", "изображение"), LEMMA(8, "lemma", "лемма"), PROOF(9, "proof",
-			"доказательство"), PROPOSITION(10, "proposition", "предложение"), REMARK(
-			11, "remark", "note", "comment", "замечание", "комментарий"), SECTION(
-			12, "section", "subsection", "subsubsection"), THEOREM(13,
-			"theorem", "теорема"), UNRECOGNIZED_DOCUMENT_SEGMENT(14, ""), TABLE(
-			15, "tabular", "table", "таблица");
+			"figure", "рисунок", "график", "изображение"), LEMMA(8, "lemma",
+			"лемма"), PROOF(9, "proof", "доказательство"), PROPOSITION(10,
+			"proposition", "предложение"), REMARK(11, "remark", "note",
+			"comment", "замечание", "комментарий"), SECTION(12, "section",
+			"subsection", "subsubsection"), THEOREM(13, "theorem", "теорема"), UNRECOGNIZED_DOCUMENT_SEGMENT(
+			14, ""), TABLE(15, "tabular", "table", "таблица");
 
 	private String[] labels;
 	/**
@@ -38,32 +42,46 @@ public enum MocassinOntologyClasses {
 		this.labels = labels;
 	}
 
-	private static ImmutableBiMap<MocassinOntologyClasses, String> class2Uri = ImmutableBiMap
-			.<MocassinOntologyClasses, String> builder()
-			.put(AXIOM, "http://cll.niimm.ksu.ru/ontologies/mocassin#Axiom")
-			.put(CLAIM, "http://cll.niimm.ksu.ru/ontologies/mocassin#Claim")
-			.put(CONJECTURE,
-					"http://cll.niimm.ksu.ru/ontologies/mocassin#Conjecture")
-			.put(COROLLARY,
-					"http://cll.niimm.ksu.ru/ontologies/mocassin#Corollary")
-			.put(DEFINITION,
-					"http://cll.niimm.ksu.ru/ontologies/mocassin#Definition")
-			.put(EQUATION,
-					"http://cll.niimm.ksu.ru/ontologies/mocassin#Equation")
-			.put(EXAMPLE, "http://cll.niimm.ksu.ru/ontologies/mocassin#Example")
-			.put(FIGURE,
-					"http://salt.semanticauthoring.org/ontologies/sdo#Figure")
-			.put(LEMMA, "http://cll.niimm.ksu.ru/ontologies/mocassin#Lemma")
-			.put(PROOF, "http://cll.niimm.ksu.ru/ontologies/mocassin#Proof")
-			.put(PROPOSITION,
-					"http://cll.niimm.ksu.ru/ontologies/mocassin#Proposition")
-			.put(REMARK, "http://cll.niimm.ksu.ru/ontologies/mocassin#Remark")
-			.put(SECTION,
-					"http://salt.semanticauthoring.org/ontologies/sdo#Section")
-			.put(THEOREM, "http://cll.niimm.ksu.ru/ontologies/mocassin#Theorem")
-			.put(UNRECOGNIZED_DOCUMENT_SEGMENT,
-					"http://cll.niimm.ksu.ru/ontologies/mocassin#DocumentSegment")
-			.build();
+	private static ImmutableBiMap<MocassinOntologyClasses, String> class2Uri;
+	static {
+		class2Uri = ImmutableBiMap
+				.<MocassinOntologyClasses, String> builder()
+				.put(AXIOM, "http://cll.niimm.ksu.ru/ontologies/mocassin#Axiom")
+				.put(CLAIM, "http://cll.niimm.ksu.ru/ontologies/mocassin#Claim")
+				.put(CONJECTURE,
+						"http://cll.niimm.ksu.ru/ontologies/mocassin#Conjecture")
+				.put(COROLLARY,
+						"http://cll.niimm.ksu.ru/ontologies/mocassin#Corollary")
+				.put(DEFINITION,
+						"http://cll.niimm.ksu.ru/ontologies/mocassin#Definition")
+				.put(EQUATION,
+						"http://cll.niimm.ksu.ru/ontologies/mocassin#Equation")
+				.put(EXAMPLE,
+						"http://cll.niimm.ksu.ru/ontologies/mocassin#Example")
+				.put(FIGURE,
+						"http://salt.semanticauthoring.org/ontologies/sdo#Figure")
+				.put(LEMMA, "http://cll.niimm.ksu.ru/ontologies/mocassin#Lemma")
+				.put(PROOF, "http://cll.niimm.ksu.ru/ontologies/mocassin#Proof")
+				.put(PROPOSITION,
+						"http://cll.niimm.ksu.ru/ontologies/mocassin#Proposition")
+				.put(REMARK,
+						"http://cll.niimm.ksu.ru/ontologies/mocassin#Remark")
+				.put(SECTION,
+						"http://salt.semanticauthoring.org/ontologies/sdo#Section")
+				.put(TABLE,
+						"http://salt.semanticauthoring.org/ontologies/sdo#Table")
+				.put(THEOREM,
+						"http://cll.niimm.ksu.ru/ontologies/mocassin#Theorem")
+				.put(UNRECOGNIZED_DOCUMENT_SEGMENT,
+						"http://cll.niimm.ksu.ru/ontologies/mocassin#DocumentSegment")
+				.build();
+		if (class2Uri.keySet().size() != new HashSet<MocassinOntologyClasses>(
+				Arrays.asList(MocassinOntologyClasses.values())).size()) {
+			throw new IllegalStateException(
+					MocassinOntologyClasses.class.getName()
+							+ " is inconsistent. See the associated map.");
+		}
+	}
 
 	public String[] getLabels() {
 		return labels;

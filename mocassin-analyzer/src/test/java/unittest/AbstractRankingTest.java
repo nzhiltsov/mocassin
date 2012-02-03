@@ -23,6 +23,7 @@ import ru.ksu.niimm.cll.mocassin.fulltext.FullTextModule;
 import ru.ksu.niimm.cll.mocassin.nlp.NlpModule;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateModule;
 import ru.ksu.niimm.cll.mocassin.ontology.OntologyModule;
+import ru.ksu.niimm.cll.mocassin.ontology.OntologyTestModule;
 import ru.ksu.niimm.cll.mocassin.parser.latex.Edge;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexParserModule;
@@ -40,7 +41,7 @@ import edu.uci.ics.jung.graph.Graph;
 
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext({ AnalyzerModule.class, NlpModule.class, LatexParserModule.class,
-		OntologyModule.class, VirtuosoModule.class, FullTextModule.class,
+	OntologyTestModule.class, VirtuosoModule.class, FullTextModule.class,
 		GateModule.class, PdfParserModule.class })
 public abstract class AbstractRankingTest {
 	@Inject
