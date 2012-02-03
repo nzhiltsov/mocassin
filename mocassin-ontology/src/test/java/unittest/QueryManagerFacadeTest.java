@@ -1,5 +1,6 @@
 package unittest;
 
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +29,12 @@ import ru.ksu.niimm.cll.mocassin.ontology.provider.RepositoryProvider;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
 
 import com.google.inject.Inject;
+import com.hp.hpl.jena.graph.Graph;
+import com.hp.hpl.jena.graph.Node;
+import com.hp.hpl.jena.graph.Triple;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.util.iterator.ExtendedIterator;
 import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
@@ -102,6 +109,21 @@ public class QueryManagerFacadeTest {
 			}
 		}
 		Assert.assertTrue("The expected instance is not found.", found);
+	}
+
+	@Test
+	public void testDescribe() {
+		String model = getQueryManagerFacade().describe(
+				"http://mathnet.ru/ivm537/1017");
+		Model jenaModel = ModelFactory.createDefaultModel();
+		jenaModel.read(new StringReader(model), null);
+		Graph describeGraph = jenaModel.getGraph();
+		ExtendedIterator<Triple> foundIt = describeGraph.find(
+				Node.createURI("http://mathnet.ru/ivm537/1017"),
+				Node.createURI(MocassinOntologyRelations.DEPENDS_ON.getUri()),
+				Node.createURI("http://mathnet.ru/ivm537/1442"));
+
+		Assert.assertTrue(foundIt.hasNext());
 	}
 
 	private QueryStatement makeWildcardStatement() {
