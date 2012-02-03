@@ -21,6 +21,7 @@ import ru.ksu.niimm.cll.mocassin.nlp.gate.GateModule;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.ParsedDocumentImpl;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
 import ru.ksu.niimm.cll.mocassin.ontology.OntologyModule;
+import ru.ksu.niimm.cll.mocassin.ontology.OntologyTestModule;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.parser.pdf.PdfParserModule;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
@@ -32,9 +33,9 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 import edu.uci.ics.jung.graph.Graph;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext( { AnalyzerModule.class, NlpModule.class,
-		LatexParserModule.class, OntologyModule.class, VirtuosoModule.class,
-		FullTextModule.class, GateModule.class, PdfParserModule.class })
+@GuiceContext({ AnalyzerModule.class, NlpModule.class, LatexParserModule.class,
+		OntologyTestModule.class, VirtuosoModule.class, FullTextModule.class,
+		GateModule.class, PdfParserModule.class })
 public class ExemplifiesRelationAnalyzerTest {
 	@Inject
 	ExemplifiesRelationAnalyzer exemplifiesRelationAnalyzer;
@@ -48,9 +49,8 @@ public class ExemplifiesRelationAnalyzerTest {
 
 	@Before
 	public void init() {
-		document = new ParsedDocumentImpl("math/0005005",
-				"http://arxiv.org/abs/math/0005005",
-				"http://arxiv.org/pdf/math/0005005");
+		document = new ParsedDocumentImpl("ivm581", "http://mathnet.ru/ivm581",
+				"http://mathnet.ru/ivm581");
 		graph = this.referenceSearcher.retrieveStructuralGraph(document);
 	}
 
@@ -61,13 +61,20 @@ public class ExemplifiesRelationAnalyzerTest {
 		boolean found = false;
 		for (Reference ref : edges) {
 			StructuralElement from = graph.getSource(ref);
-			if (ref.getPredictedRelation() == MocassinOntologyRelations.EXEMPLIFIES && from.getId() == 2047) {
+			if (ref.getPredictedRelation() == MocassinOntologyRelations.EXEMPLIFIES
+					&& from.getTitle().equals("Пример 4.4 .")) {
 				StructuralElement to = graph.getDest(ref);
-				Assert.assertEquals(1937, to.getId());
+				Assert.assertEquals(
+						"Exemplified element title does not equal to the expected one.",
+						"Теорема 3.1 .", to.getTitle()); // TODO: not quite right
+														// according to actual
+														// semantic of the
+														// relation instance
 				found = true;
 				break;
 			}
 		}
-		Assert.assertTrue(found);
+		Assert.assertTrue("The expected example instance couldn't be found.",
+				found);
 	}
 }
