@@ -9,6 +9,7 @@ m:hasSegment <http://mathnet.ru/ivm537/1442>.
 <http://mathnet.ru/ivm537/1017> m:dependsOn <http://mathnet.ru/ivm537/1442>;
 a sdo:Section;
 m:hasStartPageNumber 1;
+m:hasText "группы кольца и поля";
 a m:DocumentSegment .
 <http://mathnet.ru/ivm537/1442> a m:Equation;
 m:hasStartPageNumber 2;
