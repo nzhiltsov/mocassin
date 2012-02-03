@@ -1,5 +1,6 @@
 package ru.ksu.niimm.cll.mocassin.ontology.impl;
 
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -247,10 +248,17 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 	@Override
 	public boolean insert(Set<RDFTriple> data) {
 		String insertQuery = insertQueryGenerator.generate(new ArrayList(data));
+		
 		try {
+			FileWriter writer = new FileWriter("/tmp/problem_query.txt");
+			writer.write(insertQuery);
+			writer.flush();
+			writer.close();
 			RepositoryConnection connection = getRepository().getConnection();
 			Update updateQuery = connection.prepareUpdate(QueryLanguage.SPARQL,
 					insertQuery);
+			
+
 			updateQuery.execute();
 			connection.close();
 			return true;
