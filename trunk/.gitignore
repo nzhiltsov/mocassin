@@ -4,6 +4,11 @@ mocassin-ui/.settings/com.google.gwt.eclipse.core.prefs
 mocassin-pom/.settings/org.maven.ide.eclipse.prefs
 mocassin-ui/.settings/com.google.gwt.eclipse.core.prefs
 mocassin-ui/.classpath
+mocassin-ui/src/main/gwt-unitCache/*
+mocassin-ui/src/main/webapp/WEB-INF/deploy/*
+mocassin-ui/src/main/webapp/dashboard/*
+mocassin-ui/src/main/webapp/mocassin/*
+mocassin-ui/src/main/webapp/viewer/*
 .metadata/
 */.project
 */.classpath
