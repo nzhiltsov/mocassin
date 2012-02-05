@@ -116,8 +116,8 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 		} catch (Exception e) {
 			logger.log(
 					Level.SEVERE,
-					String.format("Failed to execute a query due to %s. Empty will be returned."),
-					e.getCause());
+					String.format("Failed to execute a query due to %s. Empty result set will be returned.",
+					e));
 		}
 		return ontologyResources;
 	}

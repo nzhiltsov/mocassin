@@ -26,7 +26,7 @@ public class GateModule extends AbstractModule {
 			throw new RuntimeException(
 					"failed to load the NLP module configuration");
 		}
-		bind(GateDocumentDAO.class).to(GateDocumentDAOImpl.class);
+		bind(GateDocumentDAO.class).to(GateDocumentDAOImpl.class).in(Singleton.class);
 		bind(GateProcessingFacade.class).to(GateProcessingFacadeImpl.class);
 		bind(AnnotationUtil.class).to(AnnotationUtilImpl.class);
 		ThrowingProviderBinder
