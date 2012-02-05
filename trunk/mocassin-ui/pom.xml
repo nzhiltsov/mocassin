@@ -186,6 +186,6 @@
 	</dependencies>
 
 	<properties>
-		<gwt.version>2.2.0</gwt.version>
+		<gwt.version>2.4.0</gwt.version>
 	</properties>
 </project>
