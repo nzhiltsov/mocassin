@@ -2,7 +2,7 @@
 ==Road Map==
 
 || *Release* || *Milestone Name* || *New Main Features* || *Planned Date* ||
-|| 1.0.0.6 || TEL'12 || 1) Complete indexing implementation || 7.02.2012 ||
+|| 1.0.0.6 || TEL'12 || 1) Complete indexing implementation || 12.02.2012 ||
 || ||  || 2) Limited support of Russian language || ||
 || ||  || || ||
 || 1.0.0.7 || ? || 1) Citation link analysis || 1.03.2012 ||
