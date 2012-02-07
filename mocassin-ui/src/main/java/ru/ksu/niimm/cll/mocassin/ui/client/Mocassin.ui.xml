@@ -6,6 +6,7 @@
 		.main-panel {
 			table-layout: auto;
 			width: 100%;
+			height: 100%;
 			background-image: url(math_background.gif);
 			background-repeat: repeat;
 		}

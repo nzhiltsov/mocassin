@@ -23,7 +23,7 @@ public class InferenceCheckbox extends Composite {
 	public InferenceCheckbox() {
 		initWidget(uiBinder.createAndBindUi(this));
 		checkbox.setText(constants.inferenceCheckboxLabel());
-		checkbox.setValue(true);
+		checkbox.setValue(false);
 	}
 
 	public boolean isChecked() {
