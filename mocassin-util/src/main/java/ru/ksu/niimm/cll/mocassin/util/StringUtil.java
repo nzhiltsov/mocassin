@@ -10,9 +10,11 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringEscapeUtils;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import com.google.common.collect.Iterables;
 
 public class StringUtil {
+	private static final String URI_DELIMITER = "/";
 	public static final String ARXIVID_SEGMENTID_DELIMITER = "$";
 	private static final Pattern STYLE_PATTERN = Pattern
 			.compile("\\\\[a-zA-Z]+\\{([^}]*)\\}");
@@ -136,7 +138,7 @@ public class StringUtil {
 	}
 
 	public static String arxivid2gateid(String arxivId) {
-		return arxivId.replace("/", "_");
+		return arxivId.replace(URI_DELIMITER, "_");
 	}
 
 	public static String extractJournalPrefixFromMathnetKey(String mathnetKey) {
@@ -158,7 +160,14 @@ public class StringUtil {
 	public static String extractMathnetKeyFromURI(String uri) {
 		if (uri == null || uri.length() == 0)
 			throw new IllegalArgumentException("URI cannot be null or empty");
-		return uri.substring(uri.lastIndexOf("/") + 1);
+		return uri.substring(uri.lastIndexOf(URI_DELIMITER) + 1);
+	}
+
+	public static String extractDocumentURIFromSegmentURI(String segmentUri) {
+		checkArgument(segmentUri != null
+				&& segmentUri.length() > 0,
+				"Argument was %s but expected non-empty", segmentUri);
+		return segmentUri.substring(0, segmentUri.lastIndexOf(URI_DELIMITER));
 	}
 
 }
