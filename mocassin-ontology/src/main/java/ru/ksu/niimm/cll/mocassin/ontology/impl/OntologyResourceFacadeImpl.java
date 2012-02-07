@@ -33,7 +33,7 @@ import ru.ksu.niimm.cll.mocassin.ontology.OntologyResourceFacade;
 import ru.ksu.niimm.cll.mocassin.ontology.SGEdge;
 import ru.ksu.niimm.cll.mocassin.ontology.loader.SparqlQueryLoader;
 import ru.ksu.niimm.cll.mocassin.ontology.provider.RepositoryProvider;
-import ru.ksu.niimm.cll.mocassin.util.StringUtil;
+import static ru.ksu.niimm.cll.mocassin.util.StringUtil.*;
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFGraph;
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFTriple;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoDAO;
@@ -144,9 +144,10 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 					return null;
 				}
 				BindingSet segmentInfoBindingSet = segmentInfoResult.next();
-				segmentTitle = segmentInfoBindingSet.getValue("stitle")
-						.stringValue();
-				documentUri = segmentInfoBindingSet.getValue("p").stringValue();
+				Value segmentTitleValue = segmentInfoBindingSet.getValue("stitle");
+				segmentTitle = segmentTitleValue != null ? segmentTitleValue
+						.stringValue() : null;
+				documentUri = extractDocumentURIFromSegmentURI(resourceUri);
 				numPage = ((Literal) segmentInfoBindingSet.getValue("snumpage"))
 						.intValue();
 			} finally {
@@ -277,7 +278,7 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 		String title = retrieveTitle(documentUri);
 		// String arxivId = retrieveArxivId(documentUri); // TODO: workaround
 		// for Mathnet keys
-		String mathnetKey = StringUtil.extractMathnetKeyFromURI(documentUri);
+		String mathnetKey = extractMathnetKeyFromURI(documentUri);
 		List<Author> authors = retrieveAuthors(documentUri);
 		List<Link> links = retrieveLinks(documentUri);
 
@@ -482,7 +483,7 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 
 	private String generateSegmentInfoQuery(String segmentUri) {
 		String query = getSparqlQueryLoader().loadQueryByName("GetSegmentInfo");
-		return String.format(query, segmentUri);
+		return String.format(query, segmentUri, segmentUri);
 	}
 
 	private String generateAuthorQuery(String documentUri) {

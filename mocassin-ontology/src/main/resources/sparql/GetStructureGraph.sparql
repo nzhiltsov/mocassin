@@ -5,9 +5,12 @@ SELECT DISTINCT ?snumpage ?stitle ?sclass ?s ?p ?o ?oclass ?otitle ?onumpage {
 ?s a ?sclass .
 ?o a ?oclass .
 ?s <http://cll.niimm.ksu.ru/ontologies/mocassin#hasStartPageNumber> ?snumpage .
+OPTIONAL {
+?s <http://cll.niimm.ksu.ru/ontologies/mocassin#hasTitle> ?stitle  .
+}
 ?o <http://cll.niimm.ksu.ru/ontologies/mocassin#hasStartPageNumber> ?onumpage .
-OPTIONAL {?s <http://cll.niimm.ksu.ru/ontologies/mocassin#hasTitle> ?stitle } .
-OPTIONAL {?o <http://cll.niimm.ksu.ru/ontologies/mocassin#hasTitle> ?otitle} .
+OPTIONAL { 
+?o <http://cll.niimm.ksu.ru/ontologies/mocassin#hasTitle> ?otitle .} 
 FILTER (STR(?d) = "%s") 
 FILTER (REGEX(STR(?p), 'ontologies/mocassin'))
 }
