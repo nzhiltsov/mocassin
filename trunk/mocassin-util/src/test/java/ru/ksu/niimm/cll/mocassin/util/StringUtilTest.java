@@ -11,12 +11,21 @@ public class StringUtilTest {
 	public void testStripLatexMarkup() {
 		String str = ".\\label{nef=sa} $\\Pic{(X)}_{\\bq} \\simeq \\Num{(X)}_{\\bq}$ $\bq$-factorial preserving-order \\cite[Proposition 1.11(3)]{this} \\ref{that} (\ref{fin_pic}) the fan of $Y$ coincides with the \textit{restriction} of the fan of $X$ to the subspace $\\Pic{(Y)}_{\\br}\\subset\\Pic{(X)}_{\\br}$: i.e. proof.";
 		List<String> strippedTokens = StringUtil.stripLatexMarkup(str);
-		String[] expected = {"factorial", "preserving", "order", "the", "fan", "of", "coincides", "with", "the",
-				"restriction", "of", "the", "fan", "of", "to", "the",
-				"subspace", "ie", "proof" };
+		String[] expected = { "factorial", "preserving", "order", "the", "fan",
+				"of", "coincides", "with", "the", "restriction", "of", "the",
+				"fan", "of", "to", "the", "subspace", "ie", "proof" };
 		Assert.assertEquals(strippedTokens.size(), expected.length);
 		for (int i = 0; i < strippedTokens.size(); i++) {
 			Assert.assertEquals(strippedTokens.get(i), expected[i]);
 		}
+	}
+
+	@Test
+	public void testExtractDocumentURIFromSegmentURI() {
+		String docUri = StringUtil
+				.extractDocumentURIFromSegmentURI("http://mathnet.ru/ivm537/1017");
+		Assert.assertEquals(
+				"Extracted document URI does not equal to the expected one",
+				"http://mathnet.ru/ivm537", docUri);
 	}
 }
