@@ -28,8 +28,6 @@ public class DescriptionServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		String resourceUri = req.getParameter(RESOURCE_URI_PARAMETER_NAME);
-		logger.info(String.format("description servlet handles URI: %s",
-				resourceUri));
 		resp.setContentType(CONTENT_TYPE);
 		ServletOutputStream outputStream = resp.getOutputStream();
 		String model = getQueryManagerFacade().describe(resourceUri);
