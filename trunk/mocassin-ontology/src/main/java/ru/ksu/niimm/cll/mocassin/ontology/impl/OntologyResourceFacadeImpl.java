@@ -144,7 +144,8 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 					return null;
 				}
 				BindingSet segmentInfoBindingSet = segmentInfoResult.next();
-				Value segmentTitleValue = segmentInfoBindingSet.getValue("stitle");
+				Value segmentTitleValue = segmentInfoBindingSet
+						.getValue("stitle");
 				segmentTitle = segmentTitleValue != null ? segmentTitleValue
 						.stringValue() : null;
 				documentUri = extractDocumentURIFromSegmentURI(resourceUri);
@@ -248,18 +249,13 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 
 	@Override
 	public boolean insert(Set<RDFTriple> data) {
-		String insertQuery = insertQueryGenerator.generate(new ArrayList(data));
-		
+		String insertQuery = insertQueryGenerator
+				.generate(new ArrayList<RDFTriple>(data));
+
 		try {
-			FileWriter writer = new FileWriter("/tmp/problem_query.txt");
-			writer.write(insertQuery);
-			writer.flush();
-			writer.close();
 			RepositoryConnection connection = getRepository().getConnection();
 			Update updateQuery = connection.prepareUpdate(QueryLanguage.SPARQL,
 					insertQuery);
-			
-
 			updateQuery.execute();
 			connection.close();
 			return true;
