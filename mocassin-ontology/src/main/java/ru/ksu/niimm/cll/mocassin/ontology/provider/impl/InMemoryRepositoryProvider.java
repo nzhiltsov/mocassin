@@ -23,7 +23,7 @@ public class InMemoryRepositoryProvider implements
 		try {
 			connection.add(
 					getClass().getResourceAsStream("/bootstrapdata.rdf"),
-					"http://cll.niimm.ksu.ru/mocassinfortest", RDFFormat.N3);
+					"http://cll.niimm.ksu.ru/mocassinfortest", RDFFormat.RDFXML);
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		} finally {
