@@ -8,6 +8,7 @@ import java.util.StringTokenizer;
 import java.util.TreeMap;
 
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
+import ru.ksu.niimm.cll.mocassin.parser.arxmliv.ArxmlivStructureElementTypes;
 import ru.ksu.niimm.cll.mocassin.util.StringSimilarityEvaluator;
 import ru.ksu.niimm.cll.mocassin.util.StringSimilarityEvaluator.SimilarityMetrics;
 
@@ -26,6 +27,12 @@ class StructuralElementTypeRecognizerImpl implements
 
 	@Override
 	public MocassinOntologyClasses predict(StructuralElement structuralElement) {
+		// special handling of the root element
+		if (structuralElement.getName() != null
+				&& structuralElement.getName().equals(
+						ArxmlivStructureElementTypes.DOCUMENT.toString())) {
+			return MocassinOntologyClasses.UNRECOGNIZED_DOCUMENT_SEGMENT;
+		}
 		// special handling of sections
 		if (Arrays.asList(MocassinOntologyClasses.SECTION.getLabels())
 				.contains(structuralElement.getName())) {
