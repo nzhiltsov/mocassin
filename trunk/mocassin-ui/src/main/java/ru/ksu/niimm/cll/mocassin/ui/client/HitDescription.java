@@ -45,7 +45,7 @@ public class HitDescription extends Composite {
 		viewerUri = resultDescription.getViewerUri();
 		pdfUri = resultDescription.getPdfUri();
 		titleLink.setText(resultDescription.getTitle());
-		viewerDocumentFormat.setText("arXiv");
+		viewerDocumentFormat.setText("Original");
 		viewerDocumentFormat.setResourceUri(resultDescription.getDocumentUri());
 		viewerDocumentFormat.setAction(Action.ARXIV);
 		rdfDocumentFormat.setText("RDF");
