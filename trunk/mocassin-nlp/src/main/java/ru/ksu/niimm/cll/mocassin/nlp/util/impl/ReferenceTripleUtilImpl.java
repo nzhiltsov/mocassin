@@ -3,6 +3,7 @@ package ru.ksu.niimm.cll.mocassin.nlp.util.impl;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import static java.lang.String.format;
 
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
@@ -18,13 +19,24 @@ public class ReferenceTripleUtilImpl implements ReferenceTripleUtil {
 	private static final String TRIPLE_PATTERN = "<%s> <%s> <%s> .";
 	private static final String RDFS_TYPE = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
 	private static final String INTEGER_PATTERN = "<%s> <%s> \"%d\"^^<http://www.w3.org/2001/XMLSchema#integer> .";
+	private static final String SALT_SCHEMA = "http://salt.semanticauthoring.org/ontologies/sdo";
+	private static final String SDO_PUBLICATION_TYPE = format("%s#Publication",
+			SALT_SCHEMA);
 
 	@Override
 	public Set<RDFTriple> convert(Graph<StructuralElement, Reference> graph) {
 		Set<RDFTriple> triples = new HashSet<RDFTriple>();
+		boolean addedPublication = false;
 		for (Reference ref : graph.getEdges()) {
+			if (!addedPublication) {
+				triples.add(createTriple(ref.getDocument().getUri(), RDFS_TYPE,
+						SDO_PUBLICATION_TYPE));
+				addedPublication = true;
+			}
+			
 			StructuralElement from = graph.getSource(ref);
 			StructuralElement to = graph.getDest(ref);
+			
 			triples.add(createTypeTriple(from));
 			triples.add(createTypeTriple(to));
 
@@ -44,12 +56,10 @@ public class ReferenceTripleUtilImpl implements ReferenceTripleUtil {
 			triples.add(createTriple(from.getUri(), ref.getPredictedRelation()
 					.getUri(), to.getUri()));
 			triples.add(createTriple(ref.getDocument().getUri(),
-					MocassinOntologyRelations.HAS_SEGMENT.getUri(), from
-							.getUri()));
-			triples
-					.add(createTriple(ref.getDocument().getUri(),
-							MocassinOntologyRelations.HAS_SEGMENT.getUri(), to
-									.getUri()));
+					MocassinOntologyRelations.HAS_SEGMENT.getUri(),
+					from.getUri()));
+			triples.add(createTriple(ref.getDocument().getUri(),
+					MocassinOntologyRelations.HAS_SEGMENT.getUri(), to.getUri()));
 		}
 		return triples;
 	}
@@ -64,15 +74,16 @@ public class ReferenceTripleUtilImpl implements ReferenceTripleUtil {
 	}
 
 	private static RDFTriple createTitleTriple(StructuralElement element) {
-		return new RDFTripleImpl(String.format(LITERAL_PATTERN, element
-				.getUri(), MocassinOntologyRelations.HAS_TITLE.getUri(),
+		return new RDFTripleImpl(String.format(LITERAL_PATTERN,
+				element.getUri(), MocassinOntologyRelations.HAS_TITLE.getUri(),
 				element.getTitle()));
 	}
 
 	private static RDFTriple createPageNumberTriple(StructuralElement element) {
-		return new RDFTripleImpl(String.format(INTEGER_PATTERN, element
-				.getUri(), MocassinOntologyRelations.HAS_START_PAGE_NUMBER
-				.getUri(), element.getStartPageNumber()));
+		return new RDFTripleImpl(String.format(INTEGER_PATTERN,
+				element.getUri(),
+				MocassinOntologyRelations.HAS_START_PAGE_NUMBER.getUri(),
+				element.getStartPageNumber()));
 	}
 
 	private static RDFTriple createValueTriple(StructuralElement element) {
@@ -82,9 +93,9 @@ public class ReferenceTripleUtilImpl implements ReferenceTripleUtil {
 			sb.append(str);
 			sb.append(" ");
 		}
-		String textContents = sb
-		.toString().replace("\n", "");
-		return new RDFTripleImpl(String.format(LITERAL_PATTERN, element
-				.getUri(), MocassinOntologyRelations.HAS_TEXT.getUri(), textContents));
+		String textContents = sb.toString().replace("\n", "");
+		return new RDFTripleImpl(String.format(LITERAL_PATTERN,
+				element.getUri(), MocassinOntologyRelations.HAS_TEXT.getUri(),
+				textContents));
 	}
 }

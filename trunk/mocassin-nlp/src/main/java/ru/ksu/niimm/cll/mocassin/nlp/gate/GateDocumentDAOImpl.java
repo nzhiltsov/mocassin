@@ -116,8 +116,8 @@ class GateDocumentDAOImpl implements GateDocumentDAO {
 			throw new IllegalArgumentException(message);
 		} catch (PersistenceException e) {
 			String message = String.format(
-					"failed to save a GATE document for the file='%s'",
-					file.getAbsolutePath());
+					"failed to save a GATE document for the file='%s' due to %s",
+					file.getAbsolutePath(), e);
 			logger.log(Level.SEVERE, message);
 			throw new ru.ksu.niimm.cll.mocassin.nlp.gate.PersistenceException(
 					message);
