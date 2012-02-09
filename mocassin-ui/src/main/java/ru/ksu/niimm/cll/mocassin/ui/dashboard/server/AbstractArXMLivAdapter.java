@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static java.lang.String.format;
 
 import ru.ksu.niimm.cll.mocassin.analyzer.classifier.NavigationalRelationClassifier;
 import ru.ksu.niimm.cll.mocassin.analyzer.classifier.Prediction;
@@ -107,9 +108,14 @@ public abstract class AbstractArXMLivAdapter implements ArXMLivAdapter {
 					logger.log(
 							Level.SEVERE,
 							String.format(
-									"failed to generate the highlighted PDF for a segment with id='%d' in the document='%s'",
+									"Failed to generate the highlighted PDF for a segment with id='%d' in the document='%s'",
 									element.getId(), arxivId));
 				}
+			} else {
+				logger.log(
+						Level.WARNING,
+						format("Skipped generating the highlighted PDF for a segment='%s' in the document='%s'. Perhaps, the segment location is incorrect.",
+								element.getId(), arxivId));
 			}
 		}
 	}
