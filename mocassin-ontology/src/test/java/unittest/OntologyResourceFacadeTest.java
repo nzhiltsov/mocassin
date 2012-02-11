@@ -1,13 +1,18 @@
 package unittest;
 
-import java.util.HashSet;
+import static ru.ksu.niimm.cll.mocassin.ontology.model.URIConstants.RDF_TYPE;
+
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openrdf.model.Statement;
+import org.openrdf.model.impl.NumericLiteralImpl;
+import org.openrdf.model.impl.StatementImpl;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.rio.RDFFormat;
@@ -19,12 +24,10 @@ import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
 import ru.ksu.niimm.cll.mocassin.ontology.OntologyIndividual;
 import ru.ksu.niimm.cll.mocassin.ontology.OntologyResource;
 import ru.ksu.niimm.cll.mocassin.ontology.OntologyResourceFacade;
-import ru.ksu.niimm.cll.mocassin.ontology.SGEdge;
 import ru.ksu.niimm.cll.mocassin.ontology.OntologyTestModule;
+import ru.ksu.niimm.cll.mocassin.ontology.SGEdge;
 import ru.ksu.niimm.cll.mocassin.ontology.provider.RepositoryProvider;
-import ru.ksu.niimm.cll.mocassin.virtuoso.RDFTriple;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
-import ru.ksu.niimm.cll.mocassin.virtuoso.impl.RDFTripleImpl;
 
 import com.google.inject.Inject;
 import com.mycila.testing.junit.MycilaJunitRunner;
@@ -33,6 +36,7 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext({ OntologyTestModule.class, VirtuosoModule.class })
 public class OntologyResourceFacadeTest {
+
 	@Inject
 	private OntologyResourceFacade ontologyResourceFacade;
 	@Inject
@@ -62,7 +66,9 @@ public class OntologyResourceFacadeTest {
 				.equals(articleMetadata.getTitle());
 
 		Assert.assertTrue(titleEquals);
-		Assert.assertEquals("Number of authors does not equal to the expected one.", 1, articleMetadata.getAuthors().size());
+		Assert.assertEquals(
+				"Number of authors does not equal to the expected one.", 1,
+				articleMetadata.getAuthors().size());
 		Author singleAuthor = articleMetadata.getAuthors().get(0);
 		Assert.assertEquals("И. В. Коннов", singleAuthor.getName());
 		Assert.assertEquals(
@@ -73,24 +79,44 @@ public class OntologyResourceFacadeTest {
 
 	@Test
 	public void testInsert() {
+		Statement statement1 = new StatementImpl(new URIImpl(
+				"http://mathnet.ru/ivm18/1"), RDF_TYPE, new URIImpl(
+				"http://cll.niimm.ksu.ru/ontologies/mocassin#Theorem"));
+		Statement statement2 = new StatementImpl(new URIImpl(
+				"http://mathnet.ru/ivm18/2"), RDF_TYPE, new URIImpl(
+				"http://cll.niimm.ksu.ru/ontologies/mocassin#Lemma"));
+		Statement statement3 = new StatementImpl(new URIImpl(
+				"http://mathnet.ru/ivm18/1"), new URIImpl(
+				"http://cll.niimm.ksu.ru/ontologies/mocassin#refersTo"),
+				new URIImpl("http://mathnet.ru/ivm18/2"));
+		Statement statement4 = new StatementImpl(new URIImpl(
+				"http://mathnet.ru/ivm18"), new URIImpl(
+				"http://cll.niimm.ksu.ru/ontologies/mocassin#hasSegment"),
+				new URIImpl("http://mathnet.ru/ivm18/1"));
+		Statement statement5 = new StatementImpl(new URIImpl(
+				"http://mathnet.ru/ivm18"), new URIImpl(
+				"http://cll.niimm.ksu.ru/ontologies/mocassin#hasSegment"),
+				new URIImpl("http://mathnet.ru/ivm18/2"));
+		Statement statement6 = new StatementImpl(new URIImpl(
+				"http://mathnet.ru/ivm18/1"), new URIImpl(
+				"http://cll.niimm.ksu.ru/ontologies/mocassin#hasStartPageNumber"),
+				new NumericLiteralImpl(1));
+		Statement statement7 = new StatementImpl(new URIImpl(
+				"http://mathnet.ru/ivm18/2"), new URIImpl(
+				"http://cll.niimm.ksu.ru/ontologies/mocassin#hasStartPageNumber"),
+				new NumericLiteralImpl(2));
 
-		Set<RDFTriple> triples = new HashSet<RDFTriple>();
-		triples.add(new RDFTripleImpl(
-				"<http://mathnet.ru/ivm18/1> a <http://cll.niimm.ksu.ru/ontologies/mocassin#Theorem> ."));
-		triples.add(new RDFTripleImpl(
-				"<http://mathnet.ru/ivm18/2> a <http://cll.niimm.ksu.ru/ontologies/mocassin#Lemma> ."));
-		triples.add(new RDFTripleImpl(
-				"<http://mathnet.ru/ivm18/1> <http://cll.niimm.ksu.ru/ontologies/mocassin#refersTo> <http://mathnet.ru/ivm18/2> ."));
-		triples.add(new RDFTripleImpl(
-				"<http://mathnet.ru/ivm18> <http://cll.niimm.ksu.ru/ontologies/mocassin#hasSegment> <http://mathnet.ru/ivm18/1> ."));
-		triples.add(new RDFTripleImpl(
-				"<http://mathnet.ru/ivm18> <http://cll.niimm.ksu.ru/ontologies/mocassin#hasSegment> <http://mathnet.ru/ivm18/2> ."));
-		triples.add(new RDFTripleImpl(
-				"<http://mathnet.ru/ivm18/1> <http://cll.niimm.ksu.ru/ontologies/mocassin#hasStartPageNumber> 1 ."));
-		triples.add(new RDFTripleImpl(
-				"<http://mathnet.ru/ivm18/2> <http://cll.niimm.ksu.ru/ontologies/mocassin#hasStartPageNumber> 2 ."));
+		List<Statement> statements = new ArrayList<Statement>();
+		statements.add(statement1);
+		statements.add(statement2);
+		statements.add(statement3);
+		statements.add(statement4);
+		statements.add(statement5);
+		statements.add(statement6);
+		statements.add(statement7);
+
 		Assert.assertTrue("Failed to insert data.", getOntologyResourceFacade()
-				.insert(triples));
+				.insert(statements));
 		final String expectedAuthorName = "И. В. Олемской";
 		final String expectedTitle = "Конструирование явных методов типа Рунге–Кутта интегрирования систем специального вида";
 		ArticleMetadata retrievedArticleMetadata = getOntologyResourceFacade()
@@ -100,13 +126,14 @@ public class OntologyResourceFacadeTest {
 		Assert.assertEquals(
 				"The retrieved title does not equal to the expected one.",
 				expectedTitle, retrievedArticleMetadata.getTitle());
-		Assert.assertEquals("Number of authors does not equal to the expected one.", 1, retrievedArticleMetadata.getAuthors().size());
+		Assert.assertEquals(
+				"Number of authors does not equal to the expected one.", 1,
+				retrievedArticleMetadata.getAuthors().size());
 		Author singleAuthor = retrievedArticleMetadata.getAuthors().get(0);
 		Assert.assertEquals(expectedAuthorName, singleAuthor.getName());
 		Assert.assertEquals(
 				"Author's affiliation does not equal to the expected one.",
-				null,
-				singleAuthor.getAffiliation());
+				null, singleAuthor.getAffiliation());
 
 		List<SGEdge> graph = getOntologyResourceFacade()
 				.retrieveStructureGraph(

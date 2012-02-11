@@ -1,10 +1,10 @@
 package ru.ksu.niimm.cll.mocassin.ontology;
 
 import java.util.List;
-import java.util.Set;
+
+import org.openrdf.model.Statement;
 
 import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
-import ru.ksu.niimm.cll.mocassin.virtuoso.RDFTriple;
 
 public interface OntologyResourceFacade {
 	/**
@@ -28,9 +28,9 @@ public interface OntologyResourceFacade {
 
 	/**
 	 * 
-	 * @param triples
-	 * @return true, if insert was successful
+	 * @param statements
+	 * @return true, if the insertion was successful
 	 */
-	boolean insert(Set<RDFTriple> triples);
+	boolean insert(List<Statement> statements);
 
 }
