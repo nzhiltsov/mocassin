@@ -1,5 +1,8 @@
-package ru.ksu.niimm.cll.mocassin.nlp;
+package ru.ksu.niimm.cll.mocassin.analyzer;
 
+import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
+import ru.ksu.niimm.cll.mocassin.nlp.Reference;
+import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import edu.uci.ics.jung.graph.Graph;
 
 /**

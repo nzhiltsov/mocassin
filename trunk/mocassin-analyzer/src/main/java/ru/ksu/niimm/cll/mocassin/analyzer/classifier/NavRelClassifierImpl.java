@@ -80,7 +80,7 @@ public class NavRelClassifierImpl implements NavigationalRelationClassifier {
 													.getDocument()
 													.getUri(), e
 													.getMessage()));
+			return null;
 		}
-		return null;
 	}
 }

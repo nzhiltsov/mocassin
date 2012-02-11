@@ -1,21 +1,18 @@
 package ru.ksu.niimm.cll.mocassin.ui.dashboard.server;
 
 import java.io.File;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Level;
 
-import edu.uci.ics.jung.graph.Graph;
+import org.openrdf.model.Statement;
 
 import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.arxiv.impl.Link;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
-import ru.ksu.niimm.cll.mocassin.ui.dashboard.client.ArxivArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
-import ru.ksu.niimm.cll.mocassin.virtuoso.RDFTriple;
+import edu.uci.ics.jung.graph.Graph;
 
 public class MathnetAdapter extends AbstractArXMLivAdapter implements
 		ArXMLivAdapter {
@@ -57,7 +54,7 @@ public class MathnetAdapter extends AbstractArXMLivAdapter implements
 			// Step 7
 			generateHighlightedPdfs(mathnetKey, graph.getVertices());
 			// Step 8
-			Set<RDFTriple> triples = referenceTripleUtil.convert(graph);
+			List<Statement> triples = referenceStatementGenerator.convert(graph);
 			
 			if(!ontologyResourceFacade.insert(triples)) {
 				throw new RuntimeException("Failed to insert triples.");
