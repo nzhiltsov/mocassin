@@ -1,6 +1,8 @@
 package ru.ksu.niimm.cll.mocassin.ontology.impl;
 
-import java.io.FileWriter;
+import static ru.ksu.niimm.cll.mocassin.util.StringUtil.extractDocumentURIFromSegmentURI;
+import static ru.ksu.niimm.cll.mocassin.util.StringUtil.extractMathnetKeyFromURI;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -8,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.openrdf.model.Literal;
+import org.openrdf.model.Statement;
 import org.openrdf.model.Value;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.MalformedQueryException;
@@ -33,10 +36,8 @@ import ru.ksu.niimm.cll.mocassin.ontology.OntologyResourceFacade;
 import ru.ksu.niimm.cll.mocassin.ontology.SGEdge;
 import ru.ksu.niimm.cll.mocassin.ontology.loader.SparqlQueryLoader;
 import ru.ksu.niimm.cll.mocassin.ontology.provider.RepositoryProvider;
-import static ru.ksu.niimm.cll.mocassin.util.StringUtil.*;
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFGraph;
 import ru.ksu.niimm.cll.mocassin.virtuoso.RDFTriple;
-import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoDAO;
 import ru.ksu.niimm.cll.mocassin.virtuoso.generator.InsertQueryGenerator;
 import ru.ksu.niimm.cll.mocassin.virtuoso.impl.RDFGraphImpl;
 
@@ -61,8 +62,6 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 	private static final String RULES_SET_ENTRY = "define input:inference \"%s\"";
 	private static final String RETRIEVED_ARXIV_ID_ELEMENT_KEY = "2";
 
-	private final InsertQueryGenerator insertQueryGenerator;
-
 	private final SparqlQueryLoader sparqlQueryLoader;
 
 	private final OntologyFacade ontologyFacade;
@@ -76,16 +75,14 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 	private String ontologyRulesSetName;
 
 	@Inject
-	public OntologyResourceFacadeImpl(
-			InsertQueryGenerator insertQueryGenerator,
-			SparqlQueryLoader sparqlQueryLoader, OntologyFacade ontologyFacade,
+	public OntologyResourceFacadeImpl(SparqlQueryLoader sparqlQueryLoader,
+			OntologyFacade ontologyFacade,
 			RepositoryProvider<Repository> repositoryProvider,
 			@Named("connection.url") String connectionUrl,
 			@Named("connection.user.name") String username,
 			@Named("connection.user.password") String password,
 			@Named("graph.iri") String graphIri,
 			@Named("ontology.rules.set") String ontologyRuleSet) {
-		this.insertQueryGenerator = insertQueryGenerator;
 		this.sparqlQueryLoader = sparqlQueryLoader;
 		this.ontologyFacade = ontologyFacade;
 		this.repositoryProvider = repositoryProvider;
@@ -248,16 +245,15 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 	}
 
 	@Override
-	public boolean insert(Set<RDFTriple> data) {
-		String insertQuery = insertQueryGenerator
-				.generate(new ArrayList<RDFTriple>(data));
+	public boolean insert(List<Statement> statements) {
 
 		try {
 			RepositoryConnection connection = getRepository().getConnection();
-			Update updateQuery = connection.prepareUpdate(QueryLanguage.SPARQL,
-					insertQuery);
-			updateQuery.execute();
-			connection.close();
+			try {
+				connection.add(statements);
+			} finally {
+				connection.close();
+			}
 			return true;
 		} catch (Exception e) {
 			logger.log(
