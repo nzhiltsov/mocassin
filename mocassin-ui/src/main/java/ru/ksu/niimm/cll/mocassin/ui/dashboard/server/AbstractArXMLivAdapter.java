@@ -7,6 +7,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import static java.lang.String.format;
 
+import ru.ksu.niimm.cll.mocassin.analyzer.ReferenceSearcher;
+import ru.ksu.niimm.cll.mocassin.analyzer.ReferenceStatementGenerator;
 import ru.ksu.niimm.cll.mocassin.analyzer.classifier.NavigationalRelationClassifier;
 import ru.ksu.niimm.cll.mocassin.analyzer.classifier.Prediction;
 import ru.ksu.niimm.cll.mocassin.analyzer.relation.ExemplifiesRelationAnalyzer;
@@ -17,12 +19,10 @@ import ru.ksu.niimm.cll.mocassin.arxiv.impl.Link;
 import ru.ksu.niimm.cll.mocassin.arxiv.impl.Link.PdfLinkPredicate;
 import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
-import ru.ksu.niimm.cll.mocassin.nlp.ReferenceSearcher;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateProcessingFacade;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.ParsedDocumentImpl;
-import ru.ksu.niimm.cll.mocassin.nlp.util.ReferenceTripleUtil;
 import ru.ksu.niimm.cll.mocassin.ontology.OntologyResourceFacade;
 import ru.ksu.niimm.cll.mocassin.parser.arxmliv.ArxmlivProducer;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentDAO;
@@ -47,15 +47,7 @@ public abstract class AbstractArXMLivAdapter implements ArXMLivAdapter {
 	@Inject
 	protected ReferenceSearcher referenceSearcher;
 	@Inject
-	protected ReferenceTripleUtil referenceTripleUtil;
-	@Inject
-	protected NavigationalRelationClassifier navigationalRelationClassifier;
-	@Inject
-	protected ProvesRelationAnalyzer provesRelationAnalyzer;
-	@Inject
-	protected HasConsequenceRelationAnalyzer hasConsequenceRelationAnalyzer;
-	@Inject
-	protected ExemplifiesRelationAnalyzer exemplifiesRelationAnalyzer;
+	protected ReferenceStatementGenerator referenceStatementGenerator;
 	@Inject
 	protected LatexDocumentHeaderPatcher latexDocumentHeaderPatcher;
 	@Inject
@@ -73,7 +65,7 @@ public abstract class AbstractArXMLivAdapter implements ArXMLivAdapter {
 	@Inject
 	protected PdfHighlighter pdfHighlighter;
 
-	public AbstractArXMLivAdapter() {
+	protected AbstractArXMLivAdapter() {
 	}
 
 	public int handle(Set<String> arxivIds) {
@@ -125,19 +117,6 @@ public abstract class AbstractArXMLivAdapter implements ArXMLivAdapter {
 		ParsedDocument document = getParsedDocument(metadata);
 		Graph<StructuralElement, Reference> graph = referenceSearcher
 				.retrieveStructuralGraph(document);
-		Collection<Reference> edges = graph.getEdges();
-		for (Reference reference : edges) {
-			if (reference.getPredictedRelation() == null) {
-				Prediction prediction = navigationalRelationClassifier.predict(
-						reference, graph);
-				if (prediction == null)
-					continue;
-				reference.setPredictedRelation(prediction.getRelation());
-			}
-		}
-		exemplifiesRelationAnalyzer.addRelations(graph, document);
-		provesRelationAnalyzer.addRelations(graph, document);
-		hasConsequenceRelationAnalyzer.addRelations(graph, document);
 		return graph;
 	}
 
