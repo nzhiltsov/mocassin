@@ -2,26 +2,16 @@ package ru.ksu.niimm.cll.mocassin.ui.dashboard.server;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import ru.ksu.niimm.cll.mocassin.analyzer.classifier.Prediction;
+import org.openrdf.model.Statement;
+
 import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.arxiv.ArxivDAOFacade;
-import ru.ksu.niimm.cll.mocassin.arxiv.impl.Link;
-import ru.ksu.niimm.cll.mocassin.arxiv.impl.Link.PdfLinkPredicate;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
-import ru.ksu.niimm.cll.mocassin.nlp.impl.ParsedDocumentImpl;
-import ru.ksu.niimm.cll.mocassin.ui.dashboard.client.ArxivArticleMetadata;
-import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
-import ru.ksu.niimm.cll.mocassin.virtuoso.RDFTriple;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 
 import edu.uci.ics.jung.graph.Graph;
@@ -69,7 +59,7 @@ public class ArxivAdapter extends AbstractArXMLivAdapter implements
 			// Step 7
 			generateHighlightedPdfs(arxivId, graph.getVertices());
 			// Step 8
-			Set<RDFTriple> triples = referenceTripleUtil.convert(graph);
+			List<Statement> triples = referenceStatementGenerator.convert(graph);
 			ontologyResourceFacade.insert(triples); // TODO: Arxiv article
 													// metadata must be inserted
 													// into a store beforehand
