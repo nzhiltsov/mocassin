@@ -1,4 +1,4 @@
-package ru.ksu.niimm.cll.mocassin.nlp;
+package ru.ksu.niimm.cll.mocassin.analyzer.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -7,6 +7,18 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import ru.ksu.niimm.cll.mocassin.analyzer.ReferenceSearcher;
+import ru.ksu.niimm.cll.mocassin.analyzer.ReferenceStatementGenerator;
+import ru.ksu.niimm.cll.mocassin.analyzer.classifier.NavigationalRelationClassifier;
+import ru.ksu.niimm.cll.mocassin.analyzer.classifier.Prediction;
+import ru.ksu.niimm.cll.mocassin.analyzer.relation.ExemplifiesRelationAnalyzer;
+import ru.ksu.niimm.cll.mocassin.analyzer.relation.HasConsequenceRelationAnalyzer;
+import ru.ksu.niimm.cll.mocassin.analyzer.relation.ProvesRelationAnalyzer;
+import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
+import ru.ksu.niimm.cll.mocassin.nlp.Reference;
+import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
+import ru.ksu.niimm.cll.mocassin.nlp.StructuralElementSearcher;
+import ru.ksu.niimm.cll.mocassin.nlp.Token;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateDocumentException;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateStorageException;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
@@ -27,7 +39,7 @@ import gate.Annotation;
 import gate.AnnotationSet;
 import gate.Document;
 
-class GateReferenceSearcher implements ReferenceSearcher {
+public class GateReferenceSearcher implements ReferenceSearcher {
 	private final String ARXMLIV_MARKUP_NAME;
 	private final String ARXMLIV_REF_ANNOTATION_NAME;
 	private final String ARXMLIV_MATH_ANNOTATION_NAME;
@@ -41,6 +53,15 @@ class GateReferenceSearcher implements ReferenceSearcher {
 	private AnnotationUtil annotationUtil;
 	@Inject
 	private GateDocumentDAO gateDocumentDAO;
+
+	@Inject
+	protected NavigationalRelationClassifier navigationalRelationClassifier;
+	@Inject
+	protected ProvesRelationAnalyzer provesRelationAnalyzer;
+	@Inject
+	protected HasConsequenceRelationAnalyzer hasConsequenceRelationAnalyzer;
+	@Inject
+	protected ExemplifiesRelationAnalyzer exemplifiesRelationAnalyzer;
 
 	private List<StructuralElement> structuralElements;
 
@@ -67,7 +88,8 @@ class GateReferenceSearcher implements ReferenceSearcher {
 	public Graph<StructuralElement, Reference> retrieveStructuralGraph(
 			ParsedDocument parsedDocument) {
 		this.parsedDocument = parsedDocument;
-		String arxivId = StringUtil.arxivid2gateid(parsedDocument.getCollectionId());
+		String arxivId = StringUtil.arxivid2gateid(parsedDocument
+				.getCollectionId());
 		try {
 			this.graph = new DirectedSparseMultigraph<StructuralElement, Reference>();
 
@@ -93,6 +115,8 @@ class GateReferenceSearcher implements ReferenceSearcher {
 
 			addNavigationalRelations(filteredRefAnnotations);
 
+			addRestrictedRelations();
+
 			return this.graph;
 		} catch (AccessGateDocumentException e) {
 			logger.log(Level.SEVERE,
@@ -108,6 +132,12 @@ class GateReferenceSearcher implements ReferenceSearcher {
 		} finally {
 			gateDocumentDAO.release(getDocument());
 		}
+	}
+
+	private void addRestrictedRelations() {
+		exemplifiesRelationAnalyzer.addRelations(graph, parsedDocument);
+		provesRelationAnalyzer.addRelations(graph, parsedDocument);
+		hasConsequenceRelationAnalyzer.addRelations(graph, parsedDocument);
 	}
 
 	/**
@@ -222,6 +252,11 @@ class GateReferenceSearcher implements ReferenceSearcher {
 					.build();
 			reference.setSentenceTokens(sentenceTokens);
 			addEdge(reference, from, to);
+			Prediction prediction = navigationalRelationClassifier.predict(
+					reference, graph);
+			if (prediction != null) {
+				reference.setPredictedRelation(prediction.getRelation());
+			}
 		}
 	}
 

@@ -4,10 +4,8 @@ import java.io.IOException;
 import java.util.Properties;
 
 import ru.ksu.niimm.cll.mocassin.nlp.util.AnnotationUtil;
-import ru.ksu.niimm.cll.mocassin.nlp.util.ReferenceTripleUtil;
 import ru.ksu.niimm.cll.mocassin.nlp.util.StopWordLoader;
 import ru.ksu.niimm.cll.mocassin.nlp.util.impl.AnnotationUtilImpl;
-import ru.ksu.niimm.cll.mocassin.nlp.util.impl.ReferenceTripleUtilImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.util.impl.StopWordLoaderImpl;
 
 import com.google.inject.AbstractModule;
@@ -28,12 +26,10 @@ public class NlpModule extends AbstractModule {
 		}
 		bind(StructuralElementSearcher.class).to(
 				GateStructuralElementSearcher.class);
-		bind(ReferenceSearcher.class).to(GateReferenceSearcher.class);
 		bind(AnnotationUtil.class).to(AnnotationUtilImpl.class);
 		bind(StopWordLoader.class).to(StopWordLoaderImpl.class);
 		bind(StructuralElementTypeRecognizer.class).to(
 				StructuralElementTypeRecognizerImpl.class);
-		bind(ReferenceTripleUtil.class).to(ReferenceTripleUtilImpl.class);
 		bind(CitationSearcher.class).to(GateCitationSearcher.class);
 		bind(BibliographyExtractor.class).to(FakeBibliographyExtractor.class);
 	}

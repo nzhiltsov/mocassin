@@ -1,42 +1,42 @@
-package ru.ksu.niimm.cll.mocassin.nlp.util.impl;
+package ru.ksu.niimm.cll.mocassin.analyzer.impl;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import static java.lang.String.format;
+import static ru.ksu.niimm.cll.mocassin.ontology.model.URIConstants.createIntegerTriple;
+import static ru.ksu.niimm.cll.mocassin.ontology.model.URIConstants.createLiteralTriple;
+import static ru.ksu.niimm.cll.mocassin.ontology.model.URIConstants.createRdfTypeTriple;
+import static ru.ksu.niimm.cll.mocassin.ontology.model.URIConstants.createTriple;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.openrdf.model.Statement;
+
+import ru.ksu.niimm.cll.mocassin.analyzer.ReferenceStatementGenerator;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
-import ru.ksu.niimm.cll.mocassin.nlp.util.ReferenceTripleUtil;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
-import ru.ksu.niimm.cll.mocassin.virtuoso.RDFTriple;
-import ru.ksu.niimm.cll.mocassin.virtuoso.impl.RDFTripleImpl;
 import edu.uci.ics.jung.graph.Graph;
 
-public class ReferenceTripleUtilImpl implements ReferenceTripleUtil {
-	private static final String LITERAL_PATTERN = "<%s> <%s> \"%s\" .";
-	private static final String TRIPLE_PATTERN = "<%s> <%s> <%s> .";
-	private static final String RDFS_TYPE = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
-	private static final String INTEGER_PATTERN = "<%s> <%s> \"%d\"^^<http://www.w3.org/2001/XMLSchema#integer> .";
+public class ReferenceStatementGeneratorImpl implements ReferenceStatementGenerator {
 	private static final String SALT_SCHEMA = "http://salt.semanticauthoring.org/ontologies/sdo";
 	private static final String SDO_PUBLICATION_TYPE = format("%s#Publication",
 			SALT_SCHEMA);
 
 	@Override
-	public Set<RDFTriple> convert(Graph<StructuralElement, Reference> graph) {
-		Set<RDFTriple> triples = new HashSet<RDFTriple>();
+	public List<Statement> convert(Graph<StructuralElement, Reference> graph) {
+		List<Statement> triples = new ArrayList<Statement>();
 		boolean addedPublication = false;
 		for (Reference ref : graph.getEdges()) {
 			if (!addedPublication) {
-				triples.add(createTriple(ref.getDocument().getUri(), RDFS_TYPE,
+				triples.add(createRdfTypeTriple(ref.getDocument().getUri(),
 						SDO_PUBLICATION_TYPE));
 				addedPublication = true;
 			}
-			
+
 			StructuralElement from = graph.getSource(ref);
 			StructuralElement to = graph.getDest(ref);
-			
+
 			triples.add(createTypeTriple(from));
 			triples.add(createTypeTriple(to));
 
@@ -64,29 +64,24 @@ public class ReferenceTripleUtilImpl implements ReferenceTripleUtil {
 		return triples;
 	}
 
-	private static RDFTriple createTriple(Object... args) {
-		return new RDFTripleImpl(String.format(TRIPLE_PATTERN, args));
-	}
-
-	private static RDFTriple createTypeTriple(StructuralElement element) {
-		return createTriple(element.getUri(), RDFS_TYPE,
+	private static Statement createTypeTriple(StructuralElement element) {
+		return createRdfTypeTriple(element.getUri(),
 				MocassinOntologyClasses.getUri(element.getPredictedClass()));
 	}
 
-	private static RDFTriple createTitleTriple(StructuralElement element) {
-		return new RDFTripleImpl(String.format(LITERAL_PATTERN,
-				element.getUri(), MocassinOntologyRelations.HAS_TITLE.getUri(),
-				element.getTitle()));
+	private static Statement createTitleTriple(StructuralElement element) {
+		return createLiteralTriple(element.getUri(),
+				MocassinOntologyRelations.HAS_TITLE.getUri(),
+				element.getTitle());
 	}
 
-	private static RDFTriple createPageNumberTriple(StructuralElement element) {
-		return new RDFTripleImpl(String.format(INTEGER_PATTERN,
-				element.getUri(),
+	private static Statement createPageNumberTriple(StructuralElement element) {
+		return createIntegerTriple(element.getUri(),
 				MocassinOntologyRelations.HAS_START_PAGE_NUMBER.getUri(),
-				element.getStartPageNumber()));
+				element.getStartPageNumber());
 	}
 
-	private static RDFTriple createValueTriple(StructuralElement element) {
+	private static Statement createValueTriple(StructuralElement element) {
 		List<String> contents = element.getContents();
 		StringBuffer sb = new StringBuffer();
 		for (String str : contents) {
@@ -94,8 +89,7 @@ public class ReferenceTripleUtilImpl implements ReferenceTripleUtil {
 			sb.append(" ");
 		}
 		String textContents = sb.toString().replace("\n", "");
-		return new RDFTripleImpl(String.format(LITERAL_PATTERN,
-				element.getUri(), MocassinOntologyRelations.HAS_TEXT.getUri(),
-				textContents));
+		return createLiteralTriple(element.getUri(),
+				MocassinOntologyRelations.HAS_TEXT.getUri(), textContents);
 	}
 }

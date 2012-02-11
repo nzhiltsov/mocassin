@@ -7,6 +7,8 @@ import java.util.Properties;
 
 import ru.ksu.niimm.cll.mocassin.analyzer.classifier.NavRelClassifierImpl;
 import ru.ksu.niimm.cll.mocassin.analyzer.classifier.NavigationalRelationClassifier;
+import ru.ksu.niimm.cll.mocassin.analyzer.impl.GateReferenceSearcher;
+import ru.ksu.niimm.cll.mocassin.analyzer.impl.ReferenceStatementGeneratorImpl;
 import ru.ksu.niimm.cll.mocassin.analyzer.importance.ImportantNodeService;
 import ru.ksu.niimm.cll.mocassin.analyzer.importance.impl.ImportantNodeServiceImpl;
 import ru.ksu.niimm.cll.mocassin.analyzer.location.ReferenceElementLocationAnalyzer;
@@ -67,7 +69,9 @@ public class AnalyzerModule extends AbstractModule {
 
 		bind(NavigationalRelationClassifier.class).to(
 				NavRelClassifierImpl.class);
-
+		bind(ReferenceSearcher.class).to(GateReferenceSearcher.class);
+		bind(ReferenceStatementGenerator.class).to(ReferenceStatementGeneratorImpl.class);
+		
 		bindClassifier();
 
 		bindTrainingSetHeader();

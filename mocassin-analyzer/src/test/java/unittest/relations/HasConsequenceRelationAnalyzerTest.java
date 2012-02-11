@@ -10,12 +10,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ru.ksu.niimm.cll.mocassin.analyzer.AnalyzerModule;
+import ru.ksu.niimm.cll.mocassin.analyzer.ReferenceSearcher;
 import ru.ksu.niimm.cll.mocassin.analyzer.relation.HasConsequenceRelationAnalyzer;
 import ru.ksu.niimm.cll.mocassin.fulltext.FullTextModule;
 import ru.ksu.niimm.cll.mocassin.nlp.NlpModule;
 import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
-import ru.ksu.niimm.cll.mocassin.nlp.ReferenceSearcher;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateModule;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.ParsedDocumentImpl;
