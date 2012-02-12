@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 
 import org.openrdf.model.Literal;
 import org.openrdf.model.Statement;
+import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.MalformedQueryException;
@@ -250,7 +251,8 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 		try {
 			RepositoryConnection connection = getRepository().getConnection();
 			try {
-				connection.add(statements);
+				URI context = getRepository().getValueFactory().createURI(getSearchGraph().getIri());
+				connection.add(statements, context);
 			} finally {
 				connection.close();
 			}
