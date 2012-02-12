@@ -260,8 +260,7 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 		} catch (Exception e) {
 			logger.log(
 					Level.SEVERE,
-					String.format("Failed to insert triples due to %s",
-							e.getCause()));
+					String.format("Failed to insert triples due to %s", e));
 			return false;
 		}
 	}
