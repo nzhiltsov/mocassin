@@ -44,7 +44,7 @@ import com.hp.hpl.jena.rdf.model.Model;
 public class QueryManagerFacadeImpl implements QueryManagerFacade {
 	private static final String RULES_SET_ENTRY = "define input:inference \"%s\"\n %s";
 	private static final String RDF_PREFIX_STRING = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>";
-	private static final String SELECT_STATEMENT = "SELECT DISTINCT %s WHERE\n{\n";
+	private static final String SELECT_STATEMENT = "SELECT DISTINCT %s FROM <%s> WHERE\n{\n";
 	private static final String RETRIEVED_CONCEPT_KEY = "?1";
 
 	private final RepositoryProvider<Repository> repositoryProvider;
@@ -131,7 +131,7 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 	 */
 	public String generateQuery(QueryStatement queryStatement) {
 		StringBuffer sb = new StringBuffer();
-		sb.append(String.format(SELECT_STATEMENT, RETRIEVED_CONCEPT_KEY));
+		sb.append(String.format(SELECT_STATEMENT, RETRIEVED_CONCEPT_KEY, getSearchGraph().getIri()));
 		List<OntologyTriple> retrievedTriples = queryStatement
 				.getRetrievedTriples();
 		for (OntologyTriple triple : retrievedTriples) {

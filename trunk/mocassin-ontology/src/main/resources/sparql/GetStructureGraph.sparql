@@ -1,4 +1,4 @@
-SELECT DISTINCT ?snumpage ?stitle ?sclass ?s ?p ?o ?oclass ?otitle ?onumpage {
+SELECT DISTINCT ?snumpage ?stitle ?sclass ?s ?p ?o ?oclass ?otitle ?onumpage FROM <%s> {
 ?d <http://cll.niimm.ksu.ru/ontologies/mocassin#hasSegment> ?s . 
 ?d <http://cll.niimm.ksu.ru/ontologies/mocassin#hasSegment> ?o .
 ?s ?p ?o .

@@ -1,4 +1,4 @@
-SELECT * {
+SELECT * FROM <%s> {
 <%s> <http://www.aktors.org/ontology/portal#has-author> ?2 .
 ?2 <http://www.aktors.org/ontology/portal#full-name> ?3 .
 OPTIONAL { ?2 <http://www.aktors.org/ontology/portal#has-affiliation> ?4 .
