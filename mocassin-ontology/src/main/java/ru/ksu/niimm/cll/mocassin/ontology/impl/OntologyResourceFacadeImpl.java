@@ -2,6 +2,7 @@ package ru.ksu.niimm.cll.mocassin.ontology.impl;
 
 import static ru.ksu.niimm.cll.mocassin.util.StringUtil.extractDocumentURIFromSegmentURI;
 import static ru.ksu.niimm.cll.mocassin.util.StringUtil.extractMathnetKeyFromURI;
+import static java.lang.String.format;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,7 +105,7 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 		try {
 			isPublication = isPublication(resourceUri);
 		} catch (Exception e) {
-			logger.log(Level.SEVERE, String.format(
+			logger.log(Level.SEVERE, format(
 					"Failed to check if the document='%s' is a publication",
 					resourceUri, e.getCause()));
 			return null;
@@ -113,7 +114,7 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 			try {
 				return loadPublication(resourceUri);
 			} catch (Exception e) {
-				logger.log(Level.SEVERE, String.format(
+				logger.log(Level.SEVERE, format(
 						"Failed to load the document='%s' due to %s",
 						resourceUri, e.getCause()));
 				return null;
@@ -160,7 +161,7 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 			containedPublication.setCurrentPageNumber(numPage);
 			return containedPublication;
 		} catch (Exception e) {
-			logger.log(Level.SEVERE, String.format(
+			logger.log(Level.SEVERE, format(
 					"Failed to load info of the segment='%s' due to %s",
 					resourceUri, e.getCause()));
 			return null;
@@ -219,7 +220,7 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 		} catch (Exception e) {
 			logger.log(
 					Level.SEVERE,
-					String.format(
+					format(
 							"Failed to retrieve the structural graph of the document='%s' due to %s",
 							resource.getUri(), e.getCause()));
 			return null;
@@ -237,7 +238,7 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 			} catch (Exception e) {
 				logger.log(
 						Level.SEVERE,
-						String.format(
+						format(
 								"Couldn't load metadata of the document='%s' due to %s",
 								uri, e.getCause()));
 			}
@@ -260,7 +261,7 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 		} catch (Exception e) {
 			logger.log(
 					Level.SEVERE,
-					String.format("Failed to insert triples due to %s", e));
+					format("Failed to insert triples due to %s", e));
 			return false;
 		}
 	}
@@ -306,7 +307,7 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 		} catch (Exception e) {
 			logger.log(
 					Level.SEVERE,
-					String.format(
+					format(
 							"The publications list will be probably incomplete due to %s",
 							e.getCause()));
 		}
@@ -387,7 +388,7 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 			BindingSet titleBindingSet = result.next();
 			Value value = titleBindingSet.getValue(RETRIEVED_TITLE_ELEMENT_KEY);
 			if (result.hasNext()) {
-				logger.log(Level.INFO, String.format(
+				logger.log(Level.INFO, format(
 						"The document='%s' has more than one title.",
 						documentUri));
 			}
@@ -461,42 +462,43 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 
 	private String generateTypeQueryString(String uri) {
 		String query = getSparqlQueryLoader().loadQueryByName("GetTypes");
-		return String.format(query, uri);
+		return format(query,getSearchGraph().getIri(), uri);
 	}
 
 	private String generateTitleQuery(String documentUri) {
 		String query = getSparqlQueryLoader().loadQueryByName("GetTitle");
-		return String.format(query, documentUri);
+		return format(query,getSearchGraph().getIri(), documentUri);
 	}
 
 	private String generateArxivIdQuery(String documentUri) {
 		String query = getSparqlQueryLoader().loadQueryByName("GetArxivId");
-		return String.format(query, documentUri);
+		return format(query, getSearchGraph().getIri(), documentUri);
 	}
 
 	private String generateSegmentInfoQuery(String segmentUri) {
 		String query = getSparqlQueryLoader().loadQueryByName("GetSegmentInfo");
-		return String.format(query, segmentUri, segmentUri);
+		return format(query,getSearchGraph().getIri(), segmentUri, segmentUri);
 	}
 
 	private String generateAuthorQuery(String documentUri) {
 		String query = getSparqlQueryLoader().loadQueryByName("GetAuthors");
-		return String.format(query, documentUri);
+		return format(query,getSearchGraph().getIri(), documentUri);
 	}
 
 	private String generateLinkQuery(String documentUri) {
 		String query = getSparqlQueryLoader().loadQueryByName("GetLinks");
-		return String.format(query, documentUri);
+		return format(query,getSearchGraph().getIri(), documentUri);
 	}
 
 	private String generatePubQuery() {
-		return getSparqlQueryLoader().loadQueryByName("GetPublications");
+		String query = getSparqlQueryLoader().loadQueryByName("GetPublications");
+		return format(query, getSearchGraph().getIri());
 	}
 
 	private String generateRetrieveStructureGraphQuery(String documentUri) {
 		String query = getSparqlQueryLoader().loadQueryByName(
 				"GetStructureGraph");
-		return String.format(query, documentUri);
+		return format(query,getSearchGraph().getIri(),documentUri);
 	}
 
 	private RDFGraph getSearchGraph() {

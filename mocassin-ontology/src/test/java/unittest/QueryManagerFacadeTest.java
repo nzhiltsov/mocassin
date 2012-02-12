@@ -50,9 +50,15 @@ public class QueryManagerFacadeTest {
 	public void init() throws Exception {
 		Repository repository = repositoryProvider.get();
 		RepositoryConnection connection = repository.getConnection();
+		final String context = "http://cll.niimm.ksu.ru/mocassinfortest";
 		try {
-			connection.add(getClass().getResourceAsStream("/testmetadata.rdf"),
-					"http://cll.niimm.ksu.ru/mocassinfortest", RDFFormat.N3);
+			
+			connection.add(
+					getClass().getResourceAsStream("/testmetadata.rdf"),
+					context,
+					RDFFormat.N3,
+					repository.getValueFactory().createURI(
+							context));
 		} finally {
 			connection.close();
 		}
