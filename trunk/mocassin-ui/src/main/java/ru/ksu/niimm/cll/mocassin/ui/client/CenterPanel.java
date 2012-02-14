@@ -6,6 +6,7 @@ import java.util.Stack;
 
 import ru.ksu.niimm.cll.mocassin.ui.client.widget.event.PageLinkEvent;
 import ru.ksu.niimm.cll.mocassin.ui.client.widget.event.PageLinkEventHandler;
+import ru.ksu.niimm.cll.mocassin.ui.common.client.AsyncCallbackWrapper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
