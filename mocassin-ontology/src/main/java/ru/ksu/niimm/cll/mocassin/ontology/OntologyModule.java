@@ -15,9 +15,11 @@ import ru.ksu.niimm.cll.mocassin.ontology.provider.RepositoryProvider;
 import ru.ksu.niimm.cll.mocassin.ontology.provider.impl.InMemoryRepositoryProvider;
 import ru.ksu.niimm.cll.mocassin.ontology.provider.impl.OntologyPelletProvider;
 import ru.ksu.niimm.cll.mocassin.ontology.provider.impl.VirtuosoRepositoryProvider;
+import ru.ksu.niimm.cll.mocassin.util.inject.log.Slf4jTypeListener;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
+import com.google.inject.matcher.Matchers;
 import com.google.inject.name.Names;
 import com.google.inject.throwingproviders.ThrowingProviderBinder;
 import com.hp.hpl.jena.ontology.OntModel;
@@ -43,6 +45,7 @@ public class OntologyModule extends AbstractModule {
 		ThrowingProviderBinder.create(binder())
 				.bind(OntologyProvider.class, OntModel.class)
 				.to(OntologyPelletProvider.class).in(Singleton.class);
+		bindListener(Matchers.any(), new Slf4jTypeListener());
 		configureStore();
 	}
 

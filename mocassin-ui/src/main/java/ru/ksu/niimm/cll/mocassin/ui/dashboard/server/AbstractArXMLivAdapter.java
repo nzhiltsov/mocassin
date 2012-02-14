@@ -1,19 +1,15 @@
 package ru.ksu.niimm.cll.mocassin.ui.dashboard.server;
 
+import static java.lang.String.*;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import static java.lang.String.format;
+
+import org.slf4j.Logger;
 
 import ru.ksu.niimm.cll.mocassin.analyzer.ReferenceSearcher;
 import ru.ksu.niimm.cll.mocassin.analyzer.ReferenceStatementGenerator;
-import ru.ksu.niimm.cll.mocassin.analyzer.classifier.NavigationalRelationClassifier;
-import ru.ksu.niimm.cll.mocassin.analyzer.classifier.Prediction;
-import ru.ksu.niimm.cll.mocassin.analyzer.relation.ExemplifiesRelationAnalyzer;
-import ru.ksu.niimm.cll.mocassin.analyzer.relation.HasConsequenceRelationAnalyzer;
-import ru.ksu.niimm.cll.mocassin.analyzer.relation.ProvesRelationAnalyzer;
 import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.arxiv.impl.Link;
 import ru.ksu.niimm.cll.mocassin.arxiv.impl.Link.PdfLinkPredicate;
@@ -32,6 +28,7 @@ import ru.ksu.niimm.cll.mocassin.parser.pdf.PdfHighlighter;
 import ru.ksu.niimm.cll.mocassin.parser.pdf.PdflatexWrapper;
 import ru.ksu.niimm.cll.mocassin.ui.dashboard.client.ArxivArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
+import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
@@ -40,7 +37,7 @@ import com.google.inject.Inject;
 import edu.uci.ics.jung.graph.Graph;
 
 public abstract class AbstractArXMLivAdapter implements ArXMLivAdapter {
-	@Inject
+	@InjectLogger
 	protected Logger logger;
 	@Inject
 	protected OntologyResourceFacade ontologyResourceFacade;
@@ -75,11 +72,10 @@ public abstract class AbstractArXMLivAdapter implements ArXMLivAdapter {
 				long start = System.currentTimeMillis();
 				handle(arxivId);
 				long stop = System.currentTimeMillis();
-				logger.log(
-						Level.INFO,
-						String.format(
-								"The document='%s' has been processed in %.2f second(s)",
-								arxivId, ((float) (stop - start)) / 1000));
+				logger.info(
+						"The document= {} has been processed in {} second(s)",
+						arxivId,
+						format("%.2f", ((float) (stop - start)) / 1000));
 				numberOfSuccesses++;
 			} catch (Exception e) {// do nothing
 			}
@@ -97,17 +93,14 @@ public abstract class AbstractArXMLivAdapter implements ArXMLivAdapter {
 					pdfHighlighter.generateHighlightedPdf(arxivId,
 							element.getId(), latexStartLine, latexEndLine);
 				} catch (Exception e) {
-					logger.log(
-							Level.SEVERE,
-							String.format(
-									"Failed to generate the highlighted PDF for a segment with id='%d' in the document='%s'",
-									element.getId(), arxivId));
+					logger.error(
+							"Failed to generate the highlighted PDF for a segment with id = {}",
+							format("%s/%d", arxivId, element.getId()), e);
 				}
 			} else {
-				logger.log(
-						Level.WARNING,
-						format("Skipped generating the highlighted PDF for a segment='%s' in the document='%s'. Perhaps, the segment location is incorrect.",
-								element.getId(), arxivId));
+				logger.warn(
+						"Skipped generating the highlighted PDF for a segment with id = {}. Perhaps, the segment location is incorrect.",
+						format("%s/%d", arxivId, element.getId()));
 			}
 		}
 	}

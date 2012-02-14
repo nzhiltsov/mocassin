@@ -3,7 +3,6 @@ package ru.ksu.niimm.cll.mocassin.ui.dashboard.server;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 import org.openrdf.model.Statement;
 
@@ -61,12 +60,7 @@ public class MathnetAdapter extends AbstractArXMLivAdapter implements
 			}
 
 		} catch (Exception e) {
-			/*
-			 * String message = String.format(
-			 * "failed to handle document with id='%s' due to: %s", mathnetKey,
-			 * e.getMessage());
-			 */
-			logger.log(Level.SEVERE, e.toString());
+			logger.error("Failed to handle a document with a key = {}", mathnetKey, e);
 			throw new RuntimeException(e);
 		}
 

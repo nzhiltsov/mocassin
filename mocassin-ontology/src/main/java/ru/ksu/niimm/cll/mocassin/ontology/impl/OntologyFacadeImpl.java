@@ -5,14 +5,15 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
 
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.ontology.OntologyConcept;
 import ru.ksu.niimm.cll.mocassin.ontology.OntologyFacade;
 import ru.ksu.niimm.cll.mocassin.ontology.OntologyRelation;
 import ru.ksu.niimm.cll.mocassin.ontology.provider.OntologyProvider;
+import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -23,7 +24,9 @@ import com.hp.hpl.jena.ontology.OntResource;
 import com.hp.hpl.jena.util.iterator.ExtendedIterator;
 
 public class OntologyFacadeImpl implements OntologyFacade {
-	private final Logger logger;
+	
+	@InjectLogger
+	private Logger logger;
 
 	private final OntologyProvider<OntModel> ontologyProvider;
 
@@ -34,11 +37,10 @@ public class OntologyFacadeImpl implements OntologyFacade {
 	@Inject
 	public OntologyFacadeImpl(OntologyProvider<OntModel> ontologyProvider,
 			@Named("ontology.uri") String ontologyUri,
-			@Named("ontology.label.locale") String locale, Logger logger) {
+			@Named("ontology.label.locale") String locale) {
 		this.ontologyProvider = ontologyProvider;
 		this.ontologyUri = ontologyUri;
 		this.ontologyLabelLocale = locale;
-		this.logger = logger;
 	}
 
 	/*
@@ -174,10 +176,7 @@ public class OntologyFacadeImpl implements OntologyFacade {
 		try {
 			return this.ontologyProvider.get();
 		} catch (IOException e) {
-			logger.log(
-					Level.SEVERE,
-					"Couldn't get the ontology instance due to: "
-							+ e.getCause());
+			logger.error("Couldn't get the ontology instance.", e);
 			throw new RuntimeException(e);
 		}
 	}

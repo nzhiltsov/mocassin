@@ -33,6 +33,19 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 		</dependency>
+		<!-- Others  -->
+		<dependency>
+				<groupId>com.google.inject</groupId>
+				<artifactId>guice</artifactId>
+			</dependency>
+			<dependency>
+				<groupId>com.google.inject.extensions</groupId>
+				<artifactId>guice-assistedinject</artifactId>
+			</dependency>
+			<dependency>
+				<groupId>com.google.inject.extensions</groupId>
+				<artifactId>guice-throwingproviders</artifactId>
+			</dependency>
 		<dependency>
 			<groupId>net.sourceforge.expectj</groupId>
 			<artifactId>expectj</artifactId>
@@ -54,6 +67,14 @@
 			<groupId>net.sourceforge.javacsv</groupId>
 			<artifactId>javacsv</artifactId>
 			<version>2.0</version>
+		</dependency>
+			<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
 		</dependency>
 	</dependencies>
 </project>

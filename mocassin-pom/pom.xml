@@ -73,23 +73,17 @@
 			<dependency>
 				<groupId>com.google.inject</groupId>
 				<artifactId>guice</artifactId>
-				<version>3.0</version>
-				<type>jar</type>
-				<scope>compile</scope>
+				<version>${guice.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.google.inject.extensions</groupId>
 				<artifactId>guice-assistedinject</artifactId>
-				<version>3.0</version>
-				<type>jar</type>
-				<scope>compile</scope>
+				<version>${guice.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.google.inject.extensions</groupId>
 				<artifactId>guice-throwingproviders</artifactId>
-				<version>3.0</version>
-				<type>jar</type>
-				<scope>compile</scope>
+				<version>${guice.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.commons</groupId>
@@ -147,7 +141,16 @@
 				<type>jar</type>
 				<scope>compile</scope>
 			</dependency>
-
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-log4j12</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>com.google.guava</groupId>
 				<artifactId>guava</artifactId>
@@ -183,5 +186,7 @@
 	</distributionManagement>
 	<properties>
 		<guava.version>r08</guava.version>
+		<slf4j.version>1.6.4</slf4j.version>
+		<guice.version>3.0</guice.version>
 	</properties>
 </project>

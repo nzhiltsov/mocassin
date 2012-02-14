@@ -2,12 +2,12 @@ package ru.ksu.niimm.cll.mocassin.ontology.provider.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.mindswap.pellet.jena.PelletReasonerFactory;
+import org.slf4j.Logger;
 
 import ru.ksu.niimm.cll.mocassin.ontology.provider.OntologyProvider;
+import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -19,7 +19,7 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 public class OntologyPelletProvider implements OntologyProvider<OntModel> {
 	private static final String ONTOLOGY_LOADING_MODE_PARAMETER_NAME = "ontology.loading.mode";
 
-	@Inject
+	@InjectLogger
 	private Logger logger;
 
 	private final String ontologyLoadingMode;
@@ -74,8 +74,7 @@ public class OntologyPelletProvider implements OntologyProvider<OntModel> {
 			model.read(stream, null);
 			stream.close();
 		} catch (IOException e) {
-			logger.log(Level.SEVERE, "couldn't model as local file with name:"
-					+ this.ontologyLocalFilename);
+			logger.error("Couldn't model as local file with name: {}", this.ontologyLocalFilename, e);
 		}
 		return model;
 	}
