@@ -4,8 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -14,10 +12,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
 
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
+import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
 
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @SuppressWarnings("serial")
@@ -25,16 +24,16 @@ import com.google.inject.Singleton;
 public class PdfDownloadServlet extends HttpServlet {
 	private static final String ARXIVID_ENTRY = "/arxivid/";
 	private static int ARXIVID_ENTRY_LENGTH = ARXIVID_ENTRY.length();
-	@Inject
+	@InjectLogger
 	private Logger logger;
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException {
 		String requestURI = req.getRequestURI();
-		logger.log(Level.INFO, "request URI: " + requestURI);
-		String parameter = requestURI.substring(
-				requestURI.lastIndexOf(ARXIVID_ENTRY) + ARXIVID_ENTRY_LENGTH);
+		logger.info("The requested URI: {}", requestURI);
+		String parameter = requestURI.substring(requestURI
+				.lastIndexOf(ARXIVID_ENTRY) + ARXIVID_ENTRY_LENGTH);
 		int signIndex = parameter
 				.indexOf(StringUtil.ARXIVID_SEGMENTID_DELIMITER);
 		String arxivId = signIndex != -1 ? parameter.substring(0, signIndex)
@@ -43,8 +42,7 @@ public class PdfDownloadServlet extends HttpServlet {
 				: null;
 
 		if (arxivId == null) {
-			logger.log(Level.SEVERE,
-					"obtained a request with an empty arxiv id parameter");
+			logger.error("The request with an empty arxiv id parameter");
 			return;
 		}
 		String filePath = segmentId == null ? "/opt/mocassin/aux-pdf/"
@@ -66,14 +64,10 @@ public class PdfDownloadServlet extends HttpServlet {
 			outputStream.write(byteArrayOutputStream.toByteArray());
 			outputStream.close();
 		} catch (FileNotFoundException e) {
-			logger.log(Level.SEVERE, String.format(
-					"error while downloading: PDF file='%s' not found",
-					filePath));
+			logger.error("Error while downloading: PDF file= '{}' not found",
+					filePath);
 		} catch (IOException e) {
-			logger.log(
-					Level.SEVERE,
-					String.format("error while downloading due to: %s",
-							e.getMessage()));
+			logger.error("Error while downloading the PDF file", e);
 		}
 	}
 }

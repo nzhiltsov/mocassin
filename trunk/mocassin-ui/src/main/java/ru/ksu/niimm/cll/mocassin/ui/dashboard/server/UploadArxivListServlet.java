@@ -2,8 +2,6 @@ package ru.ksu.niimm.cll.mocassin.ui.dashboard.server;
 
 import java.io.IOException;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -14,8 +12,10 @@ import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.slf4j.Logger;
 
 import ru.ksu.niimm.cll.mocassin.util.IOUtil;
+import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -23,7 +23,7 @@ import com.google.inject.Singleton;
 @SuppressWarnings("serial")
 @Singleton
 public class UploadArxivListServlet extends HttpServlet {
-	@Inject
+	@InjectLogger
 	private Logger logger;
 	@Inject
 	private ArXMLivAdapter arXMLivAdapter;
@@ -43,8 +43,7 @@ public class UploadArxivListServlet extends HttpServlet {
 				resp.getWriter().printf("{ \"numberOfSuccesses\": %d}", numberOfSuccesses);
 			}
 		} catch (FileUploadException e) {
-			logger.log(Level.SEVERE, "failed to upload an arXiv list due to "
-					+ e.getMessage());
+			logger.error("Failed to upload a list of articles ids for processing", e);
 		}
 
 	}
