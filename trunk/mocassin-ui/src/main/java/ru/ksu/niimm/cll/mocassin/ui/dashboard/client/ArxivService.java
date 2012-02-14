@@ -1,6 +1,7 @@
 package ru.ksu.niimm.cll.mocassin.ui.dashboard.client;
 
-import java.util.List;
+import ru.ksu.niimm.cll.mocassin.ui.common.client.PagingLoadConfig;
+import ru.ksu.niimm.cll.mocassin.ui.common.client.PagingLoadInfo;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
@@ -9,5 +10,5 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 public interface ArxivService extends RemoteService {
 	public void handle(String arxivId);
 	
-	public List<ArxivArticleMetadata> loadArticles();
+	public PagingLoadInfo<ArxivArticleMetadata> loadArticles(PagingLoadConfig pagingLoadConfig);
 }

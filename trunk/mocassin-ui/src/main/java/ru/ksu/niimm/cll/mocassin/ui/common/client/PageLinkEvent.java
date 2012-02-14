@@ -1,6 +1,5 @@
-package ru.ksu.niimm.cll.mocassin.ui.client.widget.event;
+package ru.ksu.niimm.cll.mocassin.ui.common.client;
 
-import ru.ksu.niimm.cll.mocassin.ui.client.PagingLoadConfig;
 
 public class PageLinkEvent {
 	private PagingLoadConfig pagingLoadConfig;

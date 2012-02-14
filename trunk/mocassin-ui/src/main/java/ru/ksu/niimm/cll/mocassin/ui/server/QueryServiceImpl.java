@@ -23,10 +23,10 @@ import ru.ksu.niimm.cll.mocassin.ui.client.OntLiteral;
 import ru.ksu.niimm.cll.mocassin.ui.client.OntQueryStatement;
 import ru.ksu.niimm.cll.mocassin.ui.client.OntRelation;
 import ru.ksu.niimm.cll.mocassin.ui.client.OntTriple;
-import ru.ksu.niimm.cll.mocassin.ui.client.PagingLoadConfig;
-import ru.ksu.niimm.cll.mocassin.ui.client.PagingLoadInfo;
 import ru.ksu.niimm.cll.mocassin.ui.client.QueryService;
 import ru.ksu.niimm.cll.mocassin.ui.client.ResultDescription;
+import ru.ksu.niimm.cll.mocassin.ui.common.client.PagingLoadConfig;
+import ru.ksu.niimm.cll.mocassin.ui.common.client.PagingLoadInfo;
 import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
 
 import com.google.common.collect.Iterables;

@@ -1,4 +1,4 @@
-package ru.ksu.niimm.cll.mocassin.ui.client;
+package ru.ksu.niimm.cll.mocassin.ui.common.client;
 
 import java.io.Serializable;
 import java.util.Collection;

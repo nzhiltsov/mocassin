@@ -1,8 +1,14 @@
 package ru.ksu.niimm.cll.mocassin.ui.dashboard.client;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ru.ksu.niimm.cll.mocassin.ui.common.client.AsyncCallbackWrapper;
+import ru.ksu.niimm.cll.mocassin.ui.common.client.PageLinkEvent;
+import ru.ksu.niimm.cll.mocassin.ui.common.client.PageLinkEventHandler;
+import ru.ksu.niimm.cll.mocassin.ui.common.client.PaginationPanel;
+import ru.ksu.niimm.cll.mocassin.ui.common.client.PagingLoadConfig;
+import ru.ksu.niimm.cll.mocassin.ui.common.client.PagingLoadInfo;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -15,7 +21,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -27,8 +32,13 @@ import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
-public class DashboardTabPanel extends Composite {
-
+public class DashboardTabPanel extends Composite implements
+		PageLinkEventHandler {
+	private static final PagingLoadConfig INITIAL_PAGING_LOAD_CONFIG = new PagingLoadConfig();
+	{
+		INITIAL_PAGING_LOAD_CONFIG.setLimit(10);
+		INITIAL_PAGING_LOAD_CONFIG.setOffset(0);
+	}
 	private static DashboardTabPanelUiBinder uiBinder = GWT
 			.create(DashboardTabPanelUiBinder.class);
 
@@ -54,6 +64,8 @@ public class DashboardTabPanel extends Composite {
 	DialogBox dialogBox;
 	@UiField
 	FlexTable documentTable;
+	@UiField
+	PaginationPanel paginationPanel;
 
 	@UiField
 	FormPanel multipleUploadForm;
@@ -84,32 +96,45 @@ public class DashboardTabPanel extends Composite {
 					}
 				});
 
-		final AsyncCallbackWrapper<List<ArxivArticleMetadata>> callback = new AsyncCallbackWrapper<List<ArxivArticleMetadata>>() {
-			@Override
-			public void handleFailure(Throwable caught) {
-				Window.alert("loading papers has failed:" + caught.getMessage());
-			}
-
-			@Override
-			public void handleSuccess(List<ArxivArticleMetadata> result) {
-				for (int i = 0; i < result.size(); i++) {
-					documentTable.setText(i + 1, 0, result.get(i).getKey());
-					documentTable.setText(i + 1, 1, result.get(i).getTitle());
-				}
-
-			}
-		};
 		tabPanel.addSelectionHandler(new SelectionHandler<Integer>() {
 
 			@Override
 			public void onSelection(SelectionEvent<Integer> event) {
 				Integer selectedItem = event.getSelectedItem();
 				if (selectedItem == 1) {
-					callback.beforeCall();
-					arxivService.loadArticles(callback);
+					loadArticles(INITIAL_PAGING_LOAD_CONFIG);
 				}
 			}
+
 		});
+		paginationPanel.addPageLinkEventHandler(this);
+	}
+
+	private void loadArticles(PagingLoadConfig pagingLoadConfig) {
+		final AsyncCallbackWrapper<PagingLoadInfo<ArxivArticleMetadata>> callback = new AsyncCallbackWrapper<PagingLoadInfo<ArxivArticleMetadata>>() {
+			@Override
+			public void handleFailure(Throwable caught) {
+				Window.alert("Loading papers has failed:" + caught.getMessage());
+			}
+
+			@Override
+			public void handleSuccess(PagingLoadInfo<ArxivArticleMetadata> result) {
+				documentTable.clear();
+				List<ArxivArticleMetadata> data = new ArrayList<ArxivArticleMetadata>(result.getData());
+				for (int i = 0; i < data.size(); i++) {
+					documentTable.setText(i + 1, 0, data.get(i).getKey());
+					documentTable.setText(i + 1, 1, data.get(i).getTitle());
+				}
+				paginationPanel.refresh(result);
+			}
+		};
+		callback.beforeCall();
+		arxivService.loadArticles(pagingLoadConfig, callback);
+	}
+
+	@Override
+	public void handlePageLinkEvent(PageLinkEvent event) {
+		loadArticles(event.getPagingLoadConfig());
 	}
 
 	@UiHandler({ "uploadButton", "closeDialogButton", "multipleUploadButton" })
@@ -120,6 +145,7 @@ public class DashboardTabPanel extends Composite {
 			public void handleSuccess(Void result) {
 				showSuccess(1);
 			}
+
 			@Override
 			public void handleFailure(Throwable caught) {
 				dialogBox.setText("The upload has failed.");
