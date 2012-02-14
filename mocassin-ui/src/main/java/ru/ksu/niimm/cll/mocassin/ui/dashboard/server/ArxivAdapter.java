@@ -3,7 +3,6 @@ package ru.ksu.niimm.cll.mocassin.ui.dashboard.server;
 import java.io.File;
 import java.io.InputStream;
 import java.util.List;
-import java.util.logging.Level;
 
 import org.openrdf.model.Statement;
 
@@ -65,11 +64,8 @@ public class ArxivAdapter extends AbstractArXMLivAdapter implements
 													// into a store beforehand
 
 		} catch (Exception e) {
-			String message = String.format(
-					"failed to handle document with id='%s' due to: %s",
-					arxivId, e.getMessage());
-			logger.log(Level.SEVERE, message);
-			throw new RuntimeException(message);
+			logger.error("Failed to handle a document with a key = {}", arxivId, e);
+			throw new RuntimeException(e);
 		}
 	}
 
