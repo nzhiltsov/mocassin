@@ -1,10 +1,8 @@
-package ru.ksu.niimm.cll.mocassin.ui.client;
+package ru.ksu.niimm.cll.mocassin.ui.common.client;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import ru.ksu.niimm.cll.mocassin.ui.client.widget.event.PageLinkEvent;
-import ru.ksu.niimm.cll.mocassin.ui.client.widget.event.PageLinkEventHandler;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;

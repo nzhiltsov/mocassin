@@ -1,5 +1,6 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-	xmlns:g='urn:import:com.google.gwt.user.client.ui' xmlns:ose='urn:import:ru.ksu.niimm.cll.mocassin.ui.client'>
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' xmlns:ose='urn:import:ru.ksu.niimm.cll.mocassin.ui.client'
+	xmlns:com='urn:import:ru.ksu.niimm.cll.mocassin.ui.common.client'>
 	<ui:style>
 		.main-panel {
 			width: 100%;
@@ -14,7 +15,7 @@
 	<g:VerticalPanel styleName='{style.main-panel}'>
 		<ose:SearchResultsCountPanel ui:field="searchResultsCountPanel" />
 		<g:VerticalPanel ui:field="resultsPanel" styleName='{style.results-panel}' />
-		<ose:PaginationPanel ui:field="paginationPanel" />
+		<com:PaginationPanel ui:field="paginationPanel" />
 	</g:VerticalPanel>
 
 </ui:UiBinder>

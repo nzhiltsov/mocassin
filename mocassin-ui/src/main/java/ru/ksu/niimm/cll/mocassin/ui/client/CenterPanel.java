@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-import ru.ksu.niimm.cll.mocassin.ui.client.widget.event.PageLinkEvent;
-import ru.ksu.niimm.cll.mocassin.ui.client.widget.event.PageLinkEventHandler;
 import ru.ksu.niimm.cll.mocassin.ui.common.client.AsyncCallbackWrapper;
+import ru.ksu.niimm.cll.mocassin.ui.common.client.PageLinkEvent;
+import ru.ksu.niimm.cll.mocassin.ui.common.client.PageLinkEventHandler;
+import ru.ksu.niimm.cll.mocassin.ui.common.client.PaginationPanel;
+import ru.ksu.niimm.cll.mocassin.ui.common.client.PagingLoadConfig;
+import ru.ksu.niimm.cll.mocassin.ui.common.client.PagingLoadInfo;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
