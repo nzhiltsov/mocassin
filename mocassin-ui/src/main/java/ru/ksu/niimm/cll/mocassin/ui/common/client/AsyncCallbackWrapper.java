@@ -1,4 +1,5 @@
-package ru.ksu.niimm.cll.mocassin.ui.client;
+package ru.ksu.niimm.cll.mocassin.ui.common.client;
+
 
 
 import com.google.gwt.core.client.GWT;

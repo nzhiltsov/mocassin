@@ -2,8 +2,12 @@ package ru.ksu.niimm.cll.mocassin.ui.dashboard.client;
 
 import java.util.List;
 
+import ru.ksu.niimm.cll.mocassin.ui.common.client.AsyncCallbackWrapper;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
@@ -69,55 +73,64 @@ public class DashboardTabPanel extends Composite {
 
 					@Override
 					public void onSubmitComplete(SubmitCompleteEvent event) {
-						
-						String body = event
-								.getResults();
-						JSONObject response = (JSONObject) JSONParser.parseLenient(body);
-						double numberOfSuccesses = ((JSONNumber) response.get("numberOfSuccesses")).doubleValue();
+
+						String body = event.getResults();
+						JSONObject response = (JSONObject) JSONParser
+								.parseLenient(body);
+						double numberOfSuccesses = ((JSONNumber) response
+								.get("numberOfSuccesses")).doubleValue();
 						showSuccess((int) numberOfSuccesses);
 						multipleUploadForm.reset();
 					}
 				});
 
-		AsyncCallback<List<ArxivArticleMetadata>> callback = new AsyncCallback<List<ArxivArticleMetadata>>() {
+		final AsyncCallbackWrapper<List<ArxivArticleMetadata>> callback = new AsyncCallbackWrapper<List<ArxivArticleMetadata>>() {
+			@Override
+			public void handleFailure(Throwable caught) {
+				Window.alert("loading papers has failed:" + caught.getMessage());
+			}
 
 			@Override
-			public void onSuccess(List<ArxivArticleMetadata> result) {
+			public void handleSuccess(List<ArxivArticleMetadata> result) {
 				for (int i = 0; i < result.size(); i++) {
 					documentTable.setText(i + 1, 0, result.get(i).getKey());
 					documentTable.setText(i + 1, 1, result.get(i).getTitle());
 				}
 
 			}
+		};
+		tabPanel.addSelectionHandler(new SelectionHandler<Integer>() {
 
 			@Override
-			public void onFailure(Throwable caught) {
-				Window.alert("loading papers has failed:" + caught.getMessage());
-
+			public void onSelection(SelectionEvent<Integer> event) {
+				Integer selectedItem = event.getSelectedItem();
+				if (selectedItem == 1) {
+					callback.beforeCall();
+					arxivService.loadArticles(callback);
+				}
 			}
-		};
-		arxivService.loadArticles(callback);
+		});
 	}
 
 	@UiHandler({ "uploadButton", "closeDialogButton", "multipleUploadButton" })
 	void handleClick(ClickEvent event) {
-		AsyncCallback<Void> singleUploadCallback = new AsyncCallback<Void>() {
+		AsyncCallbackWrapper<Void> singleUploadCallback = new AsyncCallbackWrapper<Void>() {
 
 			@Override
-			public void onSuccess(Void result) {
+			public void handleSuccess(Void result) {
 				showSuccess(1);
-
 			}
-
 			@Override
-			public void onFailure(Throwable caught) {
+			public void handleFailure(Throwable caught) {
 				dialogBox.setText("The upload has failed.");
 				dialogBox.center();
 				dialogBox.show();
 			}
 		};
 		if (event.getSource() == uploadButton) {
-			arxivService.handle(uploadKeyInput.getValue(), singleUploadCallback);
+			singleUploadCallback.beforeCall();
+			arxivService
+					.handle(uploadKeyInput.getValue(), singleUploadCallback);
 		} else if (event.getSource() == closeDialogButton) {
 			dialogBox.hide();
 		} else if (event.getSource() == multipleUploadButton) {

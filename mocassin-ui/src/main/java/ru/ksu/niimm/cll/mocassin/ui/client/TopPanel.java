@@ -1,5 +1,7 @@
 package ru.ksu.niimm.cll.mocassin.ui.client;
 
+import ru.ksu.niimm.cll.mocassin.ui.common.client.MocassinConstants;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
