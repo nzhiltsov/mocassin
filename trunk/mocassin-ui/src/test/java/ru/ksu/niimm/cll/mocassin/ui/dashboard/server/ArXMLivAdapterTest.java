@@ -50,7 +50,7 @@ public class ArXMLivAdapterTest {
 		Set<String> ids = IOUtil.readLineSet(this.getClass().getClassLoader()
 				.getResourceAsStream("mathnet_ids_list.txt"));
 		this.sample = new HashSet<String>(CollectionUtil.sampleRandomSublist(
-				new ArrayList<String>(ids), 1));
+				new ArrayList<String>(ids), 3));
 		for (String id : this.sample) {
 			this.gateDocumentDAO.delete(id);
 		}
