@@ -1,29 +1,32 @@
 package ru.ksu.niimm.cll.mocassin.parser.arxmliv.impl;
 
 import java.util.concurrent.TimeoutException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
 
 import ru.ksu.niimm.cll.mocassin.parser.arxmliv.ArxmlivProducer;
 import ru.ksu.niimm.cll.mocassin.util.AbstractUnixCommandWrapper;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
+import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 public class ArxmlivProducerImpl extends AbstractUnixCommandWrapper implements
 		ArxmlivProducer {
+	@InjectLogger
+	private Logger logger;
 
 	private final String ARXMLIV_DOCUMENT_DIR;
 
 	private final String LATEX_DIR;
 
 	@Inject
-	public ArxmlivProducerImpl(Logger logger,
+	public ArxmlivProducerImpl(
 			@Named("arxmliv.document.dir") String arxmlivDocumentsDir,
 			@Named("arxmliv.path") String arxmlivPath,
 			@Named("patched.tex.document.dir") String latexDir) {
-		super(logger, 4);
+		super(4);
 		this.ARXMLIV_DOCUMENT_DIR = arxmlivDocumentsDir;
 		this.LATEX_DIR = latexDir;
 		this.cmdArray[0] = "/usr/local/bin/latexml";
@@ -43,17 +46,15 @@ public class ArxmlivProducerImpl extends AbstractUnixCommandWrapper implements
 			execute();
 			return arxmlivDocFilePath;
 		} catch (TimeoutException e) {
-			String message = String
-					.format("failed to produce the arxmliv document for an arXiv identifier='%s' due to timeout",
-							arxivId);
-			logger.log(Level.SEVERE, message);
-			throw new RuntimeException(message);
+			logger.error(
+					"Failed to produce an arxmliv document with an identifier='{}' due to timeout",
+					arxivId, e);
+			throw new RuntimeException(e);
 		} catch (Exception e) {
-			String message = String
-					.format("failed to produce the arxmliv document for an arXiv identifier='%s' due to: %s",
-							arxivId, e.getMessage());
-			logger.log(Level.SEVERE, message);
-			throw new RuntimeException(message);
+			logger.error(
+					"Failed to produce an arxmliv document with an identifier='{}'",
+					arxivId, e);
+			throw new RuntimeException(e);
 		}
 	}
 }

@@ -1,10 +1,10 @@
 package ru.ksu.niimm.cll.mocassin.parser.pdf;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
 
 import ru.ksu.niimm.cll.mocassin.util.AbstractUnixCommandWrapper;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
+import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -15,14 +15,16 @@ import com.google.inject.name.Named;
  */
 class SedBasedShadedPatcher extends AbstractUnixCommandWrapper implements
 		LatexDocumentShadedPatcher {
+	@InjectLogger
+	private Logger logger;
+
 	private final String PATCHED_LATEX_DIR;
 
 	@Inject
-	SedBasedShadedPatcher(Logger logger,
-			@Named("shaded.patcher.script.path") String bashPath,
+	SedBasedShadedPatcher(@Named("shaded.patcher.script.path") String bashPath,
 			@Named("shaded.tex.document.dir") String outputDir,
 			@Named("patched.tex.document.dir") String patchedLatexDir) {
-		super(logger, 6);
+		super(6);
 		this.PATCHED_LATEX_DIR = patchedLatexDir;
 		this.cmdArray[0] = bashPath;
 		this.cmdArray[5] = outputDir;
@@ -38,11 +40,10 @@ class SedBasedShadedPatcher extends AbstractUnixCommandWrapper implements
 		try {
 			execute();
 		} catch (Exception e) {
-			String message = String
-					.format("failed to patch the latex source of a document='%s' with shaded entries due to: %s",
-							arxivId, e.getMessage());
-			logger.log(Level.SEVERE, message);
-			throw new RuntimeException(message);
+			logger.error(
+					"Failed to patch the latex source of a document='{}' with shaded entries.",
+					arxivId, e);
+			throw new RuntimeException(e);
 		}
 
 	}

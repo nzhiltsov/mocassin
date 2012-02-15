@@ -7,14 +7,11 @@ import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import junit.framework.Assert;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -30,9 +27,6 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext({ LatexParserModule.class, PdfParserModule.class })
 public class LatexDocumentHeaderPatcherTest {
-	@Inject
-	Logger logger;
-
 	private static final Pattern PDFSYNC_PATTERN = Pattern
 			.compile("\\\\usepackage\\{pdfsync\\}");
 	private static final Pattern XCOLOR_PATTERN = Pattern
@@ -113,15 +107,4 @@ public class LatexDocumentHeaderPatcherTest {
 		Assert.assertTrue(found);
 	}
 
-	@Test @Ignore
-	public void testPatchMathnetArticles() {
-		for (String mathnetKey : id2filename.keySet()) {
-			try {
-				latexDocumentHeaderPatcher.patch(mathnetKey);
-			} catch (Exception e) {
-				logger.log(Level.SEVERE,
-						"failed to patch an article with key: " + mathnetKey);
-			}
-		}
-	}
 }

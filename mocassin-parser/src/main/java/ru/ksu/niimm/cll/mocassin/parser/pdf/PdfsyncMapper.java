@@ -1,12 +1,15 @@
 package ru.ksu.niimm.cll.mocassin.parser.pdf;
 
+import static java.lang.String.format;
+
 import java.io.IOException;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
 
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
+import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
 
 import com.csvreader.CsvReader;
 import com.csvreader.CsvWriter;
@@ -19,7 +22,7 @@ import com.google.inject.name.Named;
  * 
  */
 class PdfsyncMapper implements Latex2PDFMapper {
-	@Inject
+	@InjectLogger
 	private Logger logger;
 
 	private static final String PDF_MARK = "s";
@@ -55,11 +58,10 @@ class PdfsyncMapper implements Latex2PDFMapper {
 				}
 			}
 		} catch (IOException e) {
-			logger.log(
-					Level.SEVERE,
-					String.format(
-							"failed to get page number for a line='%d' in the document='%s' due to %s; zero will be returned",
-							latexLineNumber, arxivId, e.getMessage()));
+			logger.warn(
+					"Failed to get page number for a line={}; zero will be returned",
+					format("'%d' in the document='%s'", latexLineNumber,
+							arxivId), e);
 		} finally {
 			if (reader != null) {
 				reader.close();
@@ -100,11 +102,9 @@ class PdfsyncMapper implements Latex2PDFMapper {
 			reader.close();
 			printPages(filename, pages);
 		} catch (Exception e) {
-			String message = String
-					.format("failed to generate the summary for a document='%s' due to: %s",
-							arxivId, e.getMessage());
-			logger.log(Level.SEVERE, message);
-			throw new GeneratePdfSummaryException(message);
+			logger.error("Failed to generate the summary for a document='{}'",
+					arxivId, e);
+			throw new GeneratePdfSummaryException(e);
 		}
 
 	}

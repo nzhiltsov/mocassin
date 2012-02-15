@@ -1,16 +1,19 @@
 package ru.ksu.niimm.cll.mocassin.parser.pdf;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
 
 import ru.ksu.niimm.cll.mocassin.util.AbstractUnixCommandWrapper;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
+import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 class PdflatexWrapperImpl extends AbstractUnixCommandWrapper implements
 		PdflatexWrapper {
+	@InjectLogger
+	private Logger logger;
+
 	private final String PATCHED_LATEX_DIR;
 
 	private final String SHADED_LATEX_DIR;
@@ -20,12 +23,11 @@ class PdflatexWrapperImpl extends AbstractUnixCommandWrapper implements
 	private final String AUX_PDF_DIR;
 
 	@Inject
-	PdflatexWrapperImpl(Logger logger,
-			@Named("auxiliary.pdf.document.dir") String auxPdfPath,
+	PdflatexWrapperImpl(@Named("auxiliary.pdf.document.dir") String auxPdfPath,
 			@Named("patched.tex.document.dir") String patchedLatexDir,
 			@Named("shaded.tex.document.dir") String shadedLatexDir,
 			@Named("pdf.document.dir") String pdfDir) {
-		super(logger, 6);
+		super(6);
 		PATCHED_LATEX_DIR = patchedLatexDir;
 		SHADED_LATEX_DIR = shadedLatexDir;
 		AUX_PDF_DIR = auxPdfPath;
@@ -60,12 +62,10 @@ class PdflatexWrapperImpl extends AbstractUnixCommandWrapper implements
 			execute();
 			execute(); // double calling is necessary for right cross-references
 		} catch (Exception e) {
-			String message = String
-					.format("failed to compile the PDF document for an arXiv identifier='%s' due to %s",
-							arxivId, e.getCause());
-			logger.log(Level.SEVERE, message);
-			throw new PdflatexCompilationException(message);
+			logger.error(
+					"Failed to compile the PDF document with an identifier='{}'",
+					arxivId, e);
+			throw new PdflatexCompilationException(e);
 		}
 	}
-
 }

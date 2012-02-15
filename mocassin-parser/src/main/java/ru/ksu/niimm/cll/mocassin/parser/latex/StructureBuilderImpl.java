@@ -5,8 +5,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
 
 import net.sourceforge.texlipse.model.DocumentReference;
 import net.sourceforge.texlipse.model.OutlineNode;
@@ -14,6 +14,7 @@ import ru.ksu.niimm.cll.mocassin.parser.impl.EdgeContextImpl;
 import ru.ksu.niimm.cll.mocassin.parser.impl.EdgeImpl;
 import ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl;
 import ru.ksu.niimm.cll.mocassin.parser.pdf.Latex2PDFMapper;
+import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
 
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
@@ -30,7 +31,7 @@ import edu.uci.ics.jung.graph.Graph;
  */
 class StructureBuilderImpl implements StructureBuilder {
 	private static final String NODE_ID_FORMAT = "%d_%d";
-	@Inject
+	@InjectLogger
 	private Logger logger;
 	private final Latex2PDFMapper latex2pdfMapper;
 	private LatexDocumentModel model;
@@ -50,12 +51,10 @@ class StructureBuilderImpl implements StructureBuilder {
 	 * .ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel)
 	 */
 	@Override
-	public Graph<Node, Edge> buildStructureGraph(
-			LatexDocumentModel parsedModel) {
+	public Graph<Node, Edge> buildStructureGraph(LatexDocumentModel parsedModel) {
 
 		if (parsedModel == null) {
-			logger.log(Level.SEVERE,
-					"The parsed model is null. An empty graph will be returned");
+			logger.warn("The parsed model is null. An empty graph will be returned");
 			return hypergraph;
 		}
 		this.hypergraph = new DirectedSparseMultigraph<Node, Edge>();
