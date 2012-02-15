@@ -8,11 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SortedMap;
-import java.util.logging.Logger;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.runner.RunWith;
 
 import ru.ksu.niimm.cll.mocassin.analyzer.AnalyzerModule;
@@ -24,7 +22,6 @@ import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateModule;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.ParsedDocumentImpl;
-import ru.ksu.niimm.cll.mocassin.ontology.OntologyModule;
 import ru.ksu.niimm.cll.mocassin.ontology.OntologyTestModule;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.parser.pdf.PdfParserModule;

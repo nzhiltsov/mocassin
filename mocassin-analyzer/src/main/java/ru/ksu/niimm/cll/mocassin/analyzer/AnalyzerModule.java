@@ -29,11 +29,13 @@ import ru.ksu.niimm.cll.mocassin.analyzer.relation.ProvesRelationAnalyzer;
 import ru.ksu.niimm.cll.mocassin.analyzer.relation.impl.ExemplifiesRelationAnalyzerImpl;
 import ru.ksu.niimm.cll.mocassin.analyzer.relation.impl.HasConsequenceRelationAnalyzerImpl;
 import ru.ksu.niimm.cll.mocassin.analyzer.relation.impl.ProvesRelationAnalyzerImpl;
+import ru.ksu.niimm.cll.mocassin.util.inject.log.Slf4jTypeListener;
 import weka.classifiers.Classifier;
 import weka.core.Instances;
 import weka.core.SerializationHelper;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.matcher.Matchers;
 import com.google.inject.name.Names;
 
 public class AnalyzerModule extends AbstractModule {
@@ -71,7 +73,7 @@ public class AnalyzerModule extends AbstractModule {
 				NavRelClassifierImpl.class);
 		bind(ReferenceSearcher.class).to(GateReferenceSearcher.class);
 		bind(ReferenceStatementGenerator.class).to(ReferenceStatementGeneratorImpl.class);
-		
+		bindListener(Matchers.any(), new Slf4jTypeListener());
 		bindClassifier();
 
 		bindTrainingSetHeader();
