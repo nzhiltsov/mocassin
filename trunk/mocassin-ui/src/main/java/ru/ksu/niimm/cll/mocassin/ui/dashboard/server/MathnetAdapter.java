@@ -5,16 +5,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.openrdf.model.Statement;
+import org.slf4j.Logger;
 
 import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.arxiv.impl.Link;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
+import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
 import edu.uci.ics.jung.graph.Graph;
 
 public class MathnetAdapter extends AbstractArXMLivAdapter implements
 		ArXMLivAdapter {
+	@InjectLogger
+	private Logger logger;
 	/**
 	 * TODO: move to a configuration file
 	 */
@@ -53,17 +57,24 @@ public class MathnetAdapter extends AbstractArXMLivAdapter implements
 			// Step 7
 			generateHighlightedPdfs(mathnetKey, graph.getVertices());
 			// Step 8
-			List<Statement> triples = referenceStatementGenerator.convert(graph);
-			
-			if(!ontologyResourceFacade.insert(triples)) {
+			List<Statement> triples = referenceStatementGenerator
+					.convert(graph);
+
+			if (!ontologyResourceFacade.insert(triples)) {
 				throw new RuntimeException("Failed to insert triples.");
 			}
 
 		} catch (Exception e) {
-			logger.error("Failed to handle a document with a key = {}", mathnetKey, e);
+			logger.error("Failed to handle a document with a key = {}",
+					mathnetKey, e);
 			throw new RuntimeException(e);
 		}
 
+	}
+
+	@Override
+	protected Logger getLogger() {
+		return this.logger;
 	}
 
 }

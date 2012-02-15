@@ -22,12 +22,13 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
 
 import ru.ksu.niimm.cll.mocassin.nlp.util.AnnotationUtil;
 import ru.ksu.niimm.cll.mocassin.util.GateDocumentMetadata;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
+import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
@@ -45,8 +46,8 @@ class GateDocumentDAOImpl implements GateDocumentDAO {
 	private final String ARXMLIV_MARKUP_NAME_PROPERTY;
 	private final String TITLE_ANNOTATION_NAME_PROPERTY;
 	private final String ARXMLIV_CREATOR_PROPERTY;
-
-	private final Logger logger;
+	@InjectLogger
+	private Logger logger;
 
 	private final AnnotationUtil annotationUtil;
 
@@ -54,7 +55,6 @@ class GateDocumentDAOImpl implements GateDocumentDAO {
 
 	@Inject
 	GateDocumentDAOImpl(
-			Logger logger,
 			AnnotationUtil annotationUtil,
 			@Named("gate.home") String gateHome,
 			@Named("gate.builtin.creole.dir") String gateBuiltinCreoleDir,
@@ -102,32 +102,23 @@ class GateDocumentDAOImpl implements GateDocumentDAO {
 					"tex.xml"));
 			this.dataStore.sync(persistedDocument);
 		} catch (ResourceInstantiationException e) {
-			String message = String.format(
-					"failed to create a GATE document for the file='%s'",
-					file.getAbsolutePath());
-			logger.log(Level.SEVERE, message);
-			throw new ru.ksu.niimm.cll.mocassin.nlp.gate.PersistenceException(
-					message);
-		} catch (MalformedURLException e) {
-			String message = String
-					.format("failed to create a GATE document for the file='%s': this file path probably is incorrect",
-							file.getAbsolutePath());
-			logger.log(Level.SEVERE, message);
-			throw new IllegalArgumentException(message);
-		} catch (PersistenceException e) {
-			String message = String.format(
-					"failed to save a GATE document for the file='%s' due to %s",
+			logger.error("Failed to create a GATE document for the file='{}'",
 					file.getAbsolutePath(), e);
-			logger.log(Level.SEVERE, message);
-			throw new ru.ksu.niimm.cll.mocassin.nlp.gate.PersistenceException(
-					message);
+			throw new ru.ksu.niimm.cll.mocassin.nlp.gate.PersistenceException(e);
+		} catch (MalformedURLException e) {
+			logger.error(
+					"Failed to create a GATE document for the file='{}': this file path probably is incorrect",
+					file.getAbsolutePath(), e);
+			throw new IllegalArgumentException(e);
+		} catch (PersistenceException e) {
+			logger.error("Failed to save a GATE document for the file='{}'",
+					file.getAbsolutePath(), e);
+			throw new ru.ksu.niimm.cll.mocassin.nlp.gate.PersistenceException(e);
 		} catch (SecurityException e) {
-			String message = String
-					.format("failed to save a GATE document for the file='%s' due to security reasons",
-							file.getAbsolutePath());
-			logger.log(Level.SEVERE, message);
-			throw new ru.ksu.niimm.cll.mocassin.nlp.gate.PersistenceException(
-					message);
+			logger.error(
+					"Failed to save a GATE document for the file='{}' due to security reasons",
+					file.getAbsolutePath(), e);
+			throw new ru.ksu.niimm.cll.mocassin.nlp.gate.PersistenceException(e);
 		}
 	}
 
@@ -138,21 +129,18 @@ class GateDocumentDAOImpl implements GateDocumentDAO {
 		String foundDocumentId = Iterables.find(documentIds,
 				new DocumentNamePredicate(documentId), null);
 		if (foundDocumentId == null) {
-			logger.log(Level.INFO, String.format(
-					"The document='%s' asked for deleting does not exist.",
-					documentId));
+			logger.warn(
+					"The document='{}' asked for deleting does not exist.",
+					documentId);
 			return;
 		}
 		try {
 			this.dataStore.delete(GATE_DOCUMENT_LR_TYPE_PROPERTY,
 					foundDocumentId);
 		} catch (PersistenceException e) {
-			String message = String
-					.format("Failed to delete a GATE document with id='%s'",
-							documentId);
-			logger.log(Level.SEVERE, message);
-			throw new ru.ksu.niimm.cll.mocassin.nlp.gate.PersistenceException(
-					message);
+			logger.error("Failed to delete a GATE document with id='{}'",
+					documentId, e);
+			throw new ru.ksu.niimm.cll.mocassin.nlp.gate.PersistenceException(e);
 		}
 	}
 
@@ -182,9 +170,8 @@ class GateDocumentDAOImpl implements GateDocumentDAO {
 			document = (Document) Factory.createResource(
 					GATE_DOCUMENT_LR_TYPE_PROPERTY, features);
 		} catch (ResourceInstantiationException e) {
-			logger.log(Level.SEVERE, String.format(
-					"couldn't create resource with id='%s' caused by: %s",
-					documentId, e.getMessage()));
+			logger.error("Couldn't create a resource with id='{}'", documentId,
+					e);
 			throw new AccessGateDocumentException(e);
 		}
 		return document;
@@ -211,8 +198,7 @@ class GateDocumentDAOImpl implements GateDocumentDAO {
 
 			return gateDocuments;
 		} catch (PersistenceException e) {
-			logger.log(Level.SEVERE,
-					"couldn't get language resource identifiers");
+			logger.error("Couldn't get language resource identifiers", e);
 			throw new AccessGateDocumentException(e);
 		}
 	}

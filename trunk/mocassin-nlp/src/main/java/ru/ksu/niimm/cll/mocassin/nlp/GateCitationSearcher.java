@@ -9,11 +9,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-import ru.ksu.niimm.cll.mocassin.nlp.Citation.Builder;
+import org.slf4j.Logger;
+
 import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateDocumentException;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateStorageException;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
@@ -21,6 +20,7 @@ import ru.ksu.niimm.cll.mocassin.nlp.gate.GateFormatConstants;
 import ru.ksu.niimm.cll.mocassin.nlp.util.AnnotationUtil;
 import ru.ksu.niimm.cll.mocassin.util.StreamHandler;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
+import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
 
 import com.google.common.base.Predicate;
 import com.google.inject.Inject;
@@ -30,8 +30,8 @@ class GateCitationSearcher implements CitationSearcher {
 	private final String ARXMLIV_MARKUP_NAME;
 	private final String ARXMLIV_CITE_ANNOTATION_NAME;
 	private final String TOKEN_ANNOTATION_NAME;
-
-	private final Logger logger;
+	@InjectLogger
+	private Logger logger;
 
 	private final GateDocumentDAO gateDocumentDAO;
 
@@ -41,7 +41,6 @@ class GateCitationSearcher implements CitationSearcher {
 
 	@Inject
 	GateCitationSearcher(
-			Logger logger,
 			GateDocumentDAO gateDocumentDAO,
 			AnnotationUtil annotationUtil,
 			BibliographyExtractor bibliographyExtractor,
@@ -67,15 +66,12 @@ class GateCitationSearcher implements CitationSearcher {
 					ARXMLIV_MARKUP_NAME).get(ARXMLIV_CITE_ANNOTATION_NAME);
 			return extractSentences(gateDocument, citations, documentId);
 		} catch (AccessGateDocumentException e) {
-			logger.log(Level.SEVERE, String.format(
-					"failed to load the document: %s", documentId));
+			logger.error("Failed to load the document: {}", documentId, e);
 			throw new RuntimeException(e);
 		} catch (AccessGateStorageException e) {
-			logger.log(
-					Level.SEVERE,
-					String.format(
-							"failed to access the storage while loading the document: %s",
-							documentId));
+			logger.error(
+					"Failed to access the storage while loading the document: {}",
+					documentId, e);
 			throw new RuntimeException(e);
 		} finally {
 			gateDocumentDAO.release(gateDocument);
@@ -92,7 +88,8 @@ class GateCitationSearcher implements CitationSearcher {
 			AnnotationSet tokenSet = gateDocument.getAnnotations(
 					GateFormatConstants.DEFAULT_ANNOTATION_SET_NAME).get(
 					TOKEN_ANNOTATION_NAME);
-			ArrayList<Annotation> tokenList = new ArrayList<Annotation>(tokenSet);
+			ArrayList<Annotation> tokenList = new ArrayList<Annotation>(
+					tokenSet);
 			Collections.sort(tokenList, new OffsetComparator());
 			StreamHandler<Annotation> streamHandler = new StreamHandler<Annotation>(
 					tokenList, new OpenCitationPredicate(),
@@ -112,15 +109,12 @@ class GateCitationSearcher implements CitationSearcher {
 			return citations;
 
 		} catch (AccessGateDocumentException e) {
-			logger.log(Level.SEVERE, String.format(
-					"failed to load the document: %s", documentId));
+			logger.error("Failed to load the document: {}", documentId, e);
 			throw new RuntimeException(e);
 		} catch (AccessGateStorageException e) {
-			logger.log(
-					Level.SEVERE,
-					String.format(
-							"failed to access the storage while loading the document: %s",
-							documentId));
+			logger.error(
+					"Failed to access the storage while loading the document: {}",
+					documentId, e);
 			throw new RuntimeException(e);
 		} finally {
 			gateDocumentDAO.release(gateDocument);
@@ -149,8 +143,8 @@ class GateCitationSearcher implements CitationSearcher {
 		String toKey = bibliographyExtractor.getToKey(documentId, number);
 		String sentence = annotationUtil
 				.getTextContentsForAnnotationWithReplacements(gateDocument,
-						enclosingSentence, citation,
-						toKey != null ? toKey : numberStr);
+						enclosingSentence, citation, toKey != null ? toKey
+								: numberStr);
 
 		return sentence;
 	}
