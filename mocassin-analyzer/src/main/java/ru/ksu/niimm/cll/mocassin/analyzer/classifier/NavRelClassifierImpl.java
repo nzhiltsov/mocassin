@@ -1,12 +1,14 @@
 package ru.ksu.niimm.cll.mocassin.analyzer.classifier;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import static java.lang.String.format;
+
+import org.slf4j.Logger;
 
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
+import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
 import weka.classifiers.Classifier;
 import weka.core.Instance;
 import weka.core.Instances;
@@ -17,7 +19,7 @@ import com.google.inject.name.Named;
 import edu.uci.ics.jung.graph.Graph;
 
 public class NavRelClassifierImpl implements NavigationalRelationClassifier {
-	@Inject
+	@InjectLogger
 	private Logger logger;
 
 	private final Classifier classifier;
@@ -40,11 +42,10 @@ public class NavRelClassifierImpl implements NavigationalRelationClassifier {
 		MocassinOntologyClasses toType = to.getPredictedClass();
 		long documentSize = reference.getDocument().getSize();
 		float normalizedStartDistance = ((float) from.getGateStartOffset() - to
-				.getGateStartOffset())
-				/ documentSize;
+				.getGateStartOffset()) / documentSize;
 
-		float normalizedEndDistance = ((float) from.getGateEndOffset() - to.getGateEndOffset())
-				/ documentSize;
+		float normalizedEndDistance = ((float) from.getGateEndOffset() - to
+				.getGateEndOffset()) / documentSize;
 		Instance instance = new Instance(trainingSetHeader.numAttributes());
 		instance.setDataset(trainingSetHeader);
 		instance.setValue(0, fromType.toString());
@@ -70,16 +71,10 @@ public class NavRelClassifierImpl implements NavigationalRelationClassifier {
 			}
 			return prediction;
 		} catch (Exception e) {
-			logger
-					.log(
-							Level.SEVERE,
-							String
-									.format(
-											"couldn't classify a reference with id='%d' in a document='%s' due to %s; null will be returned",
-											reference.getId(), reference
-													.getDocument()
-													.getUri(), e
-													.getMessage()));
+			logger.error(
+					"Couldn't classify a reference with id='{}' in a document='{}'; null will be returned",
+					format("%d/%s", reference.getId(),  reference.getDocument()
+							.getUri()), e);
 			return null;
 		}
 	}

@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
 
 import ru.ksu.niimm.cll.mocassin.analyzer.ReferenceSearcher;
-import ru.ksu.niimm.cll.mocassin.analyzer.ReferenceStatementGenerator;
 import ru.ksu.niimm.cll.mocassin.analyzer.classifier.NavigationalRelationClassifier;
 import ru.ksu.niimm.cll.mocassin.analyzer.classifier.Prediction;
 import ru.ksu.niimm.cll.mocassin.analyzer.relation.ExemplifiesRelationAnalyzer;
@@ -29,6 +28,7 @@ import ru.ksu.niimm.cll.mocassin.nlp.util.AnnotationUtil;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
 import ru.ksu.niimm.cll.mocassin.parser.arxmliv.ArxmlivFormatConstants;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
+import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -45,7 +45,7 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 	private final String ARXMLIV_MATH_ANNOTATION_NAME;
 
 	private final boolean USE_STEMMING;
-	@Inject
+	@InjectLogger
 	private Logger logger;
 	@Inject
 	private StructuralElementSearcher structuralElementSearcher;
@@ -119,15 +119,12 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 
 			return this.graph;
 		} catch (AccessGateDocumentException e) {
-			logger.log(Level.SEVERE,
-					String.format("failed to load the document: %s", arxivId));
+			logger.error("Failed to load the document: {}", arxivId, e);
 			throw new RuntimeException(e);
 		} catch (AccessGateStorageException e) {
-			logger.log(
-					Level.SEVERE,
-					String.format(
-							"failed to access the storage while loading the document: %s",
-							arxivId));
+			logger.error(
+					"Failed to access the storage while loading the document: {}",
+					arxivId, e);
 			throw new RuntimeException(e);
 		} finally {
 			gateDocumentDAO.release(getDocument());
@@ -281,11 +278,8 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 
 		if (closestParentElement == null) {
 			getLogger()
-					.log(Level.INFO,
-							String.format(
-									"parent element for ref with id='%d' in document '%s' not found",
-									annotation.getId(), getDocument().getName()));
-
+					.warn("Parent element for reference with id='{}' in a document '{}' not found",
+							annotation.getId(), getDocument().getName());
 		}
 
 		return closestParentElement;
@@ -298,8 +292,7 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 				return element;
 			}
 		}
-		logger.log(Level.INFO,
-				String.format("element with label '%s' not found", labelref));
+		logger.warn("Element with a label '{}' not found", labelref);
 		return null;
 	}
 
