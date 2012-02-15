@@ -110,15 +110,18 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.thechisegroup.choosel.protovis</groupId>
 			<artifactId>protovis-gwt</artifactId>
 			<version>0.4</version>
 		</dependency>
-
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>com.google.guava</groupId>
