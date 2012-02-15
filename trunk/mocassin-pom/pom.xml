@@ -43,6 +43,11 @@
 						</archive>
 					</configuration>
 				</plugin>
+				<plugin>
+					<groupId>org.codehaus.groovy.maven</groupId>
+					<artifactId>gmaven-plugin</artifactId>
+					<version>1.0</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 
@@ -60,6 +65,11 @@
 
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>org.codehaus.groovy</groupId>
+				<artifactId>groovy-all</artifactId>
+				<version>${groovy.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>com.hp.hpl.jena</groupId>
 				<artifactId>jena</artifactId>
@@ -134,22 +144,17 @@
 				<type>jar</type>
 				<scope>test</scope>
 			</dependency>
-			<dependency>
-				<groupId>commons-logging</groupId>
-				<artifactId>commons-logging</artifactId>
-				<version>1.1.1</version>
-				<type>jar</type>
-				<scope>compile</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-log4j12</artifactId>
-				<version>${slf4j.version}</version>
-			</dependency>
+			<!-- <dependency> <groupId>commons-logging</groupId> <artifactId>commons-logging</artifactId> 
+				<version>1.1.1</version> <type>jar</type> <scope>compile</scope> </dependency> -->
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>
 				<version>${slf4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.qos.logback</groupId>
+				<artifactId>logback-classic</artifactId>
+				<version>1.0.0</version>
 			</dependency>
 			<dependency>
 				<groupId>com.google.guava</groupId>
@@ -188,5 +193,6 @@
 		<guava.version>r08</guava.version>
 		<slf4j.version>1.6.4</slf4j.version>
 		<guice.version>3.0</guice.version>
+		<groovy.version>1.7.6</groovy.version>
 	</properties>
 </project>

@@ -46,41 +46,47 @@
 		<dependency>
 			<groupId>com.hp.hpl.jena</groupId>
 			<artifactId>jena</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.clarkparsia.pellet</groupId>
 			<artifactId>pellet-core</artifactId>
-			<version>2.1.1</version>
+			<version>${pellet.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.clarkparsia.pellet</groupId>
 			<artifactId>pellet-query</artifactId>
-			<version>2.1.1</version>
+			<version>${pellet.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.clarkparsia.pellet</groupId>
 			<artifactId>pellet-jena</artifactId>
-			<version>2.1.1</version>
+			<version>${pellet.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.clarkparsia.pellet</groupId>
 			<artifactId>pellet-owlapi</artifactId>
-			<version>2.1.1</version>
+			<version>${pellet.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.clarkparsia.pellet</groupId>
 			<artifactId>pellet-datatypes</artifactId>
-			<version>2.1.1</version>
+			<version>${pellet.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.clarkparsia.pellet</groupId>
 			<artifactId>pellet-rules</artifactId>
-			<version>2.1.1</version>
+			<version>${pellet.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.clarkparsia.pellet</groupId>
 			<artifactId>pellet-el</artifactId>
-			<version>2.1.1</version>
+			<version>${pellet.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.semanticweb.owl</groupId>
@@ -170,12 +176,18 @@
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.groovy</groupId>
+			<artifactId>groovy-all</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
 		<dependency>
 			<groupId>com.openlink.virtuoso</groupId>
 			<artifactId>virtuoso-sesame</artifactId>
@@ -222,6 +234,10 @@
 					<groupId>org.apache.lucene</groupId>
 					<artifactId>lucene-core</artifactId>
 				</exclusion>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 
@@ -242,5 +258,6 @@
 	</dependencies>
 	<properties>
 		<sesame.version>2.6.3</sesame.version>
+		<pellet.version>2.1.1</pellet.version>
 	</properties>
 </project>

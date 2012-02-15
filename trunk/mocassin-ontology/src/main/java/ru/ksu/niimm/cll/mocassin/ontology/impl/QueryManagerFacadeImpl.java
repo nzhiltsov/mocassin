@@ -91,7 +91,7 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 
 			TupleQuery tupleQuery = connection.prepareTupleQuery(
 					QueryLanguage.SPARQL, queryString);
-
+			logger.debug("Executed query: '{}'", queryString.replace('\n', ' '));
 			TupleQueryResult result = tupleQuery.evaluate();
 
 			try {
