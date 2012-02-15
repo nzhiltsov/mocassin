@@ -5,11 +5,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
 
 import ru.ksu.niimm.cll.mocassin.fulltext.FullTextModule;
 import ru.ksu.niimm.cll.mocassin.nlp.NlpModule;
@@ -19,6 +19,7 @@ import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
 import ru.ksu.niimm.cll.mocassin.ontology.OntologyModule;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.util.GateDocumentMetadata;
+import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
 import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
 
 import com.google.inject.Inject;
@@ -30,15 +31,17 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext({ NlpModule.class, OntologyModule.class, VirtuosoModule.class,
 		LatexParserModule.class, FullTextModule.class })
-public class ExtractMetadataUtil {
+@Ignore("Probably outdated test")
+public class ExtractMetadataTest {/* TODO: check if the test is required */
 	@Inject
 	private GateDocumentDAO gateDocumentDAO;
-	@Inject
+	@InjectLogger
 	private Logger logger;
 
 	@Test
 	public void testExtractAndSaveMetadata()
-			throws AccessGateDocumentException, IOException, AccessGateStorageException {
+			throws AccessGateDocumentException, IOException,
+			AccessGateStorageException {
 		List<String> documentIds = gateDocumentDAO.getDocumentIds();
 		Collections.sort(documentIds);
 		List<GateDocumentMetadata> metadataList = new ArrayList<GateDocumentMetadata>();
@@ -49,9 +52,7 @@ public class ExtractMetadataUtil {
 						.loadMetadata(id);
 				metadataList.add(metadata);
 			} catch (AccessGateDocumentException e) {
-				logger.log(Level.SEVERE, String.format(
-						"failed to process document '%s' due to",
-						e.getMessage()));
+				logger.error("Failed to process document '{}'", id, e);
 			}
 
 		}

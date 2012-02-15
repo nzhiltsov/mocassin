@@ -7,9 +7,11 @@ import java.util.Properties;
 
 import ru.ksu.niimm.cll.mocassin.nlp.util.AnnotationUtil;
 import ru.ksu.niimm.cll.mocassin.nlp.util.impl.AnnotationUtilImpl;
+import ru.ksu.niimm.cll.mocassin.util.inject.log.Slf4jTypeListener;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
+import com.google.inject.matcher.Matchers;
 import com.google.inject.name.Names;
 import com.google.inject.throwingproviders.ThrowingProviderBinder;
 
@@ -29,6 +31,7 @@ public class GateModule extends AbstractModule {
 		bind(GateDocumentDAO.class).to(GateDocumentDAOImpl.class).in(Singleton.class);
 		bind(GateProcessingFacade.class).to(GateProcessingFacadeImpl.class);
 		bind(AnnotationUtil.class).to(AnnotationUtilImpl.class);
+		bindListener(Matchers.any(), new Slf4jTypeListener());
 		ThrowingProviderBinder
 				.create(binder())
 				.bind(AnnieControllerProvider.class,

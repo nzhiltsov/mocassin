@@ -7,8 +7,10 @@ import ru.ksu.niimm.cll.mocassin.nlp.util.AnnotationUtil;
 import ru.ksu.niimm.cll.mocassin.nlp.util.StopWordLoader;
 import ru.ksu.niimm.cll.mocassin.nlp.util.impl.AnnotationUtilImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.util.impl.StopWordLoaderImpl;
+import ru.ksu.niimm.cll.mocassin.util.inject.log.Slf4jTypeListener;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.matcher.Matchers;
 import com.google.inject.name.Names;
 
 public class NlpModule extends AbstractModule {
@@ -32,6 +34,7 @@ public class NlpModule extends AbstractModule {
 				StructuralElementTypeRecognizerImpl.class);
 		bind(CitationSearcher.class).to(GateCitationSearcher.class);
 		bind(BibliographyExtractor.class).to(FakeBibliographyExtractor.class);
+		bindListener(Matchers.any(), new Slf4jTypeListener());
 	}
 
 }

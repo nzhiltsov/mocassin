@@ -4,14 +4,16 @@ import gate.Document;
 
 import java.io.File;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import junit.framework.Assert;
 
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
 
 import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
+import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
 
 import com.google.inject.Inject;
 import com.mycila.testing.junit.MycilaJunitRunner;
@@ -22,7 +24,7 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 public class GateDocumentDAOTest {
 	private static final String SECOND_DOC = "ivm537";
 	private static final String FIRST_DOC = "ivm18";
-	@Inject
+	@InjectLogger
 	private Logger logger;
 	@Inject
 	private GateDocumentDAO gateDocumentDAO;
@@ -46,24 +48,27 @@ public class GateDocumentDAOTest {
 
 	@Test
 	public void testLoad() throws Exception {
+		final int expectedLoadedDocCount = 2;
 		List<String> ids = CollectionUtil.sampleRandomSublist(
-				getGateDocumentDAO().getDocumentIds(), 2);
+				getGateDocumentDAO().getDocumentIds(), expectedLoadedDocCount);
+		int loadedDocCount = 0;
 		for (String id : ids) {
 			Document document = null;
 			try {
 				document = getGateDocumentDAO().load(id);
+				logger.debug("The document '{}' is OK", id);
+				loadedDocCount++;
 			} catch (Exception e) {
-				logger.log(Level.SEVERE,
-						String.format("couldn't load the document: %s", id));
+				logger.debug("Couldn't load the document: {}", id, e);
 			} finally {
 				if (document != null) {
-					logger.log(Level.INFO,
-							String.format("document %s is OK", id));
 					getGateDocumentDAO().release(document);
 				}
 			}
-
 		}
+		Assert.assertEquals(
+				"Not all the document have been successfully loaded.",
+				expectedLoadedDocCount, loadedDocCount);
 	}
 
 	@After

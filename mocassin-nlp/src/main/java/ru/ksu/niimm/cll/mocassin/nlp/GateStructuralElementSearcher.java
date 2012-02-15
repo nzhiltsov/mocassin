@@ -12,8 +12,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
 
 import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateDocumentException;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateStorageException;
@@ -32,6 +32,7 @@ import ru.ksu.niimm.cll.mocassin.parser.latex.Node;
 import ru.ksu.niimm.cll.mocassin.parser.latex.StructureBuilder;
 import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
+import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -44,7 +45,7 @@ import com.google.inject.name.Named;
 class GateStructuralElementSearcher implements StructuralElementSearcher {
 	private final String ARXMLIV_MARKUP_NAME;
 	private final String TITLE_ANNOTATION_NAME;
-	@Inject
+	@InjectLogger
 	private Logger logger;
 	@Inject
 	private AnnotationUtil annotationUtil;
@@ -98,15 +99,13 @@ class GateStructuralElementSearcher implements StructuralElementSearcher {
 					.transform(structuralAnnotations, extractFunction);
 			return CollectionUtil.asList(structuralElementIterable);
 		} catch (AccessGateDocumentException e) {
-			logger.log(Level.SEVERE, String.format(
-					"failed to load the document: %s", parsedDocument.getUri()));
+			logger.error("Failed to load the document: {}",
+					parsedDocument.getUri(), e);
 			throw new RuntimeException(e);
 		} catch (AccessGateStorageException e) {
-			logger.log(
-					Level.SEVERE,
-					String.format(
-							"failed to access the storage while loading the document: %s",
-							arxivId));
+			logger.error(
+					"Failed to access the storage while loading the document: {}",
+					arxivId, e);
 			throw new RuntimeException(e);
 		} finally {
 			gateDocumentDAO.release(gateDocument);

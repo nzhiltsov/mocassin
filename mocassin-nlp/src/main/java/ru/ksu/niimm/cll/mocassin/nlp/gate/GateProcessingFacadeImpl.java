@@ -1,5 +1,7 @@
 package ru.ksu.niimm.cll.mocassin.nlp.gate;
 
+import org.slf4j.Logger;
+
 import gate.Corpus;
 import gate.Document;
 import gate.Factory;
@@ -9,15 +11,13 @@ import gate.creole.SerialAnalyserController;
 import gate.persist.PersistenceException;
 import gate.security.SecurityException;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
+import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
 
 import com.google.inject.Inject;
 
 class GateProcessingFacadeImpl implements GateProcessingFacade {
-	@Inject
+	@InjectLogger
 	private Logger logger;
 
 	private final AnnieControllerProvider<SerialAnalyserController> annieControllerProvider;
@@ -47,25 +47,23 @@ class GateProcessingFacadeImpl implements GateProcessingFacade {
 			annieController.execute();
 			document.getDataStore().sync(document);
 		} catch (ExecutionException e) {
-			logger.log(
-					Level.SEVERE,
-					String.format(
-							"failed to execute ANNIE controller over a document with id='%s'",
-							arxivId));
+			logger.error(
+					"Failed to execute ANNIE controller over a document with id='{}'",
+					arxivId, e);
 			throw new ProcessException(e);
 		} catch (PersistenceException e) {
-			logger.log(Level.SEVERE, String.format(
-					"failed to update the document with id='%s'", arxivId));
+			logger.error("Failed to update the document with id='{}'", arxivId,
+					e);
 			throw new ProcessException(e);
 		} catch (SecurityException e) {
-			logger.log(Level.SEVERE, String.format(
-					"failed to update the document with id='%s'", arxivId));
+			logger.error("Failed to update the document with id='{}'", arxivId,
+					e);
 			throw new ProcessException(e);
 		} catch (AnnieControllerCreationException e) {
-			logger.log(Level.SEVERE, "failed to create the ANNIE controller");
+			logger.error("Failed to create the ANNIE controller", e);
 			throw new ProcessException(e);
 		} catch (ResourceInstantiationException e) {
-			logger.log(Level.SEVERE, "failed to create a temporary corpus");
+			logger.error("Failed to create a temporary corpus", e);
 			throw new ProcessException(e);
 		}
 	}

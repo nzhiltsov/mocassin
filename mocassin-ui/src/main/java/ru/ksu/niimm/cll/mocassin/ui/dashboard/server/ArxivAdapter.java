@@ -5,11 +5,13 @@ import java.io.InputStream;
 import java.util.List;
 
 import org.openrdf.model.Statement;
+import org.slf4j.Logger;
 
 import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.arxiv.ArxivDAOFacade;
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
+import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
 
 import com.google.inject.Inject;
 
@@ -17,7 +19,8 @@ import edu.uci.ics.jung.graph.Graph;
 
 public class ArxivAdapter extends AbstractArXMLivAdapter implements
 		ArXMLivAdapter {
-
+	@InjectLogger
+	private Logger logger;
 	@Inject
 	private ArxivDAOFacade arxivDAOFacade;
 
@@ -58,15 +61,21 @@ public class ArxivAdapter extends AbstractArXMLivAdapter implements
 			// Step 7
 			generateHighlightedPdfs(arxivId, graph.getVertices());
 			// Step 8
-			List<Statement> triples = referenceStatementGenerator.convert(graph);
+			List<Statement> triples = referenceStatementGenerator
+					.convert(graph);
 			ontologyResourceFacade.insert(triples); // TODO: Arxiv article
 													// metadata must be inserted
 													// into a store beforehand
 
 		} catch (Exception e) {
-			logger.error("Failed to handle a document with a key = {}", arxivId, e);
+			logger.error("Failed to handle a document with a key = {}",
+					arxivId, e);
 			throw new RuntimeException(e);
 		}
 	}
 
+	@Override
+	protected Logger getLogger() {
+		return this.logger;
+	}
 }

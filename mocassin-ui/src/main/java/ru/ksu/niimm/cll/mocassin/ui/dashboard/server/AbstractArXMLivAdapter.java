@@ -28,7 +28,6 @@ import ru.ksu.niimm.cll.mocassin.parser.pdf.PdfHighlighter;
 import ru.ksu.niimm.cll.mocassin.parser.pdf.PdflatexWrapper;
 import ru.ksu.niimm.cll.mocassin.ui.dashboard.client.ArxivArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
-import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
@@ -37,8 +36,7 @@ import com.google.inject.Inject;
 import edu.uci.ics.jung.graph.Graph;
 
 public abstract class AbstractArXMLivAdapter implements ArXMLivAdapter {
-	@InjectLogger
-	protected Logger logger;
+
 	@Inject
 	protected OntologyResourceFacade ontologyResourceFacade;
 	@Inject
@@ -62,8 +60,7 @@ public abstract class AbstractArXMLivAdapter implements ArXMLivAdapter {
 	@Inject
 	protected PdfHighlighter pdfHighlighter;
 
-	protected AbstractArXMLivAdapter() {
-	}
+	protected abstract Logger getLogger();
 
 	public int handle(Set<String> arxivIds) {
 		int numberOfSuccesses = 0;
@@ -72,12 +69,14 @@ public abstract class AbstractArXMLivAdapter implements ArXMLivAdapter {
 				long start = System.currentTimeMillis();
 				handle(arxivId);
 				long stop = System.currentTimeMillis();
-				logger.info(
+				getLogger().info(
 						"The document= {} has been processed in {} second(s)",
 						arxivId,
 						format("%.2f", ((float) (stop - start)) / 1000));
 				numberOfSuccesses++;
-			} catch (Exception e) {// do nothing
+			} catch (Exception e) {
+				getLogger().error("Failed to handle a document with id = '{}'",
+						arxivId, e);
 			}
 		}
 		return numberOfSuccesses;
@@ -93,14 +92,15 @@ public abstract class AbstractArXMLivAdapter implements ArXMLivAdapter {
 					pdfHighlighter.generateHighlightedPdf(arxivId,
 							element.getId(), latexStartLine, latexEndLine);
 				} catch (Exception e) {
-					logger.error(
-							"Failed to generate the highlighted PDF for a segment with id = {}",
-							format("%s/%d", arxivId, element.getId()), e);
+					getLogger()
+							.error("Failed to generate the highlighted PDF for a segment with id = {}",
+									format("%s/%d", arxivId, element.getId()),
+									e);
 				}
 			} else {
-				logger.warn(
-						"Skipped generating the highlighted PDF for a segment with id = {}. Perhaps, the segment location is incorrect.",
-						format("%s/%d", arxivId, element.getId()));
+				getLogger()
+						.warn("Skipped generating the highlighted PDF for a segment with id = {}. Perhaps, the segment location is incorrect.",
+								format("%s/%d", arxivId, element.getId()));
 			}
 		}
 	}
