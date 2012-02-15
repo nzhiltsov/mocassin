@@ -13,10 +13,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.slf4j.Logger;
 
 import net.sourceforge.texlipse.model.DocumentReference;
 import net.sourceforge.texlipse.model.ReferenceEntry;
@@ -25,6 +25,7 @@ import net.sourceforge.texlipse.texparser.LatexParser;
 import net.sourceforge.texlipse.texparser.lexer.LexerException;
 import ru.ksu.niimm.cll.mocassin.parser.pdf.Latex2PDFMapper;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
+import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
 
 import com.google.inject.Inject;
 
@@ -42,7 +43,7 @@ class LatexParserImpl implements Parser {
 	private static final Pattern BEGIN_DOCUMENT_PATTERN = Pattern
 			.compile("\\\\begin\\{document\\}");
 
-	@Inject
+	@InjectLogger
 	private Logger logger;
 
 	private LatexParser latexParser = new LatexParser();
@@ -147,8 +148,9 @@ class LatexParserImpl implements Parser {
 			}
 			return parsedModel;
 		} catch (Exception e) {
-			logger.log(Level.SEVERE, "failed to parse a document model due to:"
-					+ e.getMessage());
+			logger.error(
+					"Failed to parse a document model='{}'. Null will be returned",
+					docId, e);
 			return null;
 		}
 	}

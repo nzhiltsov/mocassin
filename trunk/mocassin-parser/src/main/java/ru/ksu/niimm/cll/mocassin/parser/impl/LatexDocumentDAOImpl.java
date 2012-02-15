@@ -7,32 +7,33 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
 
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentDAO;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
 import ru.ksu.niimm.cll.mocassin.parser.latex.Parser;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
+import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 public class LatexDocumentDAOImpl implements LatexDocumentDAO {
-	@Inject
-	Logger logger;
+	@InjectLogger
+	private Logger logger;
 
 	private final Parser parser;
 
 	private final String LATEX_DOCUMENT_DIR;
-	
+
 	private final String PATCHED_LATEX_DOCUMENT_DIR;
 
 	@Inject
 	public LatexDocumentDAOImpl(Parser parser,
-			@Named("patched.tex.document.dir") String patchedTexDocumentDir, @Named("tex.document.dir") String texDocumentDir) {
+			@Named("patched.tex.document.dir") String patchedTexDocumentDir,
+			@Named("tex.document.dir") String texDocumentDir) {
 		this.parser = parser;
 		this.PATCHED_LATEX_DOCUMENT_DIR = patchedTexDocumentDir;
 		LATEX_DOCUMENT_DIR = texDocumentDir;
@@ -49,11 +50,9 @@ public class LatexDocumentDAOImpl implements LatexDocumentDAO {
 							PATCHED_LATEX_DOCUMENT_DIR, filename)), true);
 
 		} catch (FileNotFoundException e) {
-			logger.log(
-					Level.SEVERE,
-					String.format(
-							"couldn't load a Latex document with id='%s'; an empty model will be returned",
-							documentId));
+			logger.error(
+					"Couldn't load a Latex document with id='{}'; an empty model will be returned",
+					documentId, e);
 		}
 		return model;
 	}
@@ -62,18 +61,17 @@ public class LatexDocumentDAOImpl implements LatexDocumentDAO {
 	public void save(String arxivId, InputStream inputStream, String encoding) {
 		String filename = StringUtil.arxivid2filename(arxivId, "tex");
 		try {
-			Writer writer = new OutputStreamWriter(new FileOutputStream(String.format("%s/%s",
-					LATEX_DOCUMENT_DIR, filename)), encoding);
+			Writer writer = new OutputStreamWriter(new FileOutputStream(
+					String.format("%s/%s", LATEX_DOCUMENT_DIR, filename)),
+					encoding);
 			IOUtils.copy(inputStream, writer, encoding);
 			writer.flush();
 			writer.close();
 			inputStream.close();
 		} catch (IOException e) {
-			String message = String.format(
-					"failed to save the Latex source with id='%s' due to: %s",
-					arxivId, e.getMessage());
-			logger.log(Level.SEVERE, message);
-			throw new RuntimeException(message);
+			logger.error("Failed to save the Latex source with id='{}'",
+					arxivId, e);
+			throw new RuntimeException(e);
 		}
 
 	}

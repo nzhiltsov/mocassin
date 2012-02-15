@@ -6,7 +6,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
-import java.util.logging.Logger;
 
 import junit.framework.Assert;
 
@@ -26,8 +25,6 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 public class PdflatexWrapperTest {
 	private static final String FIFTH_PAGE_MARK = "s 5";
 	private static final String SEVENTH_PAGE_MARK = "s 7";
-	@Inject
-	Logger logger;
 	@Inject
 	private PdflatexWrapper pdflatexWrapper;
 
