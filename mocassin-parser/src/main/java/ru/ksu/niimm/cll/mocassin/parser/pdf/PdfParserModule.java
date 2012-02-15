@@ -3,7 +3,10 @@ package ru.ksu.niimm.cll.mocassin.parser.pdf;
 import java.io.IOException;
 import java.util.Properties;
 
+import ru.ksu.niimm.cll.mocassin.util.inject.log.Slf4jTypeListener;
+
 import com.google.inject.AbstractModule;
+import com.google.inject.matcher.Matchers;
 import com.google.inject.name.Names;
 
 public class PdfParserModule extends AbstractModule {
@@ -23,6 +26,7 @@ public class PdfParserModule extends AbstractModule {
 		bind(PdflatexWrapper.class).to(PdflatexWrapperImpl.class);
 		bind(Latex2PDFMapper.class).to(PdfsyncMapper.class);
 		bind(LatexDocumentShadedPatcher.class).to(SedBasedShadedPatcher.class);
+		bindListener(Matchers.any(), new Slf4jTypeListener());
 	}
 
 }

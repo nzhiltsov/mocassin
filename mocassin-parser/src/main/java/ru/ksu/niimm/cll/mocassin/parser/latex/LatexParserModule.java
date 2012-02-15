@@ -6,8 +6,10 @@ import java.util.Properties;
 import ru.ksu.niimm.cll.mocassin.parser.arxmliv.ArxmlivProducer;
 import ru.ksu.niimm.cll.mocassin.parser.arxmliv.impl.ArxmlivProducerImpl;
 import ru.ksu.niimm.cll.mocassin.parser.impl.LatexDocumentDAOImpl;
+import ru.ksu.niimm.cll.mocassin.util.inject.log.Slf4jTypeListener;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.matcher.Matchers;
 import com.google.inject.name.Names;
 
 public class LatexParserModule extends AbstractModule {
@@ -29,9 +31,7 @@ public class LatexParserModule extends AbstractModule {
 		bind(LatexDocumentDAO.class).to(LatexDocumentDAOImpl.class);
 		bind(LatexDocumentHeaderPatcher.class).to(SedBasedHeaderPatcher.class);
 		bind(ArxmlivProducer.class).to(ArxmlivProducerImpl.class);
-		
-		
-		
+		bindListener(Matchers.any(), new Slf4jTypeListener());	
 	}
 
 }
