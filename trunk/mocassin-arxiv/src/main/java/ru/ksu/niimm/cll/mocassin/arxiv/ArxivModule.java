@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.util.Properties;
 
 import ru.ksu.niimm.cll.mocassin.arxiv.impl.ArxivDAOFacadeImpl;
+import ru.ksu.niimm.cll.mocassin.util.inject.log.Slf4jTypeListener;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.matcher.Matchers;
 import com.google.inject.name.Names;
 
 public class ArxivModule extends AbstractModule {
@@ -22,5 +24,6 @@ public class ArxivModule extends AbstractModule {
 					"failed to load the Arxiv module configuration");
 		}
 		bind(ArxivDAOFacade.class).to(ArxivDAOFacadeImpl.class);
+		bindListener(Matchers.any(), new Slf4jTypeListener());
 	}
 }
