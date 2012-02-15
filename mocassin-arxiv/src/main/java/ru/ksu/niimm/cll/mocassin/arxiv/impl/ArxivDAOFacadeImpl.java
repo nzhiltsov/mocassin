@@ -10,14 +10,15 @@ import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
+
+import org.slf4j.Logger;
 
 import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.arxiv.ArxivDAOFacade;
 import ru.ksu.niimm.cll.mocassin.arxiv.impl.Link.PdfLinkPredicate;
 import ru.ksu.niimm.cll.mocassin.arxiv.impl.util.ArticleMetadataReader;
+import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
 
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
@@ -50,7 +51,7 @@ public class ArxivDAOFacadeImpl implements ArxivDAOFacade {
 
 	private String proxyPassword;
 
-	@Inject
+	@InjectLogger
 	private Logger logger;
 
 	@Inject
@@ -76,8 +77,8 @@ public class ArxivDAOFacadeImpl implements ArxivDAOFacade {
 			throw new NullPointerException("arxiv id cannot be null");
 		try {
 			String paramValue = arxivId;
-			String query = String.format("id_list=%s", URLEncoder.encode(
-					paramValue, DEFAULT_CHARSET));
+			String query = String.format("id_list=%s",
+					URLEncoder.encode(paramValue, DEFAULT_CHARSET));
 			URL url = new URL(this.arxivConnectionUrl + "?" + query);
 			InputStream response = loadFromUrl(url, XML_CONTENT_TYPE);
 
@@ -89,9 +90,8 @@ public class ArxivDAOFacadeImpl implements ArxivDAOFacade {
 			return metadata;
 
 		} catch (Exception e) {
-			logger.log(Level.SEVERE,
-					"failed to process the request with arXiv id:" + arxivId
-							+ " due to:" + e.getMessage());
+			logger.error("Failed to process the request with arXiv id='{}'",
+					arxivId, e);
 			return null;
 		}
 	}
@@ -106,12 +106,10 @@ public class ArxivDAOFacadeImpl implements ArxivDAOFacade {
 			inputStream = new GZIPInputStream(loadFromUrl(sourceUrl,
 					TXT_CONTENT_TYPE));
 		} catch (MalformedURLException e) {
-			logger.log(Level.SEVERE, String.format(
-					"failed to prepare source URL from: %s", sourceLink));
+			logger.error("Failed to prepare a source URL from: {}", sourceLink,
+					e);
 		} catch (IOException e) {
-			logger.log(Level.SEVERE, String.format(
-					"failed to get the source of %s due to: %s", id, e
-							.getMessage()));
+			logger.error("Failed to get the source of {}", id, e);
 		}
 		if (isUseProxy) {
 			Authenticator.setDefault(null);
@@ -125,13 +123,9 @@ public class ArxivDAOFacadeImpl implements ArxivDAOFacade {
 				new PdfLinkPredicate(), null);
 		if (pdfLink == null
 				|| (pdfLink.getHref() == null || pdfLink.getHref().length() == 0)) {
-			logger
-					.log(
-							Level.SEVERE,
-							String
-									.format(
-											"article metadata with id='%s' doesn't include PDF link; empty stream will be returned",
-											metadata.getId()));
+			logger.warn(
+					"Article metadata with id='{}' doesn't include PDF link; empty stream will be returned",
+					metadata.getId());
 			return null;
 		}
 		InputStream inputStream = null;
@@ -139,14 +133,10 @@ public class ArxivDAOFacadeImpl implements ArxivDAOFacade {
 			URL sourceUrl = new URL(pdfLink.getHref());
 			inputStream = loadFromUrl(sourceUrl, PDF_CONTENT_TYPE);
 		} catch (MalformedURLException e) {
-			logger
-					.log(Level.SEVERE, String.format(
-							"failed to prepare source URL from: %s", pdfLink
-									.getHref()));
+			logger.error("Failed to prepare source URL from: {}",
+					pdfLink.getHref(), e);
 		} catch (IOException e) {
-			logger.log(Level.SEVERE, String.format(
-					"failed to get the source of %s due to: %s", metadata
-							.getId(), e.getMessage()));
+			logger.error("Failed to get the source of {}", metadata.getId(), e);
 		}
 		if (isUseProxy) {
 			Authenticator.setDefault(null);
