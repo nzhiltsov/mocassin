@@ -10,9 +10,10 @@ statusListener(OnConsoleStatusListener)
 
 def USER_HOME = System.getProperty("user.home")
 def MOCASSIN_HOME = "/opt/mocassin"
+def productionFlag = "tomcat"
 
 def isProduction = false
-if (USER_HOME =~ /tomcat/) {
+if (USER_HOME.contains(productionFlag)) {
 	isProduction = true
 	println "Production logging mode is initialized"
 }
