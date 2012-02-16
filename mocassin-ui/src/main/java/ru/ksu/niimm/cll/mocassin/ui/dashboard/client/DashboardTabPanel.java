@@ -85,12 +85,14 @@ public class DashboardTabPanel extends Composite implements
 
 					@Override
 					public void onSubmitComplete(SubmitCompleteEvent event) {
-
+						closeDialogButton.setEnabled(true);
+						dialogBox.hide();
 						String body = event.getResults();
 						JSONObject response = (JSONObject) JSONParser
 								.parseLenient(body);
 						double numberOfSuccesses = ((JSONNumber) response
 								.get("numberOfSuccesses")).doubleValue();
+
 						showSuccess((int) numberOfSuccesses);
 						multipleUploadForm.reset();
 					}
@@ -118,9 +120,11 @@ public class DashboardTabPanel extends Composite implements
 			}
 
 			@Override
-			public void handleSuccess(PagingLoadInfo<ArxivArticleMetadata> result) {
+			public void handleSuccess(
+					PagingLoadInfo<ArxivArticleMetadata> result) {
 				documentTable.clear();
-				List<ArxivArticleMetadata> data = new ArrayList<ArxivArticleMetadata>(result.getData());
+				List<ArxivArticleMetadata> data = new ArrayList<ArxivArticleMetadata>(
+						result.getData());
 				for (int i = 0; i < data.size(); i++) {
 					documentTable.setText(i + 1, 0, data.get(i).getKey());
 					documentTable.setText(i + 1, 1, data.get(i).getTitle());
@@ -160,6 +164,10 @@ public class DashboardTabPanel extends Composite implements
 		} else if (event.getSource() == closeDialogButton) {
 			dialogBox.hide();
 		} else if (event.getSource() == multipleUploadButton) {
+			closeDialogButton.setEnabled(false);
+			dialogBox.setText("Uploading data. Please wait...");
+			dialogBox.center();
+			dialogBox.show();
 			multipleUploadForm.submit();
 		}
 	}
