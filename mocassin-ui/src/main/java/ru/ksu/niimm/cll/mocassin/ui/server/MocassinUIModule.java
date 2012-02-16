@@ -22,7 +22,7 @@ public class MocassinUIModule extends ServletModule {
 	protected void configureServlets() {
 		serve("*/GWT.rpc").with(GuiceRemoteServiceServlet.class);
 		serve("/mocassin/download/arxivid/*").with(PdfDownloadServlet.class);
-		serve("/mocassin/upload/arxivlist").with(UploadArxivListServlet.class);
+		serve("*/upload/arxivlist").with(UploadArxivListServlet.class);
 		serve("*/describe").with(DescriptionServlet.class);
 		bind(OntologyService.class).to(OntologyServiceImpl.class);
 		bind(QueryService.class).to(QueryServiceImpl.class);
