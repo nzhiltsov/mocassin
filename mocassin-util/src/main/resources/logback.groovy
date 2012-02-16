@@ -10,7 +10,7 @@ statusListener(OnConsoleStatusListener)
 
 def USER_HOME = System.getProperty("user.home")
 def MOCASSIN_HOME = "/opt/mocassin"
-def productionFlag = "tomcat"
+def productionFlag = "linglab"
 
 def isProduction = false
 if (USER_HOME.contains(productionFlag)) {
@@ -39,5 +39,5 @@ logger("org.openrdf.rio", INFO)
 if (isProduction) {
 	root(INFO, ["FILE"])
 } else {
-root(DEBUG, ["FILE", "STDOUT"])
+root(DEBUG, ["STDOUT"])
 }
