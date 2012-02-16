@@ -38,12 +38,16 @@ public class UploadArxivListServlet extends HttpServlet {
 			if (it.hasNext()) {
 				FileItemStream item = it.next();
 				Set<String> ids = IOUtil.readLineSet(item.openStream());
+				logger.debug("Found {} identifiers to upload in the request",
+						ids.size());
 				int numberOfSuccesses = arXMLivAdapter.handle(ids);
 				resp.setContentType("text/html");
-				resp.getWriter().printf("{ \"numberOfSuccesses\": %d}", numberOfSuccesses);
+				resp.getWriter().printf("{ \"numberOfSuccesses\": %d}",
+						numberOfSuccesses);
 			}
 		} catch (FileUploadException e) {
-			logger.error("Failed to upload a list of articles ids for processing", e);
+			logger.error(
+					"Failed to upload a list of articles ids for processing", e);
 		}
 
 	}
