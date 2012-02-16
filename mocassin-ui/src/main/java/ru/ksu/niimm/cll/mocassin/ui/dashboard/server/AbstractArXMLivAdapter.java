@@ -70,7 +70,7 @@ public abstract class AbstractArXMLivAdapter implements ArXMLivAdapter {
 				handle(arxivId);
 				long stop = System.currentTimeMillis();
 				getLogger().info(
-						"The document= {} has been processed in {} second(s)",
+						"The document = '{}' has been processed in {} second(s)",
 						arxivId,
 						format("%.2f", ((float) (stop - start)) / 1000));
 				numberOfSuccesses++;
