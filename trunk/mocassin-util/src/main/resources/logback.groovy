@@ -20,14 +20,14 @@ if (USER_HOME =~ /tomcat/) {
 if (!isProduction) {
 appender("STDOUT", ConsoleAppender) {
   encoder(PatternLayoutEncoder) {
-    pattern = "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+    pattern = "%d{HH:mm:ss.SSS}\t[%thread]\t%-5level\t%logger{36}\t-\t%msg%n"
   }
 }
 }
 appender("FILE", FileAppender) {
 	file = "${MOCASSIN_HOME}/logs/common.log"
 	encoder(PatternLayoutEncoder) {
-	  pattern = "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+	  pattern = "%d{HH:mm:ss.SSS}\t[%thread]\t%-5level\t%logger{36}\t-\t%msg%n"
 	}
   }
 
@@ -38,5 +38,5 @@ logger("org.openrdf.rio", INFO)
 if (isProduction) {
 	root(INFO, ["FILE"])
 } else {
-root(INFO, ["FILE", "STDOUT"])
+root(DEBUG, ["FILE", "STDOUT"])
 }
