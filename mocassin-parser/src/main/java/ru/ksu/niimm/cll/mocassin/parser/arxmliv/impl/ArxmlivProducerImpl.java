@@ -46,7 +46,7 @@ public class ArxmlivProducerImpl extends AbstractUnixCommandWrapper implements
 				StringUtil.arxivid2filename(arxivId, "tex"));
 		try {
 			if (!execute())
-				throw new RuntimeException("Not normal output.");
+				throw new RuntimeException("Not normal output while producing arxmliv document.");
 			return arxmlivDocFilePath;
 		} catch (TimeoutException e) {
 			logger.error(

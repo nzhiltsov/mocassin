@@ -62,7 +62,7 @@ class PdflatexWrapperImpl extends AbstractUnixCommandWrapper implements
 			throws PdflatexCompilationException {
 		try {
 			if (!execute())
-				throw new RuntimeException("Not normal output.");
+				throw new RuntimeException("Not normal output while compiling PDF");
 			execute(); // double calling is necessary for correct cross-references
 		} catch (Exception e) {
 			logger.error(
