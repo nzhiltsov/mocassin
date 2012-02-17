@@ -14,6 +14,8 @@ import com.google.inject.name.Named;
 
 public class ArxmlivProducerImpl extends AbstractUnixCommandWrapper implements
 		ArxmlivProducer {
+	private static final String SUCCESS_FLAG = "Conversion complete:";
+
 	@InjectLogger
 	private Logger logger;
 
@@ -26,7 +28,7 @@ public class ArxmlivProducerImpl extends AbstractUnixCommandWrapper implements
 			@Named("arxmliv.document.dir") String arxmlivDocumentsDir,
 			@Named("arxmliv.path") String arxmlivPath,
 			@Named("patched.tex.document.dir") String latexDir) {
-		super(4);
+		super(4, SUCCESS_FLAG);
 		this.ARXMLIV_DOCUMENT_DIR = arxmlivDocumentsDir;
 		this.LATEX_DIR = latexDir;
 		this.cmdArray[0] = "/usr/local/bin/latexml";
@@ -43,7 +45,8 @@ public class ArxmlivProducerImpl extends AbstractUnixCommandWrapper implements
 		this.cmdArray[3] = String.format("%s/%s", LATEX_DIR,
 				StringUtil.arxivid2filename(arxivId, "tex"));
 		try {
-			execute();
+			if (!execute())
+				throw new RuntimeException("Not normal output.");
 			return arxmlivDocFilePath;
 		} catch (TimeoutException e) {
 			logger.error(
