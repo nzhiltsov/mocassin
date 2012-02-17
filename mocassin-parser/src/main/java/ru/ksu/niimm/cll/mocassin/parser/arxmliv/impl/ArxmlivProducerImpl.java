@@ -1,7 +1,5 @@
 package ru.ksu.niimm.cll.mocassin.parser.arxmliv.impl;
 
-import java.util.concurrent.TimeoutException;
-
 import org.slf4j.Logger;
 
 import ru.ksu.niimm.cll.mocassin.parser.arxmliv.ArxmlivProducer;
@@ -11,6 +9,8 @@ import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+
+import expectj.TimeoutException;
 
 public class ArxmlivProducerImpl extends AbstractUnixCommandWrapper implements
 		ArxmlivProducer {
