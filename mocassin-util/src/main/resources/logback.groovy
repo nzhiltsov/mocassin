@@ -1,6 +1,6 @@
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder
 import ch.qos.logback.core.ConsoleAppender
-import ch.qos.logback.core.FileAppender
+import ch.qos.logback.core.rolling.RollingFileAppender
 import ch.qos.logback.core.status.OnConsoleStatusListener
 
 import static ch.qos.logback.classic.Level.DEBUG
@@ -29,7 +29,7 @@ if (HOSTNAME.contains(productionFlag) & USER_HOME.contains(testFlag)) {
 	mode = Mode.PRODUCTION
 	println "Production logging mode will be initialized"
 } else {
-println "Development logging mode will be initialized"
+	println "Development logging mode will be initialized"
 }
 
 switch (mode) {
@@ -41,17 +41,24 @@ switch (mode) {
 		break
 
 	case Mode.TEST:
-		appender("TESTFILE", FileAppender) {
+		appender("TESTFILE", RollingFileAppender) {
 			file = "${MOCASSIN_HOME}/logs/common-test.log"
-			append = false
+			rollingPolicy(TimeBasedRollingPolicy) {
+				fileNamePattern = "common-test.%d{yyyy-MM-dd}.log"
+				maxHistory = 7
+			}
 			encoder(PatternLayoutEncoder) { pattern = PATTERN }
 		}
 		root(DEBUG, ["TESTFILE"])
 		break
 
 	case Mode.PRODUCTION:
-		appender("FILE", FileAppender) {
+		appender("FILE", RollingFileAppender) {
 			file = "${MOCASSIN_HOME}/logs/common.log"
+			rollingPolicy(TimeBasedRollingPolicy) {
+				fileNamePattern = "common.%d{yyyy-MM-dd}.log"
+				maxHistory = 30
+			}
 			encoder(PatternLayoutEncoder) { pattern = PATTERN }
 		}
 		root(INFO, ["FILE"])
