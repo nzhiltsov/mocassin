@@ -38,19 +38,14 @@ switch (mode) {
 		appender("STDOUT", ConsoleAppender) {
 			encoder(PatternLayoutEncoder) { pattern = PATTERN }
 		}
-		root(DEBUG, ["STDOUT"])
+		root(INFO, ["STDOUT"])
 		break
 
 	case Mode.TEST:
-		appender("TESTFILE", RollingFileAppender) {
-			file = "${MOCASSIN_HOME}/logs/common-test.log"
-			rollingPolicy(TimeBasedRollingPolicy) {
-				fileNamePattern = "common-test.%d{yyyy-MM-dd}.log"
-				maxHistory = 7
-			}
+		appender("STDOUT", ConsoleAppender) {
 			encoder(PatternLayoutEncoder) { pattern = PATTERN }
 		}
-		root(DEBUG, ["TESTFILE"])
+		root(INFO, ["STDOUT"])
 		break
 
 	case Mode.PRODUCTION:

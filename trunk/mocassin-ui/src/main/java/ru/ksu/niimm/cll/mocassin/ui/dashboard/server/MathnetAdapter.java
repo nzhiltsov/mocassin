@@ -25,7 +25,7 @@ public class MathnetAdapter extends AbstractArXMLivAdapter implements
 	private static final String MATHNET_DOWNLOAD_PDF_URL = "http://www.mathnet.ru/php/getFT.phtml?jrnid=%s&paperid=%s&what=fullt&option_lang=rus";
 
 	@Override
-	public void handle(String mathnetKey) {
+	public void handle(String mathnetKey) throws Exception {
 		if (mathnetKey == null || mathnetKey.length() == 0)
 			throw new RuntimeException("Mathnet key id cannot be null or empty");
 		/*
@@ -33,7 +33,6 @@ public class MathnetAdapter extends AbstractArXMLivAdapter implements
 		 * classes; see Issue 70 for numbering
 		 */
 
-		try {
 			ArticleMetadata metadata = new ArticleMetadata();
 			metadata.setId("http://mathnet.ru/" + mathnetKey);
 			metadata.setCollectionId(mathnetKey);
@@ -63,13 +62,6 @@ public class MathnetAdapter extends AbstractArXMLivAdapter implements
 			if (!ontologyResourceFacade.insert(triples)) {
 				throw new RuntimeException("Failed to insert triples.");
 			}
-
-		} catch (Exception e) {
-			logger.error("Failed to handle a document with a key = {}",
-					mathnetKey, e);
-			throw new RuntimeException(e);
-		}
-
 	}
 
 	@Override

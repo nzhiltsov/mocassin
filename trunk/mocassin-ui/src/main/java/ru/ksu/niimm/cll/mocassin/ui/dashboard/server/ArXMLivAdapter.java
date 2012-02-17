@@ -7,7 +7,7 @@ import ru.ksu.niimm.cll.mocassin.ui.dashboard.client.ArxivArticleMetadata;
 
 public interface ArXMLivAdapter {
 
-	void handle(String arxivId);
+	void handle(String arxivId) throws Exception;
 	/**
 	 * returns number of successfully processed papers
 	 * 

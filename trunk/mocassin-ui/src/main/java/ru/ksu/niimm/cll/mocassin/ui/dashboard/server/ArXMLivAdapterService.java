@@ -16,7 +16,11 @@ public class ArXMLivAdapterService implements ArxivService {
 
 	@Override
 	public void handle(String arxivId) {
-		arXMLivAdapter.handle(arxivId);
+		try {
+			arXMLivAdapter.handle(arxivId);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override
