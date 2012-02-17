@@ -11,6 +11,8 @@ import com.google.inject.name.Named;
 
 class PdflatexWrapperImpl extends AbstractUnixCommandWrapper implements
 		PdflatexWrapper {
+	private static final String SUCCESS_FLAG = "Output written on";
+
 	@InjectLogger
 	private Logger logger;
 
@@ -27,7 +29,7 @@ class PdflatexWrapperImpl extends AbstractUnixCommandWrapper implements
 			@Named("patched.tex.document.dir") String patchedLatexDir,
 			@Named("shaded.tex.document.dir") String shadedLatexDir,
 			@Named("pdf.document.dir") String pdfDir) {
-		super(6);
+		super(6, SUCCESS_FLAG);
 		PATCHED_LATEX_DIR = patchedLatexDir;
 		SHADED_LATEX_DIR = shadedLatexDir;
 		AUX_PDF_DIR = auxPdfPath;
@@ -59,8 +61,9 @@ class PdflatexWrapperImpl extends AbstractUnixCommandWrapper implements
 	private void executeCommands(String arxivId)
 			throws PdflatexCompilationException {
 		try {
-			execute();
-			execute(); // double calling is necessary for right cross-references
+			if (!execute())
+				throw new RuntimeException("Not normal output.");
+			execute(); // double calling is necessary for correct cross-references
 		} catch (Exception e) {
 			logger.error(
 					"Failed to compile the PDF document with an identifier='{}'",

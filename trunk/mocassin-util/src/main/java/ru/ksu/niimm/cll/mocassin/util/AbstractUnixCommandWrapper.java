@@ -28,9 +28,12 @@ public abstract class AbstractUnixCommandWrapper {
 
 		Spawn shell = expectinator.spawn(StringUtil.asString(cmdArray));
 		shell.expectClose();
-		String output = shell.getCurrentStandardErrContents();
-		if (successFlag != null && output != null && !output.isEmpty()) {
-			return output.contains(successFlag) ? true : false;
+		String errOutput = shell.getCurrentStandardErrContents();
+		String standardOutput = shell.getCurrentStandardOutContents();
+		if (successFlag != null) {
+			boolean contains = standardOutput.contains(successFlag)
+					|| errOutput.contains(successFlag);
+			return contains;
 		}
 		return true;
 	}
