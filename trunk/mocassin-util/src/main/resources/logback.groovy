@@ -3,6 +3,7 @@ import ch.qos.logback.core.ConsoleAppender
 import ch.qos.logback.core.rolling.RollingFileAppender
 import ch.qos.logback.core.status.OnConsoleStatusListener
 import ch.qos.logback.core.rolling.TimeBasedRollingPolicy
+import ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy
 
 import static ch.qos.logback.classic.Level.DEBUG
 import static ch.qos.logback.classic.Level.INFO
@@ -38,14 +39,20 @@ switch (mode) {
 		appender("STDOUT", ConsoleAppender) {
 			encoder(PatternLayoutEncoder) { pattern = PATTERN }
 		}
-		root(INFO, ["STDOUT"])
+		root(DEBUG, ["STDOUT"])
 		break
 
 	case Mode.TEST:
-		appender("STDOUT", ConsoleAppender) {
+		appender("FILE", RollingFileAppender) {
+			file = "${MOCASSIN_HOME}/logs/common-test.log"
+			rollingPolicy(TimeBasedRollingPolicy) {
+				fileNamePattern = "common-test.%d{yyyy-MM-dd}.log"
+				maxHistory = 7
+			}
+			triggeringPolicy(SizeBasedTriggeringPolicy) { maxFileSize = "100MB" }
 			encoder(PatternLayoutEncoder) { pattern = PATTERN }
 		}
-		root(INFO, ["STDOUT"])
+		root(INFO, ["FILE"])
 		break
 
 	case Mode.PRODUCTION:
