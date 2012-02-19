@@ -1,5 +1,7 @@
 package ru.ksu.niimm.cll.mocassin.parser.latex;
 
+import java.io.File;
+
 import org.slf4j.Logger;
 
 import ru.ksu.niimm.cll.mocassin.util.AbstractUnixCommandWrapper;
@@ -32,8 +34,14 @@ class SedBasedHeaderPatcher extends AbstractUnixCommandWrapper implements
 	@Override
 	public void patch(String arxivId) {
 
-		this.cmdArray[3] = String.format("%s/%s", texDocumentDir,
+		String filename = String.format("%s/%s", texDocumentDir,
 				StringUtil.arxivid2filename(arxivId, "tex"));
+		File file = new File(filename);
+		if (!file.exists()) {
+			throw new IllegalArgumentException(
+					"Failed to patch a Latex document, because it does not exist.");
+		}
+		this.cmdArray[3] = filename;
 		try {
 			execute();
 		} catch (Exception e) {
