@@ -52,7 +52,7 @@ switch (mode) {
 			triggeringPolicy(SizeBasedTriggeringPolicy) { maxFileSize = "100MB" }
 			encoder(PatternLayoutEncoder) { pattern = PATTERN }
 		}
-		root(INFO, ["FILE"])
+		root(DEBUG, ["FILE"])
 		break
 
 	case Mode.PRODUCTION:
