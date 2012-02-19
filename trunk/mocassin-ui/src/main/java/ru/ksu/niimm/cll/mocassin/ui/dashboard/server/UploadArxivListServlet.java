@@ -41,6 +41,9 @@ public class UploadArxivListServlet extends HttpServlet {
 				logger.debug("Found {} identifiers to upload in the request",
 						ids.size());
 				int numberOfSuccesses = arXMLivAdapter.handle(ids);
+				logger.debug(
+						"{} out of {} document(s) have been processed successfully",
+						numberOfSuccesses, ids.size());
 				resp.setContentType("text/html");
 				resp.getWriter().printf("{ \"numberOfSuccesses\": %d}",
 						numberOfSuccesses);
@@ -51,5 +54,4 @@ public class UploadArxivListServlet extends HttpServlet {
 		}
 
 	}
-
 }
