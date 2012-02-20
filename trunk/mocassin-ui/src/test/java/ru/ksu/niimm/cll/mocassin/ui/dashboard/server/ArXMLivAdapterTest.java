@@ -2,7 +2,7 @@ package ru.ksu.niimm.cll.mocassin.ui.dashboard.server;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import junit.framework.Assert;
@@ -42,15 +42,15 @@ public class ArXMLivAdapterTest {
 	@Inject
 	private GateDocumentDAO gateDocumentDAO;
 
-	private Set<String> sample;
+	private List<String> sample;
 
 	@Before
 	public void init() throws IOException, AccessGateDocumentException,
 			PersistenceException {
 		Set<String> ids = IOUtil.readLineSet(this.getClass().getClassLoader()
 				.getResourceAsStream("mathnet_ids_list.txt"));
-		this.sample = new HashSet<String>(CollectionUtil.sampleRandomSublist(
-				new ArrayList<String>(ids), 3));
+		this.sample = CollectionUtil.sampleRandomSublist(
+				new ArrayList<String>(ids), 3);
 		for (String id : this.sample) {
 			this.gateDocumentDAO.delete(id);
 		}

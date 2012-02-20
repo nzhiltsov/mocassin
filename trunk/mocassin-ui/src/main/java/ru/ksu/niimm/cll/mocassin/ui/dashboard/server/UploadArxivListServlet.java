@@ -1,7 +1,7 @@
 package ru.ksu.niimm.cll.mocassin.ui.dashboard.server;
 
 import java.io.IOException;
-import java.util.Set;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 
@@ -44,7 +44,7 @@ public class UploadArxivListServlet extends HttpServlet {
 			FileItemIterator it = upload.getItemIterator(req);
 			if (it.hasNext()) {
 				FileItemStream item = it.next();
-				final Set<String> ids = IOUtil.readLineSet(item.openStream());
+				final List<String> ids = IOUtil.readLineList(item.openStream());
 				logger.debug("Found {} identifiers to upload in the request",
 						ids.size());
 				ListeningExecutorService service = MoreExecutors
