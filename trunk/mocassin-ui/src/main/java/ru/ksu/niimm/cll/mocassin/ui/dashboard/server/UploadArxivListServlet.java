@@ -57,7 +57,7 @@ public class UploadArxivListServlet extends HttpServlet {
 						});
 				Futures.addCallback(indexing, new FutureCallback<Integer>() {
 					public void onSuccess(Integer numberOfSuccesses) {
-						logger.debug(
+						logger.info(
 								"{} document(s) have been processed successfully",
 								numberOfSuccesses);
 					}
