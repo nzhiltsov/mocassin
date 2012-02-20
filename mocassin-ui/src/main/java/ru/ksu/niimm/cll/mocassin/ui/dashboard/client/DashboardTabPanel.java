@@ -86,15 +86,8 @@ public class DashboardTabPanel extends Composite implements
 					@Override
 					public void onSubmitComplete(SubmitCompleteEvent event) {
 						closeDialogButton.setEnabled(true);
-						dialogBox.hide();
-						String body = event.getResults();
-						JSONObject response = (JSONObject) JSONParser
-								.parseLenient(body);
-						double numberOfSuccesses = ((JSONNumber) response
-								.get("numberOfSuccesses")).doubleValue();
-
-						showSuccess((int) numberOfSuccesses);
 						multipleUploadForm.reset();
+						dialogBox.setText(event.getResults());
 					}
 				});
 
