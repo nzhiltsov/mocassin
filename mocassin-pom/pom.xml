@@ -190,7 +190,7 @@
 		</snapshotRepository>
 	</distributionManagement>
 	<properties>
-		<guava.version>r08</guava.version>
+		<guava.version>11.0.1</guava.version>
 		<slf4j.version>1.6.4</slf4j.version>
 		<guice.version>3.0</guice.version>
 		<groovy.version>1.7.6</groovy.version>
