@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.net.URL;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
 
 public class IOUtil {
@@ -14,7 +15,7 @@ public class IOUtil {
 	}
 
 	/**
-	 * read set of string lines from input stream and close it
+	 * read a set of string lines from input stream and close it
 	 * 
 	 * @param inputStream
 	 * @return
@@ -34,7 +35,28 @@ public class IOUtil {
 		} finally {
 			stream.close();
 		}
-
+	}
+	/**
+	 * read an ordered list of string lines from input stream and close it
+	 * 
+	 * @param inputStream
+	 * @return
+	 * @throws IOException
+	 */
+	public static LinkedList<String> readLineList(InputStream stream)
+			throws IOException {
+		LinkedList<String> values = new LinkedList<String>();
+		try {
+			LineNumberReader lineReader = new LineNumberReader(
+					new InputStreamReader(stream));
+			String line = null;
+			while ((line = lineReader.readLine()) != null) {
+				values.add(line);
+			}
+			return values;
+		} finally {
+			stream.close();
+		}
 	}
 
 	public static String readContents(URL url) throws IOException {

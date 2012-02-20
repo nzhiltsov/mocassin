@@ -1,10 +1,9 @@
 package ru.ksu.niimm.cll.mocassin.ui.dashboard.server;
 
-import static java.lang.String.*;
+import static java.lang.String.format;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import org.slf4j.Logger;
 
@@ -62,7 +61,7 @@ public abstract class AbstractArXMLivAdapter implements ArXMLivAdapter {
 
 	protected abstract Logger getLogger();
 
-	public int handle(Set<String> arxivIds) {
+	public int handle(List<String> arxivIds) {
 		int numberOfSuccesses = 0;
 		for (String arxivId : arxivIds) {
 			try {
