@@ -10,7 +10,6 @@ import ru.ksu.niimm.cll.mocassin.nlp.util.impl.AnnotationUtilImpl;
 import ru.ksu.niimm.cll.mocassin.util.inject.log.Slf4jTypeListener;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.Singleton;
 import com.google.inject.matcher.Matchers;
 import com.google.inject.name.Names;
 import com.google.inject.throwingproviders.ThrowingProviderBinder;
@@ -28,7 +27,7 @@ public class GateModule extends AbstractModule {
 			throw new RuntimeException(
 					"failed to load the NLP module configuration");
 		}
-		bind(GateDocumentDAO.class).to(GateDocumentDAOImpl.class).in(Singleton.class);
+		bind(GateDocumentDAO.class).to(GateDocumentDAOImpl.class);
 		bind(GateProcessingFacade.class).to(GateProcessingFacadeImpl.class);
 		bind(AnnotationUtil.class).to(AnnotationUtilImpl.class);
 		bindListener(Matchers.any(), new Slf4jTypeListener());
@@ -36,7 +35,7 @@ public class GateModule extends AbstractModule {
 				.create(binder())
 				.bind(AnnieControllerProvider.class,
 						SerialAnalyserController.class)
-				.to(AnnieControllerProviderImpl.class).in(Singleton.class);
+				.to(AnnieControllerProviderImpl.class);
 	}
 
 }

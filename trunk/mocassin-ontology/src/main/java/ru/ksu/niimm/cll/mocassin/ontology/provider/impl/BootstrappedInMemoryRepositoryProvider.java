@@ -13,9 +13,6 @@ import org.slf4j.Logger;
 import ru.ksu.niimm.cll.mocassin.ontology.provider.RepositoryProvider;
 import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
 
-import com.google.inject.Singleton;
-
-@Singleton
 public class BootstrappedInMemoryRepositoryProvider implements
 		RepositoryProvider<Repository> {
 	@InjectLogger

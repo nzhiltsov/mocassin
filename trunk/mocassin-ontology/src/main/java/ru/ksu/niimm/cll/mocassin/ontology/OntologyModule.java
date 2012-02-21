@@ -12,13 +12,11 @@ import ru.ksu.niimm.cll.mocassin.ontology.loader.SparqlQueryLoader;
 import ru.ksu.niimm.cll.mocassin.ontology.loader.impl.SparqlQueryLoaderImpl;
 import ru.ksu.niimm.cll.mocassin.ontology.provider.OntologyProvider;
 import ru.ksu.niimm.cll.mocassin.ontology.provider.RepositoryProvider;
-import ru.ksu.niimm.cll.mocassin.ontology.provider.impl.InMemoryRepositoryProvider;
 import ru.ksu.niimm.cll.mocassin.ontology.provider.impl.OntologyPelletProvider;
 import ru.ksu.niimm.cll.mocassin.ontology.provider.impl.VirtuosoRepositoryProvider;
 import ru.ksu.niimm.cll.mocassin.util.inject.log.Slf4jTypeListener;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.Singleton;
 import com.google.inject.matcher.Matchers;
 import com.google.inject.name.Names;
 import com.google.inject.throwingproviders.ThrowingProviderBinder;
@@ -44,7 +42,7 @@ public class OntologyModule extends AbstractModule {
 		bind(SparqlQueryLoader.class).to(SparqlQueryLoaderImpl.class);
 		ThrowingProviderBinder.create(binder())
 				.bind(OntologyProvider.class, OntModel.class)
-				.to(OntologyPelletProvider.class).in(Singleton.class);
+				.to(OntologyPelletProvider.class);
 		bindListener(Matchers.any(), new Slf4jTypeListener());
 		configureStore();
 	}
@@ -52,7 +50,7 @@ public class OntologyModule extends AbstractModule {
 	protected void configureStore() {
 		ThrowingProviderBinder.create(binder())
 				.bind(RepositoryProvider.class, Repository.class)
-				.to(VirtuosoRepositoryProvider.class).in(Singleton.class);
+				.to(VirtuosoRepositoryProvider.class);
 	}
 
 }

@@ -7,10 +7,8 @@ import ru.ksu.niimm.cll.mocassin.ontology.provider.RepositoryProvider;
 import virtuoso.sesame2.driver.VirtuosoRepository;
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
-@Singleton
 public class VirtuosoRepositoryProvider implements
 		RepositoryProvider<Repository> {
 	private final String connectionUrl;
