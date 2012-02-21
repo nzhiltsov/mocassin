@@ -10,12 +10,10 @@ import ru.ksu.niimm.cll.mocassin.ontology.provider.OntologyProvider;
 import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.hp.hpl.jena.ontology.OntModel;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 
-@Singleton
 public class OntologyPelletProvider implements OntologyProvider<OntModel> {
 	private static final String ONTOLOGY_LOADING_MODE_PARAMETER_NAME = "ontology.loading.mode";
 
@@ -74,7 +72,8 @@ public class OntologyPelletProvider implements OntologyProvider<OntModel> {
 			model.read(stream, null);
 			stream.close();
 		} catch (IOException e) {
-			logger.error("Couldn't model as local file with name: {}", this.ontologyLocalFilename, e);
+			logger.error("Couldn't model as local file with name: {}",
+					this.ontologyLocalFilename, e);
 		}
 		return model;
 	}

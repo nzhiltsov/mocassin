@@ -5,7 +5,6 @@ import org.openrdf.repository.Repository;
 import ru.ksu.niimm.cll.mocassin.ontology.provider.RepositoryProvider;
 import ru.ksu.niimm.cll.mocassin.ontology.provider.impl.BootstrappedInMemoryRepositoryProvider;
 
-import com.google.inject.Singleton;
 import com.google.inject.throwingproviders.ThrowingProviderBinder;
 
 public class OntologyBootstrappedTestModule extends OntologyModule {
@@ -14,7 +13,7 @@ public class OntologyBootstrappedTestModule extends OntologyModule {
 	protected void configureStore() {
 		ThrowingProviderBinder.create(binder())
 		.bind(RepositoryProvider.class, Repository.class)
-		.to(BootstrappedInMemoryRepositoryProvider.class).in(Singleton.class);
+		.to(BootstrappedInMemoryRepositoryProvider.class);
 	}
 
 }
