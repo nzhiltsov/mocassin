@@ -34,7 +34,6 @@ import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
 import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
 
-import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
@@ -92,12 +91,13 @@ class GateStructuralElementSearcher implements StructuralElementSearcher {
 			setStructuralAnnotations(gateDocument.getAnnotations(
 					ARXMLIV_MARKUP_NAME).get(NAME_SET));
 
-			Function<Annotation, StructuralElement> extractFunction = new ExtractionFunction(
-					gateDocument);
-
-			Iterable<StructuralElement> structuralElementIterable = Iterables
-					.transform(structuralAnnotations, extractFunction);
-			return CollectionUtil.asList(structuralElementIterable);
+			List<StructuralElement> elements = new ArrayList<StructuralElement>();
+			for (Annotation structuralAnnotation : getStructuralAnnotations()) {
+				StructuralElement element = extractStructuralElement(
+						gateDocument, structuralAnnotation);
+				elements.add(element);
+			}
+			return elements;
 		} catch (AccessGateDocumentException e) {
 			logger.error("Failed to load the document: {}",
 					parsedDocument.getUri(), e);
@@ -232,98 +232,82 @@ class GateStructuralElementSearcher implements StructuralElementSearcher {
 		element.setLatexEndLine(node.getEndLine());
 	}
 
-	private class ExtractionFunction implements
-			Function<Annotation, StructuralElement> {
+	private StructuralElement extractStructuralElement(Document document,
+			Annotation annotation) {
+		Integer id = annotation.getId();
+		Long start = annotation.getStartNode().getOffset();
+		Long end = annotation.getEndNode().getOffset();
+		String type = annotation.getType();
+		String classFeature = (String) annotation.getFeatures().get(
+				ArxmlivFormatConstants.CLASS_ATTRIBUTE_NAME);
 
-		private Document document;
+		String name = classFeature != null
+				&& !type.equals(ArxmlivStructureElementTypes.TABLE.toString()) ? classFeature
+				: type;
 
-		public ExtractionFunction(Document document) {
-			this.document = document;
+		List<String> labels = collectLabels(document, annotation);
+
+		AnnotationSet titleSet = document
+				.getAnnotations(ARXMLIV_MARKUP_NAME)
+				.get(TITLE_ANNOTATION_NAME)
+
+				.getContained(annotation.getStartNode().getOffset(),
+						annotation.getEndNode().getOffset());
+		List<Annotation> titleList = new ArrayList<Annotation>(titleSet);
+		Collections.sort(titleList, new OffsetComparator());
+		String title = "";
+		if (titleList.size() > 0) {
+			Annotation titleAnnotation = titleList.get(0);
+			title = getTextContentsForAnnotation(document, titleAnnotation);
+		} else {
+			String refnum = (String) annotation.getFeatures().get(
+					ArxmlivFormatConstants.REF_NUM_ATTRIBUTE_NAME);
+			title = refnum != null ? String.format("%s %s", name, refnum)
+					: name;
 		}
 
-		public Document getDocument() {
-			return document;
-		}
+		StructuralElement element = new StructuralElementImpl.Builder(id,
+				getParsedDocument().getUri() + "/" + id).start(start).end(end)
+				.name(name).title(title).build();
+		element.setLabels(labels);
+		element.setContents(getPureTokensForAnnotation(document, annotation));
 
-		@Override
-		public StructuralElement apply(Annotation annotation) {
-			Integer id = annotation.getId();
-			Long start = annotation.getStartNode().getOffset();
-			Long end = annotation.getEndNode().getOffset();
-			String type = annotation.getType();
-			String classFeature = (String) annotation.getFeatures().get(
-					ArxmlivFormatConstants.CLASS_ATTRIBUTE_NAME);
+		MocassinOntologyClasses predictedClass = getStructuralElementTypeRecognizer()
+				.predict(element);
+		element.setPredictedClass(predictedClass);
 
-			String name = classFeature != null
-					&& !type.equals(ArxmlivStructureElementTypes.TABLE
-							.toString()) ? classFeature : type;
+		fillPageNumber(element);
 
-			List<String> labels = collectLabels(annotation);
-
-			AnnotationSet titleSet = getDocument()
-					.getAnnotations(ARXMLIV_MARKUP_NAME)
-					.get(TITLE_ANNOTATION_NAME)
-
-					.getContained(annotation.getStartNode().getOffset(),
-							annotation.getEndNode().getOffset());
-			List<Annotation> titleList = new ArrayList<Annotation>(titleSet);
-			Collections.sort(titleList, new OffsetComparator());
-			String title = "";
-			if (titleList.size() > 0) {
-				Annotation titleAnnotation = titleList.get(0);
-				title = getTextContentsForAnnotation(getDocument(),
-						titleAnnotation);
-			} else {
-				String refnum = (String) annotation.getFeatures().get(
-						ArxmlivFormatConstants.REF_NUM_ATTRIBUTE_NAME);
-				title = refnum != null ? String.format("%s %s", name, refnum)
-						: name;
-			}
-
-			StructuralElement element = new StructuralElementImpl.Builder(id,
-					getParsedDocument().getUri() + "/" + id).start(start)
-					.end(end).name(name).title(title).build();
-			element.setLabels(labels);
-			element.setContents(getPureTokensForAnnotation(getDocument(),
-					annotation));
-
-			MocassinOntologyClasses predictedClass = getStructuralElementTypeRecognizer()
-					.predict(element);
-			element.setPredictedClass(predictedClass);
-
-			fillPageNumber(element);
-
-			return element;
-		}
-
-		/**
-		 * return all labels for a given annotation and for all contained
-		 * non-arxmliv annotations
-		 * 
-		 * @param annotation
-		 * @return
-		 */
-		private List<String> collectLabels(Annotation annotation) {
-			List<String> labels = extractLabels(annotation);
-			AnnotationSet containedElementSet = getDocument().getAnnotations(
-					ARXMLIV_MARKUP_NAME).getContained(
-					annotation.getStartNode().getOffset(),
-					annotation.getEndNode().getOffset());
-			ImmutableSet<Annotation> containedAxiliaryElements = Sets
-					.difference(containedElementSet, getStructuralAnnotations())
-					.immutableCopy();
-			for (Annotation a : containedAxiliaryElements) {
-				labels.addAll(extractLabels(a));
-			}
-			return labels;
-		}
-
-		private List<String> extractLabels(Annotation annotation) {
-			String labelStr = (String) annotation.getFeatures().get(
-					ArxmlivFormatConstants.LABEL_ATTRIBUTE_NAME);
-			List<String> labels = StringUtil.tokenize(labelStr);
-			return labels;
-		}
-
+		return element;
 	}
+
+	/**
+	 * return all labels for a given annotation and for all contained
+	 * non-arxmliv annotations
+	 * 
+	 * @param annotation
+	 * @return
+	 */
+	private List<String> collectLabels(Document document, Annotation annotation) {
+		List<String> labels = extractLabels(annotation);
+		AnnotationSet containedElementSet = document.getAnnotations(
+				ARXMLIV_MARKUP_NAME).getContained(
+				annotation.getStartNode().getOffset(),
+				annotation.getEndNode().getOffset());
+		ImmutableSet<Annotation> containedAxiliaryElements = Sets.difference(
+				containedElementSet, getStructuralAnnotations())
+				.immutableCopy();
+		for (Annotation a : containedAxiliaryElements) {
+			labels.addAll(extractLabels(a));
+		}
+		return labels;
+	}
+
+	private List<String> extractLabels(Annotation annotation) {
+		String labelStr = (String) annotation.getFeatures().get(
+				ArxmlivFormatConstants.LABEL_ATTRIBUTE_NAME);
+		List<String> labels = StringUtil.tokenize(labelStr);
+		return labels;
+	}
+
 }

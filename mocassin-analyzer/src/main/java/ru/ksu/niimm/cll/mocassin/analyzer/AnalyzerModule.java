@@ -72,7 +72,8 @@ public class AnalyzerModule extends AbstractModule {
 		bind(NavigationalRelationClassifier.class).to(
 				NavRelClassifierImpl.class);
 		bind(ReferenceSearcher.class).to(GateReferenceSearcher.class);
-		bind(ReferenceStatementGenerator.class).to(ReferenceStatementGeneratorImpl.class);
+		bind(ReferenceStatementGenerator.class).to(
+				ReferenceStatementGeneratorImpl.class);
 		bindListener(Matchers.any(), new Slf4jTypeListener());
 		bindClassifier();
 
@@ -89,7 +90,7 @@ public class AnalyzerModule extends AbstractModule {
 					Names.named("training.set.header")).toInstance(data);
 		} catch (IOException e) {
 			throw new RuntimeException(
-					"couldn't read the navigation relations training set header");
+					"Failed to read the navigation relations training set header");
 		}
 	}
 
@@ -114,7 +115,7 @@ public class AnalyzerModule extends AbstractModule {
 											.getProperty("persisted.learning.model.filename")));
 		} catch (Exception e) {
 			throw new RuntimeException(
-					"couldn't read the navigation relations learning model");
+					"Failed to read the learning model for navigational relations");
 		}
 
 		bind(Classifier.class).annotatedWith(Names.named("classifier"))
