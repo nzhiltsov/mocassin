@@ -128,6 +128,7 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 			throw new RuntimeException(e);
 		} finally {
 			gateDocumentDAO.release(getDocument());
+			setDocument(null);
 		}
 	}
 

@@ -61,9 +61,7 @@ public class GateDocumentDAOTest {
 			} catch (Exception e) {
 				logger.debug("Couldn't load the document: {}", id, e);
 			} finally {
-				if (document != null) {
-					getGateDocumentDAO().release(document);
-				}
+				getGateDocumentDAO().release(document);
 			}
 		}
 		Assert.assertEquals(

@@ -65,6 +65,8 @@ class GateProcessingFacadeImpl implements GateProcessingFacade {
 		} catch (ResourceInstantiationException e) {
 			logger.error("Failed to create a temporary corpus", e);
 			throw new ProcessException(e);
+		} finally {
+			gateDocumentDAO.release(document);
 		}
 	}
 }

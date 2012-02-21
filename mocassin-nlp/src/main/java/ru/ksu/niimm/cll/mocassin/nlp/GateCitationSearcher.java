@@ -50,7 +50,6 @@ class GateCitationSearcher implements CitationSearcher {
 		this.ARXMLIV_MARKUP_NAME = arxmlivMarkupName;
 		this.ARXMLIV_CITE_ANNOTATION_NAME = arxmlivCiteAnnotationName;
 		this.TOKEN_ANNOTATION_NAME = tokenAnnotationName;
-		this.logger = logger;
 		this.gateDocumentDAO = gateDocumentDAO;
 		this.annotationUtil = annotationUtil;
 		this.bibliographyExtractor = bibliographyExtractor;
