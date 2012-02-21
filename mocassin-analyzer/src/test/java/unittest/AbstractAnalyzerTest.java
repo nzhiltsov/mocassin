@@ -54,7 +54,7 @@ public abstract class AbstractAnalyzerTest {
 		Assert.assertTrue("Extracted edge list is empty.", edges.size() > 0);
 
 		for (Reference ref : edges) {
-			if (ref.getId() == 5087 || ref.getId() == 4766) {
+			if (!ref.getSentenceTokens().isEmpty()) {
 				this.references.add(ref);
 				if (this.references.size() == 2) {
 					break;
