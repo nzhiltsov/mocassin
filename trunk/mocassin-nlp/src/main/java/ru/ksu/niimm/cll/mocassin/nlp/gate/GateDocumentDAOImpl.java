@@ -63,7 +63,6 @@ class GateDocumentDAOImpl implements GateDocumentDAO {
 			@Named("arxmliv.markup.name") String arxmlivMarkupName,
 			@Named("title.annotation.name") String titleAnnotationName,
 			@Named("arxmliv.creator.annotation.name") String arxmlivCreatorAnnotationName) {
-		this.logger = logger;
 		this.annotationUtil = annotationUtil;
 		this.GATE_HOME_PROPERTY = gateHome;
 		this.GATE_BUILTIN_CREOLE_DIR_PROPERTY = gateBuiltinCreoleDir;
@@ -129,8 +128,7 @@ class GateDocumentDAOImpl implements GateDocumentDAO {
 		String foundDocumentId = Iterables.find(documentIds,
 				new DocumentNamePredicate(documentId), null);
 		if (foundDocumentId == null) {
-			logger.warn(
-					"The document='{}' asked for deleting does not exist.",
+			logger.warn("The document='{}' asked for deleting does not exist.",
 					documentId);
 			return;
 		}
@@ -148,8 +146,13 @@ class GateDocumentDAOImpl implements GateDocumentDAO {
 	public GateDocumentMetadata loadMetadata(String documentId)
 			throws AccessGateDocumentException, AccessGateStorageException {
 		Document document = load(documentId);
-		GateDocumentMetadata metadata = extractMetadata(document);
-		release(document);
+		GateDocumentMetadata metadata;
+		try {
+			metadata = extractMetadata(document);
+		} finally {
+			release(document);
+		}
+
 		return metadata;
 	}
 
