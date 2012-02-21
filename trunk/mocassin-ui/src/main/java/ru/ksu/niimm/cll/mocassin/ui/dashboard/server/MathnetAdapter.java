@@ -1,5 +1,7 @@
 package ru.ksu.niimm.cll.mocassin.ui.dashboard.server;
 
+import static java.lang.String.format;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +19,10 @@ import edu.uci.ics.jung.graph.Graph;
 
 public class MathnetAdapter extends AbstractArXMLivAdapter implements
 		ArXMLivAdapter {
+	
+	private static final String GATE_DOCUMENT_ENCODING = "utf8";
+	private static final String ID_PATTERN = "%s%s";
+	private static final String MATHNET_PREFIX = "http://mathnet.ru/";
 	@InjectLogger
 	private Logger logger;
 	/**
@@ -34,7 +40,7 @@ public class MathnetAdapter extends AbstractArXMLivAdapter implements
 		 */
 
 			ArticleMetadata metadata = new ArticleMetadata();
-			metadata.setId("http://mathnet.ru/" + mathnetKey);
+		metadata.setId(format(ID_PATTERN, MATHNET_PREFIX, mathnetKey));
 			metadata.setCollectionId(mathnetKey);
 			ArrayList<Link> links = new ArrayList<Link>();
 
@@ -49,7 +55,7 @@ public class MathnetAdapter extends AbstractArXMLivAdapter implements
 			// Step 4
 			String arxmlivFilePath = arxmlivProducer.produce(mathnetKey);
 			// Step 5
-			gateDocumentDAO.save(mathnetKey, new File(arxmlivFilePath), "utf8");
+			gateDocumentDAO.save(mathnetKey, new File(arxmlivFilePath), GATE_DOCUMENT_ENCODING);
 			gateProcessingFacade.process(mathnetKey);
 			// Step 6
 			Graph<StructuralElement, Reference> graph = extractStructuralElements(metadata);

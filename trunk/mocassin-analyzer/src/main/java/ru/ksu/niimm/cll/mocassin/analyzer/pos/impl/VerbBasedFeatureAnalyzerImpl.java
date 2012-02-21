@@ -81,10 +81,10 @@ public class VerbBasedFeatureAnalyzerImpl extends AbstractScoringIndexer
 		return CollectionUtil.asList(Iterables.filter(tokens, filter));
 	}
 
-	private class VerbPredicate implements Predicate<Token> {
+	private static class VerbPredicate implements Predicate<Token> {
 		@Override
 		public boolean apply(Token token) {
-			if (token.getValue() == null || isStopWord(token.getValue()))
+			if (token.getValue() == null)
 				return false;
 			String pos = token.getPos();
 			if (pos == null)

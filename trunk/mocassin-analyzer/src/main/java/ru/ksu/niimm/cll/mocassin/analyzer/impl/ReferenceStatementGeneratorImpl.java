@@ -19,6 +19,9 @@ import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
 import edu.uci.ics.jung.graph.Graph;
 
 public class ReferenceStatementGeneratorImpl implements ReferenceStatementGenerator {
+	private static final String EMPTY_STRING = "";
+	private static final String END_LINE = "\n";
+	private static final String SPACE = " ";
 	private static final String SALT_SCHEMA = "http://salt.semanticauthoring.org/ontologies/sdo";
 	private static final String SDO_PUBLICATION_TYPE = format("%s#Publication",
 			SALT_SCHEMA);
@@ -86,9 +89,9 @@ public class ReferenceStatementGeneratorImpl implements ReferenceStatementGenera
 		StringBuffer sb = new StringBuffer();
 		for (String str : contents) {
 			sb.append(str);
-			sb.append(" ");
+			sb.append(SPACE);
 		}
-		String textContents = sb.toString().replace("\n", "");
+		String textContents = sb.toString().replace(END_LINE, EMPTY_STRING);
 		return createLiteralTriple(element.getUri(),
 				MocassinOntologyRelations.HAS_TEXT.getUri(), textContents);
 	}
