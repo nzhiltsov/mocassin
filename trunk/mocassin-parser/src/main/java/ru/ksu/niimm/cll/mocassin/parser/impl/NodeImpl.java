@@ -11,6 +11,7 @@ import ru.ksu.niimm.cll.mocassin.parser.latex.Node;
 import com.google.common.base.Predicate;
 
 public class NodeImpl implements Node {
+	private static final String SUFFIX = "*";
 	private final String id;
 	private final String name;
 	private final List<String> contents = new LinkedList<String>();
@@ -24,6 +25,7 @@ public class NodeImpl implements Node {
 	private int pdfPageNumber;
 
 	public static class Builder {
+		
 		private final String id;
 		private final String name;
 		private boolean isNumbered;
@@ -38,8 +40,8 @@ public class NodeImpl implements Node {
 
 		public Builder(String id, String name) {
 			this.id = id;
-			if (name.endsWith("*")) {
-				this.name = name.substring(0, name.length() - 1);
+			if (name.endsWith(SUFFIX)) {
+				this.name = name.substring(0, name.length() - 1).intern();
 			} else {
 				this.name = name;
 			}

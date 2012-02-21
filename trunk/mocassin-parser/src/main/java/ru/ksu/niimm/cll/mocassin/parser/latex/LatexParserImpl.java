@@ -30,6 +30,8 @@ import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
 import com.google.inject.Inject;
 
 class LatexParserImpl implements Parser {
+	private static final String RIGHT_BRACE = "}";
+	private static final String LEFT_BRACE = "{";
 	private static final String NUMBERING_WITHIN_SECTION_FLAG = "[section]";
 	private static final String LATEX_COMMENT_SYMBOL = "%";
 	/**
@@ -78,8 +80,8 @@ class LatexParserImpl implements Parser {
 
 				int commentBeginningPosition = line
 						.indexOf(LATEX_COMMENT_SYMBOL);
-				final String strippedLine = commentBeginningPosition >= 0 ? line
-						.substring(0, commentBeginningPosition) : line;
+				final String strippedLine = commentBeginningPosition >= 0 ? new String(line
+						.substring(0, commentBeginningPosition)) : line;
 
 				if (strippedLine.length() == 0)
 					continue;
@@ -114,16 +116,17 @@ class LatexParserImpl implements Parser {
 				}
 				if (newtheoremCommand != null) {
 
-					int firstLeftBrace = newtheoremCommand.indexOf("{") + 1;
-					int firstRightBrace = newtheoremCommand.indexOf("}",
+					int firstLeftBrace = newtheoremCommand.indexOf(LEFT_BRACE) + 1;
+					int firstRightBrace = newtheoremCommand.indexOf(
+							RIGHT_BRACE,
 							firstLeftBrace);
 					String key = newtheoremCommand.substring(firstLeftBrace,
-							firstRightBrace);
-					int secondLeftBrace = newtheoremCommand.indexOf("{",
+							firstRightBrace).intern();
+					int secondLeftBrace = newtheoremCommand.indexOf(LEFT_BRACE,
 							firstRightBrace) + 1;
 					String dirtyTitle = newtheoremCommand.substring(
 							secondLeftBrace,
-							newtheoremCommand.indexOf("}", secondLeftBrace));
+							newtheoremCommand.indexOf(RIGHT_BRACE, secondLeftBrace)).intern();
 					String title = StringUtil.takeoutMarkup(dirtyTitle);
 					newtheorems.add(new NewtheoremCommand(key, title,
 							isNumbered));

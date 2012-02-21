@@ -19,6 +19,8 @@ import com.google.inject.name.Named;
 import edu.uci.ics.jung.graph.Graph;
 
 public class NavRelClassifierImpl implements NavigationalRelationClassifier {
+	private static final String ATTRIBUTE_NAME_DELIMITER = "_";
+
 	@InjectLogger
 	private Logger logger;
 
@@ -54,7 +56,7 @@ public class NavRelClassifierImpl implements NavigationalRelationClassifier {
 		instance.setValue(3, normalizedEndDistance);
 		for (int i = 4; i < trainingSetHeader.numAttributes() - 1; i++) {
 			String attrName = trainingSetHeader.attribute(i).name();
-			String word = attrName.substring(attrName.indexOf("_") + 1);
+			String word = attrName.substring(attrName.indexOf(ATTRIBUTE_NAME_DELIMITER) + 1);
 			instance.setValue(i,
 					reference.getSentenceTokens().contains(word) ? 1 : 0);
 		}
