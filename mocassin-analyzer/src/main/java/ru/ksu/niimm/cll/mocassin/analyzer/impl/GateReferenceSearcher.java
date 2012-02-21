@@ -99,7 +99,7 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 
 			addPartholeRelations();
 
-			AnnotationSet refAnnotations = document.getAnnotations(
+			AnnotationSet refAnnotations = getDocument().getAnnotations(
 					ARXMLIV_MARKUP_NAME).get(ARXMLIV_REF_ANNOTATION_NAME);
 			List<Annotation> filteredRefAnnotations = new ArrayList<Annotation>();
 			for (Annotation refAnnotation : refAnnotations) {
