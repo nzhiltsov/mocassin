@@ -16,7 +16,6 @@ import expectj.TimeoutException;
 
 public class ArxmlivProducerImpl extends AbstractUnixCommandWrapper implements
 		ArxmlivProducer {
-	private static final String SUCCESS_FLAG = "Conversion complete:";
 
 	@InjectLogger
 	private Logger logger;
@@ -30,7 +29,7 @@ public class ArxmlivProducerImpl extends AbstractUnixCommandWrapper implements
 			@Named("arxmliv.document.dir") String arxmlivDocumentsDir,
 			@Named("arxmliv.path") String arxmlivPath,
 			@Named("patched.tex.document.dir") String latexDir) {
-		super(4, SUCCESS_FLAG);
+		super(4);
 		this.ARXMLIV_DOCUMENT_DIR = arxmlivDocumentsDir;
 		this.LATEX_DIR = latexDir;
 		this.cmdArray[0] = "/usr/local/bin/latexml";
@@ -53,9 +52,12 @@ public class ArxmlivProducerImpl extends AbstractUnixCommandWrapper implements
 				.format("--destination=%s", arxmlivDocFilePath);
 		this.cmdArray[3] = filename;
 		try {
-			if (!execute())
+			execute();
+			File outputFile = new File(arxmlivDocFilePath);
+			if (!outputFile.exists()) {
 				throw new RuntimeException(
-						"Not normal output while producing arxmliv document.");
+						"The output file does not exist. Perhaps, the arxmliv script failed.");
+			}
 			return arxmlivDocFilePath;
 		} catch (TimeoutException e) {
 			logger.error(

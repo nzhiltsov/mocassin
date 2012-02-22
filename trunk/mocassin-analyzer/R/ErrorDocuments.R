@@ -15,7 +15,7 @@ ErrorDocuments <- function(logs){
   
   GetReason <- function(message){
     reason = NA
-    if (regexpr("Not normal output while producing arxmliv document", message) > 0) {
+    if (regexpr("the arxmliv script failed", message) > 0) {
       reason = "latexml"
     } else if (regexpr("Not normal output while compiling PDF", message) > 0) {
       reason = "pdflatex"
