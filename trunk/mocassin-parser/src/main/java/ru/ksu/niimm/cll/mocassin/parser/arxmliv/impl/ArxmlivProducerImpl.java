@@ -1,5 +1,7 @@
 package ru.ksu.niimm.cll.mocassin.parser.arxmliv.impl;
 
+import java.io.File;
+
 import org.slf4j.Logger;
 
 import ru.ksu.niimm.cll.mocassin.parser.arxmliv.ArxmlivProducer;
@@ -40,13 +42,20 @@ public class ArxmlivProducerImpl extends AbstractUnixCommandWrapper implements
 		String arxmlivDocFilePath = String.format("%s/%s",
 				ARXMLIV_DOCUMENT_DIR,
 				StringUtil.arxivid2filename(arxivId, "tex.xml"));
+		String filename = String.format("%s/%s", LATEX_DIR,
+				StringUtil.arxivid2filename(arxivId, "tex"));
+		File file = new File(filename);
+		if (!file.exists()) {
+			throw new IllegalArgumentException(
+					"Failed to produce an arXMLiv representation for a Latex document, because it does not exist.");
+		}
 		this.cmdArray[2] = String
 				.format("--destination=%s", arxmlivDocFilePath);
-		this.cmdArray[3] = String.format("%s/%s", LATEX_DIR,
-				StringUtil.arxivid2filename(arxivId, "tex"));
+		this.cmdArray[3] = filename;
 		try {
 			if (!execute())
-				throw new RuntimeException("Not normal output while producing arxmliv document.");
+				throw new RuntimeException(
+						"Not normal output while producing arxmliv document.");
 			return arxmlivDocFilePath;
 		} catch (TimeoutException e) {
 			logger.error(
