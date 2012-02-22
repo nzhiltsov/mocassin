@@ -4,7 +4,7 @@ import expectj.ExpectJ;
 import expectj.Spawn;
 
 public abstract class AbstractUnixCommandWrapper {
-	private static final long TIMEOUT_IN_SECONDS = 120;
+	private static final long TIMEOUT_IN_SECONDS = 180;
 	protected final String[] cmdArray;
 	private final String successFlag;
 
