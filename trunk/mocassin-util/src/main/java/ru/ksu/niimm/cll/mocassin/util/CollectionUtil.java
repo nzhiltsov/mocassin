@@ -74,4 +74,26 @@ public class CollectionUtil {
 		}
 		return prefix2id;
 	}
+
+	public static List<String[]> splitOrderedDurationsIntoIntervals(
+			String[] durations, int numberOfIntervals) {
+
+		int sizeOfSmallSublists = durations.length / numberOfIntervals;
+		int sizeOfLargeSublists = sizeOfSmallSublists + 1;
+		int numberOfLargeSublists = durations.length % numberOfIntervals;
+		int numberOfSmallSublists = numberOfIntervals - numberOfLargeSublists;
+
+		List<String[]> sublists = new ArrayList<String[]>(numberOfIntervals);
+		int numberOfElementsHandled = 0;
+		for (int i = 0; i < numberOfIntervals; i++) {
+			int size = i < numberOfSmallSublists ? sizeOfSmallSublists
+					: sizeOfLargeSublists;
+			String[] sublist = new String[size];
+			System.arraycopy(durations, numberOfElementsHandled, sublist, 0,
+					size);
+			sublists.add(sublist);
+			numberOfElementsHandled += size;
+		}
+		return sublists;
+	}
 }
