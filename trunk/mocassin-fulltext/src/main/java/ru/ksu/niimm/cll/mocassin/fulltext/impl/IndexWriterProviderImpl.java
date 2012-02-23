@@ -9,10 +9,8 @@ import org.apache.lucene.util.Version;
 import ru.ksu.niimm.cll.mocassin.fulltext.providers.IndexWriterProvider;
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
-@Singleton
 public class IndexWriterProviderImpl implements
 		IndexWriterProvider<IndexWriter> {
 
