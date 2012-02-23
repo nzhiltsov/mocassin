@@ -76,85 +76,89 @@ class LatexParserImpl implements Parser {
 		boolean isNumberingWithinSection = false;
 		String line;
 		try {
-			while ((line = headerReader.readLine()) != null) {
+			try {
+				while ((line = headerReader.readLine()) != null) {
 
-				int commentBeginningPosition = line
-						.indexOf(LATEX_COMMENT_SYMBOL);
-				final String strippedLine = commentBeginningPosition >= 0 ? new String(line
-						.substring(0, commentBeginningPosition)) : line;
+					int commentBeginningPosition = line
+							.indexOf(LATEX_COMMENT_SYMBOL);
+					final String strippedLine = commentBeginningPosition >= 0 ? new String(
+							line.substring(0, commentBeginningPosition)) : line;
 
-				if (strippedLine.length() == 0)
-					continue;
+					if (strippedLine.length() == 0)
+						continue;
 
-				boolean isEndOfPreamble = BEGIN_DOCUMENT_PATTERN.matcher(
-						strippedLine).find();
-				if (isEndOfPreamble) {
-					break;
-				}
-
-				Matcher unnumberedNewTheoremMatcher = UNNUMBERED_NEW_THEOREM_PATTERN
-						.matcher(strippedLine);
-				String unnumberedNewtheoremCommand = null;
-				if (unnumberedNewTheoremMatcher.find()) {
-					unnumberedNewtheoremCommand = unnumberedNewTheoremMatcher
-							.group(1);
-				}
-				Matcher numberedNewTheoremMatcher = NUMBERED_NEW_THEOREM_PATTERN
-						.matcher(strippedLine);
-				String numberedNewtheoremCommand = null;
-				if (numberedNewTheoremMatcher.find()) {
-					numberedNewtheoremCommand = numberedNewTheoremMatcher
-							.group(1);
-				}
-				String newtheoremCommand = null;
-				boolean isNumbered = false;
-				if (numberedNewtheoremCommand != null) {
-					newtheoremCommand = numberedNewtheoremCommand;
-					isNumbered = true;
-				} else if (unnumberedNewtheoremCommand != null) {
-					newtheoremCommand = unnumberedNewtheoremCommand;
-				}
-				if (newtheoremCommand != null) {
-
-					int firstLeftBrace = newtheoremCommand.indexOf(LEFT_BRACE) + 1;
-					int firstRightBrace = newtheoremCommand.indexOf(
-							RIGHT_BRACE,
-							firstLeftBrace);
-					String key = newtheoremCommand.substring(firstLeftBrace,
-							firstRightBrace).intern();
-					int secondLeftBrace = newtheoremCommand.indexOf(LEFT_BRACE,
-							firstRightBrace) + 1;
-					String dirtyTitle = newtheoremCommand.substring(
-							secondLeftBrace,
-							newtheoremCommand.indexOf(RIGHT_BRACE, secondLeftBrace)).intern();
-					String title = StringUtil.takeoutMarkup(dirtyTitle);
-					newtheorems.add(new NewtheoremCommand(key, title,
-							isNumbered));
-					if (!isNumberingWithinSection
-							&& strippedLine
-									.contains(NUMBERING_WITHIN_SECTION_FLAG)) {
-						isNumberingWithinSection = true;
+					boolean isEndOfPreamble = BEGIN_DOCUMENT_PATTERN.matcher(
+							strippedLine).find();
+					if (isEndOfPreamble) {
+						break;
 					}
+
+					Matcher unnumberedNewTheoremMatcher = UNNUMBERED_NEW_THEOREM_PATTERN
+							.matcher(strippedLine);
+					String unnumberedNewtheoremCommand = null;
+					if (unnumberedNewTheoremMatcher.find()) {
+						unnumberedNewtheoremCommand = unnumberedNewTheoremMatcher
+								.group(1);
+					}
+					Matcher numberedNewTheoremMatcher = NUMBERED_NEW_THEOREM_PATTERN
+							.matcher(strippedLine);
+					String numberedNewtheoremCommand = null;
+					if (numberedNewTheoremMatcher.find()) {
+						numberedNewtheoremCommand = numberedNewTheoremMatcher
+								.group(1);
+					}
+					String newtheoremCommand = null;
+					boolean isNumbered = false;
+					if (numberedNewtheoremCommand != null) {
+						newtheoremCommand = numberedNewtheoremCommand;
+						isNumbered = true;
+					} else if (unnumberedNewtheoremCommand != null) {
+						newtheoremCommand = unnumberedNewtheoremCommand;
+					}
+					if (newtheoremCommand != null) {
+
+						int firstLeftBrace = newtheoremCommand
+								.indexOf(LEFT_BRACE) + 1;
+						int firstRightBrace = newtheoremCommand.indexOf(
+								RIGHT_BRACE, firstLeftBrace);
+						String key = newtheoremCommand.substring(
+								firstLeftBrace, firstRightBrace).intern();
+						int secondLeftBrace = newtheoremCommand.indexOf(
+								LEFT_BRACE, firstRightBrace) + 1;
+						String dirtyTitle = newtheoremCommand.substring(
+								secondLeftBrace,
+								newtheoremCommand.indexOf(RIGHT_BRACE,
+										secondLeftBrace)).intern();
+						String title = StringUtil.takeoutMarkup(dirtyTitle);
+						newtheorems.add(new NewtheoremCommand(key, title,
+								isNumbered));
+						if (!isNumberingWithinSection
+								&& strippedLine
+										.contains(NUMBERING_WITHIN_SECTION_FLAG)) {
+							isNumberingWithinSection = true;
+						}
+					}
+
 				}
 
+				parsingInputStream.reset();
+				Reader reader = new InputStreamReader(parsingInputStream);
+				LatexDocumentModel parsedModel = parseTree(reader);
+				parsedModel.setDocId(this.docId);
+				parsedModel.setNewtheorems(newtheorems);
+				parsedModel.setNumberingWithinSection(isNumberingWithinSection);
+				return parsedModel;
+			} finally {
+				if (closeStream) {
+					headerReader.close();
+					parsingInputStream.close();
+				}
 			}
-
-			parsingInputStream.reset();
-			Reader reader = new InputStreamReader(parsingInputStream);
-			LatexDocumentModel parsedModel = parseTree(reader);
-			parsedModel.setDocId(this.docId);
-			parsedModel.setNewtheorems(newtheorems);
-			parsedModel.setNumberingWithinSection(isNumberingWithinSection);
-			if (closeStream) {
-				headerReader.close();
-				parsingInputStream.close();
-			}
-			return parsedModel;
+			
 		} catch (Exception e) {
-			logger.error(
-					"Failed to parse a document model='{}'. Null will be returned",
-					docId, e);
-			return null;
+			logger.error("Failed to parse a Latex document model='{}'.", docId,
+					e);
+			throw new RuntimeException("Failed to parse a Latex model.", e);
 		}
 	}
 
