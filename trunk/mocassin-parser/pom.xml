@@ -184,6 +184,12 @@
 			<artifactId>runtime</artifactId>
 			<version>3.3.100-v20070530</version>
 			<scope>runtime</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>app</artifactId>
+					<groupId>org.eclipse.equinox</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.core</groupId>
@@ -213,12 +219,6 @@
 			<groupId>org.eclipse.equinox</groupId>
 			<artifactId>registry</artifactId>
 			<version>3.3.0-v20070522</version>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.equinox</groupId>
-			<artifactId>app</artifactId>
-			<version>1.0.0-v20070606</version>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
