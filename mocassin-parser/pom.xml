@@ -36,7 +36,7 @@
 			<artifactId>texlipse</artifactId>
 			<version>1.4.1</version>
 		</dependency>
-		<dependency>
+		<!--<dependency>
 			<groupId>org.eclipse.core.runtime</groupId>
 			<artifactId>common</artifactId>
 			<version>3.5.0</version>
@@ -46,7 +46,7 @@
 			<artifactId>text</artifactId>
 			<version>3.5.0</version>
 		</dependency>
-		<dependency>
+		 <dependency>
 			<groupId>org.mod4j.org.eclipse.ui</groupId>
 			<artifactId>workbench</artifactId>
 			<version>3.5.0</version>
@@ -75,7 +75,7 @@
 			<groupId>org.mod4j.org.eclipse</groupId>
 			<artifactId>text</artifactId>
 			<version>3.5.0</version>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>uk.ac.shef.wit</groupId>
 			<artifactId>simmetrics</artifactId>
@@ -160,6 +160,78 @@
 			<groupId>net.sourceforge.javacsv</groupId>
 			<artifactId>javacsv</artifactId>
 			<version>2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.swt.gtk.linux</groupId>
+			<artifactId>x86_64</artifactId>
+			<version>3.3.0-v3346</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.ui</groupId>
+			<artifactId>editors</artifactId>
+			<version>3.3.0-v20070606-0010</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.equinox</groupId>
+			<artifactId>common</artifactId>
+			<version>3.3.0-v20070426</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.core</groupId>
+			<artifactId>runtime</artifactId>
+			<version>3.3.100-v20070530</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.core</groupId>
+			<artifactId>net</artifactId>
+			<version>1.0.0-I20070531</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse</groupId>
+			<artifactId>osgi</artifactId>
+			<version>3.5.0.v20090520</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.equinox</groupId>
+			<artifactId>preferences</artifactId>
+			<version>3.2.100-v20070522</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.core</groupId>
+			<artifactId>jobs</artifactId>
+			<version>3.3.0-v20070423</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.equinox</groupId>
+			<artifactId>registry</artifactId>
+			<version>3.3.0-v20070522</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.equinox</groupId>
+			<artifactId>app</artifactId>
+			<version>1.0.0-v20070606</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.core</groupId>
+			<artifactId>contenttype</artifactId>
+			<version>3.2.100-v20070319</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse</groupId>
+			<artifactId>text</artifactId>
+			<version>3.3.0-v20070606-0010</version>
+			<scope>runtime</scope>
 		</dependency>
 	</dependencies>
 </project>
