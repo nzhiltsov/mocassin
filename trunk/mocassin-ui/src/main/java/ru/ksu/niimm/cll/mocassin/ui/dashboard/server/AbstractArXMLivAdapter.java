@@ -73,7 +73,7 @@ public abstract class AbstractArXMLivAdapter implements ArXMLivAdapter {
 								arxivId,
 								Math.round(((float) (stop - start)) / 1000));
 				numberOfSuccesses++;
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				getLogger().error("Failed to handle a document with id = '{}'",
 						arxivId, e);
 			}
