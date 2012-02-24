@@ -34,7 +34,7 @@ public class StructuralElementSearcherTest {
 	public void init() throws Exception {
 		this.parsedDocument = new ParsedDocumentImpl("ivm18",
 				"http://mathnet.ru/ivm18", "http://mathnet.ru/ivm18");
-//		gateProcessingFacade.process(parsedDocument.getCollectionId());
+		gateProcessingFacade.process(parsedDocument.getCollectionId());
 	}
 
 	@Test
