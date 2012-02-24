@@ -30,9 +30,9 @@ public class StringUtil {
 	private static final Pattern MATHNET_JOURNAL_PREFIX = Pattern
 			.compile("([a-z]+)([0-9]+)");
 
-	private static final String QUERY_BOOLEAN_AND = "and";
+	private static final String QUERY_BOOLEAN_AND = "AND";
 
-	private static final String QUERY_BOOLEAN_OR = "or";
+	private static final String QUERY_BOOLEAN_OR = "OR";
 
 	private StringUtil() {
 	}
@@ -185,17 +185,30 @@ public class StringUtil {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < tokens.size(); i++) {
 			String token = tokens.get(i);
-			if (token.equalsIgnoreCase(QUERY_BOOLEAN_AND))
-				continue;
-			if (token.equalsIgnoreCase(QUERY_BOOLEAN_OR)) {
+			boolean shouldAppendAnd = false;
+			if (token.equalsIgnoreCase(QUERY_BOOLEAN_AND)) {
 				token = token.toUpperCase();
-			} else if (!LATIN_TEXT_PATTERN.matcher(token).matches()) {
-				token = format("'%s'", token);
+			} else if (token.equalsIgnoreCase(QUERY_BOOLEAN_OR)) {
+				token = token.toUpperCase();
+			} else {
+				if (i > 0
+						&& i < tokens.size()
+						&& !tokens.get(i - 1).equalsIgnoreCase(
+								QUERY_BOOLEAN_AND)
+						&& !tokens.get(i - 1)
+								.equalsIgnoreCase(QUERY_BOOLEAN_OR)) {
+					shouldAppendAnd = true;
+				}
+				if (!LATIN_TEXT_PATTERN.matcher(token).matches()) {
+					token = format("'%s'", token);
+				}
 			}
-			sb.append(format(" %s ", token));
+			if (shouldAppendAnd) {
+				sb.append(format(" %s", QUERY_BOOLEAN_AND));
+			}
+			sb.append(format(" %s", token));
 		}
 
 		return sb.toString().trim();
 	}
-
 }
