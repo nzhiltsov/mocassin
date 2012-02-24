@@ -52,13 +52,10 @@ public class QueryManagerFacadeTest {
 		RepositoryConnection connection = repository.getConnection();
 		final String context = "http://cll.niimm.ksu.ru/mocassinfortest";
 		try {
-			
-			connection.add(
-					getClass().getResourceAsStream("/testmetadata.rdf"),
-					context,
-					RDFFormat.N3,
-					repository.getValueFactory().createURI(
-							context));
+
+			connection.add(getClass().getResourceAsStream("/testmetadata.rdf"),
+					context, RDFFormat.N3, repository.getValueFactory()
+							.createURI(context));
 		} finally {
 			connection.close();
 		}
@@ -82,8 +79,20 @@ public class QueryManagerFacadeTest {
 	}
 
 	@Test
+	public void testGenerateVirtuosoFullTextQuery() {
+		QueryStatement queryStatement = makeFullTextStatement();
+		String generatedQuery = getQueryManagerFacade().generateQuery(
+				queryStatement);
+		Assert.assertTrue(
+				"The generated query does not contain the expected substring",
+				generatedQuery
+						.contains("<bif:contains> \"'кольца' AND 'поля'\""));
+		System.out.println(generatedQuery);
+	}
+
+	@Test
 	@Ignore("Refactoring to using LuceneSail is required for in-memory repository.")
-	public void testGenerateFullTextQuery() {
+	public void testExecuteFullTextQuery() {
 		QueryStatement queryStatement = makeFullTextStatement();
 
 		List<OntologyResource> resources = getQueryManagerFacade().query(
@@ -170,7 +179,7 @@ public class QueryManagerFacadeTest {
 		OntologyRelation predicate2 = new OntologyRelation(
 				MocassinOntologyRelations.HAS_TEXT.getUri(), "hasText");
 		predicate2.setId(4);
-		OntologyLiteral object2 = new OntologyLiteral("кольца AND поля");
+		OntologyLiteral object2 = new OntologyLiteral("кольца поля");
 		object2.setId(5);
 		triples.add(new OntologyTriple(subject2, predicate2, object2));
 		return new QueryStatement(triples);

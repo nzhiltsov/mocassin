@@ -1,6 +1,7 @@
 package ru.ksu.niimm.cll.mocassin.ontology.impl;
 
 import static java.lang.String.format;
+import static ru.ksu.niimm.cll.mocassin.util.StringUtil.getFullTextQuery;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -145,8 +146,8 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 						individualString);
 			} else if (isLiteral) {
 				String containsString = format("?%d <bif:contains> \"%s\"",
-						triple.getObject().getId(), triple.getObject()
-								.getLabel());
+						triple.getObject().getId(), getFullTextQuery(triple
+								.getObject().getLabel()));
 				String predicateString = getPredicateExpression(triple);
 				whereClause = format("%s .\n %s .\n %s.", subjectTypeString,
 						predicateString, containsString);
