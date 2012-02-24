@@ -19,7 +19,15 @@ ErrorDocuments <- function(logs){
       reason = "latexml"
     } else if (regexpr("Not normal output while compiling PDF", message) > 0) {
       reason = "pdflatex"
+    } else if (regexpr("ru.ksu.niimm.cll.mocassin.parser.pdf.PdflatexCompilationException: expectj.TimeoutException: Timeout waiting for spawn to finish", message) > 0) {
+      reason = "pdflatex_timeout"
+    } else if (regexpr("java.lang.NoClassDefFoundError: org/eclipse", message) > 0 |
+      regexpr("java.lang.NoClassDefFoundError: net/sourceforge/texlipse", message) > 0) {
+      reason = "latex"
+    } else if (regexpr("Failed to patch a Latex document, because it does not exist", message) > 0) {
+      reason = "not_exists"  
     }
+    
     reason
   }
   reasons <- ldply(error.messages$Message, GetReason)
