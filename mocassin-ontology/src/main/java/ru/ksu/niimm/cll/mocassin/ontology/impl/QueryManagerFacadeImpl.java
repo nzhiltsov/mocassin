@@ -1,5 +1,7 @@
 package ru.ksu.niimm.cll.mocassin.ontology.impl;
 
+import static java.lang.String.format;
+
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -83,7 +85,7 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 
 		String queryString = generateQuery(queryStatement);
 		if (queryStatement.isInferenceOn()) {
-			queryString = String.format(RULES_SET_ENTRY,
+			queryString = format(RULES_SET_ENTRY,
 					searchGraph.getInferenceRulesSetName(), queryString);
 		}
 		try {
@@ -123,44 +125,43 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 	 */
 	public String generateQuery(QueryStatement queryStatement) {
 		StringBuffer sb = new StringBuffer();
-		sb.append(String.format(SELECT_STATEMENT, RETRIEVED_CONCEPT_KEY,
+		sb.append(format(SELECT_STATEMENT, RETRIEVED_CONCEPT_KEY,
 				getSearchGraph().getIri()));
 		List<OntologyTriple> retrievedTriples = queryStatement
 				.getRetrievedTriples();
 		for (OntologyTriple triple : retrievedTriples) {
 			OntologyElement tripleObject = triple.getObject();
 			String whereClause = "";
-			String subjectTypeString = String.format("?%d a <%s>", triple
-					.getSubject().getId(), triple.getSubject().getUri());
+			String subjectTypeString = format("?%d a <%s>", triple.getSubject()
+					.getId(), triple.getSubject().getUri());
 			boolean isIndividual = tripleObject instanceof OntologyIndividual;
 			boolean isLiteral = tripleObject instanceof OntologyLiteral;
 			boolean isBlankNode = tripleObject instanceof OntologyBlankNode;
 			if (isIndividual) {
-				String individualString = String.format("?%d <%s> <%s>", triple
+				String individualString = format("?%d <%s> <%s>", triple
 						.getSubject().getId(), triple.getPredicate().getUri(),
 						triple.getObject().getUri());
-				whereClause = String.format("%s .\n %s.", subjectTypeString,
+				whereClause = format("%s .\n %s.", subjectTypeString,
 						individualString);
 			} else if (isLiteral) {
-				String containsString = String.format(
-						"?%d <bif:contains> \"%s\"",
+				String containsString = format("?%d <bif:contains> \"%s\"",
 						triple.getObject().getId(), triple.getObject()
 								.getLabel());
 				String predicateString = getPredicateExpression(triple);
-				whereClause = String.format("%s .\n %s .\n %s.",
-						subjectTypeString, predicateString, containsString);
+				whereClause = format("%s .\n %s .\n %s.", subjectTypeString,
+						predicateString, containsString);
 			} else if (isBlankNode) {
 				boolean isPredicateBlankNode = triple.getPredicate() instanceof OntologyBlankNode;
 
-				whereClause = isPredicateBlankNode ? String.format("%s .\n",
-						subjectTypeString) : String.format("%s .\n %s .\n",
+				whereClause = isPredicateBlankNode ? format("%s .\n",
+						subjectTypeString) : format("%s .\n %s .\n",
 						subjectTypeString, getPredicateExpression(triple));
 			} else {
-				String objectTypeString = String.format("?%d a <%s>", triple
+				String objectTypeString = format("?%d a <%s>", triple
 						.getObject().getId(), triple.getObject().getUri());
 				String predicateString = getPredicateExpression(triple);
-				whereClause = String.format("%s .\n %s .\n %s.",
-						subjectTypeString, objectTypeString, predicateString);
+				whereClause = format("%s .\n %s .\n %s.", subjectTypeString,
+						objectTypeString, predicateString);
 			}
 
 			sb.append(whereClause);
@@ -175,9 +176,9 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 	}
 
 	private static String getPredicateExpression(OntologyTriple triple) {
-		String predicateString = String.format("?%d <%s> ?%d", triple
-				.getSubject().getId(), triple.getPredicate().getUri(), triple
-				.getObject().getId());
+		String predicateString = format("?%d <%s> ?%d", triple.getSubject()
+				.getId(), triple.getPredicate().getUri(), triple.getObject()
+				.getId());
 		return predicateString;
 	}
 

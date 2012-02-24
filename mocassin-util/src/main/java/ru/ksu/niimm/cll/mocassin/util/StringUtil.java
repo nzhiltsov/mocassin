@@ -1,5 +1,7 @@
 package ru.ksu.niimm.cll.mocassin.util;
 
+import static java.lang.String.format;
+
 import java.rmi.server.UID;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -27,6 +29,10 @@ public class StringUtil {
 
 	private static final Pattern MATHNET_JOURNAL_PREFIX = Pattern
 			.compile("([a-z]+)([0-9]+)");
+
+	private static final String QUERY_BOOLEAN_AND = "and";
+
+	private static final String QUERY_BOOLEAN_OR = "or";
 
 	private StringUtil() {
 	}
@@ -57,7 +63,7 @@ public class StringUtil {
 	 * @return
 	 */
 	public static String generateBlankNodeId() {
-		return String.format("_:bnode%d", new UID().hashCode());
+		return format("_:bnode%d", new UID().hashCode());
 	}
 
 	/**
@@ -128,12 +134,12 @@ public class StringUtil {
 	 */
 	public static String arxivid2filename(String arxivId, String extension) {
 		String name = arxivid2gateid(arxivId);
-		return String.format("%s.%s", name, extension);
+		return format("%s.%s", name, extension);
 	}
 
 	public static String segmentid2filename(String arxivId, int segmentId,
 			String extension) {
-		return String.format("%s%s%d.%s", StringUtil.arxivid2gateid(arxivId),
+		return format("%s%s%d.%s", StringUtil.arxivid2gateid(arxivId),
 				ARXIVID_SEGMENTID_DELIMITER, segmentId, extension);
 	}
 
@@ -164,10 +170,32 @@ public class StringUtil {
 	}
 
 	public static String extractDocumentURIFromSegmentURI(String segmentUri) {
-		checkArgument(segmentUri != null
-				&& segmentUri.length() > 0,
+		checkArgument(segmentUri != null && segmentUri.length() > 0,
 				"Argument was %s but expected non-empty", segmentUri);
 		return segmentUri.substring(0, segmentUri.lastIndexOf(URI_DELIMITER));
+	}
+
+	public static String getFullTextQuery(String query) {
+		StringTokenizer st = new StringTokenizer(query);
+		List<String> tokens = new LinkedList<String>();
+		while (st.hasMoreTokens()) {
+			String token = st.nextToken();
+			tokens.add(token);
+		}
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < tokens.size(); i++) {
+			String token = tokens.get(i);
+			if (token.equalsIgnoreCase(QUERY_BOOLEAN_AND))
+				continue;
+			if (token.equalsIgnoreCase(QUERY_BOOLEAN_OR)) {
+				token = token.toUpperCase();
+			} else if (!LATIN_TEXT_PATTERN.matcher(token).matches()) {
+				token = format("'%s'", token);
+			}
+			sb.append(format(" %s ", token));
+		}
+
+		return sb.toString().trim();
 	}
 
 }

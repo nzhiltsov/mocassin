@@ -28,4 +28,15 @@ public class StringUtilTest {
 				"Extracted document URI does not equal to the expected one",
 				"http://mathnet.ru/ivm537", docUri);
 	}
+
+	@Test
+	public void testGetFullTextQuery() {
+		Assert.assertEquals("group", StringUtil.getFullTextQuery("group"));
+		Assert.assertEquals("finite AND group", StringUtil.getFullTextQuery("finite group"));
+		Assert.assertEquals("finite AND group", StringUtil.getFullTextQuery("finite and group"));
+		Assert.assertEquals("group OR ring", StringUtil.getFullTextQuery("group or ring"));
+		Assert.assertEquals("'группа'", StringUtil.getFullTextQuery("группа"));
+		Assert.assertEquals("'нильпотентная' AND 'разложимая' AND 'группа'", StringUtil.getFullTextQuery("нильпотентная разложимая группа"));
+		Assert.assertEquals("'группа' OR 'кольцо'", StringUtil.getFullTextQuery("группа or кольцо"));
+	}
 }
