@@ -13,7 +13,6 @@ import ru.ksu.niimm.cll.mocassin.ontology.OntologyConcept;
 import ru.ksu.niimm.cll.mocassin.ontology.OntologyFacade;
 import ru.ksu.niimm.cll.mocassin.ontology.OntologyRelation;
 import ru.ksu.niimm.cll.mocassin.ontology.OntologyTestModule;
-import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
 import unittest.util.OntologyConceptComparator;
 
 import com.google.inject.Inject;
@@ -21,7 +20,7 @@ import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext({ OntologyTestModule.class, VirtuosoModule.class })
+@GuiceContext({ OntologyTestModule.class})
 public class MocassinOntologyFacadeTest {
 	@Inject
 	private OntologyFacade ontologyFacade;

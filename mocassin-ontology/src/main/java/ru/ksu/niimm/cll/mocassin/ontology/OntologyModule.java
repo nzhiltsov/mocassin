@@ -14,6 +14,8 @@ import ru.ksu.niimm.cll.mocassin.ontology.provider.OntologyProvider;
 import ru.ksu.niimm.cll.mocassin.ontology.provider.RepositoryProvider;
 import ru.ksu.niimm.cll.mocassin.ontology.provider.impl.OntologyPelletProvider;
 import ru.ksu.niimm.cll.mocassin.ontology.provider.impl.VirtuosoRepositoryProvider;
+import ru.ksu.niimm.cll.mocassin.ontology.query.DescribeQueryGenerator;
+import ru.ksu.niimm.cll.mocassin.ontology.query.DescribeQueryGeneratorImpl;
 import ru.ksu.niimm.cll.mocassin.util.inject.log.Slf4jTypeListener;
 
 import com.google.inject.AbstractModule;
@@ -40,6 +42,7 @@ public class OntologyModule extends AbstractModule {
 		bind(QueryManagerFacade.class).to(QueryManagerFacadeImpl.class);
 		bind(OntologyResourceFacade.class).to(OntologyResourceFacadeImpl.class);
 		bind(SparqlQueryLoader.class).to(SparqlQueryLoaderImpl.class);
+		bind(DescribeQueryGenerator.class).to(DescribeQueryGeneratorImpl.class);
 		ThrowingProviderBinder.create(binder())
 				.bind(OntologyProvider.class, OntModel.class)
 				.to(OntologyPelletProvider.class);

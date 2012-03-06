@@ -1,6 +1,5 @@
-package ru.ksu.niimm.cll.mocassin.virtuoso.impl;
+package ru.ksu.niimm.cll.mocassin.ontology.query;
 
-import ru.ksu.niimm.cll.mocassin.virtuoso.RDFTriple;
 
 public class RDFTripleImpl implements RDFTriple {
 	private final String value;

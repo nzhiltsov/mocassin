@@ -1,9 +1,7 @@
-package ru.ksu.niimm.cll.mocassin.virtuoso.query;
+package ru.ksu.niimm.cll.mocassin.ontology.query;
 
 import java.util.LinkedList;
 import java.util.List;
-
-import ru.ksu.niimm.cll.mocassin.virtuoso.RDFTriple;
 
 /**
  * SPARQL query builder according to SPARQL/Update grammar

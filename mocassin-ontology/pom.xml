@@ -20,13 +20,6 @@
 	<dependencies>
 		<dependency>
 			<groupId>ru.ksu.niimm.cll.mocassin</groupId>
-			<artifactId>mocassin-virtuoso</artifactId>
-			<version>1.0.0.6-SNAPSHOT</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>ru.ksu.niimm.cll.mocassin</groupId>
 			<artifactId>mocassin-arxiv</artifactId>
 			<version>1.0.0.6-SNAPSHOT</version>
 			<scope>compile</scope>
