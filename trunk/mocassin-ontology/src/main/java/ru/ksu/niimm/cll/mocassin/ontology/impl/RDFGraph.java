@@ -1,4 +1,4 @@
-package ru.ksu.niimm.cll.mocassin.virtuoso;
+package ru.ksu.niimm.cll.mocassin.ontology.impl;
 
 /**
  * Interface to aggregate information about target RDF graph

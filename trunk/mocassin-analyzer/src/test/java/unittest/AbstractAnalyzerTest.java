@@ -25,7 +25,6 @@ import ru.ksu.niimm.cll.mocassin.nlp.impl.ParsedDocumentImpl;
 import ru.ksu.niimm.cll.mocassin.ontology.OntologyTestModule;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.parser.pdf.PdfParserModule;
-import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
 
 import com.aliasi.matrix.Vector;
 import com.google.inject.Inject;
@@ -36,7 +35,7 @@ import edu.uci.ics.jung.graph.Graph;
 
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext({ AnalyzerModule.class, NlpModule.class, LatexParserModule.class,
-		OntologyTestModule.class, VirtuosoModule.class, FullTextModule.class,
+		OntologyTestModule.class, FullTextModule.class,
 		GateModule.class, PdfParserModule.class })
 public abstract class AbstractAnalyzerTest {
 	@Inject

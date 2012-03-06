@@ -29,10 +29,8 @@ import ru.ksu.niimm.cll.mocassin.ontology.OntologyTriple;
 import ru.ksu.niimm.cll.mocassin.ontology.QueryManagerFacade;
 import ru.ksu.niimm.cll.mocassin.ontology.QueryStatement;
 import ru.ksu.niimm.cll.mocassin.ontology.provider.RepositoryProvider;
+import ru.ksu.niimm.cll.mocassin.ontology.query.DescribeQueryGenerator;
 import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
-import ru.ksu.niimm.cll.mocassin.virtuoso.RDFGraph;
-import ru.ksu.niimm.cll.mocassin.virtuoso.generator.DescribeQueryGenerator;
-import ru.ksu.niimm.cll.mocassin.virtuoso.impl.RDFGraphImpl;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;

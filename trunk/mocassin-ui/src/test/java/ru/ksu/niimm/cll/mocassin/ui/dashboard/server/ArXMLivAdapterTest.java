@@ -25,7 +25,6 @@ import ru.ksu.niimm.cll.mocassin.parser.pdf.PdfParserModule;
 import ru.ksu.niimm.cll.mocassin.ui.server.MocassinUIModule;
 import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
 import ru.ksu.niimm.cll.mocassin.util.IOUtil;
-import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
 
 import com.google.inject.Inject;
 import com.mycila.testing.junit.MycilaJunitRunner;
@@ -33,8 +32,7 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext({ MocassinUIModule.class, OntologyTestModule.class,
-		VirtuosoModule.class, ArxivModule.class, NlpModule.class,
-		LatexParserModule.class, PdfParserModule.class, FullTextModule.class,
+		ArxivModule.class, NlpModule.class,		LatexParserModule.class, PdfParserModule.class, FullTextModule.class,
 		AnalyzerModule.class, GateModule.class })
 public class ArXMLivAdapterTest {
 	@Inject

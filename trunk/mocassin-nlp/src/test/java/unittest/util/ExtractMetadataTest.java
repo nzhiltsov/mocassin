@@ -20,7 +20,6 @@ import ru.ksu.niimm.cll.mocassin.ontology.OntologyModule;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.util.GateDocumentMetadata;
 import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
-import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
 
 import com.google.inject.Inject;
 import com.mycila.testing.junit.MycilaJunitRunner;
@@ -29,7 +28,7 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext({ NlpModule.class, OntologyModule.class, VirtuosoModule.class,
+@GuiceContext({ NlpModule.class, OntologyModule.class,
 		LatexParserModule.class, FullTextModule.class })
 @Ignore("Probably outdated test")
 public class ExtractMetadataTest {/* TODO: check if the test is required */

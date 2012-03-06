@@ -169,7 +169,6 @@
 	<modules>
 		<module>../mocassin-ontology</module>
 		<module>../mocassin-ui</module>
-		<module>../mocassin-virtuoso</module>
 		<module>../mocassin-parser</module>
 		<module>../mocassin-analyzer</module>
 		<module>../mocassin-nlp</module>

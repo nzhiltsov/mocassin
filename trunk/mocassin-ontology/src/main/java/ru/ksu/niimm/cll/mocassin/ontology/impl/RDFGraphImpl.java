@@ -1,6 +1,4 @@
-package ru.ksu.niimm.cll.mocassin.virtuoso.impl;
-
-import ru.ksu.niimm.cll.mocassin.virtuoso.RDFGraph;
+package ru.ksu.niimm.cll.mocassin.ontology.impl;
 
 public class RDFGraphImpl implements RDFGraph {
 	private final String username;

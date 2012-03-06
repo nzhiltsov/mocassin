@@ -38,10 +38,6 @@ import ru.ksu.niimm.cll.mocassin.ontology.SGEdge;
 import ru.ksu.niimm.cll.mocassin.ontology.loader.SparqlQueryLoader;
 import ru.ksu.niimm.cll.mocassin.ontology.provider.RepositoryProvider;
 import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
-import ru.ksu.niimm.cll.mocassin.virtuoso.RDFGraph;
-import ru.ksu.niimm.cll.mocassin.virtuoso.RDFTriple;
-import ru.ksu.niimm.cll.mocassin.virtuoso.generator.InsertQueryGenerator;
-import ru.ksu.niimm.cll.mocassin.virtuoso.impl.RDFGraphImpl;
 
 import com.google.common.base.Function;
 import com.google.inject.Inject;

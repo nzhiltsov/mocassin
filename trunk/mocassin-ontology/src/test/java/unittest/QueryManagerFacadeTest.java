@@ -26,7 +26,6 @@ import ru.ksu.niimm.cll.mocassin.ontology.OntologyTriple;
 import ru.ksu.niimm.cll.mocassin.ontology.QueryManagerFacade;
 import ru.ksu.niimm.cll.mocassin.ontology.QueryStatement;
 import ru.ksu.niimm.cll.mocassin.ontology.provider.RepositoryProvider;
-import ru.ksu.niimm.cll.mocassin.virtuoso.VirtuosoModule;
 
 import com.google.inject.Inject;
 import com.hp.hpl.jena.graph.Graph;
@@ -39,7 +38,7 @@ import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext({ OntologyTestModule.class, VirtuosoModule.class })
+@GuiceContext({ OntologyTestModule.class})
 public class QueryManagerFacadeTest {
 	@Inject
 	private QueryManagerFacade queryManagerFacade;
