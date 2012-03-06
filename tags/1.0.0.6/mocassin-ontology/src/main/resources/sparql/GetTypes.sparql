@@ -1,0 +1,1 @@
+SELECT DISTINCT ?t FROM <%s>  {<%s> a ?t}

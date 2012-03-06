@@ -1,0 +1,5 @@
+SELECT * FROM <%s> {
+?1 a <http://www.aktors.org/ontology/portal#Article-Reference> .
+?1 <http://www.aktors.org/ontology/portal#has-title> ?3 .
+FILTER (str(?1) = "%s") .
+}
