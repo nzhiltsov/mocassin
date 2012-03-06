@@ -1,5 +1,0 @@
-SELECT * FROM <%s> {
-?1 a <http://salt.semanticauthoring.org/ontologies/sdo#Publication> .
-?1 <http://arxiv.org/schema#id> ?2 .
-FILTER (str(?1) = "%s") .
-}
