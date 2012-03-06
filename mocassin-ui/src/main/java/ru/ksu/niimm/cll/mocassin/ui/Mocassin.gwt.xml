@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module rename-to='mocassin'>
+  <inherits name='com.google.gwt.user.User'/>
+  <inherits name='com.google.gwt.user.theme.standard.Standard'/>
+  <inherits name="com.google.gwt.uibinder.UiBinder" />
+  <inherits name="com.google.gwt.i18n.I18N"/>
+  <inherits name="ru.ksu.niimm.cll.mocassin.ui.common.Common" />
+  <extend-property name="locale" values="ru"/>
+  
+  <entry-point class='ru.ksu.niimm.cll.mocassin.ui.client.Mocassin'/>
+  <source path='client'/>
+  
+</module>
