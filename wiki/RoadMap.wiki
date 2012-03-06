@@ -2,7 +2,8 @@
 ==Road Map==
 
 || *Release* || *Milestone Name* || *New Main Features* || *Planned Date* ||
-|| 1.0.0.7 || ? || 1) Stabilize API || 23.04.2012 ||
-|| ||  || 2) Major bug fixes || ||
+|| 1.0.0.7 || ? || 1) Implement baseline ranking || 23.04.2012 ||
+|| ||  || 2) Stabilize API || ||
+|| ||  || 3) Major bug fixes (inc. UI) || ||
 || ||  || || ||
 || 1.0.1 || RUSSIR'12 || First alpha release || 1.04.2012 ||
