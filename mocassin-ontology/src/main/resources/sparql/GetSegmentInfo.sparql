@@ -1,0 +1,4 @@
+SELECT ?stitle ?snumpage FROM <%s> {
+<%s> <http://cll.niimm.ksu.ru/ontologies/mocassin#hasStartPageNumber> ?snumpage .
+OPTIONAL {<%s> <http://cll.niimm.ksu.ru/ontologies/mocassin#hasTitle> ?stitle  . }
+}

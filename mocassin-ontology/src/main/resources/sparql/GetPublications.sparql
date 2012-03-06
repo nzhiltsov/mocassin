@@ -1,0 +1,3 @@
+SELECT DISTINCT ?1 FROM <%s> {
+?1 a <http://www.aktors.org/ontology/portal#Article-Reference> .
+}
