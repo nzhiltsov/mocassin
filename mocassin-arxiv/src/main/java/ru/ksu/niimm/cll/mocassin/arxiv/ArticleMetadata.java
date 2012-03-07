@@ -1,7 +1,10 @@
 package ru.ksu.niimm.cll.mocassin.arxiv;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import ru.ksu.niimm.cll.mocassin.arxiv.impl.Link;
 
@@ -26,7 +29,7 @@ public class ArticleMetadata {
 
 	private String title;
 
-	private List<Author> authors = new ArrayList<Author>();
+	private final Set<Author> authors = new HashSet<Author>();
 
 	private String currentSegmentUri;
 
@@ -51,11 +54,11 @@ public class ArticleMetadata {
 	}
 
 	public List<Author> getAuthors() {
-		return authors;
+		return new ArrayList<Author>(authors);
 	}
 
 	public void setAuthors(List<Author> authors) {
-		this.authors = authors;
+		this.authors.addAll(authors);
 	}
 
 	public List<Link> getLinks() {
