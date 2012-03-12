@@ -1,6 +1,9 @@
 package ru.ksu.niimm.cll.mocassin.ui.server;
 
+import static java.lang.String.format;
+
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -45,14 +48,18 @@ public class PdfDownloadServlet extends HttpServlet {
 			logger.error("The request with an empty arxiv id parameter");
 			return;
 		}
-		String filePath = segmentId == null ? "/opt/mocassin/aux-pdf/"
-				+ StringUtil.arxivid2filename(arxivId, "pdf")
+		String filePath = segmentId == null ? format("/opt/mocassin/aux-pdf/%s"
+				+ StringUtil.arxivid2filename(arxivId, "pdf"))
 				: "/opt/mocassin/pdf/"
 						+ StringUtil.segmentid2filename(arxivId,
 								Integer.parseInt(segmentId), "pdf");
-
+		if (!new File(filePath).exists()) {
+			filePath = format("/opt/mocassin/aux-pdf/%s",
+					StringUtil.arxivid2filename(arxivId, "pdf"));
+		}
 		try {
 			FileInputStream fileInputStream = new FileInputStream(filePath);
+
 			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 			IOUtils.copy(fileInputStream, byteArrayOutputStream);
 			resp.setContentType("application/pdf");
