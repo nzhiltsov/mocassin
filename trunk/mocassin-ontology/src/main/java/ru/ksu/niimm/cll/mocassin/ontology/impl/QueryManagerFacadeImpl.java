@@ -193,7 +193,7 @@ public class QueryManagerFacadeImpl implements QueryManagerFacade {
 				ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 				QueryResultIO.write(graphQueryResult, RDFFormat.RDFXML,
 						outputStream);
-				return outputStream.toString("utf8");
+				return outputStream.toString("UTF-8");
 			} finally {
 				connection.close();
 			}
