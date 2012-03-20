@@ -1,6 +1,7 @@
 package ru.ksu.niimm.cll.mocassin.ui.server;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -19,6 +20,7 @@ import com.google.inject.Singleton;
 @SuppressWarnings("serial")
 @Singleton
 public class DescriptionServlet extends HttpServlet {
+	private static final String RESPONSE_ENCODING = "UTF-8";
 	private static final String RESOURCE_URI_PARAMETER_NAME = "resourceuri";
 	private static final String CONTENT_TYPE = "application/rdf+xml; charset=UTF-8";
 	@InjectLogger
@@ -31,10 +33,15 @@ public class DescriptionServlet extends HttpServlet {
 			throws ServletException, IOException {
 		String resourceUri = req.getParameter(RESOURCE_URI_PARAMETER_NAME);
 		resp.setContentType(CONTENT_TYPE);
-		ServletOutputStream outputStream = resp.getOutputStream();
+		resp.setCharacterEncoding(RESPONSE_ENCODING);
+		PrintWriter writer = resp.getWriter();
 		String model = getQueryManagerFacade().describe(resourceUri);
-		outputStream.print(model);
-		outputStream.close();
+		try {
+			writer.print(model);
+		} finally {
+			writer.close();
+		}
+
 		logger.debug(
 				"Request for a resource='{}' has been processed successfully",
 				resourceUri);
