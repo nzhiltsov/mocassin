@@ -191,12 +191,27 @@ public class StructuralElementImpl implements StructuralElement {
 				return 1;
 			if (first.getGateStartOffset() > second.getGateStartOffset())
 				return -1;
-			if (first.getGateEndOffset() - first.getGateStartOffset() > second.getGateEndOffset() - second.getGateStartOffset())
+			if (first.getGateEndOffset() - first.getGateStartOffset() > second
+					.getGateEndOffset() - second.getGateStartOffset())
 				return 1;
-			if (first.getGateEndOffset() - first.getGateStartOffset() < second.getGateEndOffset() - second.getGateStartOffset())
+			if (first.getGateEndOffset() - first.getGateStartOffset() < second
+					.getGateEndOffset() - second.getGateStartOffset())
 				return -1;
 			return 0;
 		}
+	}
+
+	@SuppressWarnings("serial")
+	public static class IdComparator implements Serializable,
+			Comparator<StructuralElement> {
+
+		@Override
+		public int compare(StructuralElement first, StructuralElement second) {
+			Integer firstId = first.getId();
+			Integer secondId = second.getId();
+			return firstId.compareTo(secondId);
+		}
+
 	}
 
 	public static class TypePredicate implements Predicate<StructuralElement> {

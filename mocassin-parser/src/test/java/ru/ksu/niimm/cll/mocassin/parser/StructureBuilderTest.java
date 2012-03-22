@@ -41,7 +41,7 @@ public class StructureBuilderTest {
 	@Before
 	public void init() throws LexerException, IOException {
 		InputStream in = new FileInputStream("/opt/mocassin/tex/ivm18.tex");
-		this.model = parser.parse("ivm18", in, true);
+		this.model = parser.parse("ivm18", in, "cp866", true);
 	}
 
 	@Test

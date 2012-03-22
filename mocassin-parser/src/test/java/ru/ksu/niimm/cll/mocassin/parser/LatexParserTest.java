@@ -34,7 +34,7 @@ public class LatexParserTest {
 
 	@Test
 	public void testParse() throws Exception {
-		LatexDocumentModel model = getParser().parse("ivm18", getInputStream(), true);
+		LatexDocumentModel model = getParser().parse("ivm18", getInputStream(), "cp866", true);
 		Assert.assertTrue(model.getReferences().size() > 0);
 	}
 
