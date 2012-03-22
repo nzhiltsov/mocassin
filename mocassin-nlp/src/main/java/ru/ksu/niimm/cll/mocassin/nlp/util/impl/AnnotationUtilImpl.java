@@ -25,6 +25,8 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 public class AnnotationUtilImpl implements AnnotationUtil {
+	private static final String FREE_EXPRESSION_MARK = ".Ex";
+
 	private final String TOKEN_ANNOTATION_NAME;
 
 	private final String ARXMLIV_MATH_ANNOTATION_NAME;
@@ -67,7 +69,8 @@ public class AnnotationUtilImpl implements AnnotationUtil {
 			AnnotationSet coveringGroups = annotationSet.getCovering(
 					"equationgroup", equation.getStartNode().getOffset(),
 					equation.getEndNode().getOffset());
-			if (!coveringGroups.isEmpty()) {
+			String xmlIdAttr = (String) equation.getFeatures().get("xml:id");
+			if (!coveringGroups.isEmpty() || xmlIdAttr.contains(FREE_EXPRESSION_MARK)) {
 				equationsForRemove.add(equation);
 			}
 		}

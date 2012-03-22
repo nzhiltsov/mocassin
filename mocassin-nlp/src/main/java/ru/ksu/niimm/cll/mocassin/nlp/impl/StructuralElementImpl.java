@@ -153,7 +153,7 @@ public class StructuralElementImpl implements StructuralElement {
 
 	@Override
 	public String toString() {
-		return String.format("%s; %s", uri, predictedClass);
+		return String.format("%s; %s; %s", uri, predictedClass, name);
 	}
 
 	@Override
