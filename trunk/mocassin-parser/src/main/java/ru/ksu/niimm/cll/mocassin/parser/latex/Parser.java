@@ -10,5 +10,5 @@ import java.io.InputStream;
  * 
  */
 public interface Parser {
-	LatexDocumentModel parse(String docId, InputStream inputStream, boolean closeStream);
+	LatexDocumentModel parse(String docId, InputStream inputStream, String encoding, boolean closeStream);
 }

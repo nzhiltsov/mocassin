@@ -58,7 +58,7 @@ class LatexParserImpl implements Parser {
 
 	@Override
 	public LatexDocumentModel parse(String docId,
-			final InputStream inputStream, boolean closeStream) {
+			final InputStream inputStream, String encoding, boolean closeStream) {
 		this.docId = docId;
 		InputStream parsingInputStream;
 		if (!inputStream.markSupported()) {
@@ -70,12 +70,11 @@ class LatexParserImpl implements Parser {
 
 		List<NewtheoremCommand> newtheorems = new ArrayList<NewtheoremCommand>();
 
-		BufferedReader headerReader = new BufferedReader(new InputStreamReader(
-				parsingInputStream));
-
 		boolean isNumberingWithinSection = false;
 		String line;
 		try {
+			BufferedReader headerReader = new BufferedReader(
+					new InputStreamReader(parsingInputStream, encoding));
 			try {
 				while ((line = headerReader.readLine()) != null) {
 
@@ -154,7 +153,7 @@ class LatexParserImpl implements Parser {
 					parsingInputStream.close();
 				}
 			}
-			
+
 		} catch (Exception e) {
 			logger.error("Failed to parse a Latex document model='{}'.", docId,
 					e);

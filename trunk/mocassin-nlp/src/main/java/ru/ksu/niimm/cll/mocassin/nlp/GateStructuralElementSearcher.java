@@ -15,6 +15,9 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 
+import static ru.ksu.niimm.cll.mocassin.parser.impl.NodeImpl.NodePositionComparator;
+import static ru.ksu.niimm.cll.mocassin.nlp.impl.StructuralElementImpl.DescPositionComparator;
+
 import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateDocumentException;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateStorageException;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
@@ -31,7 +34,9 @@ import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentModel;
 import ru.ksu.niimm.cll.mocassin.parser.latex.Node;
 import ru.ksu.niimm.cll.mocassin.parser.latex.StructureBuilder;
 import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
+import ru.ksu.niimm.cll.mocassin.util.StringSimilarityEvaluator;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
+import ru.ksu.niimm.cll.mocassin.util.StringSimilarityEvaluator.SimilarityMetrics;
 import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
 
 import com.google.common.base.Predicate;
@@ -57,15 +62,12 @@ class GateStructuralElementSearcher implements StructuralElementSearcher {
 	@Inject
 	private StructureBuilder structureBuilder;
 
-	private static final Set<String> NAME_SET = ArxmlivStructureElementTypes
-			.toNameSet();
-
 	private AnnotationSet structuralAnnotations;
 
 	private ParsedDocument parsedDocument;
 
 	private LatexDocumentModel latexDocumentModel;
-	private Collection<Node> latexNodes;
+	private List<Node> latexNodes;
 
 	@Inject
 	GateStructuralElementSearcher(
@@ -85,11 +87,11 @@ class GateStructuralElementSearcher implements StructuralElementSearcher {
 			gateDocument = gateDocumentDAO.load(arxivId);
 			latexDocumentModel = latexDocumentDAO.load(parsedDocument
 					.getCollectionId());
-			latexNodes = structureBuilder.buildStructureGraph(
-					latexDocumentModel).getVertices();
+			latexNodes = new ArrayList<Node>(structureBuilder
+					.buildStructureGraph(latexDocumentModel).getVertices());
+			Collections.sort(latexNodes, new NodePositionComparator());
 
-			setStructuralAnnotations(gateDocument.getAnnotations(
-					ARXMLIV_MARKUP_NAME).get(NAME_SET));
+			setStructuralAnnotations(gateDocument);
 
 			List<StructuralElement> elements = new ArrayList<StructuralElement>();
 			for (Annotation structuralAnnotation : getStructuralAnnotations()) {
@@ -97,6 +99,8 @@ class GateStructuralElementSearcher implements StructuralElementSearcher {
 						gateDocument, structuralAnnotation);
 				elements.add(element);
 			}
+
+			fillPageNumbers(elements);
 			return elements;
 		} catch (AccessGateDocumentException e) {
 			logger.error("Failed to load the document: {}",
@@ -109,6 +113,37 @@ class GateStructuralElementSearcher implements StructuralElementSearcher {
 			throw new RuntimeException(e);
 		} finally {
 			gateDocumentDAO.release(gateDocument);
+		}
+	}
+
+	private void fillPageNumbers(List<StructuralElement> elements) {
+		Collections.sort(elements, new StructuralElementByLocationComparator());
+		int j = 0;
+		for (StructuralElement element : elements) {
+			if (element.getPredictedClass() == MocassinOntologyClasses.UNRECOGNIZED_DOCUMENT_SEGMENT)
+				continue;
+			String[] elementLabels = element.getPredictedClass().getLabels();
+			while (j < latexNodes.size()) {
+				Node node = latexNodes.get(j);
+				boolean found = false;
+				for (String label : elementLabels) {
+					float similarity = StringSimilarityEvaluator.getSimilarity(
+							node.getName(), label, SimilarityMetrics.N_GRAM);
+					if (similarity >= 0.8) {
+						fillElementLocation(element, node);
+						found = true;
+						break;
+					}
+				}
+				j++;
+				if (found) {
+					break;
+				}
+			}
+			if (element.getStartPageNumber() == 0) {
+				logger.info("Couldn't determine location of an element='{}'",
+						element.getUri());
+			}
 		}
 	}
 
@@ -194,36 +229,9 @@ class GateStructuralElementSearcher implements StructuralElementSearcher {
 		return structuralAnnotations;
 	}
 
-	public void setStructuralAnnotations(AnnotationSet structuralAnnotations) {
-		this.structuralAnnotations = structuralAnnotations;
-	}
-
-	private void fillPageNumber(StructuralElement element) {
-		for (Node node : latexNodes) {
-			if (!element.getLabels().isEmpty()) {
-				String labelText = String.format("LABEL:%s",
-						node.getLabelText());
-				if (element.getLabels().contains(labelText)) {
-					fillElementLocation(element, node);
-					break;
-				}
-			} else {
-				/**
-				 * TODO: this is a temporary workaround; use arxmliv coordinates
-				 * when they will be available
-				 */
-				if (element.getPredictedClass() != MocassinOntologyClasses.SECTION)
-					continue;
-				else if (Arrays.asList(
-						MocassinOntologyClasses.SECTION.getLabels()).contains(
-						node.getName())
-						&& element.getTitle().contains(node.getTitle())) {
-					fillElementLocation(element, node);
-					break;
-				}
-			}
-		}
-
+	public void setStructuralAnnotations(Document gateDocument) {
+		this.structuralAnnotations = getAnnotationUtil()
+				.getStructuralAnnotations(gateDocument);
 	}
 
 	private void fillElementLocation(StructuralElement element, Node node) {
@@ -275,8 +283,6 @@ class GateStructuralElementSearcher implements StructuralElementSearcher {
 		MocassinOntologyClasses predictedClass = getStructuralElementTypeRecognizer()
 				.predict(element);
 		element.setPredictedClass(predictedClass);
-
-		fillPageNumber(element);
 
 		return element;
 	}

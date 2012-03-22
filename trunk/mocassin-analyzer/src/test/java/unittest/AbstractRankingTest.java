@@ -56,7 +56,7 @@ public abstract class AbstractRankingTest {
 	public void init() throws LexerException, IOException {
 		InputStream in = this.getClass().getResourceAsStream("/example.tex");
 		LatexDocumentModel latexDocumentModel = this.parser.parse("example",
-				in, true);
+				in, "utf8", true);
 
 		this.models.add(this.structureBuilder
 				.buildStructureGraph(latexDocumentModel));

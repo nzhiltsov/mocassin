@@ -21,6 +21,12 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 public class LatexDocumentDAOImpl implements LatexDocumentDAO {
+	private static final String UNICODE_ENCODING = "utf8";
+
+	private static final String CYRILLIC_ENCODING = "cp866";
+
+	private static final String IZVESTIYA_PREFIX = "ivm";
+
 	@InjectLogger
 	private Logger logger;
 
@@ -41,13 +47,15 @@ public class LatexDocumentDAOImpl implements LatexDocumentDAO {
 
 	@Override
 	public LatexDocumentModel load(String documentId) {
+		String encoding = detectEncoding(documentId);
 		String filename = StringUtil.arxivid2filename(documentId, "tex");
 		LatexDocumentModel model = null;
 		try {
 			model = parser.parse(
 					documentId,
 					new FileInputStream(String.format("%s/%s",
-							PATCHED_LATEX_DOCUMENT_DIR, filename)), true);
+							PATCHED_LATEX_DOCUMENT_DIR, filename)), encoding,
+					true);
 
 		} catch (FileNotFoundException e) {
 			logger.error(
@@ -74,5 +82,10 @@ public class LatexDocumentDAOImpl implements LatexDocumentDAO {
 			throw new RuntimeException(e);
 		}
 
+	}
+
+	private String detectEncoding(String documentId) {
+		return documentId.contains(IZVESTIYA_PREFIX) ? CYRILLIC_ENCODING
+				: UNICODE_ENCODING;
 	}
 }

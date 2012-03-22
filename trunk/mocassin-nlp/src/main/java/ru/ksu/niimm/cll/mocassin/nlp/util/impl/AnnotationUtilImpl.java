@@ -7,13 +7,17 @@ import gate.util.OffsetComparator;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import ru.ksu.niimm.cll.mocassin.nlp.Token;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.GateFormatConstants;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.TokenImpl;
 import ru.ksu.niimm.cll.mocassin.nlp.util.AnnotationUtil;
+import ru.ksu.niimm.cll.mocassin.parser.arxmliv.ArxmlivFormatConstants;
+import ru.ksu.niimm.cll.mocassin.parser.arxmliv.ArxmlivStructureElementTypes;
 import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
 
 import com.google.common.collect.Iterables;
@@ -33,6 +37,9 @@ public class AnnotationUtilImpl implements AnnotationUtil {
 
 	private final String SENTENCE_ANNOTATION_NAME;
 
+	private static final Set<String> NAME_SET = ArxmlivStructureElementTypes
+			.toNameSet();
+
 	@Inject
 	AnnotationUtilImpl(
 			@Named("token.annotation.name") String tokenAnnotationName,
@@ -47,6 +54,25 @@ public class AnnotationUtilImpl implements AnnotationUtil {
 		this.ARXMLIV_MARKUP_NAME = arxmlivMarkupName;
 		this.SPACE_TOKEN_ANNOTATION_NAME = spaceTokenAnnotationName;
 		this.SENTENCE_ANNOTATION_NAME = sentenceAnnotationName;
+	}
+
+	@Override
+	public AnnotationSet getStructuralAnnotations(Document document) {
+		AnnotationSet annotationSet = document
+				.getAnnotations(ARXMLIV_MARKUP_NAME);
+		AnnotationSet equations = document.getAnnotations(ARXMLIV_MARKUP_NAME)
+				.get("equation");
+		Set<Annotation> equationsForRemove = new HashSet<Annotation>();
+		for (Annotation equation : equations) {
+			AnnotationSet coveringGroups = annotationSet.getCovering(
+					"equationgroup", equation.getStartNode().getOffset(),
+					equation.getEndNode().getOffset());
+			if (!coveringGroups.isEmpty()) {
+				equationsForRemove.add(equation);
+			}
+		}
+		annotationSet.removeAll(equationsForRemove);
+		return annotationSet.get(NAME_SET);
 	}
 
 	@Override
