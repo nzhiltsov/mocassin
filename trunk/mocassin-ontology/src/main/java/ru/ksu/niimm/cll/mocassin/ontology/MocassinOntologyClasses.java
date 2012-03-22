@@ -23,7 +23,7 @@ public enum MocassinOntologyClasses {
 			"утверждение"), CONJECTURE(2, "conjecture", "hypothesis",
 			"гипотеза"), COROLLARY(3, "corollary", "следствие"), DEFINITION(4,
 			"definition", "определение"), EQUATION(5, "equation",
-			"equationgroup", "gather", "eqnarray", "array"), EXAMPLE(6, "example", "пример"), FIGURE(7,
+			"equationgroup", "gather", "eqnarray", "array", "align"), EXAMPLE(6, "example", "пример"), FIGURE(7,
 			"figure", "рисунок", "график", "изображение"), LEMMA(8, "lemma",
 			"лемма"), PROOF(9, "proof", "доказательство"), PROPOSITION(10,
 			"proposition", "предложение"), REMARK(11, "remark", "note",
