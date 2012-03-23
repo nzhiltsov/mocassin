@@ -12,7 +12,7 @@ import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 
 /**
- * Mocassin Ontology classes with their synonyms and classes imported from SALT
+ * Mocassin Ontology classes with their synonyms and the classes imported from SALT
  * ontology
  * 
  * @author nzhiltsov
@@ -23,7 +23,7 @@ public enum MocassinOntologyClasses {
 			"утверждение"), CONJECTURE(2, "conjecture", "hypothesis",
 			"гипотеза"), COROLLARY(3, "corollary", "следствие"), DEFINITION(4,
 			"definition", "определение"), EQUATION(5, "equation",
-			"equationgroup", "gather", "eqnarray", "array", "align"), EXAMPLE(6, "example", "пример"), FIGURE(7,
+			"equationgroup", "gather", "eqnarray", "array", "align", "alignat", "split", "multline"), EXAMPLE(6, "example", "пример"), FIGURE(7,
 			"figure", "рисунок", "график", "изображение"), LEMMA(8, "lemma",
 			"лемма"), PROOF(9, "proof", "доказательство"), PROPOSITION(10,
 			"proposition", "предложение"), REMARK(11, "remark", "note",
