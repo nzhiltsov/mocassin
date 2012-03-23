@@ -70,7 +70,7 @@ public class AnnotationUtilImpl implements AnnotationUtil {
 					"equationgroup", equation.getStartNode().getOffset(),
 					equation.getEndNode().getOffset());
 			String xmlIdAttr = (String) equation.getFeatures().get("xml:id");
-			if (!coveringGroups.isEmpty() || xmlIdAttr.contains(FREE_EXPRESSION_MARK)) {
+			if (!coveringGroups.isEmpty() || xmlIdAttr != null && xmlIdAttr.contains(FREE_EXPRESSION_MARK)) {
 				equationsForRemove.add(equation);
 			}
 		}
