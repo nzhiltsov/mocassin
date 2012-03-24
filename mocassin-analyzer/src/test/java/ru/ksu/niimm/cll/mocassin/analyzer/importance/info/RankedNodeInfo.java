@@ -1,4 +1,4 @@
-package unittest.info;
+package ru.ksu.niimm.cll.mocassin.analyzer.importance.info;
 
 public class RankedNodeInfo {
 	private String docId;

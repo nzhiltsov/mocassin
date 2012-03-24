@@ -1,4 +1,4 @@
-package unittest;
+package ru.ksu.niimm.cll.mocassin.analyzer.importance;
 
 import java.util.Map;
 

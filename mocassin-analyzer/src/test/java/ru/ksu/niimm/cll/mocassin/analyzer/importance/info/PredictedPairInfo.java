@@ -1,4 +1,4 @@
-package unittest.info;
+package ru.ksu.niimm.cll.mocassin.analyzer.importance.info;
 
 import ru.ksu.niimm.cll.mocassin.nlp.Reference;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
