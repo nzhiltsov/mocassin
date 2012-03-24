@@ -9,8 +9,10 @@ import ru.ksu.niimm.cll.mocassin.analyzer.classifier.NavRelClassifierImpl;
 import ru.ksu.niimm.cll.mocassin.analyzer.classifier.NavigationalRelationClassifier;
 import ru.ksu.niimm.cll.mocassin.analyzer.impl.GateReferenceSearcher;
 import ru.ksu.niimm.cll.mocassin.analyzer.impl.ReferenceStatementGeneratorImpl;
+import ru.ksu.niimm.cll.mocassin.analyzer.importance.ImportantElementService;
 import ru.ksu.niimm.cll.mocassin.analyzer.importance.ImportantNodeService;
-import ru.ksu.niimm.cll.mocassin.analyzer.importance.impl.ImportantNodeServiceImpl;
+import ru.ksu.niimm.cll.mocassin.analyzer.importance.impl.PageRankElementService;
+import ru.ksu.niimm.cll.mocassin.analyzer.importance.impl.PageRankNodeService;
 import ru.ksu.niimm.cll.mocassin.analyzer.location.ReferenceElementLocationAnalyzer;
 import ru.ksu.niimm.cll.mocassin.analyzer.location.impl.ReferenceElementLocationAnalyzerImpl;
 import ru.ksu.niimm.cll.mocassin.analyzer.lsa.LSIPropertiesLoader;
@@ -55,7 +57,10 @@ public class AnalyzerModule extends AbstractModule {
 		bind(Matcher.class).to(NameMatcher.class);
 		bind(NameMatcherPropertiesLoader.class).to(
 				NameMatcherPropertiesLoaderImpl.class);
-		bind(ImportantNodeService.class).to(ImportantNodeServiceImpl.class);
+
+		bind(ImportantNodeService.class).to(PageRankNodeService.class);
+		bind(ImportantElementService.class).to(PageRankElementService.class);
+
 		bind(LatentSemanticIndexer.class).to(LatentSemanticIndexerImpl.class);
 		bind(LSIPropertiesLoader.class).to(LSIPropertiesLoaderImpl.class);
 

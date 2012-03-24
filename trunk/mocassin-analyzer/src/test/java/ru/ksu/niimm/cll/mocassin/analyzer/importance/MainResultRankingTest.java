@@ -1,12 +1,12 @@
-package unittest;
+package ru.ksu.niimm.cll.mocassin.analyzer.importance;
 
 import java.util.Map;
 
 import org.junit.Test;
 
+import ru.ksu.niimm.cll.mocassin.analyzer.importance.info.RankedNodeInfo;
 import ru.ksu.niimm.cll.mocassin.parser.latex.Edge;
 import ru.ksu.niimm.cll.mocassin.parser.latex.Node;
-import unittest.info.RankedNodeInfo;
 import edu.uci.ics.jung.graph.Graph;
 
 public class MainResultRankingTest extends ImportantNodeServiceTest {
