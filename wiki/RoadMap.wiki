@@ -7,7 +7,7 @@
 || ||  || 3) Major bug fixes (inc. UI) || ||
 || ||  || 4) Basic citation link analysis || ||
 || ||  || || ||
-|| 1.0.1 || RUSSIR'12 paper || First alpha release || 1.04.2012 ||
+|| 1.0.1 || ? || First alpha release || 1.04.2012 ||
 || ||  || || ||
 || 1.0.2 || ? || 1) Full functional citation link analysis  || 14.04.2012 ||
 || ||  || || ||
