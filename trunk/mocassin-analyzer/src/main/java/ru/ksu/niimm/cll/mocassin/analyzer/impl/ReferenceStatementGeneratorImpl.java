@@ -18,7 +18,8 @@ import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
 import edu.uci.ics.jung.graph.Graph;
 
-public class ReferenceStatementGeneratorImpl implements ReferenceStatementGenerator {
+public class ReferenceStatementGeneratorImpl implements
+		ReferenceStatementGenerator {
 	private static final String EMPTY_STRING = "";
 	private static final String END_LINE = "\n";
 	private static final String SPACE = " ";
@@ -50,9 +51,14 @@ public class ReferenceStatementGeneratorImpl implements ReferenceStatementGenera
 				triples.add(createTitleTriple(to));
 			}
 
-			triples.add(createValueTriple(from));
-			triples.add(createValueTriple(to));
-
+			Statement fromValueTriple = createValueTriple(from);
+			if (fromValueTriple != null) {
+				triples.add(fromValueTriple);
+			}
+			Statement toValueTriple = createValueTriple(to);
+			if (toValueTriple != null) {
+				triples.add(toValueTriple);
+			}
 			triples.add(createPageNumberTriple(from));
 			triples.add(createPageNumberTriple(to));
 
@@ -86,6 +92,8 @@ public class ReferenceStatementGeneratorImpl implements ReferenceStatementGenera
 
 	private static Statement createValueTriple(StructuralElement element) {
 		List<String> contents = element.getContents();
+		if (contents == null)
+			return null;
 		StringBuffer sb = new StringBuffer();
 		for (String str : contents) {
 			sb.append(str);

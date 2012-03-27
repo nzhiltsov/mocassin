@@ -258,28 +258,30 @@ class GateStructuralElementSearcher implements StructuralElementSearcher {
 		AnnotationSet titleSet = document
 				.getAnnotations(ARXMLIV_MARKUP_NAME)
 				.get(TITLE_ANNOTATION_NAME)
-
 				.getContained(annotation.getStartNode().getOffset(),
 						annotation.getEndNode().getOffset());
 		List<Annotation> titleList = new ArrayList<Annotation>(titleSet);
 		Collections.sort(titleList, new OffsetComparator());
 		String title = "";
-		if (titleList.size() > 0) {
-			Annotation titleAnnotation = titleList.get(0);
-			title = getTextContentsForAnnotation(document, titleAnnotation);
-		} else {
-			String refnum = (String) annotation.getFeatures().get(
-					ArxmlivFormatConstants.REF_NUM_ATTRIBUTE_NAME);
-			title = refnum != null ? String.format("%s %s", name, refnum)
-					: name;
+		if (id != 0) {
+			if (titleList.size() > 0) {
+				Annotation titleAnnotation = titleList.get(0);
+				title = getTextContentsForAnnotation(document, titleAnnotation);
+			} else {
+				String refnum = (String) annotation.getFeatures().get(
+						ArxmlivFormatConstants.REF_NUM_ATTRIBUTE_NAME);
+				title = refnum != null ? String.format("%s %s", name, refnum)
+						: name;
+			}
 		}
 
 		StructuralElement element = new StructuralElementImpl.Builder(id,
 				getParsedDocument().getUri() + "/" + id).start(start).end(end)
 				.name(name).title(title).build();
 		element.setLabels(labels);
-		element.setContents(getPureTokensForAnnotation(document, annotation));
-
+		if (id != 0) {
+			element.setContents(getPureTokensForAnnotation(document, annotation));
+		}
 		MocassinOntologyClasses predictedClass = getStructuralElementTypeRecognizer()
 				.predict(element);
 		element.setPredictedClass(predictedClass);

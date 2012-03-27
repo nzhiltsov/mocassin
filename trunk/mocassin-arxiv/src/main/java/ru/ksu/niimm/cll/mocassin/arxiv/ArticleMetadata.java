@@ -53,12 +53,12 @@ public class ArticleMetadata {
 		this.title = title;
 	}
 
-	public List<Author> getAuthors() {
-		return new ArrayList<Author>(authors);
+	public void setAuthors(Set<Author> authors) {
+		this.authors.addAll(authors);
 	}
 
-	public void setAuthors(List<Author> authors) {
-		this.authors.addAll(authors);
+	public Set<Author> getAuthors() {
+		return authors;
 	}
 
 	public List<Link> getLinks() {

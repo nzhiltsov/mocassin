@@ -2,6 +2,7 @@ package ru.ksu.niimm.cll.mocassin.ui.server;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.arxiv.Author;
@@ -27,7 +28,6 @@ import ru.ksu.niimm.cll.mocassin.ui.client.QueryService;
 import ru.ksu.niimm.cll.mocassin.ui.client.ResultDescription;
 import ru.ksu.niimm.cll.mocassin.ui.common.client.PagingLoadConfig;
 import ru.ksu.niimm.cll.mocassin.ui.common.client.PagingLoadInfo;
-import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
 
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
@@ -94,10 +94,12 @@ public class QueryServiceImpl implements QueryService {
 			Link pdfLink = Iterables.find(links, new Link.PdfLinkPredicate(),
 					Link.nullPdfLink());
 			rd.setPdfUri(pdfLink.getHref());
-			List<Author> authors = ontologyElement.getAuthors();
-			List<String> authorsNames = CollectionUtil.asList(Iterables
-					.transform(authors, new Author.NameFunction()));
-			rd.setAuthors(authorsNames);
+			Set<Author> authors = ontologyElement.getAuthors();
+			List<String> authorNames = new ArrayList<String>();
+			for (Author author : authors) {
+				authorNames.add(author.getName());
+			}
+			rd.setAuthors(authorNames);
 			String articleTitle = ontologyElement.getCurrentSegmentTitle() != null ? String
 					.format("%s (%s)", ontologyElement.getTitle(),
 							ontologyElement.getCurrentSegmentTitle())
