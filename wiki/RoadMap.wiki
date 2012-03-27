@@ -1,7 +1,7 @@
 #labels Featured
 ==Road Map==
 
-Mocassin's versioning (mostly) accepts [http://semver.org/ these guidelines]
+Mocassin's versioning (mostly) follows [http://semver.org/ these guidelines]
 
 || *Release* || *Milestone Name* || *New Main Features* || *Planned Date* ||
 || 1.0.0.7 || ? || 1) Implement baseline ranking || 1.04.2012 ||
