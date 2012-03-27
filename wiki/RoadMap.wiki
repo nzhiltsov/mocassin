@@ -10,6 +10,6 @@
 || ||  || || ||
 || 1.0.2 || ? || 1) Making indexing distributed || 17.04.2012 ||
 || ||  || || ||
-|| 1.0.3 || ? || 1) Citation link analysis  || 10.05.2012 ||
+|| 1.0.3 || ? || 1) Mining semantics of citation links  || 10.05.2012 ||
 || ||  || || ||
 || 1.0.4 || RUSSIR'12 paper || 1) Novel approach for mining logical structure  || 15.05.2012 ||
