@@ -25,6 +25,14 @@ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
     <akt:has-pages>74-74</akt:has-pages>
     <akt:included-in-publication rdf:resource="ivm2005-2" />
   </rdf:Description>
+  <rdf:Description rdf:about="http://mathnet.ru/ivm18">
+    <rdf:type rdf:resource="&akt;Article-Reference"/>
+    <akt:has-title xml:lang="ru">Конструирование явных методов типа Рунге--Кутта интегрирования систем специального вида</akt:has-title>
+    <akt:has-title xml:lang="en">Construction of explicit methods of Runge--Kutta type for the integration of systems of a special type</akt:has-title>
+    <akt:has-author rdf:resource="http://mathnet.ru/personid33387"/>
+    <akt:has-pages>75-80</akt:has-pages>
+    <akt:included-in-publication rdf:resource="ivm2005-2"/>
+  </rdf:Description>
 <rdf:Description rdf:about="http://mathnet.ru/ivm677">
     <rdf:type rdf:resource="&akt;Article-Reference"/>
     <akt:has-title>Дискретно-непрерывная система уравнений свертки</akt:has-title>
@@ -56,5 +64,22 @@ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
     </akt:has-author>
     <akt:has-pages>3-5</akt:has-pages>
     <akt:included-in-publication rdf:resource="ivm2005-8" />
+  </rdf:Description>
+  <rdf:Description rdf:about="http://mathnet.ru/personid33387">
+    <rdf:type rdf:resource="&akt;Affiliated-Person"/>
+    <akt:full-name xml:lang="en">I. V. Olemskoi</akt:full-name>
+    <akt:full-name xml:lang="en">Olemskoi I V</akt:full-name>
+    <akt:full-name xml:lang="ru">И. В. Олемской</akt:full-name>
+    <akt:full-name xml:lang="ru">Олемской И В</akt:full-name>
+    <akt:has-affiliation rdf:resource="http://www.mathnet.ru/orgid196"/>
+    <akt:has-email-address>olemskoy@apmath.spbu.ru</akt:has-email-address>
+    <akt:has-email-address>olemskoy_iv@mail.ru</akt:has-email-address>
+    <akt:has-web-address>http://www.mathnet.ru/php/person.phtml?personid=33387</akt:has-web-address>
+  </rdf:Description>
+    <rdf:Description rdf:ID="ivm2005-2">
+    <rdf:type rdf:resource="&akt;Journal"/>
+    <akt:has-title xml:lang="ru">Известия высших учебных заведений. Математика </akt:has-title>
+    <akt:has-title xml:lang="en">Izvestiya Vysshikh Uchebnykh Zavedenii. Matematika </akt:has-title>
+    <akt:has-issue-number>2</akt:has-issue-number>
   </rdf:Description>
 </rdf:RDF>

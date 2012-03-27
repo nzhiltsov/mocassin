@@ -5,6 +5,7 @@ import static ru.ksu.niimm.cll.mocassin.util.StringUtil.extractMathnetKeyFromURI
 import static java.lang.String.format;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -44,6 +45,9 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
+	private static final String AUTHOR_URI_ELEMENT_KEY = "2";
+	private static final String LOCALE = "ru"; // TODO: make adjustable
+												// parameter
 	private static final String AFFILIATION_ELEMENT_KEY = "5";
 	private static final String PUBLICATION_TYPE_URI = "http://www.aktors.org/ontology/portal#Article-Reference";
 	private static final String RETRIEVED_OBJECT_CLASS = "oclass";
@@ -243,6 +247,9 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 				URI context = getRepository().getValueFactory().createURI(
 						getSearchGraph().getIri());
 				connection.add(statements, context);
+				logger.info(
+						"{} triple(s) have been inserted into the triple store.",
+						statements.size());
 			} finally {
 				connection.close();
 			}
@@ -260,7 +267,7 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 		// String arxivId = retrieveArxivId(documentUri); // TODO: workaround
 		// for Mathnet keys
 		String mathnetKey = extractMathnetKeyFromURI(documentUri);
-		List<Author> authors = retrieveAuthors(documentUri);
+		Set<Author> authors = retrieveAuthors(documentUri);
 		List<Link> links = retrieveLinks(documentUri);
 
 		ArticleMetadata articleMetadata = new ArticleMetadata();
@@ -327,10 +334,10 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 		return links;
 	}
 
-	private List<Author> retrieveAuthors(String documentUri)
+	private Set<Author> retrieveAuthors(String documentUri)
 			throws QueryEvaluationException, RepositoryException,
 			MalformedQueryException {
-		List<Author> authors = new ArrayList<Author>();
+		Set<Author> authors = new HashSet<Author>();
 		String authorQueryString = generateAuthorQuery(documentUri);
 
 		RepositoryConnection connection = getRepository().getConnection();
@@ -341,6 +348,8 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 		try {
 			while (result.hasNext()) {
 				BindingSet author = result.next();
+				Value uriValue = author.getValue(AUTHOR_URI_ELEMENT_KEY);
+				String authorUri = uriValue.stringValue();
 				Value authorNameValue = author
 						.getValue(RETRIEVED_AUTHOR_NAME_ELEMENT_KEY);
 				String authorName = authorNameValue.stringValue();
@@ -348,7 +357,7 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 						.getValue(AFFILIATION_ELEMENT_KEY);
 				String affiliation = affiliationValue != null ? affiliationValue
 						.stringValue() : null;
-				authors.add(new Author(authorName, affiliation));
+				authors.add(new Author(authorUri, authorName, affiliation));
 			}
 		} finally {
 			result.close();
@@ -372,7 +381,7 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 			BindingSet titleBindingSet = result.next();
 			Value value = titleBindingSet.getValue(RETRIEVED_TITLE_ELEMENT_KEY);
 			if (result.hasNext()) {
-				logger.info(
+				logger.warn(
 						"The document= {} has more than one title. Perhaps, the RDF graph is inconsistent.",
 						documentUri);
 			}
@@ -466,7 +475,7 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 
 	private String generateAuthorQuery(String documentUri) {
 		String query = getSparqlQueryLoader().loadQueryByName("GetAuthors");
-		return format(query, getSearchGraph().getIri(), documentUri);
+		return format(query, getSearchGraph().getIri(), documentUri, LOCALE);
 	}
 
 	private String generateLinkQuery(String documentUri) {

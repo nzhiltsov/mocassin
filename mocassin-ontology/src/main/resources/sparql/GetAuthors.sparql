@@ -2,5 +2,7 @@ SELECT * FROM <%s> {
 <%s> <http://www.aktors.org/ontology/portal#has-author> ?2 .
 ?2 <http://www.aktors.org/ontology/portal#full-name> ?3 .
 OPTIONAL { ?2 <http://www.aktors.org/ontology/portal#has-affiliation> ?4 .
-?4 <http://www.aktors.org/ontology/portal#name> ?5 .}
+?4 <http://www.aktors.org/ontology/portal#name> ?5 .
+}
+FILTER langMatches(lang(?3), "%s")
 }

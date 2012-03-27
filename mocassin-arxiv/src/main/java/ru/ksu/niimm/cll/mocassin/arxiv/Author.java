@@ -9,12 +9,18 @@ import com.google.common.base.Function;
  * 
  */
 public class Author {
-	private String name;
-	private String affiliation;
+	private final String uri;
+	private final String name;
+	private final String affiliation;
 
-	public Author(String name, String affiliation) {
+	public Author(String uri, String name, String affiliation) {
+		this.uri = uri;
 		this.name = name;
 		this.affiliation = affiliation;
+	}
+
+	public String getUri() {
+		return uri;
 	}
 
 	public String getName() {
@@ -29,7 +35,7 @@ public class Author {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((uri == null) ? 0 : uri.hashCode());
 		return result;
 	}
 
@@ -42,10 +48,10 @@ public class Author {
 		if (getClass() != obj.getClass())
 			return false;
 		Author other = (Author) obj;
-		if (name == null) {
-			if (other.name != null)
+		if (uri == null) {
+			if (other.uri != null)
 				return false;
-		} else if (!name.equals(other.name))
+		} else if (!uri.equals(other.uri))
 			return false;
 		return true;
 	}
