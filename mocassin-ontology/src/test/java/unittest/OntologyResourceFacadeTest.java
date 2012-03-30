@@ -74,7 +74,7 @@ public class OntologyResourceFacadeTest {
 		Assert.assertEquals(
 				"Number of authors does not equal to the expected one.", 1,
 				articleMetadata.getAuthors().size());
-		Author singleAuthor = articleMetadata.getAuthors().get(0);
+		Author singleAuthor = articleMetadata.getAuthors().iterator().next();
 		Assert.assertEquals("И. В. Коннов", singleAuthor.getName());
 		Assert.assertEquals(
 				"Author's affiliation does not equal to the expected one.",
@@ -134,7 +134,7 @@ public class OntologyResourceFacadeTest {
 		Assert.assertEquals(
 				"Number of authors does not equal to the expected one.", 1,
 				retrievedArticleMetadata.getAuthors().size());
-		Author singleAuthor = retrievedArticleMetadata.getAuthors().get(0);
+		Author singleAuthor = retrievedArticleMetadata.getAuthors().iterator().next();
 		Assert.assertEquals(expectedAuthorName, singleAuthor.getName());
 		Assert.assertEquals(
 				"Author's affiliation does not equal to the expected one.",
