@@ -4,11 +4,11 @@
 Mocassin's versioning (mostly) follows [http://semver.org/ these guidelines]
 
 || *Release* || *Milestone Name* || *New Main Features* || *Planned Date* ||
-|| 1.0.0.7 || ? || 1) Making indexing distributed || 1.04.2012 ||
+|| 1.0.0.7 || ? || 1) Making indexing distributed || 9.04.2012 ||
 || ||  || 2) Distinguish 4 modules; Stabilize API || ||
 || ||  || 3) Major bug fixes (inc. UI) || ||
 || ||  || || ||
-|| 1.0.0 || ? || First alpha release || 3.04.2012 ||
+|| 1.0.0 || ? || First alpha release || 10.04.2012 ||
 || ||  || || ||
 || 1.1.0 || ? || 1) Implement baseline ranking || 17.04.2012 ||
 || ||  || || ||
