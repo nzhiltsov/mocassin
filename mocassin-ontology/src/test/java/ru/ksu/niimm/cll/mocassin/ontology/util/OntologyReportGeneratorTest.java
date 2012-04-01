@@ -14,7 +14,6 @@ import org.junit.Test;
 import com.hp.hpl.jena.ontology.OntModel;
 import com.hp.hpl.jena.ontology.OntModelSpec;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
-@Ignore
 public class OntologyReportGeneratorTest {
 
 	private OntModel model;
@@ -24,9 +23,9 @@ public class OntologyReportGeneratorTest {
 	@Before
 	public void init() throws IOException {
 		this.model = ModelFactory
-				.createOntologyModel(OntModelSpec.OWL_LITE_MEM);
+				.createOntologyModel(OntModelSpec.OWL_DL_MEM);
 		FileInputStream stream = new FileInputStream(new File(
-				"<some path>"));
+				"<filepath>"));
 		try {
 			model.read(stream, null, "RDF/XML");
 		} finally {
