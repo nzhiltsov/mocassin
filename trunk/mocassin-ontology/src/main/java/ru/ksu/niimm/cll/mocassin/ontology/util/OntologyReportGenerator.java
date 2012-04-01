@@ -2,8 +2,10 @@ package ru.ksu.niimm.cll.mocassin.ontology.util;
 
 import static java.lang.String.format;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
@@ -15,7 +17,10 @@ import com.hp.hpl.jena.ontology.OntProperty;
 import com.hp.hpl.jena.util.iterator.ExtendedIterator;
 
 public final class OntologyReportGenerator {
+	private static final Pattern SMALL_RUSSIAN_START_LETTER_PATTERN = Pattern
+			.compile("^[а-я].*");
 	private static final String RU_LOCALE = "ru";
+	private static final String EN_LOCALE = "en";
 
 	private OntologyReportGenerator() {
 	}
@@ -25,7 +30,10 @@ public final class OntologyReportGenerator {
 		ExtendedIterator<OntClass> iterator = model.listNamedClasses();
 		List<OntClass> iteratorAsList = iterator.toList();
 		for (OntClass ontClass : iteratorAsList) {
-			String rdfsLabel = ontClass.getLabel(RU_LOCALE);
+			String rdfsLabel = ontClass.getLabel(RU_LOCALE) != null ? ontClass
+					.getLabel(RU_LOCALE) : ontClass.getLabel(EN_LOCALE);
+			rdfsLabel = rdfsLabel != null ? rdfsLabel : ontClass.getURI()
+					.substring(ontClass.getURI().indexOf("#") + 1);
 			String uri = ontClass.getURI();
 			String comment = ontClass.getComment(RU_LOCALE);
 			addURI(wordDocument, rdfsLabel);
@@ -60,41 +68,48 @@ public final class OntologyReportGenerator {
 		XWPFParagraph paragraph = wordDocument.createParagraph();
 		paragraph.setStyle("style0");
 		XWPFRun run = paragraph.createRun();
-		run.setText(format("Описание: \t%s", comment != null ? comment : ""));
+		run.setText(format("Описание: \t%s",
+				comment != null ? comment.replace("http://", "См. http://")
+						: ""));
 	}
 
-	private static void addSuperclasses(XWPFDocument wordDocument,
-			OntClass ontClass) {
+	private static void addNeighbourClasses(XWPFDocument wordDocument,
+			Set<OntClass> classes, String header) {
 		XWPFParagraph paragraph = wordDocument.createParagraph();
 		paragraph.setStyle("style0");
 		XWPFRun run = paragraph.createRun();
-		run.setText("Суперклассы: ");
-		Set<OntClass> superClasses = ontClass.listSuperClasses().toSet();
-		for (OntClass clazz : superClasses) {
-			XWPFParagraph p = wordDocument.createParagraph();
-			p.setIndentationLeft(1440);
-			XWPFRun r = p.createRun();
-			r.setText(clazz.getLabel(RU_LOCALE));
-			r.setItalic(true);
+		run.setText(header);
+		StringBuilder sb = new StringBuilder();
+		Iterator<OntClass> it = classes.iterator();
+		while (it.hasNext()) {
+			OntClass clazz = it.next();
+			String label = clazz.getLabel(RU_LOCALE) != null ? clazz
+					.getLabel(RU_LOCALE) : clazz.getLabel(EN_LOCALE);
+			label = label != null ? label : clazz.getURI().substring(
+					clazz.getURI().indexOf("#") + 1);
+			sb.append(formatURI(label));
+			if (it.hasNext()) {
+				sb.append("; ");
+			}
 		}
+		XWPFParagraph p = wordDocument.createParagraph();
+		p.setIndentationLeft(1440);
+		XWPFRun r = p.createRun();
+		r.setText(sb.toString());
+		r.setItalic(true);
 		wordDocument.createParagraph().setIndentationLeft(1440);
 	}
 
 	private static void addSubclasses(XWPFDocument wordDocument,
 			OntClass ontClass) {
-		XWPFParagraph paragraph = wordDocument.createParagraph();
-		paragraph.setStyle("style0");
-		XWPFRun run = paragraph.createRun();
-		run.setText("Подклассы: ");
-		Set<OntClass> superClasses = ontClass.listSubClasses().toSet();
-		for (OntClass clazz : superClasses) {
-			XWPFParagraph p = wordDocument.createParagraph();
-			p.setIndentationLeft(1440);
-			XWPFRun r = p.createRun();
-			r.setText(clazz.getLabel(RU_LOCALE));
-			r.setItalic(true);
-		}
-		wordDocument.createParagraph().setIndentationLeft(1440);
+		addNeighbourClasses(wordDocument,
+				ontClass.listSubClasses(true).toSet(), "Подклассы: ");
+	}
+
+	private static void addSuperclasses(XWPFDocument wordDocument,
+			OntClass ontClass) {
+		addNeighbourClasses(wordDocument, ontClass.listSuperClasses(true)
+				.toSet(), "Суперклассы: ");
 	}
 
 	private static void addURI(XWPFDocument wordDocument, String uri) {
@@ -102,6 +117,16 @@ public final class OntologyReportGenerator {
 		paragraph.setSpacingBefore(10);
 		paragraph.setStyle("Heading 5");
 		XWPFRun run = paragraph.createRun();
-		run.setText(uri);
+		run.setText(formatURI(uri));
+	}
+
+	private static String formatURI(String uri) {
+		if (SMALL_RUSSIAN_START_LETTER_PATTERN.matcher(uri).matches()) {
+			StringBuilder sb = new StringBuilder();
+			sb.append(Character.toUpperCase(uri.charAt(0)));
+			sb.append(uri.substring(1));
+			uri = sb.toString();
+		}
+		return uri.replace("_", " ");
 	}
 }
