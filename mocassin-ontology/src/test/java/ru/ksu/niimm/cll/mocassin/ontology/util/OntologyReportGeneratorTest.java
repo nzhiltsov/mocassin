@@ -14,6 +14,7 @@ import org.junit.Test;
 import com.hp.hpl.jena.ontology.OntModel;
 import com.hp.hpl.jena.ontology.OntModelSpec;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+@Ignore
 public class OntologyReportGeneratorTest {
 
 	private OntModel model;
