@@ -20,6 +20,7 @@ import ru.ksu.niimm.cll.mocassin.nlp.gate.GateProcessingFacade;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.ProcessException;
 import ru.ksu.niimm.cll.mocassin.nlp.impl.ParsedDocumentImpl;
 import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
+import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
 import ru.ksu.niimm.cll.mocassin.ontology.OntologyTestModule;
 import ru.ksu.niimm.cll.mocassin.parser.latex.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.parser.pdf.PdfParserModule;
@@ -32,29 +33,39 @@ import edu.uci.ics.jung.graph.Graph;
 
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext({ AnalyzerModule.class, NlpModule.class, LatexParserModule.class,
-	OntologyTestModule.class,FullTextModule.class,
-	GateModule.class, PdfParserModule.class })
+		OntologyTestModule.class, FullTextModule.class, GateModule.class,
+		PdfParserModule.class })
 public class ReferenceSearcherTest {
 	@Inject
 	private ReferenceSearcher referenceSearcher;
 	@Inject
 	private GateProcessingFacade gateProcessingFacade;
 
-	private ParsedDocument document;
+	private ParsedDocument firstDocument;
+
+	private ParsedDocument secondDocument;
 
 	@Before
 	public void init() throws AccessGateDocumentException,
 			AccessGateStorageException, ProcessException {
-		document = new ParsedDocumentImpl("ivm18", "http://mathnet.ru/ivm18",
-				"http://mathnet.ru/ivm18");
-		gateProcessingFacade.process(document.getCollectionId());
+		firstDocument = new ParsedDocumentImpl("ivm18",
+				"http://mathnet.ru/ivm18", "http://mathnet.ru/ivm18");
+		gateProcessingFacade.process(firstDocument.getCollectionId());
+		secondDocument = new ParsedDocumentImpl("ivm537",
+				"http://mathnet.ru/ivm537", "http://mathnet.ru/ivm537");
+		gateProcessingFacade.process(secondDocument.getCollectionId());
 	}
 
 	@Test
 	public void testRetrieveReferences() throws AccessGateDocumentException,
 			IOException, AccessGateStorageException, ProcessException {
+		checkFirstDocument();
+		checkSecondDocument();
+	}
+
+	private void checkFirstDocument() {
 		Graph<StructuralElement, Reference> graph = this.referenceSearcher
-				.retrieveStructuralGraph(document);
+				.retrieveStructuralGraph(firstDocument);
 		Collection<Reference> edges = graph.getEdges();
 		Assert.assertTrue("The reference list is empty", edges.size() > 0);
 
@@ -80,6 +91,44 @@ public class ReferenceSearcherTest {
 		Assert.assertEquals(
 				"The number of tables in the document does not equal to the expected one.",
 				3, tableCount);
+
+		boolean foundFollowedByInstance = false;
+		for (Reference ref : edges) {
+			foundFollowedByInstance = graph.getSource(ref).getId() == 19
+					&& graph.getDest(ref).getId() == 1017
+					&& ref.getPredictedRelation() == MocassinOntologyRelations.FOLLOWED_BY;
+			if (foundFollowedByInstance) {
+				break;
+			}
+		}
+		Assert.assertTrue("The 'followedBy' instance hasn't been found.",
+				foundFollowedByInstance);
+	}
+
+	private void checkSecondDocument() {
+		Graph<StructuralElement, Reference> graph = this.referenceSearcher
+				.retrieveStructuralGraph(secondDocument);
+		Collection<Reference> edges = graph.getEdges();
+		Assert.assertTrue("The reference list is empty", edges.size() > 0);
+
+		boolean foundFollowedByInstance = false;
+		boolean foundFalseFollowedByInstance = false;
+		for (Reference ref : edges) {
+			foundFollowedByInstance = graph.getSource(ref).getId() == 897
+					&& graph.getDest(ref).getId() == 1082
+					&& ref.getPredictedRelation() == MocassinOntologyRelations.FOLLOWED_BY;
+			foundFalseFollowedByInstance = graph.getSource(ref).getId() == 1082
+					&& graph.getDest(ref).getId() == 2359
+					&& ref.getPredictedRelation() == MocassinOntologyRelations.FOLLOWED_BY;
+			if (foundFalseFollowedByInstance) {
+				Assert.fail("Found false 'followedBy' instance. There's a section text between structural elements.");
+			}
+			if (foundFollowedByInstance) {
+				break;
+			}
+		}
+		Assert.assertTrue("The 'followedBy' instance hasn't been found.",
+				foundFollowedByInstance);
 	}
 
 }
