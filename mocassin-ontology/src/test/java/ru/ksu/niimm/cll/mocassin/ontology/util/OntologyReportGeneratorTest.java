@@ -2,13 +2,9 @@ package ru.ksu.niimm.cll.mocassin.ontology.util;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Set;
 
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -16,6 +12,7 @@ import org.junit.Test;
 import com.hp.hpl.jena.ontology.OntModel;
 import com.hp.hpl.jena.ontology.OntModelSpec;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+
 @Ignore
 public class OntologyReportGeneratorTest {
 
@@ -26,8 +23,7 @@ public class OntologyReportGeneratorTest {
 	@Before
 	public void init() throws IOException {
 		this.model = ModelFactory.createOntologyModel(OntModelSpec.OWL_DL_MEM);
-		FileInputStream stream = new FileInputStream(new File(
-				"<filepath>"));
+		FileInputStream stream = new FileInputStream(new File("<filepath>"));
 		try {
 			model.read(stream, null, "RDF/XML");
 		} finally {
@@ -46,8 +42,6 @@ public class OntologyReportGeneratorTest {
 		} finally {
 			stream.close();
 		}
-	}
-
 	}
 
 }
