@@ -1,8 +1,8 @@
 package ru.ksu.niimm.cll.mocassin.rdf.ontology.impl;
 
+import static java.lang.String.format;
 import static ru.ksu.niimm.cll.mocassin.util.StringUtil.extractDocumentURIFromSegmentURI;
 import static ru.ksu.niimm.cll.mocassin.util.StringUtil.extractMathnetKeyFromURI;
-import static java.lang.String.format;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -19,15 +19,11 @@ import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.TupleQuery;
 import org.openrdf.query.TupleQueryResult;
-import org.openrdf.query.Update;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.slf4j.Logger;
 
-import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
-import ru.ksu.niimm.cll.mocassin.arxiv.Author;
-import ru.ksu.niimm.cll.mocassin.arxiv.impl.Link;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.ABoxTriple;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyRelations;
@@ -39,6 +35,9 @@ import ru.ksu.niimm.cll.mocassin.rdf.ontology.SGEdge;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.loader.SparqlQueryLoader;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.provider.RepositoryProvider;
 import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
+import ru.ksu.niimm.cll.mocassin.util.model.ArticleMetadata;
+import ru.ksu.niimm.cll.mocassin.util.model.Author;
+import ru.ksu.niimm.cll.mocassin.util.model.Link;
 
 import com.google.common.base.Function;
 import com.google.inject.Inject;

@@ -91,13 +91,6 @@
 		</dependency>
 		<dependency>
 			<groupId>ru.ksu.niimm.cll.mocassin</groupId>
-			<artifactId>mocassin-arxiv</artifactId>
-			<version>1.0.0.7-SNAPSHOT</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>ru.ksu.niimm.cll.mocassin</groupId>
 			<artifactId>mocassin-util</artifactId>
 			<version>1.0.0.7-SNAPSHOT</version>
 			<scope>compile</scope>
@@ -115,7 +108,7 @@
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 		</dependency>
-			<dependency>
+		<dependency>
 			<groupId>org.codehaus.groovy</groupId>
 			<artifactId>groovy-all</artifactId>
 			<scope>runtime</scope>
@@ -128,17 +121,8 @@
 
 		<dependency>
 			<groupId>ru.ksu.niimm.cll.mocassin</groupId>
-			<artifactId>mocassin-nlp</artifactId>
+			<artifactId>mocassin-rdf</artifactId>
 			<version>1.0.0.7-SNAPSHOT</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>ru.ksu.niimm.cll.mocassin</groupId>
-			<artifactId>mocassin-analyzer</artifactId>
-			<version>1.0.0.7-SNAPSHOT</version>
-			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>commons-fileupload</groupId>

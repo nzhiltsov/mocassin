@@ -4,14 +4,13 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 
-import ru.ksu.niimm.cll.mocassin.ontology.QueryManagerFacade;
+import ru.ksu.niimm.cll.mocassin.rdf.ontology.QueryManagerFacade;
 import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
 
 import com.google.inject.Inject;

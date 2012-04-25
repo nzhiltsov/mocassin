@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.openrdf.model.Statement;
 
-import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
+import ru.ksu.niimm.cll.mocassin.util.model.ArticleMetadata;
 
 public interface OntologyResourceFacade {
 	/**

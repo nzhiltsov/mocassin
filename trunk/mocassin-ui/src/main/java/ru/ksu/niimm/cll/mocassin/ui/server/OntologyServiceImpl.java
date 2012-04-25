@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import ru.ksu.niimm.cll.mocassin.ontology.OntologyConcept;
-import ru.ksu.niimm.cll.mocassin.ontology.OntologyFacade;
-import ru.ksu.niimm.cll.mocassin.ontology.OntologyRelation;
+import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyConcept;
+import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyFacade;
+import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyRelation;
 import ru.ksu.niimm.cll.mocassin.ui.client.OntConcept;
 import ru.ksu.niimm.cll.mocassin.ui.client.OntElement;
 import ru.ksu.niimm.cll.mocassin.ui.client.OntRelation;
@@ -19,11 +19,11 @@ import com.google.inject.Inject;
  */
 public class OntologyServiceImpl implements OntologyService {
 
-	private final OntologyFacade omdocOntologyFacade;
+	private final OntologyFacade ontologyFacade;
 
 	@Inject
 	public OntologyServiceImpl(OntologyFacade omdocOntologyFacade) {
-		this.omdocOntologyFacade = omdocOntologyFacade;
+		this.ontologyFacade = omdocOntologyFacade;
 	}
 
 	@Override
@@ -79,7 +79,7 @@ public class OntologyServiceImpl implements OntologyService {
 	}
 
 	public OntologyFacade getOmdocOntologyFacade() {
-		return omdocOntologyFacade;
+		return ontologyFacade;
 	}
 
 }

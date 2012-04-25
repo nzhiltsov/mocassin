@@ -6,17 +6,17 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 
-import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
-import ru.ksu.niimm.cll.mocassin.arxiv.Author;
-import ru.ksu.niimm.cll.mocassin.arxiv.impl.Link;
-import ru.ksu.niimm.cll.mocassin.ontology.OntologyResource;
-import ru.ksu.niimm.cll.mocassin.ontology.OntologyResourceFacade;
-import ru.ksu.niimm.cll.mocassin.ontology.SGEdge;
+import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyResource;
+import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyResourceFacade;
+import ru.ksu.niimm.cll.mocassin.rdf.ontology.SGEdge;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.ArticleInfo;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.Graph;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.ViewerService;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.server.util.OntologyElementConverter;
 import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
+import ru.ksu.niimm.cll.mocassin.util.model.ArticleMetadata;
+import ru.ksu.niimm.cll.mocassin.util.model.Author;
+import ru.ksu.niimm.cll.mocassin.util.model.Link;
 
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
