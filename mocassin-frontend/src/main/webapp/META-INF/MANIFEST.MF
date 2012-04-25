@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Built-By: nzhiltsov
+Build-Jdk: 1.6.0_23
+Application-Name: Mocassin UI
+Created-By: Maven Integration for Eclipse
+Specification-Version: 1.0.0.6-SNAPSHOT
+

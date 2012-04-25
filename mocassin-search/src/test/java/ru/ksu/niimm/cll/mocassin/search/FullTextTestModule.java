@@ -1,0 +1,18 @@
+package ru.ksu.niimm.cll.mocassin.search;
+
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.RAMDirectory;
+
+import ru.ksu.niimm.cll.mocassin.search.FullTextModule;
+
+import com.google.inject.name.Names;
+
+public class FullTextTestModule extends FullTextModule {
+
+	@Override
+	protected void bindDirectory() {
+		bind(Directory.class).annotatedWith(Names.named("lucene.directory"))
+				.toInstance(new RAMDirectory());
+	}
+
+}

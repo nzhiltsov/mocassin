@@ -1,0 +1,2 @@
+serviceClass: ru.ksu.niimm.cll.mocassin.ui.dashboard.client.ArxivService
+path: A3D7FF6EEB98CBBE0D69C5738C8CC24D.gwt.rpc

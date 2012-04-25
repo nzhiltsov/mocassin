@@ -7,7 +7,7 @@ public class MocassinParserTest {
 
 	@Test
 	public void testParse() throws Exception {
-		String[] args = {"/opt/mocassin/urls"};
+		String[] args = {"/opt/mocassin/urls", "-dir", "/opt/mocassin/crawl"};
 		Crawl.main(args);
 	}
 }

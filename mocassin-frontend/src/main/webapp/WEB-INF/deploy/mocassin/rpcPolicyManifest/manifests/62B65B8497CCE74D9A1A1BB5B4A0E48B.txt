@@ -1,0 +1,2 @@
+serviceClass: ru.ksu.niimm.cll.mocassin.ui.client.QueryService
+path: ED96DE31BB8CEA0D5ABE2E17D507D02C.gwt.rpc
