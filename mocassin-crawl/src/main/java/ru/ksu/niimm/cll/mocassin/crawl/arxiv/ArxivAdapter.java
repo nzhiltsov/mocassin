@@ -7,13 +7,12 @@ import java.util.List;
 import org.openrdf.model.Statement;
 import org.slf4j.Logger;
 
-import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
-import ru.ksu.niimm.cll.mocassin.arxiv.ArxivDAOFacade;
 import ru.ksu.niimm.cll.mocassin.crawl.AbstractArXMLivAdapter;
 import ru.ksu.niimm.cll.mocassin.crawl.ArXMLivAdapter;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Reference;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
+import ru.ksu.niimm.cll.mocassin.util.model.ArticleMetadata;
 
 import com.google.inject.Inject;
 

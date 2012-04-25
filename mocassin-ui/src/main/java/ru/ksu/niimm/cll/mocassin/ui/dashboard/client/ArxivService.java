@@ -8,7 +8,6 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 @RemoteServiceRelativePath("GWT.rpc")
 public interface ArxivService extends RemoteService {
-	public void handle(String arxivId);
 	
 	public PagingLoadInfo<ArxivArticleMetadata> loadArticles(PagingLoadConfig pagingLoadConfig);
 }

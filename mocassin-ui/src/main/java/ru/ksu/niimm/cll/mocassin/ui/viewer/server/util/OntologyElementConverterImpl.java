@@ -3,9 +3,9 @@ package ru.ksu.niimm.cll.mocassin.ui.viewer.server.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
-import ru.ksu.niimm.cll.mocassin.ontology.OntologyIndividual;
-import ru.ksu.niimm.cll.mocassin.ontology.SGEdge;
+import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyRelations;
+import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyIndividual;
+import ru.ksu.niimm.cll.mocassin.rdf.ontology.SGEdge;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.Graph;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.Node;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.protovis.LinkAdapter;

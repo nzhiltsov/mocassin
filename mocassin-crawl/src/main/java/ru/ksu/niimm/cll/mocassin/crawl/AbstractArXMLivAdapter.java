@@ -7,21 +7,25 @@ import java.util.List;
 
 import org.slf4j.Logger;
 
-import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
-import ru.ksu.niimm.cll.mocassin.arxiv.impl.Link;
-import ru.ksu.niimm.cll.mocassin.arxiv.impl.Link.PdfLinkPredicate;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.ReferenceSearcher;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.ReferenceStatementGenerator;
+import ru.ksu.niimm.cll.mocassin.crawl.parser.arxmliv.ArxmlivProducer;
+import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.GateDocumentDAO;
+import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.GateProcessingFacade;
+import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.ParsedDocument;
+import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.ParsedDocumentImpl;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Reference;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElement;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.arxmliv.ArxmlivProducer;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.latex.LatexDocumentDAO;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.latex.LatexDocumentHeaderPatcher;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.pdf.Latex2PDFMapper;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.pdf.PdfHighlighter;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.pdf.PdflatexWrapper;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyResourceFacade;
-import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
+import ru.ksu.niimm.cll.mocassin.util.model.ArticleMetadata;
+import ru.ksu.niimm.cll.mocassin.util.model.Link;
+import ru.ksu.niimm.cll.mocassin.util.model.Link.PdfLinkPredicate;
 
-import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 
@@ -113,30 +117,6 @@ public abstract class AbstractArXMLivAdapter implements ArXMLivAdapter {
 		return document;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * ru.ksu.niimm.cll.mocassin.ui.dashboard.server.ArXMLivAdapter#loadArticles
-	 * ()
-	 */
-	@Override
-	public List<ArxivArticleMetadata> loadArticles() {
-		List<ArticleMetadata> publications = ontologyResourceFacade.loadAll();
-		List<ArxivArticleMetadata> articlesList = CollectionUtil
-				.asList(Iterables.transform(publications,
-						new ArxivArticleMetadataFunction()));
-		return articlesList;
-	}
+	
 
-	private static class ArxivArticleMetadataFunction implements
-			Function<ArticleMetadata, ArxivArticleMetadata> {
-
-		@Override
-		public ArxivArticleMetadata apply(ArticleMetadata metadata) {
-			return new ArxivArticleMetadata(metadata.getId(),
-					metadata.getTitle());
-		}
-
-	}
 }

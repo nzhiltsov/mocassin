@@ -14,9 +14,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.json.client.JSONNumber;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -73,6 +70,8 @@ public class DashboardTabPanel extends Composite implements
 	public DashboardTabPanel() {
 		initWidget(uiBinder.createAndBindUi(this));
 		tabPanel.selectTab(0);
+		
+		uploadButton.setEnabled(false);
 
 		documentTable.getColumnFormatter().setWidth(0, "50px");
 		documentTable.getColumnFormatter().setWidth(1, "300px");
@@ -136,24 +135,9 @@ public class DashboardTabPanel extends Composite implements
 
 	@UiHandler({ "uploadButton", "closeDialogButton", "multipleUploadButton" })
 	void handleClick(ClickEvent event) {
-		AsyncCallbackWrapper<Void> singleUploadCallback = new AsyncCallbackWrapper<Void>() {
-
-			@Override
-			public void handleSuccess(Void result) {
-				showSuccess(1);
-			}
-
-			@Override
-			public void handleFailure(Throwable caught) {
-				dialogBox.setText("The upload has failed.");
-				dialogBox.center();
-				dialogBox.show();
-			}
-		};
+		
 		if (event.getSource() == uploadButton) {
-			singleUploadCallback.beforeCall();
-			arxivService
-					.handle(uploadKeyInput.getValue(), singleUploadCallback);
+			// nothing
 		} else if (event.getSource() == closeDialogButton) {
 			dialogBox.hide();
 		} else if (event.getSource() == multipleUploadButton) {
