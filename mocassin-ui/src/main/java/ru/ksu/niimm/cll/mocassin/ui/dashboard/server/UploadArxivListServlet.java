@@ -16,6 +16,7 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.slf4j.Logger;
 
+import ru.ksu.niimm.cll.mocassin.crawl.ArXMLivAdapter;
 import ru.ksu.niimm.cll.mocassin.util.IOUtil;
 import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
 

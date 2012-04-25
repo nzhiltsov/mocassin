@@ -25,11 +25,6 @@
 		</dependency>
 		<dependency>
 			<groupId>ru.ksu.niimm.cll.mocassin</groupId>
-			<artifactId>mocassin-ontology</artifactId>
-			<version>1.0.0.7-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>ru.ksu.niimm.cll.mocassin</groupId>
 			<artifactId>mocassin-nlp</artifactId>
 			<version>1.0.0.7-SNAPSHOT</version>
 		</dependency>

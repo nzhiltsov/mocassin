@@ -3,6 +3,7 @@ package ru.ksu.niimm.cll.mocassin.ui.dashboard.server;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.ksu.niimm.cll.mocassin.crawl.ArXMLivAdapter;
 import ru.ksu.niimm.cll.mocassin.ui.common.client.PagingLoadConfig;
 import ru.ksu.niimm.cll.mocassin.ui.common.client.PagingLoadInfo;
 import ru.ksu.niimm.cll.mocassin.ui.dashboard.client.ArxivArticleMetadata;

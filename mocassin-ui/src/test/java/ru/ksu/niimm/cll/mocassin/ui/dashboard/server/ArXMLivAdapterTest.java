@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 
 import ru.ksu.niimm.cll.mocassin.analyzer.AnalyzerModule;
 import ru.ksu.niimm.cll.mocassin.arxiv.ArxivModule;
+import ru.ksu.niimm.cll.mocassin.crawl.ArXMLivAdapter;
 import ru.ksu.niimm.cll.mocassin.fulltext.FullTextModule;
 import ru.ksu.niimm.cll.mocassin.nlp.NlpModule;
 import ru.ksu.niimm.cll.mocassin.nlp.gate.AccessGateDocumentException;
