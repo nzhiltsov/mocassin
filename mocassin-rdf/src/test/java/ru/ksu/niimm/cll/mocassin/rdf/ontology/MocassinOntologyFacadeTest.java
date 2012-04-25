@@ -8,12 +8,12 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
-import ru.ksu.niimm.cll.mocassin.ontology.OntologyConcept;
-import ru.ksu.niimm.cll.mocassin.ontology.OntologyFacade;
-import ru.ksu.niimm.cll.mocassin.ontology.OntologyRelation;
-import ru.ksu.niimm.cll.mocassin.ontology.OntologyTestModule;
-import unittest.util.OntologyConceptComparator;
+import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyClasses;
+import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyConcept;
+import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyFacade;
+import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyRelation;
+import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyTestModule;
+import ru.ksu.niimm.cll.mocassin.rdf.ontology.util.OntologyConceptComparator;
 
 import com.google.inject.Inject;
 import com.mycila.testing.junit.MycilaJunitRunner;
