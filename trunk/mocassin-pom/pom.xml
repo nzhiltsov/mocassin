@@ -167,9 +167,9 @@
 
 	</dependencyManagement>
 	<modules>
-		<module>../mocassin-ui</module>
+		<module>../mocassin-frontend</module>
 		<module>../mocassin-util</module>
-		<module>../mocassin-fulltext</module>
+		<module>../mocassin-search</module>
 		<module>../mocassin-crawl</module>
 		<module>../mocassin-rdf</module>
 	</modules>

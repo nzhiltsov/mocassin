@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<!-- Put site-specific property overrides in this file. -->
+
+<configuration>
+	<property>
+		<name>plugin.folders</name>
+		<value>/home/nzhiltsov/java-workspace/nutch-trunk/trunk/src/plugin</value>
+	</property>
+	<property>
+		<name>http.agent.name</name>
+		<value>My Nutch Spider</value>
+	</property>
+	<property>
+		<name>plugin.includes</name>
+		<value>protocol-file|parse-mocassin|index-(basic|more)
+		</value>
+	</property>
+	<property>
+		<name>file.content.limit</name>
+		<value>10097152</value>
+	</property>
+	<property>
+		<name>http.robots.agents</name>
+		<value>My Nutch Spider,*</value>
+	</property>
+</configuration>
