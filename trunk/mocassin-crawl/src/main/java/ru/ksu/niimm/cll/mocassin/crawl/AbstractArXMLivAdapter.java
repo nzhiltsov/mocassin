@@ -7,25 +7,18 @@ import java.util.List;
 
 import org.slf4j.Logger;
 
-import ru.ksu.niimm.cll.mocassin.analyzer.ReferenceSearcher;
-import ru.ksu.niimm.cll.mocassin.analyzer.ReferenceStatementGenerator;
 import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.arxiv.impl.Link;
 import ru.ksu.niimm.cll.mocassin.arxiv.impl.Link.PdfLinkPredicate;
-import ru.ksu.niimm.cll.mocassin.nlp.ParsedDocument;
-import ru.ksu.niimm.cll.mocassin.nlp.Reference;
-import ru.ksu.niimm.cll.mocassin.nlp.StructuralElement;
-import ru.ksu.niimm.cll.mocassin.nlp.gate.GateDocumentDAO;
-import ru.ksu.niimm.cll.mocassin.nlp.gate.GateProcessingFacade;
-import ru.ksu.niimm.cll.mocassin.nlp.impl.ParsedDocumentImpl;
-import ru.ksu.niimm.cll.mocassin.ontology.OntologyResourceFacade;
-import ru.ksu.niimm.cll.mocassin.parser.arxmliv.ArxmlivProducer;
-import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentDAO;
-import ru.ksu.niimm.cll.mocassin.parser.latex.LatexDocumentHeaderPatcher;
-import ru.ksu.niimm.cll.mocassin.parser.pdf.Latex2PDFMapper;
-import ru.ksu.niimm.cll.mocassin.parser.pdf.PdfHighlighter;
-import ru.ksu.niimm.cll.mocassin.parser.pdf.PdflatexWrapper;
-import ru.ksu.niimm.cll.mocassin.ui.dashboard.client.ArxivArticleMetadata;
+import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Reference;
+import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElement;
+import ru.ksu.niimm.cll.mocassin.crawl.parser.arxmliv.ArxmlivProducer;
+import ru.ksu.niimm.cll.mocassin.crawl.parser.latex.LatexDocumentDAO;
+import ru.ksu.niimm.cll.mocassin.crawl.parser.latex.LatexDocumentHeaderPatcher;
+import ru.ksu.niimm.cll.mocassin.crawl.parser.pdf.Latex2PDFMapper;
+import ru.ksu.niimm.cll.mocassin.crawl.parser.pdf.PdfHighlighter;
+import ru.ksu.niimm.cll.mocassin.crawl.parser.pdf.PdflatexWrapper;
+import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyResourceFacade;
 import ru.ksu.niimm.cll.mocassin.util.CollectionUtil;
 
 import com.google.common.base.Function;
