@@ -37,9 +37,9 @@
 					<copyWebapp>true</copyWebapp>
 					<runClasspathExclude>asm-3.3.jar</runClasspathExclude>
 					<modules>
-						<module>${project.groupId}.ui.Mocassin</module>
-						<module>${project.groupId}.ui.viewer.StructureViewer</module>
-						<module>${project.groupId}.ui.dashboard.Dashboard</module>
+						<module>${project.groupId}.frontend.Mocassin</module>
+						<module>${project.groupId}.frontend.viewer.StructureViewer</module>
+						<module>${project.groupId}.frontend.dashboard.Dashboard</module>
 					</modules>
 				</configuration>
 				<dependencies>
