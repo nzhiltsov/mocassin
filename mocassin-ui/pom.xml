@@ -140,11 +140,6 @@
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
-		<dependency>
-			<groupId>ru.ksu.niimm.cll.mocassin</groupId>
-			<artifactId>mocassin-parser</artifactId>
-			<version>1.0.0.7-SNAPSHOT</version>
-		</dependency>
 
 		<dependency>
 			<groupId>ru.ksu.niimm.cll.mocassin</groupId>
