@@ -1,6 +1,6 @@
 package ru.ksu.niimm.cll.mocassin.rdf.ontology;
 
-import static ru.ksu.niimm.cll.mocassin.ontology.model.URIConstants.RDF_TYPE;
+import static ru.ksu.niimm.cll.mocassin.rdf.ontology.model.URIConstants.RDF_TYPE;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,21 +19,21 @@ import org.openrdf.rio.RDFFormat;
 
 import ru.ksu.niimm.cll.mocassin.arxiv.ArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.arxiv.Author;
-import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyClasses;
-import ru.ksu.niimm.cll.mocassin.ontology.MocassinOntologyRelations;
-import ru.ksu.niimm.cll.mocassin.ontology.OntologyIndividual;
-import ru.ksu.niimm.cll.mocassin.ontology.OntologyResource;
-import ru.ksu.niimm.cll.mocassin.ontology.OntologyResourceFacade;
-import ru.ksu.niimm.cll.mocassin.ontology.OntologyTestModule;
-import ru.ksu.niimm.cll.mocassin.ontology.SGEdge;
-import ru.ksu.niimm.cll.mocassin.ontology.provider.RepositoryProvider;
+import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyClasses;
+import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyRelations;
+import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyIndividual;
+import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyResource;
+import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyResourceFacade;
+import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyTestModule;
+import ru.ksu.niimm.cll.mocassin.rdf.ontology.SGEdge;
+import ru.ksu.niimm.cll.mocassin.rdf.ontology.provider.RepositoryProvider;
 
 import com.google.inject.Inject;
 import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext({ OntologyTestModule.class})
+@GuiceContext({ OntologyTestModule.class })
 public class OntologyResourceFacadeTest {
 
 	@Inject
@@ -47,13 +47,10 @@ public class OntologyResourceFacadeTest {
 		RepositoryConnection connection = repository.getConnection();
 		final String context = "http://cll.niimm.ksu.ru/mocassinfortest";
 		try {
-			
-			connection.add(
-					getClass().getResourceAsStream("/testmetadata.rdf"),
-					context,
-					RDFFormat.N3,
-					repository.getValueFactory().createURI(
-							context));
+
+			connection.add(getClass().getResourceAsStream("/testmetadata.rdf"),
+					context, RDFFormat.N3, repository.getValueFactory()
+							.createURI(context));
 		} finally {
 			connection.close();
 		}
@@ -65,6 +62,8 @@ public class OntologyResourceFacadeTest {
 				"http://mathnet.ru/ivm537");
 		ArticleMetadata articleMetadata = getOntologyResourceFacade().load(
 				resource);
+		Assert.assertNotNull("Failed to find the expected article metadata.",
+				articleMetadata);
 		Assert.assertEquals("Article id does not equal to the expected one.",
 				"ivm537", articleMetadata.getCollectionId());
 		boolean titleEquals = "Неточный комбинированный релаксационный метод для многозначных включений"
@@ -102,13 +101,15 @@ public class OntologyResourceFacadeTest {
 				"http://mathnet.ru/ivm18"), new URIImpl(
 				"http://cll.niimm.ksu.ru/ontologies/mocassin#hasSegment"),
 				new URIImpl("http://mathnet.ru/ivm18/2"));
-		Statement statement6 = new StatementImpl(new URIImpl(
-				"http://mathnet.ru/ivm18/1"), new URIImpl(
-				"http://cll.niimm.ksu.ru/ontologies/mocassin#hasStartPageNumber"),
+		Statement statement6 = new StatementImpl(
+				new URIImpl("http://mathnet.ru/ivm18/1"),
+				new URIImpl(
+						"http://cll.niimm.ksu.ru/ontologies/mocassin#hasStartPageNumber"),
 				new NumericLiteralImpl(1));
-		Statement statement7 = new StatementImpl(new URIImpl(
-				"http://mathnet.ru/ivm18/2"), new URIImpl(
-				"http://cll.niimm.ksu.ru/ontologies/mocassin#hasStartPageNumber"),
+		Statement statement7 = new StatementImpl(
+				new URIImpl("http://mathnet.ru/ivm18/2"),
+				new URIImpl(
+						"http://cll.niimm.ksu.ru/ontologies/mocassin#hasStartPageNumber"),
 				new NumericLiteralImpl(2));
 
 		List<Statement> statements = new ArrayList<Statement>();
@@ -134,7 +135,8 @@ public class OntologyResourceFacadeTest {
 		Assert.assertEquals(
 				"Number of authors does not equal to the expected one.", 1,
 				retrievedArticleMetadata.getAuthors().size());
-		Author singleAuthor = retrievedArticleMetadata.getAuthors().iterator().next();
+		Author singleAuthor = retrievedArticleMetadata.getAuthors().iterator()
+				.next();
 		Assert.assertEquals(expectedAuthorName, singleAuthor.getName());
 		Assert.assertEquals(
 				"Author's affiliation does not equal to the expected one.",
