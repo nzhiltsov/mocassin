@@ -167,7 +167,6 @@
 
 	</dependencyManagement>
 	<modules>
-		<module>../mocassin-ontology</module>
 		<module>../mocassin-ui</module>
 		<module>../mocassin-analyzer</module>
 		<module>../mocassin-nlp</module>
@@ -175,6 +174,7 @@
 		<module>../mocassin-arxiv</module>
 		<module>../mocassin-fulltext</module>
 		<module>../mocassin-crawl</module>
+		<module>../mocassin-rdf</module>
 	</modules>
 	<distributionManagement>
 		<repository>

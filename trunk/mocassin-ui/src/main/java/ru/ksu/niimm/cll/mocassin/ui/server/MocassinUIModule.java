@@ -1,11 +1,11 @@
 package ru.ksu.niimm.cll.mocassin.ui.server;
 
+import ru.ksu.niimm.cll.mocassin.crawl.ArXMLivAdapter;
+import ru.ksu.niimm.cll.mocassin.crawl.mathnet.MathnetAdapter;
 import ru.ksu.niimm.cll.mocassin.ui.client.OntologyService;
 import ru.ksu.niimm.cll.mocassin.ui.client.QueryService;
 import ru.ksu.niimm.cll.mocassin.ui.dashboard.client.ArxivService;
-import ru.ksu.niimm.cll.mocassin.ui.dashboard.server.ArXMLivAdapter;
 import ru.ksu.niimm.cll.mocassin.ui.dashboard.server.ArXMLivAdapterService;
-import ru.ksu.niimm.cll.mocassin.ui.dashboard.server.MathnetAdapter;
 import ru.ksu.niimm.cll.mocassin.ui.dashboard.server.UploadArxivListServlet;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.client.ViewerService;
 import ru.ksu.niimm.cll.mocassin.ui.viewer.server.ViewerServiceImpl;
