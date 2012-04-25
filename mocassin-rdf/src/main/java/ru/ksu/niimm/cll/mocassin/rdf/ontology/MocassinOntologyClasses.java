@@ -5,11 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang.ArrayUtils;
-
 import com.google.common.collect.ImmutableBiMap;
-import com.google.common.collect.Sets;
-import com.google.common.collect.Sets.SetView;
 
 /**
  * Mocassin Ontology classes with their synonyms and the classes imported from SALT
