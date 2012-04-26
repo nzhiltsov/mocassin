@@ -1,2 +1,0 @@
-serviceClass: ru.ksu.niimm.cll.mocassin.ui.viewer.client.ViewerService
-path: B845A9DC9632D14AFECB61CAB8084BE1.gwt.rpc
