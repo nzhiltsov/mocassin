@@ -98,7 +98,7 @@
 		<alias name="parse-zip"
 			extension-id="org.apache.nutch.parse.zip.ZipParser" />
 			<alias name="parse-mocassin" 
-			extension-id="ru.ksu.niimm.cll.mocassin.parser.nutch.MocassinParser" />
+			extension-id="ru.ksu.niimm.cll.mocassin.crawl.nutch.MocassinParser" />
 	</aliases>
 	
 </parse-plugins>
