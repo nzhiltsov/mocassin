@@ -1,2 +1,0 @@
-serviceClass: ru.ksu.niimm.cll.mocassin.ui.client.OntologyService
-path: 46953345D1DF8CF07C6FBE815297637D.gwt.rpc
