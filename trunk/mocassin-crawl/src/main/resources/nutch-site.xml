@@ -6,7 +6,7 @@
 <configuration>
 	<property>
 		<name>plugin.folders</name>
-		<value>/home/nzhiltsov/java-workspace/nutch-trunk/trunk/src/plugin</value>
+		<value>/media/HP/projects/apache-nutch-1.4-bin/src/plugin</value>
 	</property>
 	<property>
 		<name>http.agent.name</name>
@@ -14,8 +14,7 @@
 	</property>
 	<property>
 		<name>plugin.includes</name>
-		<value>protocol-file|parse-mocassin|index-(basic|more)
-		</value>
+		<value>protocol-file|urlfilter-regex|parse-mocassin|index-(basic|anchor)|urlnormalizer-(pass|regex|basic)</value>
 	</property>
 	<property>
 		<name>file.content.limit</name>
@@ -24,5 +23,13 @@
 	<property>
 		<name>http.robots.agents</name>
 		<value>My Nutch Spider,*</value>
+	</property>
+	<property>
+		<name>urlfilter.regex.file</name>
+		<value>regex-urlfilter.txt</value>
+	</property>
+	<property>
+		<name>parse.plugin.file</name>
+		<value>parse-plugins.xml</value>
 	</property>
 </configuration>
