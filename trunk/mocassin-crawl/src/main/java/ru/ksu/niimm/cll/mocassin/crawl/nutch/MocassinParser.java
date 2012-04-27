@@ -4,7 +4,6 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.nutch.parse.ParseResult;
 import org.apache.nutch.parse.Parser;
 import org.apache.nutch.protocol.Content;
-import org.slf4j.Logger;
 
 import ru.ksu.niimm.cll.mocassin.crawl.ArXMLivAdapter;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.AnalyzerModule;
@@ -14,6 +13,7 @@ import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.NlpModule;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.latex.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.pdf.PdfParserModule;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyModule;
+import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyTestModule;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
 
 import com.google.inject.Guice;
@@ -25,8 +25,6 @@ public class MocassinParser implements Parser {
 
 	private ArXMLivAdapter arXMLivAdapter;
 
-	private Logger logger;
-
 	public Configuration getConf() {
 		return conf;
 	}
@@ -34,23 +32,23 @@ public class MocassinParser implements Parser {
 	public void setConf(Configuration conf) {
 		this.conf = conf;
 		Injector injector = Guice
-				.createInjector(new MathnetModule(), new OntologyModule(),
+				.createInjector(new MathnetModule(), new OntologyTestModule(),
 						new AnalyzerModule(), new GateModule(),
 						new LatexParserModule(), new NlpModule(),
 						new PdfParserModule());
 		arXMLivAdapter = injector.getInstance(ArXMLivAdapter.class);
-		logger = injector.getInstance(Logger.class);
 	}
 
 	@Override
 	public ParseResult getParse(Content content) {
 		String baseUrl = content.getBaseUrl();
-		String mathnetKey = StringUtil.extractMathnetKeyFromURI(baseUrl);
+		String mathnetKey = StringUtil.extractMathnetKeyFromFilename(baseUrl);
 		try {
 			arXMLivAdapter.handle(mathnetKey);
 		} catch (Throwable e) {
-			logger.error("Failed to parse the content of a document={}",
-					baseUrl, e);
+			System.out.println(String.format(
+					"Failed to parse the content of a document=%s due to: %s",
+					baseUrl, e));
 		}
 		return null;
 	}

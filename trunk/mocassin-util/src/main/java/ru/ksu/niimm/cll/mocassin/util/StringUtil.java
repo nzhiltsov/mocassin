@@ -16,6 +16,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import com.google.common.collect.Iterables;
 
 public class StringUtil {
+	private static final String DOT = ".";
 	private static final String URI_DELIMITER = "/";
 	public static final String ARXIVID_SEGMENTID_DELIMITER = "$";
 	private static final Pattern STYLE_PATTERN = Pattern
@@ -167,6 +168,13 @@ public class StringUtil {
 		if (uri == null || uri.length() == 0)
 			throw new IllegalArgumentException("URI cannot be null or empty");
 		return uri.substring(uri.lastIndexOf(URI_DELIMITER) + 1);
+	}
+
+	public static String extractMathnetKeyFromFilename(String filename) {
+		if (filename == null || filename.length() == 0)
+			throw new IllegalArgumentException("URI cannot be null or empty");
+		return filename.substring(filename.lastIndexOf(URI_DELIMITER) + 1,
+				filename.lastIndexOf(DOT));
 	}
 
 	public static String extractDocumentURIFromSegmentURI(String segmentUri) {
