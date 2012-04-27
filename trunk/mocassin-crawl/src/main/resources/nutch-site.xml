@@ -21,6 +21,10 @@
 		<value>10097152</value>
 	</property>
 	<property>
+		<name>parser.timeout</name>
+		<value>-1</value>
+	</property>
+	<property>
 		<name>http.robots.agents</name>
 		<value>My Nutch Spider,*</value>
 	</property>
