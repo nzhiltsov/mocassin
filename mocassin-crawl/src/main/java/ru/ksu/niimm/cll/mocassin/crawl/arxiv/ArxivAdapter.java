@@ -33,7 +33,7 @@ public class ArxivAdapter extends AbstractArXMLivAdapter implements
 	 * .lang.String)
 	 */
 	@Override
-	public void handle(String arxivId) throws Exception {
+	public String handle(String arxivId) throws Exception {
 		if (arxivId == null || arxivId.length() == 0)
 			throw new RuntimeException("arXiv id cannot be null or empty");
 		/*
@@ -65,6 +65,7 @@ public class ArxivAdapter extends AbstractArXMLivAdapter implements
 		ontologyResourceFacade.insert(triples); // TODO: Arxiv article
 												// metadata must be inserted
 												// into a store beforehand
+		return null;
 	}
 
 	@Override

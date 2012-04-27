@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface ArXMLivAdapter {
 
-	void handle(String arxivId) throws Exception;
+	String handle(String arxivId) throws Exception;
 
 	/**
 	 * returns number of successfully processed papers

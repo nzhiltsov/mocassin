@@ -1,7 +1,12 @@
 package ru.ksu.niimm.cll.mocassin.crawl.nutch;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.nutch.metadata.Metadata;
+import org.apache.nutch.parse.Outlink;
+import org.apache.nutch.parse.ParseData;
+import org.apache.nutch.parse.ParseImpl;
 import org.apache.nutch.parse.ParseResult;
+import org.apache.nutch.parse.ParseStatus;
 import org.apache.nutch.parse.Parser;
 import org.apache.nutch.protocol.Content;
 
@@ -31,11 +36,10 @@ public class MocassinParser implements Parser {
 
 	public void setConf(Configuration conf) {
 		this.conf = conf;
-		Injector injector = Guice
-				.createInjector(new MathnetModule(), new OntologyTestModule(),
-						new AnalyzerModule(), new GateModule(),
-						new LatexParserModule(), new NlpModule(),
-						new PdfParserModule());
+		Injector injector = Guice.createInjector(new MathnetModule(),
+				new OntologyTestModule(), new AnalyzerModule(),
+				new GateModule(), new LatexParserModule(), new NlpModule(),
+				new PdfParserModule());
 		arXMLivAdapter = injector.getInstance(ArXMLivAdapter.class);
 	}
 
@@ -44,7 +48,11 @@ public class MocassinParser implements Parser {
 		String baseUrl = content.getBaseUrl();
 		String mathnetKey = StringUtil.extractMathnetKeyFromFilename(baseUrl);
 		try {
-			arXMLivAdapter.handle(mathnetKey);
+			String result = arXMLivAdapter.handle(mathnetKey);
+			return ParseResult.createParseResult(content.getUrl(),
+					new ParseImpl(result, new ParseData(
+							ParseStatus.STATUS_SUCCESS, "", new Outlink[0],
+							new Metadata())));
 		} catch (Throwable e) {
 			System.out.println(String.format(
 					"Failed to parse the content of a document=%s due to: %s",
