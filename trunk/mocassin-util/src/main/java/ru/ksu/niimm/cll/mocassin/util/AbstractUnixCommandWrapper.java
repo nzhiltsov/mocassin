@@ -5,7 +5,7 @@ import expectj.Spawn;
 
 public abstract class AbstractUnixCommandWrapper {
 	private static final long TIMEOUT_IN_SECONDS = 180;
-	protected final String[] cmdArray;
+	private final String[] cmdArray;
 	private final String successFlag;
 
 	public AbstractUnixCommandWrapper(int arraySize, String successFlag) {
@@ -18,6 +18,12 @@ public abstract class AbstractUnixCommandWrapper {
 		this.successFlag = null;
 	}
 
+	protected synchronized void setCmdArray(int index, String value) {
+		if (index < 0 || index >= this.cmdArray.length)
+			throw new ArrayIndexOutOfBoundsException(index);
+		this.cmdArray[index] = value;
+	}
+
 	/**
 	 * 
 	 * @return true, if execution was successful
@@ -26,15 +32,23 @@ public abstract class AbstractUnixCommandWrapper {
 	public final boolean execute() throws Exception {
 		ExpectJ expectinator = new ExpectJ(TIMEOUT_IN_SECONDS);
 
-		Spawn shell = expectinator.spawn(StringUtil.asString(cmdArray));
+		Spawn shell;
+		synchronized (this) {
+			String command = StringUtil.asString(cmdArray);
+			shell = expectinator.spawn(command);
+		}
 		shell.expectClose();
 		String errOutput = shell.getCurrentStandardErrContents();
 		String standardOutput = shell.getCurrentStandardOutContents();
-		if (successFlag != null) {
-			boolean contains = standardOutput.contains(successFlag)
-					|| errOutput.contains(successFlag);
-			return contains;
+
+		synchronized (this) {
+			boolean isSuccess = true;
+			if (successFlag != null) {
+				isSuccess = standardOutput.contains(successFlag)
+						|| errOutput.contains(successFlag);
+			}
+			return isSuccess;
 		}
-		return true;
+
 	}
 }

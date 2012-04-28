@@ -127,15 +127,15 @@ class PdfsyncMapper implements Latex2PDFMapper {
 		/**
 		 * page number in the PDF file
 		 */
-		int number;
+		final int number;
 		/**
 		 * start line of this page in the Latex file
 		 */
-		int startLine;
+		final int startLine;
 		/**
 		 * end line of this page in the Latex file
 		 */
-		int endLine;
+		final int endLine;
 
 		public Page(int number, int startLine, int endLine) {
 			this.number = number;

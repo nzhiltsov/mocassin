@@ -34,27 +34,29 @@ class PdflatexWrapperImpl extends AbstractUnixCommandWrapper implements
 		SHADED_LATEX_DIR = shadedLatexDir;
 		AUX_PDF_DIR = auxPdfPath;
 		PDF_DIR = pdfDir;
-		this.cmdArray[0] = "pdflatex";
-		this.cmdArray[1] = "-interaction";
-		this.cmdArray[2] = "nonstopmode";
-		this.cmdArray[3] = "-output-directory";
+		setCmdArray(0, "pdflatex");
+		setCmdArray(1, "-interaction");
+		setCmdArray(2, "nonstopmode");
+		setCmdArray(3, "-output-directory");
 	}
 
 	@Override
 	public void compileShaded(String arxivId, int structuralElementId)
 			throws PdflatexCompilationException {
-		this.cmdArray[4] = PDF_DIR;
-		this.cmdArray[5] = String.format("%s/%s", SHADED_LATEX_DIR, StringUtil
-				.segmentid2filename(arxivId, structuralElementId, "tex"));
+		setCmdArray(4, PDF_DIR);
+		setCmdArray(5, String.format("%s/%s", SHADED_LATEX_DIR, StringUtil
+				.segmentid2filename(arxivId, structuralElementId, "tex")));
 		executeCommands(arxivId);
 	}
 
 	@Override
 	public void compilePatched(String arxivId)
 			throws PdflatexCompilationException {
-		this.cmdArray[4] = AUX_PDF_DIR;
-		this.cmdArray[5] = String.format("%s/%s", PATCHED_LATEX_DIR,
-				StringUtil.arxivid2filename(arxivId, "tex"));
+		setCmdArray(4, AUX_PDF_DIR);
+		setCmdArray(
+				5,
+				String.format("%s/%s", PATCHED_LATEX_DIR,
+						StringUtil.arxivid2filename(arxivId, "tex")));
 		executeCommands(arxivId);
 	}
 
@@ -62,8 +64,10 @@ class PdflatexWrapperImpl extends AbstractUnixCommandWrapper implements
 			throws PdflatexCompilationException {
 		try {
 			if (!execute())
-				throw new RuntimeException("Not normal output while compiling PDF");
-			execute(); // double calling is necessary for correct cross-references
+				throw new RuntimeException(
+						"Not normal output while compiling PDF");
+			execute(); // double calling is necessary for correct
+						// cross-references
 		} catch (Exception e) {
 			logger.error(
 					"Failed to compile the PDF document with an identifier='{}'",

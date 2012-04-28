@@ -36,7 +36,7 @@ public class MathnetAdapter extends AbstractArXMLivAdapter implements
 	private static final String MATHNET_DOWNLOAD_PDF_URL = "http://www.mathnet.ru/php/getFT.phtml?jrnid=%s&paperid=%s&what=fullt&option_lang=rus";
 
 	@Override
-	public synchronized String handle(String mathnetKey) throws Exception {
+	public String handle(String mathnetKey) throws Exception {
 		if (mathnetKey == null || mathnetKey.length() == 0)
 			throw new RuntimeException("Mathnet key id cannot be null or empty");
 		/*
