@@ -26,17 +26,17 @@ class SedBasedShadedPatcher extends AbstractUnixCommandWrapper implements
 			@Named("patched.tex.document.dir") String patchedLatexDir) {
 		super(6);
 		this.PATCHED_LATEX_DIR = patchedLatexDir;
-		this.cmdArray[0] = bashPath;
-		this.cmdArray[5] = outputDir;
+		setCmdArray(0, bashPath);
+		setCmdArray(5, outputDir);
 	}
 
 	@Override
 	public void patch(String arxivId, int startLine, int endLine, int elementId) {
-		this.cmdArray[1] = String.valueOf(startLine);
-		this.cmdArray[2] = String.valueOf(endLine);
-		this.cmdArray[3] = String.valueOf(elementId);
-		this.cmdArray[4] = String.format("%s/%s", PATCHED_LATEX_DIR,
-				StringUtil.arxivid2filename(arxivId, "tex"));
+		setCmdArray(1, String.valueOf(startLine));
+		setCmdArray(2, String.valueOf(endLine));
+		setCmdArray(3, String.valueOf(elementId));
+		setCmdArray(4, String.format("%s/%s", PATCHED_LATEX_DIR,
+				StringUtil.arxivid2filename(arxivId, "tex")));
 		try {
 			execute();
 		} catch (Exception e) {

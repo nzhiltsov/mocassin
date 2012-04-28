@@ -25,9 +25,9 @@ class SedBasedHeaderPatcher extends AbstractUnixCommandWrapper implements
 			@Named("patched.tex.document.dir") String outputDir,
 			@Named("tex.document.dir") String texDocumentDir) {
 		super(4);
-		this.cmdArray[0] = bashPath;
-		this.cmdArray[1] = patcherScriptPath;
-		this.cmdArray[2] = outputDir;
+		setCmdArray(0, bashPath);
+		setCmdArray(1, patcherScriptPath);
+		setCmdArray(2, outputDir);
 		this.texDocumentDir = texDocumentDir;
 	}
 
@@ -41,7 +41,7 @@ class SedBasedHeaderPatcher extends AbstractUnixCommandWrapper implements
 			throw new IllegalArgumentException(
 					"Failed to patch a Latex document, because it does not exist.");
 		}
-		this.cmdArray[3] = filename;
+		setCmdArray(3, filename);
 		try {
 			execute();
 		} catch (Exception e) {

@@ -32,8 +32,8 @@ public class ArxmlivProducerImpl extends AbstractUnixCommandWrapper implements
 		super(4);
 		this.ARXMLIV_DOCUMENT_DIR = arxmlivDocumentsDir;
 		this.LATEX_DIR = latexDir;
-		this.cmdArray[0] = "/usr/local/bin/latexml";
-		this.cmdArray[1] = String.format("--path=%s/sty/", arxmlivPath);
+		setCmdArray(0, "/usr/local/bin/latexml");
+		setCmdArray(1, String.format("--path=%s/sty/", arxmlivPath));
 	}
 
 	@Override
@@ -48,9 +48,9 @@ public class ArxmlivProducerImpl extends AbstractUnixCommandWrapper implements
 			throw new IllegalArgumentException(
 					"Failed to produce an arXMLiv representation for a Latex document, because it does not exist.");
 		}
-		this.cmdArray[2] = String
-				.format("--destination=%s", arxmlivDocFilePath);
-		this.cmdArray[3] = filename;
+		setCmdArray(2, String
+				.format("--destination=%s", arxmlivDocFilePath));
+		setCmdArray(3, filename);
 		try {
 			execute();
 			File outputFile = new File(arxmlivDocFilePath);
