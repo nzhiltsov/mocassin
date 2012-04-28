@@ -36,7 +36,6 @@ public class ExemplifiesRelationAnalyzerImpl extends AbstractRelationAnalyzer
 	@Override
 	public void addRelations(Graph<StructuralElement, Reference> graph,
 			ParsedDocument document) {
-		this.graph = graph;
 
 		Iterable<StructuralElement> examples = Iterables.filter(graph
 				.getVertices(), new TypePredicate(
@@ -54,7 +53,7 @@ public class ExemplifiesRelationAnalyzerImpl extends AbstractRelationAnalyzer
 						.document(document).build();
 				reference
 						.setPredictedRelation(MocassinOntologyRelations.EXEMPLIFIES);
-				addEdge(reference, example, closestPredecessor);
+				addEdge(graph, reference, example, closestPredecessor);
 			} else {
 				logger.warn(
 						"Failed to add a relation for an example={}, because the found closest predecessor is null",

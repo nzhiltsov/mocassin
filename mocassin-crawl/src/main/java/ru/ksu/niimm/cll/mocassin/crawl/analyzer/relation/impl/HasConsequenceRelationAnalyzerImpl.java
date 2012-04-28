@@ -32,7 +32,6 @@ public class HasConsequenceRelationAnalyzerImpl extends
 	@Override
 	public void addRelations(Graph<StructuralElement, Reference> graph,
 			ParsedDocument document) {
-		this.graph = graph;
 
 		Iterable<StructuralElement> corollaries = Iterables.filter(graph
 				.getVertices(), new TypePredicate(
@@ -50,7 +49,7 @@ public class HasConsequenceRelationAnalyzerImpl extends
 						.document(document).build();
 				reference
 						.setPredictedRelation(MocassinOntologyRelations.HAS_CONSEQUENCE);
-				addEdge(reference, closestPredecessor, corollary);
+				addEdge(graph, reference, closestPredecessor, corollary);
 			} else {
 				logger.warn(
 						"Failed to add a relation for a corollary={}, because the found closest predecessor is null",
