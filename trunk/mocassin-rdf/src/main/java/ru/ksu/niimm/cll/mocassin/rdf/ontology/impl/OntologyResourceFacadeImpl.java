@@ -71,9 +71,9 @@ public class OntologyResourceFacadeImpl implements OntologyResourceFacade {
 	@InjectLogger
 	private Logger logger;
 
-	private RDFGraph searchGraph;
+	private final RDFGraph searchGraph;
 
-	private String ontologyRulesSetName;
+	private final String ontologyRulesSetName;
 
 	@Inject
 	public OntologyResourceFacadeImpl(SparqlQueryLoader sparqlQueryLoader,

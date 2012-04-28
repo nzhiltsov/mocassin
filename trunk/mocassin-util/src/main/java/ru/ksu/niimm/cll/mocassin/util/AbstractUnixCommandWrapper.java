@@ -30,25 +30,23 @@ public abstract class AbstractUnixCommandWrapper {
 	 * @throws Exception
 	 */
 	public final boolean execute() throws Exception {
-		ExpectJ expectinator = new ExpectJ(TIMEOUT_IN_SECONDS);
 
-		Spawn shell;
+		String command = null;
 		synchronized (this) {
-			String command = StringUtil.asString(cmdArray);
-			shell = expectinator.spawn(command);
+			command = StringUtil.asString(cmdArray);
 		}
+		ExpectJ expectinator = new ExpectJ(TIMEOUT_IN_SECONDS);
+		Spawn shell = expectinator.spawn(command);
 		shell.expectClose();
 		String errOutput = shell.getCurrentStandardErrContents();
 		String standardOutput = shell.getCurrentStandardOutContents();
 
-		synchronized (this) {
-			boolean isSuccess = true;
-			if (successFlag != null) {
-				isSuccess = standardOutput.contains(successFlag)
-						|| errOutput.contains(successFlag);
-			}
-			return isSuccess;
+		boolean isSuccess = true;
+		if (successFlag != null) {
+			isSuccess = standardOutput.contains(successFlag)
+					|| errOutput.contains(successFlag);
 		}
+		return isSuccess;
 
 	}
 }

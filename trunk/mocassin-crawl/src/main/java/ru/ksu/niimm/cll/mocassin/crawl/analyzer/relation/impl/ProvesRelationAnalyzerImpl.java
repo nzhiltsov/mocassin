@@ -32,7 +32,6 @@ public class ProvesRelationAnalyzerImpl extends AbstractRelationAnalyzer
 	@Override
 	public void addRelations(Graph<StructuralElement, Reference> graph,
 			ParsedDocument document) {
-		this.graph = graph;
 
 		Iterable<StructuralElement> proofs = Iterables.filter(graph
 				.getVertices(),
@@ -50,7 +49,7 @@ public class ProvesRelationAnalyzerImpl extends AbstractRelationAnalyzer
 						.document(document).build();
 				reference
 						.setPredictedRelation(MocassinOntologyRelations.PROVES);
-				addEdge(reference, proof, closestPredecessor);
+				addEdge(graph, reference, proof, closestPredecessor);
 			} else {
 				logger.warn(
 						"Failed to add a relation for a proof={}, because the found closest predecessor is null",

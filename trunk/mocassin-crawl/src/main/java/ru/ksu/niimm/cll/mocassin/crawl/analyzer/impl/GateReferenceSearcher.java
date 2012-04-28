@@ -64,14 +64,6 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 	@Inject
 	protected ExemplifiesRelationAnalyzer exemplifiesRelationAnalyzer;
 
-	private List<StructuralElement> structuralElements;
-
-	private Graph<StructuralElement, Reference> graph;
-
-	private Document document;
-
-	private ParsedDocument parsedDocument;
-
 	@Inject
 	GateReferenceSearcher(
 			@Named("arxmliv.markup.name") String arxmlivMarkupName,
@@ -88,23 +80,25 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 	@Override
 	public Graph<StructuralElement, Reference> retrieveStructuralGraph(
 			ParsedDocument parsedDocument) {
-		this.parsedDocument = parsedDocument;
 		String arxivId = StringUtil.arxivid2gateid(parsedDocument
 				.getCollectionId());
+		Document document = null;
 		try {
-			this.graph = new DirectedSparseMultigraph<StructuralElement, Reference>();
+			Graph<StructuralElement, Reference> graph = new DirectedSparseMultigraph<StructuralElement, Reference>();
 
-			setDocument(gateDocumentDAO.load(arxivId));
+			document = gateDocumentDAO.load(arxivId);
 
-			loadStructuralElements(parsedDocument);
+			List<StructuralElement> elements = getStructuralElementSearcher()
+					.retrieveElements(parsedDocument);
+			Collections.sort(elements, new DescPositionComparator());
 
-			addPartholeRelations();
+			addPartholeRelations(graph, elements, document, parsedDocument);
 
-			AnnotationSet refAnnotations = getDocument().getAnnotations(
+			AnnotationSet refAnnotations = document.getAnnotations(
 					ARXMLIV_MARKUP_NAME).get(ARXMLIV_REF_ANNOTATION_NAME);
 			List<Annotation> filteredRefAnnotations = new ArrayList<Annotation>();
 			for (Annotation refAnnotation : refAnnotations) {
-				AnnotationSet coveringMathAnnotations = getDocument()
+				AnnotationSet coveringMathAnnotations = document
 						.getAnnotations(ARXMLIV_MARKUP_NAME).getCovering(
 								ARXMLIV_MATH_ANNOTATION_NAME,
 								refAnnotation.getStartNode().getOffset(),
@@ -114,11 +108,12 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 				}
 			}
 
-			addNavigationalRelations(filteredRefAnnotations);
+			addNavigationalRelations(graph, elements, filteredRefAnnotations,
+					document, parsedDocument);
 
-			addRestrictedRelations();
+			addRestrictedRelations(graph, parsedDocument);
 
-			return this.graph;
+			return graph;
 		} catch (AccessGateDocumentException e) {
 			logger.error("Failed to load the document: {}", arxivId, e);
 			throw new RuntimeException(e);
@@ -128,12 +123,13 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 					arxivId, e);
 			throw new RuntimeException(e);
 		} finally {
-			gateDocumentDAO.release(getDocument());
-			setDocument(null);
+			gateDocumentDAO.release(document);
 		}
 	}
 
-	private void addRestrictedRelations() {
+	private void addRestrictedRelations(
+			Graph<StructuralElement, Reference> graph,
+			ParsedDocument parsedDocument) {
 		exemplifiesRelationAnalyzer.addRelations(graph, parsedDocument);
 		provesRelationAnalyzer.addRelations(graph, parsedDocument);
 		hasConsequenceRelationAnalyzer.addRelations(graph, parsedDocument);
@@ -141,8 +137,17 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 
 	/**
 	 * TODO: now it wrongly handles 2-level containments
+	 * 
+	 * @param graph
+	 * 
+	 * @param structuralElements
+	 * @param parsedDocument
+	 * @param document
 	 */
-	private void addPartholeRelations() {
+	private void addPartholeRelations(
+			Graph<StructuralElement, Reference> graph,
+			List<StructuralElement> structuralElements, Document document,
+			ParsedDocument parsedDocument) {
 		int size = structuralElements.size();
 		int refId = 0;
 		for (int i = 0; i < size - 1; i++)
@@ -151,16 +156,16 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 						.get(j).getGateStartOffset()
 						&& structuralElements.get(i).getGateEndOffset() <= structuralElements
 								.get(j).getGateEndOffset()) {
-					long documentSize = getDocument().getContent().size();
+					long documentSize = document.getContent().size();
 					ParsedDocument refDocument = new ParsedDocumentImpl(
-							getParsedDocument().getCollectionId(),
-							getParsedDocument().getUri(), getParsedDocument()
-									.getPdfUri(), documentSize);
+							parsedDocument.getCollectionId(),
+							parsedDocument.getUri(),
+							parsedDocument.getPdfUri(), documentSize);
 					Reference reference = new ReferenceImpl.Builder(refId--)
 							.document(refDocument).build();
 					reference
 							.setPredictedRelation(MocassinOntologyRelations.HAS_PART);
-					addEdge(reference, structuralElements.get(j),
+					addEdge(graph, reference, structuralElements.get(j),
 							structuralElements.get(i));
 					break;
 				}
@@ -168,27 +173,8 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 
 	}
 
-	private ParsedDocument getParsedDocument() {
-		return parsedDocument;
-	}
-
-	private void loadStructuralElements(ParsedDocument parsedDocument) {
-		List<StructuralElement> elements = getStructuralElementSearcher()
-				.retrieveElements(parsedDocument);
-		Collections.sort(elements, new DescPositionComparator());
-		setStructuralElements(elements);
-	}
-
 	public StructuralElementSearcher getStructuralElementSearcher() {
 		return structuralElementSearcher;
-	}
-
-	public Document getDocument() {
-		return document;
-	}
-
-	private void setDocument(Document document) {
-		this.document = document;
 	}
 
 	public AnnotationUtil getAnnotationUtil() {
@@ -201,22 +187,24 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 				USE_STEMMING);
 	}
 
-	private void addEdge(Reference edge, final StructuralElement from,
+	private void addEdge(Graph<StructuralElement, Reference> graph,
+			Reference edge, final StructuralElement from,
 			final StructuralElement to) {
 		StructuralElement foundFrom = null;
 		StructuralElement foundTo = null;
-		if (this.graph.containsVertex(from)) {
-			foundFrom = findVertice(from);
+		if (graph.containsVertex(from)) {
+			foundFrom = findVertice(graph, from);
 		}
-		if (this.graph.containsVertex(to)) {
-			foundTo = findVertice(to);
+		if (graph.containsVertex(to)) {
+			foundTo = findVertice(graph, to);
 		}
-		this.graph.addEdge(edge, foundFrom != null ? foundFrom : from,
+		graph.addEdge(edge, foundFrom != null ? foundFrom : from,
 				foundTo != null ? foundTo : to);
 	}
 
-	private StructuralElement findVertice(StructuralElement node) {
-		Collection<StructuralElement> vertices = this.graph.getVertices();
+	private StructuralElement findVertice(
+			Graph<StructuralElement, Reference> graph, StructuralElement node) {
+		Collection<StructuralElement> vertices = graph.getVertices();
 		for (StructuralElement cur : vertices) {
 			if (cur.equals(node)) {
 				return cur;
@@ -225,32 +213,35 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 		throw new RuntimeException("node not found: " + node);
 	}
 
-	private void addNavigationalRelations(Iterable<Annotation> annotations) {
+	private void addNavigationalRelations(
+			Graph<StructuralElement, Reference> graph,
+			List<StructuralElement> elements, Iterable<Annotation> annotations,
+			Document document, ParsedDocument parsedDocument) {
 
 		for (Annotation annotation : annotations) {
 			int id = annotation.getId();
 			String labelref = (String) annotation.getFeatures().get(
 					ArxmlivFormatConstants.LABEL_REF_ATTRIBUTE_NAME);
-			StructuralElement to = getElementByLabel(labelref);
-			StructuralElement from = getEnclosingElement(annotation);
+			StructuralElement to = getElementByLabel(elements, labelref);
+			StructuralElement from = getEnclosingElement(elements, annotation,
+					document);
 			if (to == null || from == null)
 				continue;
 			Annotation enclosingSentence = getAnnotationUtil()
-					.getEnclosingSentence(getDocument(), annotation);
-			List<Token> sentenceTokens = getTokensForAnnotation(getDocument(),
+					.getEnclosingSentence(document, annotation);
+			List<Token> sentenceTokens = getTokensForAnnotation(document,
 					enclosingSentence);
-			long documentSize = getDocument().getContent().size();
+			long documentSize = document.getContent().size();
 			ParsedDocument refDocument = new ParsedDocumentImpl(
-					getParsedDocument().getCollectionId(), getParsedDocument()
-							.getUri(), getParsedDocument().getPdfUri(),
-					documentSize);
+					parsedDocument.getCollectionId(), parsedDocument.getUri(),
+					parsedDocument.getPdfUri(), documentSize);
 			String additionalRefid = (String) annotation.getFeatures().get(
 					ArxmlivFormatConstants.REF_ID_ATTRIBUTE_NAME);
 			Reference reference = new ReferenceImpl.Builder(id)
 					.document(refDocument).additionalRefid(additionalRefid)
 					.build();
 			reference.setSentenceTokens(sentenceTokens);
-			addEdge(reference, from, to);
+			addEdge(graph, reference, from, to);
 			Prediction prediction = navigationalRelationClassifier.predict(
 					reference, graph);
 			if (prediction != null) {
@@ -259,10 +250,11 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 		}
 	}
 
-	private StructuralElement getEnclosingElement(Annotation annotation) {
+	private StructuralElement getEnclosingElement(
+			List<StructuralElement> elements, Annotation annotation,
+			Document document) {
 		long refOffset = annotation.getStartNode().getOffset();
 		StructuralElement closestParentElement = null;
-		List<StructuralElement> elements = getStructuralElements();
 		for (StructuralElement element : elements) {
 			long start = element.getGateStartOffset();
 			long end = element.getGateEndOffset();
@@ -281,14 +273,14 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 		if (closestParentElement == null) {
 			getLogger()
 					.warn("Parent element for reference with id='{}' in a document '{}' not found",
-							annotation.getId(), getDocument().getName());
+							annotation.getId(), document.getName());
 		}
 
 		return closestParentElement;
 	}
 
-	private StructuralElement getElementByLabel(String labelref) {
-		List<StructuralElement> elements = getStructuralElements();
+	private StructuralElement getElementByLabel(
+			List<StructuralElement> elements, String labelref) {
 		for (StructuralElement element : elements) {
 			if (element.getLabels().contains(labelref)) {
 				return element;
@@ -300,14 +292,6 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 
 	public Logger getLogger() {
 		return logger;
-	}
-
-	public List<StructuralElement> getStructuralElements() {
-		return structuralElements;
-	}
-
-	public void setStructuralElements(List<StructuralElement> structuralElements) {
-		this.structuralElements = structuralElements;
 	}
 
 }
