@@ -8,8 +8,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ru.ksu.niimm.cll.mocassin.crawl.analyzer.classifier.NavigationalRelationClassifier;
-import ru.ksu.niimm.cll.mocassin.crawl.analyzer.classifier.Prediction;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.NavigationalRelationClassifier;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.Prediction;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.GateModule;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.NlpModule;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.ParsedDocument;
