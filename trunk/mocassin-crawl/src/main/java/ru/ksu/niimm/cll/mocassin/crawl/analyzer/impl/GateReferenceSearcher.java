@@ -93,6 +93,7 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 			Collections.sort(elements, new DescPositionComparator());
 
 			addPartholeRelations(graph, elements, document, parsedDocument);
+            addFollowedByRelations(graph, elements, document, parsedDocument);
 
 			AnnotationSet refAnnotations = document.getAnnotations(
 					ARXMLIV_MARKUP_NAME).get(ARXMLIV_REF_ANNOTATION_NAME);
@@ -172,6 +173,71 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 			}
 
 	}
+
+    private void addFollowedByRelations(Graph<StructuralElement, Reference> graph,
+                                        List<StructuralElement> structuralElements, Document document,
+                                        ParsedDocument parsedDocument) {
+        int size = structuralElements.size();
+        int refId = -10000;
+        for (int i = 0; i < size - 1; i++) {
+            long iStart = structuralElements.get(i).getGateStartOffset();
+            for (int j = i + 1; j < size; j++) {
+
+                if(!sameLevel(graph, structuralElements.get(i), structuralElements.get(j))) {
+                    continue;
+                }
+                long jEnd = structuralElements.get(j).getGateEndOffset();
+
+                boolean followed = true;
+                for (int k = 0; k < size && followed; k++) {
+                    if (k != i && k != j) {
+                        long kStart = structuralElements.get(k).getGateStartOffset();
+                        long kEnd = structuralElements.get(k).getGateEndOffset();
+
+                        if (jEnd <= kStart && kStart <= iStart) {
+                            followed = false;
+                        } else if (jEnd <= kEnd && kEnd <= iStart) {
+                            followed = false;
+                        }
+                    }
+                }
+
+                if (followed) {
+                    long documentSize = document.getContent().size();
+                    ParsedDocument refDocument = new ParsedDocumentImpl(
+                            parsedDocument.getCollectionId(),
+                            parsedDocument.getUri(), parsedDocument
+                            .getPdfUri(), documentSize);
+                    Reference reference = new ReferenceImpl.Builder(refId--)
+                            .document(refDocument).build();
+                    reference
+                            .setPredictedRelation(MocassinOntologyRelations.FOLLOWED_BY);
+                    addEdge(graph, reference, structuralElements.get(j),
+                            structuralElements.get(i));
+
+                    break;
+                }
+            }
+        }
+    }
+
+    private boolean sameLevel(Graph<StructuralElement, Reference> graph,
+                              StructuralElement first, StructuralElement second) {
+        ArrayList<Reference> firstList = new ArrayList<Reference>(graph.getInEdges(first));
+        ArrayList<Reference> secondList = new ArrayList<Reference>(graph.getInEdges(second));
+
+        if (firstList.size() == secondList.size()) {
+            if (firstList.size() != 0 &&
+                    graph.getOpposite(first, firstList.get(0)).getId() !=
+                    graph.getOpposite(second, secondList.get(0)).getId()) {
+                return false;
+            }
+        } else {
+            return false;
+        }
+
+        return true;
+    }
 
 	public StructuralElementSearcher getStructuralElementSearcher() {
 		return structuralElementSearcher;
