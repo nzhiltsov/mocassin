@@ -17,6 +17,8 @@ import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import com.hp.hpl.jena.ontology.DatatypeProperty;
+import com.hp.hpl.jena.ontology.ObjectProperty;
 import com.hp.hpl.jena.ontology.OntClass;
 import com.hp.hpl.jena.ontology.OntModel;
 import com.hp.hpl.jena.ontology.OntProperty;
@@ -24,7 +26,7 @@ import com.hp.hpl.jena.ontology.OntResource;
 import com.hp.hpl.jena.util.iterator.ExtendedIterator;
 
 public class OntologyFacadeImpl implements OntologyFacade {
-	
+
 	@InjectLogger
 	private Logger logger;
 
@@ -107,25 +109,31 @@ public class OntologyFacadeImpl implements OntologyFacade {
 			OntologyConcept ontologyConcept) {
 		String conceptUri = ontologyConcept.getUri();
 		OntClass ontClass = getOntology().getOntClass(conceptUri);
-		ExtendedIterator<OntProperty> propertiesIterator = ontClass
-				.listDeclaredProperties();
 		List<OntologyRelation> relations = new ArrayList<OntologyRelation>();
-		while (propertiesIterator.hasNext()) {
-			OntProperty property = propertiesIterator.next();
-			String uri = property.getURI();
-			if (!isOntologyProperty(uri)) {
-				continue;
-			}
-			String rdfsLabel = property.getLabel(getLocale());
-			OntologyRelation relation = new OntologyRelation(uri, rdfsLabel);
-			relations.add(relation);
 
-		}
+		ExtendedIterator<ObjectProperty> allObjectProperties = getOntology()
+				.listObjectProperties();
+		fillRelationsForClass(ontClass, allObjectProperties, relations);
+
+		ExtendedIterator<DatatypeProperty> allDatatypeProperties = getOntology()
+				.listDatatypeProperties();
+		fillRelationsForClass(ontClass, allDatatypeProperties, relations);
 		return relations;
 	}
 
-	private boolean isOntologyProperty(String uri) {
-		return uri.startsWith(this.ontologyUri);
+	private void fillRelationsForClass(OntClass ontClass,
+			ExtendedIterator<? extends OntProperty> properties,
+			List<OntologyRelation> relations) {
+		while (properties.hasNext()) {
+			OntProperty property = properties.next();
+			if (property.getNameSpace() == null) continue;
+			if (ontClass.hasDeclaredProperty(property, false)) {
+				String uri = property.getURI();
+				String rdfsLabel = property.getLabel(getLocale());
+				OntologyRelation relation = new OntologyRelation(uri, rdfsLabel);
+				relations.add(relation);
+			}
+		}
 	}
 
 	@Override
