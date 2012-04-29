@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Properties;
 
-import ru.ksu.niimm.cll.mocassin.crawl.analyzer.classifier.NavRelClassifierImpl;
-import ru.ksu.niimm.cll.mocassin.crawl.analyzer.classifier.NavigationalRelationClassifier;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl.GateReferenceSearcher;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl.ReferenceStatementGeneratorImpl;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.importance.ImportantElementService;
@@ -26,9 +24,13 @@ import ru.ksu.niimm.cll.mocassin.crawl.analyzer.mapping.matchers.impl.NameMatche
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.pos.VerbBasedFeatureAnalyzer;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.pos.impl.VerbBasedFeatureAnalyzerImpl;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.ExemplifiesRelationAnalyzer;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.GraphTopologyAnalyzer;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.HasConsequenceRelationAnalyzer;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.NavRelClassifierImpl;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.NavigationalRelationClassifier;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.ProvesRelationAnalyzer;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.impl.ExemplifiesRelationAnalyzerImpl;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.impl.GraphTopologyAnalyzerImpl;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.impl.HasConsequenceRelationAnalyzerImpl;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.impl.ProvesRelationAnalyzerImpl;
 import ru.ksu.niimm.cll.mocassin.util.inject.log.Slf4jTypeListener;
@@ -79,6 +81,7 @@ public class AnalyzerModule extends AbstractModule {
 		bind(ReferenceSearcher.class).to(GateReferenceSearcher.class);
 		bind(ReferenceStatementGenerator.class).to(
 				ReferenceStatementGeneratorImpl.class);
+		bind(GraphTopologyAnalyzer.class).to(GraphTopologyAnalyzerImpl.class);
 		bindListener(Matchers.any(), new Slf4jTypeListener());
 		bindClassifier();
 

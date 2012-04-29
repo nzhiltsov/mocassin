@@ -1,4 +1,4 @@
-package ru.ksu.niimm.cll.mocassin.crawl.analyzer.classifier;
+package ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation;
 
 import static java.lang.String.format;
 

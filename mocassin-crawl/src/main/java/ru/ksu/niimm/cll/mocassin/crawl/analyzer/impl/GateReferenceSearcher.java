@@ -8,10 +8,10 @@ import java.util.List;
 import org.slf4j.Logger;
 
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.ReferenceSearcher;
-import ru.ksu.niimm.cll.mocassin.crawl.analyzer.classifier.NavigationalRelationClassifier;
-import ru.ksu.niimm.cll.mocassin.crawl.analyzer.classifier.Prediction;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.ExemplifiesRelationAnalyzer;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.HasConsequenceRelationAnalyzer;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.NavigationalRelationClassifier;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.Prediction;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.ProvesRelationAnalyzer;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.arxmliv.ArxmlivFormatConstants;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.AccessGateDocumentException;
