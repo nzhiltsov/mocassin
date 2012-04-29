@@ -3,6 +3,7 @@
 
 <!DOCTYPE rdf:RDF [
     <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY owl2 "http://www.w3.org/2006/12/owl2#" >
     <!ENTITY swrl "http://www.w3.org/2003/11/swrl#" >
     <!ENTITY dc "http://purl.org/dc/elements/1.1/" >
     <!ENTITY swrlb "http://www.w3.org/2003/11/swrlb#" >
@@ -32,6 +33,7 @@
      xmlns:owl2xml="http://www.w3.org/2006/12/owl2-xml#"
      xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
      xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:owl2="http://www.w3.org/2006/12/owl2#"
      xmlns:swrlb="http://www.w3.org/2003/11/swrlb#"
      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
      xmlns:sdo="&ontologies;sdo#">
@@ -110,12 +112,12 @@
                 </owl:unionOf>
             </owl:Class>
         </rdfs:range>
-        <owl:PropertyChainAxiom rdf:parseType="Collection">
+        <owl2:PropertyChainAxiom rdf:parseType="Collection">
             <owl:ObjectProperty rdf:about="#dependsOn"/>
             <owl:ObjectProperty>
                 <owl:inverseOf rdf:resource="#hasPart"/>
             </owl:ObjectProperty>
-        </owl:PropertyChainAxiom>
+        </owl2:PropertyChainAxiom>
     </owl:ObjectProperty>
     
 
@@ -589,7 +591,6 @@
     <owl:TransitiveProperty rdf:about="#dependsOn"/>
     <owl:AsymmetricProperty rdf:about="#exemplifies"/>
     <owl:AsymmetricProperty rdf:about="#hasConsequence"/>
-    <owl:TransitiveProperty rdf:about="#hasConsequence"/>
     <owl:AsymmetricProperty rdf:about="#proves"/>
 
     <rdf:Description>
