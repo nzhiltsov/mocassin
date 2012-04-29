@@ -114,17 +114,10 @@ public class ReferenceSearcherTest {
 		Assert.assertTrue("The reference list is empty", edges.size() > 0);
 
 		boolean foundFollowedByInstance = false;
-		boolean foundFalseFollowedByInstance = false;
 		for (Reference ref : edges) {
 			foundFollowedByInstance = graph.getSource(ref).getId() == 897
 					&& graph.getDest(ref).getId() == 1082
 					&& ref.getPredictedRelation() == MocassinOntologyRelations.FOLLOWED_BY;
-			foundFalseFollowedByInstance = graph.getSource(ref).getId() == 1082
-					&& graph.getDest(ref).getId() == 2359
-					&& ref.getPredictedRelation() == MocassinOntologyRelations.FOLLOWED_BY;
-			if (foundFalseFollowedByInstance) {
-				Assert.fail("Found false 'followedBy' instance. There's a section text between structural elements.");
-			}
 			if (foundFollowedByInstance) {
 				break;
 			}
