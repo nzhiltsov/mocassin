@@ -36,7 +36,7 @@
      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
      xmlns:sdo="&ontologies;sdo#">
     <owl:Ontology rdf:about="">
-        <owl:versionInfo rdf:datatype="&xsd;string">1.1</owl:versionInfo>
+        <owl:versionInfo rdf:datatype="&xsd;string">2.0</owl:versionInfo>
         <dc:creator rdf:datatype="&xsd;string"
             >Nikita Zhiltsov &lt;nikita.zhiltsov@gmail.com&gt;</dc:creator>
         <dc:title rdf:datatype="&xsd;string"
@@ -76,7 +76,6 @@
     <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#dependsOn -->
 
     <owl:ObjectProperty rdf:about="#dependsOn">
-        <rdf:type rdf:resource="&owl;TransitiveProperty"/>
         <rdfs:label xml:lang="en">depends on</rdfs:label>
         <rdfs:label xml:lang="ru">&#1079;&#1072;&#1074;&#1080;&#1089;&#1080;&#1090; &#1086;&#1090;</rdfs:label>
         <dc:description rdf:datatype="&xsd;string"
@@ -111,6 +110,12 @@
                 </owl:unionOf>
             </owl:Class>
         </rdfs:range>
+        <owl:PropertyChainAxiom rdf:parseType="Collection">
+            <owl:ObjectProperty rdf:about="#dependsOn"/>
+            <owl:ObjectProperty>
+                <owl:inverseOf rdf:resource="#hasPart"/>
+            </owl:ObjectProperty>
+        </owl:PropertyChainAxiom>
     </owl:ObjectProperty>
     
 
@@ -190,6 +195,15 @@
                 </owl:unionOf>
             </owl:Class>
         </rdfs:range>
+    </owl:ObjectProperty>
+
+
+    <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#followedBy -->
+
+    <owl:ObjectProperty rdf:about="#followedBy">
+     <rdfs:label xml:lang="en">followed by</rdfs:label>
+        <rdfs:domain rdf:resource="#DocumentSegment"/>
+        <rdfs:range rdf:resource="#DocumentSegment"/>
     </owl:ObjectProperty>
     
 
@@ -409,6 +423,12 @@
         <rdfs:subClassOf rdf:resource="#DocumentSegment"/>
         <dc:description rdf:datatype="&xsd;string"
             >A statement that follows with a little or no proof from one other statement.</dc:description>
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:cardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:cardinality>
+                <owl:onProperty rdf:resource="#hasConsequence"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
     </owl:Class>
     
 
@@ -458,6 +478,12 @@
         <rdfs:subClassOf rdf:resource="#DocumentSegment"/>
         <dc:description rdf:datatype="&xsd;string"
             >A description of a particular case or a task that gives valuable information about related statement.</dc:description>
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:cardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:cardinality>
+                <owl:onProperty rdf:resource="#exemplifies"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
     </owl:Class>
     
 
@@ -482,6 +508,12 @@
         <rdfs:subClassOf rdf:resource="#DocumentSegment"/>
         <dc:description rdf:datatype="&xsd;string"
             >A publication fragment that usually contains a derivation of some statement.</dc:description>
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:cardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:cardinality>
+                <owl:onProperty rdf:resource="#proves"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
     </owl:Class>
     
 
@@ -553,6 +585,12 @@
     //
     ///////////////////////////////////////////////////////////////////////////////////////
      -->
+
+    <owl:TransitiveProperty rdf:about="#dependsOn"/>
+    <owl:AsymmetricProperty rdf:about="#exemplifies"/>
+    <owl:AsymmetricProperty rdf:about="#hasConsequence"/>
+    <owl:TransitiveProperty rdf:about="#hasConsequence"/>
+    <owl:AsymmetricProperty rdf:about="#proves"/>
 
     <rdf:Description>
         <rdf:type rdf:resource="&owl;AllDisjointClasses"/>
