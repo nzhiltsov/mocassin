@@ -355,6 +355,6 @@
 	</dependencies>
 	<properties>
 		<sesame.version>2.6.3</sesame.version>
-		<pellet.version>2.1.1</pellet.version>
+		<pellet.version>2.3.0</pellet.version>
 	</properties>
 </project>
