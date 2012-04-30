@@ -190,7 +190,8 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 
                 boolean followed = true;
                 for (int k = 0; k < size && followed; k++) {
-                    if (k != i && k != j) {
+                    if (k != i && k != j
+                            && sameLevel(graph, structuralElements.get(i), structuralElements.get(k))) {
                         long kStart = structuralElements.get(k).getGateStartOffset();
                         long kEnd = structuralElements.get(k).getGateEndOffset();
 
