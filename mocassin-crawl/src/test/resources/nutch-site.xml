@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<!-- Put site-specific property overrides in this file. -->
+
+<configuration>
+	<property>
+		<name>plugin.folders</name>
+		<value>/media/HP/projects/apache-nutch-1.4-bin/src/plugin</value>
+	</property>
+	<property>
+		<name>http.agent.name</name>
+		<value>My Nutch Spider</value>
+	</property>
+	<property>
+		<name>plugin.includes</name>
+		<value>protocol-file|urlfilter-regex|parse-testmocassin|index-(basic|anchor)|urlnormalizer-(pass|regex|basic)</value>
+	</property>
+	<property>
+		<name>file.content.limit</name>
+		<value>10097152</value>
+	</property>
+	<property>
+		<name>parser.timeout</name>
+		<value>-1</value>
+	</property>
+	<property>
+		<name>http.robots.agents</name>
+		<value>My Nutch Spider,*</value>
+	</property>
+	<property>
+		<name>urlfilter.regex.file</name>
+		<value>regex-urlfilter.txt</value>
+	</property>
+	<property>
+		<name>parse.plugin.file</name>
+		<value>parse-plugins.xml</value>
+	</property>
+</configuration>
