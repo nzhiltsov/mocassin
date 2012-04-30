@@ -36,11 +36,16 @@ public class MocassinParser implements Parser {
 
 	public void setConf(Configuration conf) {
 		this.conf = conf;
+		Injector injector = createInjector();
+		arXMLivAdapter = injector.getInstance(ArXMLivAdapter.class);
+	}
+
+	protected Injector createInjector() {
 		Injector injector = Guice.createInjector(new MathnetModule(),
-				new OntologyTestModule(), new AnalyzerModule(),
+				new OntologyModule(), new AnalyzerModule(),
 				new GateModule(), new LatexParserModule(), new NlpModule(),
 				new PdfParserModule());
-		arXMLivAdapter = injector.getInstance(ArXMLivAdapter.class);
+		return injector;
 	}
 
 	@Override
