@@ -36,12 +36,9 @@ public class ArxivAdapter extends AbstractDomainAdapter implements
 	@Inject
 	private ArxivDAOFacade arxivDAOFacade;
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * {@inheritDoc}
 	 * 
-	 * @see
-	 * ru.ksu.niimm.cll.mocassin.ui.dashboard.server.ArXMLivAdapter#handle(java
-	 * .lang.String)
 	 */
 	@Override
 	public String handle(String arxivId) throws Exception {

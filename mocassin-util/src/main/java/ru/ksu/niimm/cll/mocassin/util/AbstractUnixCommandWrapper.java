@@ -29,7 +29,7 @@ public abstract class AbstractUnixCommandWrapper {
 		this.successFlag = null;
 	}
 
-	protected synchronized void setCmdArray(int index, String value) {
+	protected synchronized final void setCmdArray(int index, String value) {
 		if (index < 0 || index >= this.cmdArray.length)
 			throw new ArrayIndexOutOfBoundsException(index);
 		this.cmdArray[index] = value;

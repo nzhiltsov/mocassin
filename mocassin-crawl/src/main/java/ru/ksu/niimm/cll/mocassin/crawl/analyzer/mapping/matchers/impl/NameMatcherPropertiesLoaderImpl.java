@@ -38,7 +38,7 @@ public class NameMatcherPropertiesLoaderImpl implements
 		}
 	}
 
-	private Properties loadProperties() throws IOException {
+	private final Properties loadProperties() throws IOException {
 		Properties properties = new Properties();
 		ClassLoader loader = NameMatcherPropertiesLoaderImpl.class
 				.getClassLoader();
