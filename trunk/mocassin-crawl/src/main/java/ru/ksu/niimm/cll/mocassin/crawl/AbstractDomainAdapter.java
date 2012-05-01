@@ -31,7 +31,7 @@ import com.google.inject.Inject;
 
 import edu.uci.ics.jung.graph.Graph;
 
-public abstract class AbstractArXMLivAdapter implements ArXMLivAdapter {
+public abstract class AbstractDomainAdapter implements DomainAdapter {
 
 	@Inject
 	protected OntologyResourceFacade ontologyResourceFacade;
