@@ -7,8 +7,8 @@ import java.util.List;
 import org.openrdf.model.Statement;
 import org.slf4j.Logger;
 
-import ru.ksu.niimm.cll.mocassin.crawl.AbstractArXMLivAdapter;
-import ru.ksu.niimm.cll.mocassin.crawl.ArXMLivAdapter;
+import ru.ksu.niimm.cll.mocassin.crawl.AbstractDomainAdapter;
+import ru.ksu.niimm.cll.mocassin.crawl.DomainAdapter;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Reference;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
@@ -18,8 +18,8 @@ import com.google.inject.Inject;
 
 import edu.uci.ics.jung.graph.Graph;
 
-public class ArxivAdapter extends AbstractArXMLivAdapter implements
-		ArXMLivAdapter {
+public class ArxivAdapter extends AbstractDomainAdapter implements
+		DomainAdapter {
 	@InjectLogger
 	private Logger logger;
 	@Inject

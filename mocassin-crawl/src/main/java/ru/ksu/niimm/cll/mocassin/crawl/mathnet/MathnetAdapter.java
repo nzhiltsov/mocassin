@@ -12,8 +12,8 @@ import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.ntriples.NTriplesWriterFactory;
 import org.slf4j.Logger;
 
-import ru.ksu.niimm.cll.mocassin.crawl.AbstractArXMLivAdapter;
-import ru.ksu.niimm.cll.mocassin.crawl.ArXMLivAdapter;
+import ru.ksu.niimm.cll.mocassin.crawl.AbstractDomainAdapter;
+import ru.ksu.niimm.cll.mocassin.crawl.DomainAdapter;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Reference;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
@@ -22,8 +22,8 @@ import ru.ksu.niimm.cll.mocassin.util.model.ArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.util.model.Link;
 import edu.uci.ics.jung.graph.Graph;
 
-public class MathnetAdapter extends AbstractArXMLivAdapter implements
-		ArXMLivAdapter {
+public class MathnetAdapter extends AbstractDomainAdapter implements
+		DomainAdapter {
 
 	private static final String GATE_DOCUMENT_ENCODING = "utf8";
 	private static final String ID_PATTERN = "%s%s";

@@ -10,7 +10,7 @@ import org.apache.nutch.parse.ParseStatus;
 import org.apache.nutch.parse.Parser;
 import org.apache.nutch.protocol.Content;
 
-import ru.ksu.niimm.cll.mocassin.crawl.ArXMLivAdapter;
+import ru.ksu.niimm.cll.mocassin.crawl.DomainAdapter;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.AnalyzerModule;
 import ru.ksu.niimm.cll.mocassin.crawl.mathnet.MathnetModule;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.GateModule;
@@ -28,7 +28,7 @@ public class MocassinParser implements Parser {
 
 	private Configuration conf;
 
-	private ArXMLivAdapter arXMLivAdapter;
+	private DomainAdapter arXMLivAdapter;
 
 	public Configuration getConf() {
 		return conf;
@@ -37,7 +37,7 @@ public class MocassinParser implements Parser {
 	public void setConf(Configuration conf) {
 		this.conf = conf;
 		Injector injector = createInjector();
-		arXMLivAdapter = injector.getInstance(ArXMLivAdapter.class);
+		arXMLivAdapter = injector.getInstance(DomainAdapter.class);
 	}
 
 	protected Injector createInjector() {
