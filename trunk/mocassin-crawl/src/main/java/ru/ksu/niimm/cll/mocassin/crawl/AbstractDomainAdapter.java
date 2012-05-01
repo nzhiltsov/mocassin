@@ -69,26 +69,6 @@ public abstract class AbstractDomainAdapter implements DomainAdapter {
 
 	protected abstract Logger getLogger();
 
-	public int handle(List<String> arxivIds) {
-		int numberOfSuccesses = 0;
-		for (String arxivId : arxivIds) {
-			try {
-				long start = System.currentTimeMillis();
-				handle(arxivId);
-				long stop = System.currentTimeMillis();
-				getLogger()
-						.info("The document = '{}' has been processed in {} second(s)",
-								arxivId,
-								Math.round(((float) (stop - start)) / 1000));
-				numberOfSuccesses++;
-			} catch (Throwable e) {
-				getLogger().error("Failed to handle a document with id = '{}'",
-						arxivId, e);
-			}
-		}
-		return numberOfSuccesses;
-	}
-
 	protected void generateHighlightedPdfs(String arxivId,
 			Collection<StructuralElement> structuralElements) {
 		for (StructuralElement element : structuralElements) {
