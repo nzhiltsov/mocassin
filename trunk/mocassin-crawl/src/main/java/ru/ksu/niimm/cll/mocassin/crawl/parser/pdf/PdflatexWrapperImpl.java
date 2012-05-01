@@ -21,69 +21,82 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 class PdflatexWrapperImpl extends AbstractUnixCommandWrapper implements
-		PdflatexWrapper {
-	private static final String SUCCESS_FLAG = "Output written on";
+	PdflatexWrapper {
+    private static final String OUTPUT_DIRECTORY_PARAMETER = "-output-directory";
 
-	@InjectLogger
-	private Logger logger;
+    private static final String NONSTOPMODE_PARAMETER = "nonstopmode";
 
-	private final String PATCHED_LATEX_DIR;
+    private static final String INTERACTION_PARAMETER = "-interaction";
 
-	private final String SHADED_LATEX_DIR;
+    private static final String PDFLATEX = "pdflatex";
 
-	private final String PDF_DIR;
+    private static final String SUCCESS_FLAG = "Output written on";
 
-	private final String AUX_PDF_DIR;
+    @InjectLogger
+    private Logger logger;
 
-	@Inject
-	PdflatexWrapperImpl(@Named("auxiliary.pdf.document.dir") String auxPdfPath,
-			@Named("patched.tex.document.dir") String patchedLatexDir,
-			@Named("shaded.tex.document.dir") String shadedLatexDir,
-			@Named("pdf.document.dir") String pdfDir) {
-		super(6, SUCCESS_FLAG);
-		PATCHED_LATEX_DIR = patchedLatexDir;
-		SHADED_LATEX_DIR = shadedLatexDir;
-		AUX_PDF_DIR = auxPdfPath;
-		PDF_DIR = pdfDir;
-		setCmdArray(0, "pdflatex");
-		setCmdArray(1, "-interaction");
-		setCmdArray(2, "nonstopmode");
-		setCmdArray(3, "-output-directory");
+    private final String PATCHED_LATEX_DIR;
+
+    private final String SHADED_LATEX_DIR;
+
+    private final String PDF_DIR;
+
+    private final String AUX_PDF_DIR;
+
+    @Inject
+    PdflatexWrapperImpl(@Named("auxiliary.pdf.document.dir") String auxPdfPath,
+	    @Named("patched.tex.document.dir") String patchedLatexDir,
+	    @Named("shaded.tex.document.dir") String shadedLatexDir,
+	    @Named("pdf.document.dir") String pdfDir) {
+	PATCHED_LATEX_DIR = patchedLatexDir;
+	SHADED_LATEX_DIR = shadedLatexDir;
+	AUX_PDF_DIR = auxPdfPath;
+	PDF_DIR = pdfDir;
+    }
+
+    @Override
+    public void compileShaded(String arxivId, int structuralElementId)
+	    throws PdflatexCompilationException {
+	final String[] cmdArray = new String[6];
+	fillInitialValues(cmdArray);
+	cmdArray[4] = PDF_DIR;
+	cmdArray[5] = String.format("%s/%s", SHADED_LATEX_DIR, StringUtil
+		.segmentid2filename(arxivId, structuralElementId, "tex"));
+	executeCommands(arxivId, cmdArray);
+    }
+
+    @Override
+    public void compilePatched(String arxivId)
+	    throws PdflatexCompilationException {
+	final String[] cmdArray = new String[6];
+	fillInitialValues(cmdArray);
+	cmdArray[4] = AUX_PDF_DIR;
+	cmdArray[5] = String.format("%s/%s", PATCHED_LATEX_DIR,
+		StringUtil.arxivid2filename(arxivId, "tex"));
+	executeCommands(arxivId, cmdArray);
+    }
+
+    private void fillInitialValues(String[] cmdArray) {
+	cmdArray[0] = PDFLATEX;
+	cmdArray[1] = INTERACTION_PARAMETER;
+	cmdArray[2] = NONSTOPMODE_PARAMETER;
+	cmdArray[3] = OUTPUT_DIRECTORY_PARAMETER;
+    }
+
+    private void executeCommands(String arxivId, String[] cmdArray)
+	    throws PdflatexCompilationException {
+	try {
+	    if (!execute(cmdArray, SUCCESS_FLAG))
+		throw new RuntimeException(
+			"Not normal output while compiling PDF");
+	    execute(cmdArray, SUCCESS_FLAG); // double calling is necessary for
+					     // correct
+	    // cross-references
+	} catch (Exception e) {
+	    logger.error(
+		    "Failed to compile the PDF document with an identifier='{}'",
+		    arxivId, e);
+	    throw new PdflatexCompilationException(e);
 	}
-
-	@Override
-	public void compileShaded(String arxivId, int structuralElementId)
-			throws PdflatexCompilationException {
-		setCmdArray(4, PDF_DIR);
-		setCmdArray(5, String.format("%s/%s", SHADED_LATEX_DIR, StringUtil
-				.segmentid2filename(arxivId, structuralElementId, "tex")));
-		executeCommands(arxivId);
-	}
-
-	@Override
-	public void compilePatched(String arxivId)
-			throws PdflatexCompilationException {
-		setCmdArray(4, AUX_PDF_DIR);
-		setCmdArray(
-				5,
-				String.format("%s/%s", PATCHED_LATEX_DIR,
-						StringUtil.arxivid2filename(arxivId, "tex")));
-		executeCommands(arxivId);
-	}
-
-	private void executeCommands(String arxivId)
-			throws PdflatexCompilationException {
-		try {
-			if (!execute())
-				throw new RuntimeException(
-						"Not normal output while compiling PDF");
-			execute(); // double calling is necessary for correct
-						// cross-references
-		} catch (Exception e) {
-			logger.error(
-					"Failed to compile the PDF document with an identifier='{}'",
-					arxivId, e);
-			throw new PdflatexCompilationException(e);
-		}
-	}
+    }
 }

@@ -42,7 +42,7 @@ public abstract class AbstractAnalyzerTest {
 	private final List<Reference> references = new ArrayList<Reference>();
 
 	@Before
-	public void init() throws Exception {
+	public void init() {
 		ParsedDocument document = new ParsedDocumentImpl("ivm18",
 				"http://mathnet.ru/ivm18", "http://mathnet.ru/ivm18");
 		Graph<StructuralElement, Reference> graph = this.referenceSearcher
