@@ -69,7 +69,8 @@
 	</mimeType>
 	
 	<mimeType name="application/x-tex">
-		<plugin id="parse-testmocassin" />
+		<plugin id="parse-mocassin-header" />
+		<plugin id="parse-mocassin-pdflatex" />
 	</mimeType>
 
        <!-- Types for parse-ext plugin: required for unit tests to pass. -->
@@ -97,8 +98,10 @@
 			extension-id="org.apache.nutch.parse.swf.SWFParser" />
 		<alias name="parse-zip"
 			extension-id="org.apache.nutch.parse.zip.ZipParser" />
-			<alias name="parse-testmocassin" 
-			extension-id="ru.ksu.niimm.cll.mocassin.crawl.nutch.MocassinTestParser" />
+			<alias name="parse-mocassin-header" 
+			extension-id="ru.ksu.niimm.cll.mocassin.crawl.nutch.MocassinHeaderParser" />
+			<alias name="parse-mocassin-pdflatex" 
+			extension-id="ru.ksu.niimm.cll.mocassin.crawl.nutch.MocassinPdflatexParser" />
 	</aliases>
 	
 </parse-plugins>

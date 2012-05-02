@@ -36,9 +36,9 @@ import com.google.inject.Injector;
 
 public class MocassinParser implements Parser {
 
-	private static final Outlink[] NO_OUTLINKS = new Outlink[0];
+	protected static final Outlink[] NO_OUTLINKS = new Outlink[0];
 
-	private Configuration conf;
+	protected Configuration conf;
 
 	private DomainAdapter domainAdapter;
 

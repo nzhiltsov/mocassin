@@ -1,10 +1,5 @@
-for file in /opt/mocassin/tex/*; do
-filename=$(basename $file)
-if [ "$filename" == "patch_latex_header.sh" ]; then
-:;
-else 
+for file in /opt/mocassin/gate/gate.corpora.DocumentImpl/*; do
 rm $file
-fi
 done
 for file in /opt/mocassin/pdfsync/*; do
 rm $file
@@ -16,9 +11,6 @@ for file in /opt/mocassin/aux-pdf/*; do
 rm $file
 done
 for file in /opt/mocassin/arxmliv/*; do
-rm $file
-done
-for file in /opt/mocassin/aux-pdf/*; do
 rm $file
 done
 for file in /opt/mocassin/patched-tex/*; do
