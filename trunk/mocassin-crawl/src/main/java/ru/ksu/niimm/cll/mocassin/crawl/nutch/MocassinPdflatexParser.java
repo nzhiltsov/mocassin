@@ -25,6 +25,7 @@ import com.google.inject.Injector;
 public class MocassinPdflatexParser implements Parser {
     private static final Logger LOG = LoggerFactory
 	    .getLogger(MocassinPdflatexParser.class);
+    protected static final Outlink[] NO_OUTLINKS = new Outlink[0];
 
     private PdflatexWrapper pdflatexWrapper;
 
@@ -52,12 +53,9 @@ public class MocassinPdflatexParser implements Parser {
 	String mathnetKey = StringUtil.extractMathnetKeyFromFilename(baseUrl);
 	try {
 	    pdflatexWrapper.compilePatched(mathnetKey);
-	    Outlink[] outlinks = { new Outlink(format(
-		    "file:///opt/mocassin/aux-pdf/%s.pdfsync", mathnetKey),
-		    null) };
 	    return ParseResult.createParseResult(content.getUrl(),
 		    new ParseImpl("", new ParseData(ParseStatus.STATUS_SUCCESS,
-			    "", outlinks, new Metadata())));
+			    "", NO_OUTLINKS, new Metadata())));
 	} catch (Throwable e) {
 	    LOG.error("Failed to parse a document={}.", mathnetKey, e);
 	}
