@@ -4,6 +4,8 @@ import java.util.Collection;
 
 import org.apache.commons.collections.CollectionUtils;
 
+import edu.uci.ics.jung.graph.Graph;
+
 public class GraphMetricUtils {
     private GraphMetricUtils() {
     }
@@ -28,6 +30,22 @@ public class GraphMetricUtils {
      */
     public static int computePreferentialAttachmentScore(
 	    Collection<?> iNeighbors, Collection<?> jNeighbors) {
+	throw new UnsupportedOperationException("not implemented yet");
+    }
+
+    /**
+     * this method computes PageRank of a given vertice by considering edge
+     * weights and a given jump probability (alpha)
+     * 
+     * @param graph
+     *            graph
+     * @param vertice
+     *            given vertice
+     * @param jumpProbability
+     *            jump probability
+     */
+    public static <V, E> float computePageRank(Graph<V, E> graph, V vertice,
+	    double jumpProbability) {
 	throw new UnsupportedOperationException("not implemented yet");
     }
 }

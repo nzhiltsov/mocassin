@@ -11,20 +11,24 @@
  ******************************************************************************/
 package ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.impl;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import static ru.ksu.niimm.cll.mocassin.util.GraphMetricUtils.computeNeighborJaccard;
+import static ru.ksu.niimm.cll.mocassin.util.GraphMetricUtils.computePageRank;
+import static ru.ksu.niimm.cll.mocassin.util.GraphMetricUtils.computePreferentialAttachmentScore;
 
-import edu.uci.ics.jung.graph.Graph;
-import org.apache.commons.collections.CollectionUtils;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.GraphTopologyAnalyzer;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.RelationFeatureInfo;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Reference;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElement;
-
-import static ru.ksu.niimm.cll.mocassin.util.GraphMetricUtils.*;
+import edu.uci.ics.jung.graph.Graph;
 
 public class GraphTopologyAnalyzerImpl implements GraphTopologyAnalyzer {
+
+    private static final double JUMP_PROBABILITY = .2;
 
     @Override
     public List<RelationFeatureInfo> extractCandidateFeatures(
@@ -33,28 +37,42 @@ public class GraphTopologyAnalyzerImpl implements GraphTopologyAnalyzer {
 
 	ArrayList<StructuralElement> elements = new ArrayList<StructuralElement>(
 		graph.getVertices());
-	int size = graph.getVertices().size();
+
+	int size = elements.size();
+
+	Map<StructuralElement, Float> element2PR = new HashMap<StructuralElement, Float>();
+	for (StructuralElement element : elements) {
+	    element2PR.put(element, computePageRank(graph, element, JUMP_PROBABILITY));
+	}
+
 	for (int i = 0; i < size - 1; i++) {
+	    StructuralElement from = elements.get(i);
+	    Float fromPR = element2PR.get(from);
+
 	    ArrayList<StructuralElement> iNeighbors = new ArrayList<StructuralElement>(
-		    graph.getNeighbors(elements.get(i)));
+		    graph.getNeighbors(from));
+	    
 	    for (int j = i + 1; j < size; j++) {
+		StructuralElement to = elements.get(j);
 		ArrayList<StructuralElement> jNeighbors = new ArrayList<StructuralElement>(
-			graph.getNeighbors(elements.get(j)));
+			graph.getNeighbors(to));
 
 		float jaccard = computeNeighborJaccard(iNeighbors, jNeighbors);
 
 		int preferentialAttachmentScore = computePreferentialAttachmentScore(
 			iNeighbors, jNeighbors);
 
+		Float toPR = element2PR.get(to);
+
 		RelationFeatureInfo info = new RelationFeatureInfo.Builder(
-			elements.get(i), elements.get(j))
+			from, to)
 			.neigborJaccard(jaccard)
 			.preferentialAttachmentScore(
-				preferentialAttachmentScore).build();
+				preferentialAttachmentScore).fromPR(fromPR)
+			.toPR(toPR).build();
 		result.add(info);
 	    }
 	}
 	return result;
     }
-
 }
