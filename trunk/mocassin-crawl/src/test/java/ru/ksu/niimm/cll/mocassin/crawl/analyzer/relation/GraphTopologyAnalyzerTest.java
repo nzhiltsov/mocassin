@@ -53,7 +53,7 @@ public class GraphTopologyAnalyzerTest {
 		Assert.assertEquals(
 				"The number of candidates must be equal to the complete graph cardinality, i.e. n(n-1)/2",
 				n * (n - 1) / 2, candidates.size());
-		checkRelation(candidates, 19, 1017, 0.043478261f);
+		checkRelation(candidates, 19, 1017, 0.04347826f);
 		checkRelation(candidates, 2900, 3460, 0.5f);
 	}
 
