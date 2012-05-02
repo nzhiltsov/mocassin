@@ -6,7 +6,7 @@
 <configuration>
 	<property>
 		<name>plugin.folders</name>
-		<value>/media/HP/projects/apache-nutch-1.4-bin/src/plugin</value>
+		<value>/home/nzhiltsov/apache-nutch-1.4-bin/src/plugin</value>
 	</property>
 	<property>
 		<name>http.agent.name</name>
