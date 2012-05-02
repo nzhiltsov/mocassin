@@ -57,7 +57,6 @@ public class GraphTopologyAnalyzerTest {
 		checkRelation(candidates, 2900, 3460, 0.5f);
 	}
 
-	@SuppressWarnings("deprecation")
 	private void checkRelation(List<RelationFeatureInfo> candidates,
 			int firstId, int secondId, float expectedJaccardValue) {
 		boolean foundRelation = false;
@@ -72,7 +71,7 @@ public class GraphTopologyAnalyzerTest {
 				Assert.assertEquals(
 						"The neighbor Jaccard coefficient for the given two elements is not equal to the expected one.",
 						expectedJaccardValue,
-						info.getNeighborJaccardCoefficient());
+						info.getNeighborJaccardCoefficient(), 1e-8);
 				break;
 			}
 
