@@ -1,6 +1,5 @@
 package ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.junit.Assert;
@@ -58,6 +57,34 @@ public class GraphTopologyAnalyzerTest {
 	checkNeighborJaccard(candidates, 2900, 3460, 0.5f);
 	checkPreferentialAttachment(candidates, 2900, 3460, 6);
 	checkPreferentialAttachment(candidates, 19, 1017, 119);
+	checkPageRanks(candidates, 19, 1017, 0.0160327601f, 0.0173156749f);
+    }
+
+    private void checkPageRanks(List<RelationFeatureInfo> candidates,
+	    int firstId, int secondId, float expectedFirstPR,
+	    float expectedSecondPR) {
+	boolean foundRelation = false;
+
+	for (RelationFeatureInfo info : candidates) {
+	    foundRelation = (info.getFrom().getId() == firstId && info.getTo()
+		    .getId() == secondId)
+		    || (info.getFrom().getId() == secondId && info.getTo()
+			    .getId() == firstId);
+
+	    if (foundRelation) {
+		Assert.assertEquals(
+			"The PageRank of the first element is not equal to the expected one.",
+			expectedFirstPR, info.getFromPR(), 1e-8);
+		Assert.assertEquals(
+			"The PageRank of the second element is not equal to the expected one.",
+			expectedSecondPR, info.getToPR(), 1e-8);
+		break;
+	    }
+
+	}
+	Assert.assertTrue(
+		"Failed to find a relation between two elements with given ids.",
+		foundRelation);
     }
 
     private void checkPreferentialAttachment(

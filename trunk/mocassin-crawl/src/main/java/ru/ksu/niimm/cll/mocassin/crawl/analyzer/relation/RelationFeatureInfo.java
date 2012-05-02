@@ -28,12 +28,24 @@ public class RelationFeatureInfo {
      * cardinalities
      */
     private final int preferentialAttachmentScore;
+    /**
+     * First element's PageRank, which is computed by considering edge weights and alpha
+     * (jump probability) is equal to .2
+     */
+    private final float fromPR;
+    /**
+     * Second element's PageRank, which is computed by considering edge weights and alpha
+     * (jump probability) is equal to .2
+     */
+    private final float toPR;
 
     public static class Builder {
 	private final StructuralElement from;
 	private final StructuralElement to;
 	private float neighborJaccardCoefficient;
 	private int preferentialAttachmentScore;
+	private float fromPR;
+	private float toPR;
 
 	public Builder(StructuralElement from, StructuralElement to) {
 	    checkNotNull(from);
@@ -56,6 +68,18 @@ public class RelationFeatureInfo {
 	    return this;
 	}
 
+	public Builder fromPR(float fromPR) {
+	    checkState(fromPR >= 0 && fromPR <= 1);
+	    this.fromPR = fromPR;
+	    return this;
+	}
+
+	public Builder toPR(float toPR) {
+	    checkState(toPR >= 0 && toPR <= 1);
+	    this.toPR = toPR;
+	    return this;
+	}
+
 	public RelationFeatureInfo build() {
 	    return new RelationFeatureInfo(this);
 	}
@@ -66,6 +90,8 @@ public class RelationFeatureInfo {
 	this.to = builder.to;
 	this.neighborJaccardCoefficient = builder.neighborJaccardCoefficient;
 	this.preferentialAttachmentScore = builder.preferentialAttachmentScore;
+	this.fromPR = builder.fromPR;
+	this.toPR = builder.toPR;
     }
 
     public StructuralElement getFrom() {
@@ -82,6 +108,14 @@ public class RelationFeatureInfo {
 
     public int getPreferentialAttachmentScore() {
 	return preferentialAttachmentScore;
+    }
+
+    public float getFromPR() {
+	return fromPR;
+    }
+
+    public float getToPR() {
+	return toPR;
     }
 
     @Override
