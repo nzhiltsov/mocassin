@@ -1,6 +1,16 @@
 package ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -57,34 +67,47 @@ public class GraphTopologyAnalyzerTest {
 	checkNeighborJaccard(candidates, 2900, 3460, 0.5f);
 	checkPreferentialAttachment(candidates, 2900, 3460, 9);
 	checkPreferentialAttachment(candidates, 19, 1017, 119);
-	checkPageRanks(candidates, 19, 1017, 0.0160327601f, 0.0173156749f);
+	checkPageRanks(candidates);
     }
 
-    private void checkPageRanks(List<RelationFeatureInfo> candidates,
-	    int firstId, int secondId, float expectedFirstPR,
-	    float expectedSecondPR) {
-	boolean foundRelation = false;
-
+    private void checkPageRanks(List<RelationFeatureInfo> candidates) {
+	Map<StructuralElement, Float> element2PR = new HashMap<StructuralElement, Float>();
 	for (RelationFeatureInfo info : candidates) {
-	    foundRelation = (info.getFrom().getId() == firstId && info.getTo()
-		    .getId() == secondId)
-		    || (info.getFrom().getId() == secondId && info.getTo()
-			    .getId() == firstId);
-
-	    if (foundRelation) {
-		Assert.assertEquals(
-			"The PageRank of the first element is not equal to the expected one.",
-			expectedFirstPR, info.getFromPR(), 1e-8);
-		Assert.assertEquals(
-			"The PageRank of the second element is not equal to the expected one.",
-			expectedSecondPR, info.getToPR(), 1e-8);
-		break;
+	    if (!element2PR.containsKey(info.getFrom())) {
+		element2PR.put(info.getFrom(), info.getFromPR());
 	    }
-
+	    if (!element2PR.containsKey(info.getTo())) {
+		element2PR.put(info.getTo(), info.getToPR());
+	    }
 	}
-	Assert.assertTrue(
-		"Failed to find a relation between two elements with given ids.",
-		foundRelation);
+	List<Entry<StructuralElement, Float>> list = new ArrayList<Entry<StructuralElement, Float>>(
+		element2PR.entrySet());
+	Collections.sort(list,
+		new Comparator<Entry<StructuralElement, Float>>() {
+		    public int compare(Entry<StructuralElement, Float> first,
+			    Entry<StructuralElement, Float> second) {
+			return first.getValue().compareTo(second.getValue());
+		    }
+		});
+	Assert.assertEquals(
+		"The element id with highest PageRank is not equal to the expected one.",
+		5632, list.get(list.size() - 1).getKey().getId());
+	Assert.assertEquals(
+		"The highest PageRank is not equal to the expected one.",
+		0.0621076, list.get(list.size() - 1).getValue(), 1e-4);
+	Assert.assertEquals(
+		"The element id with 2nd PageRank is not equal to the expected one.",
+		5498, list.get(list.size() - 2).getKey().getId());
+	Assert.assertEquals(
+		"The element id with 3rd PageRank is not equal to the expected one.",
+		5088, list.get(list.size() - 3).getKey().getId());
+	Assert.assertEquals(
+		"The element id with 4th PageRank is not equal to the expected one.",
+		4860, list.get(list.size() - 4).getKey().getId());
+	Assert.assertEquals(
+		"The element id with highest PageRank is not equal to the expected one.",
+		4808, list.get(list.size() - 5).getKey().getId());
+
     }
 
     private void checkPreferentialAttachment(
