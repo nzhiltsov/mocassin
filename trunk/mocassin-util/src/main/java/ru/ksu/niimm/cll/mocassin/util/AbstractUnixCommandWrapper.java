@@ -22,7 +22,7 @@ public abstract class AbstractUnixCommandWrapper {
      * @return true, if execution was successful
      * @throws Exception
      */
-    public final boolean execute(String[] cmdArray, String successFlag)
+    public synchronized final boolean execute(String[] cmdArray, String successFlag)
 	    throws Exception {
 
 	String command = StringUtil.asString(cmdArray);
@@ -36,6 +36,7 @@ public abstract class AbstractUnixCommandWrapper {
 	if (successFlag != null) {
 	    isSuccess = standardOutput.contains(successFlag)
 		    || errOutput.contains(successFlag);
+	    System.out.println();
 	}
 	return isSuccess;
 
