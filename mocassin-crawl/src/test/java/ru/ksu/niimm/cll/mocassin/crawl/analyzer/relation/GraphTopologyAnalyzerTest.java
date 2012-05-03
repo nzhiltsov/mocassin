@@ -55,7 +55,7 @@ public class GraphTopologyAnalyzerTest {
 		n * (n - 1) / 2, candidates.size());
 	checkNeighborJaccard(candidates, 19, 1017, 0.04347826f);
 	checkNeighborJaccard(candidates, 2900, 3460, 0.5f);
-	checkPreferentialAttachment(candidates, 2900, 3460, 6);
+	checkPreferentialAttachment(candidates, 2900, 3460, 9);
 	checkPreferentialAttachment(candidates, 19, 1017, 119);
 	checkPageRanks(candidates, 19, 1017, 0.0160327601f, 0.0173156749f);
     }
