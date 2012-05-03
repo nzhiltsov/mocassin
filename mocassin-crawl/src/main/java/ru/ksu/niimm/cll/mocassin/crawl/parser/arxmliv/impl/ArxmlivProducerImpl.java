@@ -54,6 +54,11 @@ public class ArxmlivProducerImpl extends AbstractUnixCommandWrapper implements
     }
 
     @Override
+    public String getArxmlivDocumentDirectory() {
+	return ARXMLIV_DOCUMENT_DIR;
+    }
+
+    @Override
     public String produce(String arxivId) {
 	String arxmlivDocFilePath = String.format("%s/%s",
 		ARXMLIV_DOCUMENT_DIR,

@@ -16,8 +16,8 @@
  limitations under the License.
 -->
 <plugin
-   id="parse-mocassin"
-   name="Mocassin Parse Plug-in"
+   id="parse-mocassin-header"
+   name="Mocassin Header Parse Plug-in"
    version="1.0.0"
    provider-name="nutch.org">
 
@@ -31,12 +31,12 @@
       <import plugin="nutch-extensionpoints"/>
    </requires>
 
-   <extension id="ru.ksu.niimm.cll.mocassin.crawl.nutch"
-              name="MocassinParser" 
+   <extension id="ru.ksu.niimm.cll.mocassin.crawl.nutch.MocassinHeaderParser"
+              name="MocassinHeaderParser" 
               point="org.apache.nutch.parse.Parser">
 
-      <implementation id="ru.ksu.niimm.cll.mocassin.crawl.nutch.MocassinParser" 
-                      class="ru.ksu.niimm.cll.mocassin.crawl.nutch.MocassinParser">
+      <implementation id="ru.ksu.niimm.cll.mocassin.crawl.nutch.MocassinHeaderParser" 
+                      class="ru.ksu.niimm.cll.mocassin.crawl.nutch.MocassinHeaderParser">
         <parameter name="contentType" value="application/x-tex"/>
         <parameter name="pathSuffix"  value="tex"/>
       </implementation>

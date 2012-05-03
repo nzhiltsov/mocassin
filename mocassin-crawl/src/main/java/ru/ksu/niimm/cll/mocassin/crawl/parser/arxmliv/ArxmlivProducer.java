@@ -20,4 +20,6 @@ public interface ArxmlivProducer {
 	 * @return local file path
 	 */
 	String produce(String arxivId);
+
+	String getArxmlivDocumentDirectory();
 }
