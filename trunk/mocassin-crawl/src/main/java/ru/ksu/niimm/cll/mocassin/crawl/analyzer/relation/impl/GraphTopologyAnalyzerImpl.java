@@ -38,12 +38,10 @@ public class GraphTopologyAnalyzerImpl implements GraphTopologyAnalyzer {
 	ArrayList<StructuralElement> elements = new ArrayList<StructuralElement>(
 		graph.getVertices());
 
-	int size = elements.size();
+	Map<StructuralElement, Float> element2PR = computePageRank(graph,
+		elements, JUMP_PROBABILITY);
 
-	Map<StructuralElement, Float> element2PR = new HashMap<StructuralElement, Float>();
-	for (StructuralElement element : elements) {
-	    element2PR.put(element, computePageRank(graph, element, JUMP_PROBABILITY));
-	}
+	int size = elements.size();
 
 	for (int i = 0; i < size - 1; i++) {
 	    StructuralElement from = elements.get(i);
@@ -51,7 +49,7 @@ public class GraphTopologyAnalyzerImpl implements GraphTopologyAnalyzer {
 
 	    ArrayList<StructuralElement> iNeighbors = new ArrayList<StructuralElement>(
 		    graph.getNeighbors(from));
-	    
+
 	    for (int j = i + 1; j < size; j++) {
 		StructuralElement to = elements.get(j);
 		ArrayList<StructuralElement> jNeighbors = new ArrayList<StructuralElement>(

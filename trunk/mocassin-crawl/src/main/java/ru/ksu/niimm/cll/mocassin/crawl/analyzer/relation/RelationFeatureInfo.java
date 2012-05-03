@@ -148,5 +148,4 @@ public class RelationFeatureInfo {
 	    return false;
 	return true;
     }
-
 }

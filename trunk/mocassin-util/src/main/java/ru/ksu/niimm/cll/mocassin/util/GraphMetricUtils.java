@@ -1,9 +1,13 @@
 package ru.ksu.niimm.cll.mocassin.util;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import edu.uci.ics.jung.algorithms.scoring.PageRank;
 import edu.uci.ics.jung.graph.DirectedSparseMultigraph;
+import edu.uci.ics.jung.graph.Hypergraph;
+
 import org.apache.commons.collections.CollectionUtils;
 
 import edu.uci.ics.jung.graph.Graph;
@@ -19,12 +23,12 @@ public class GraphMetricUtils {
      */
     public static float computeNeighborJaccard(Collection<?> iNeighbors,
 	    Collection<?> jNeighbors) {
-        int intersection = CollectionUtils.intersection(iNeighbors, jNeighbors)
-            .size();
-        int union = CollectionUtils.union(iNeighbors, jNeighbors).size();
+	int intersection = CollectionUtils.intersection(iNeighbors, jNeighbors)
+		.size();
+	int union = CollectionUtils.union(iNeighbors, jNeighbors).size();
 
-        float jaccard = (float) intersection / union;
-        return jaccard;
+	float jaccard = (float) intersection / union;
+	return jaccard;
     }
 
     /**
@@ -33,7 +37,7 @@ public class GraphMetricUtils {
      */
     public static int computePreferentialAttachmentScore(
 	    Collection<?> iNeighbors, Collection<?> jNeighbors) {
-        return iNeighbors.size() * jNeighbors.size();
+	return iNeighbors.size() * jNeighbors.size();
     }
 
     /**
@@ -47,31 +51,15 @@ public class GraphMetricUtils {
      * @param jumpProbability
      *            jump probability
      */
-    public static <V, E> float computePageRank(Graph<V, E> graph, V vertice,
-	    double jumpProbability) {
-        Transformer<E, ? extends Number> transformer;
-        if (graph instanceof DirectedSparseMultigraph) {
-            final DirectedSparseMultigraph multigraph = (DirectedSparseMultigraph) graph;
-            transformer = new Transformer<E, Number>() {
-                @Override
-                public Number transform(E e) {
-                    int edgeSetSize = multigraph
-                            .findEdgeSet(multigraph.getSource(e), multigraph.getDest(e)).size();
-                    int outDegree = multigraph.outDegree(multigraph.getSource(e));
-                    return (float) edgeSetSize / outDegree;
-                }
-            };
-        } else {
-            transformer = new Transformer<E, Number>() {
-                @Override
-                public Number transform(E e) {
-                    return 1;
-                }
-            };
-        }
-        PageRank<V, E> pageRank =
-                new PageRank<V, E>(graph, transformer, jumpProbability);
-        pageRank.evaluate();
-        return pageRank.getVertexScore(vertice).floatValue();
+    public static <V, E> Map<V, Float> computePageRank(final Graph<V, E> graph,
+	    Collection<V> collection, double jumpProbability) {
+	PageRank<V, E> pageRank = new PageRank<V, E>(graph, jumpProbability);
+	pageRank.evaluate();
+	Map<V, Float> element2PR = new HashMap<V, Float>();
+	for (V vertice : collection) {
+	    float pr = pageRank.getVertexScore(vertice).floatValue();
+	    element2PR.put(vertice, pr);
+	}
+	return element2PR;
     }
 }
