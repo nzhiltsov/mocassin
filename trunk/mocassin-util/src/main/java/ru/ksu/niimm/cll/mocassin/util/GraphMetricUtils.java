@@ -2,6 +2,7 @@ package ru.ksu.niimm.cll.mocassin.util;
 
 import java.util.Collection;
 
+import edu.uci.ics.jung.algorithms.scoring.PageRank;
 import org.apache.commons.collections.CollectionUtils;
 
 import edu.uci.ics.jung.graph.Graph;
@@ -16,12 +17,12 @@ public class GraphMetricUtils {
      */
     public static float computeNeighborJaccard(Collection<?> iNeighbors,
 	    Collection<?> jNeighbors) {
-	int intersection = CollectionUtils.intersection(iNeighbors, jNeighbors)
-		.size();
-	int union = CollectionUtils.union(iNeighbors, jNeighbors).size();
+        int intersection = CollectionUtils.intersection(iNeighbors, jNeighbors)
+            .size();
+        int union = CollectionUtils.union(iNeighbors, jNeighbors).size();
 
-	float jaccard = (float) intersection / union;
-	return jaccard;
+        float jaccard = (float) intersection / union;
+        return jaccard;
     }
 
     /**
@@ -30,7 +31,7 @@ public class GraphMetricUtils {
      */
     public static int computePreferentialAttachmentScore(
 	    Collection<?> iNeighbors, Collection<?> jNeighbors) {
-	throw new UnsupportedOperationException("not implemented yet");
+        return iNeighbors.size() * jNeighbors.size();
     }
 
     /**
@@ -46,6 +47,9 @@ public class GraphMetricUtils {
      */
     public static <V, E> float computePageRank(Graph<V, E> graph, V vertice,
 	    double jumpProbability) {
-	throw new UnsupportedOperationException("not implemented yet");
+        PageRank<V, E> pageRank =
+                new PageRank<V, E>(graph, jumpProbability);
+        pageRank.evaluate();
+        return pageRank.getVertexScore(vertice).floatValue();
     }
 }
