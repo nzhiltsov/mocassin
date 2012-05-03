@@ -3,9 +3,11 @@ package ru.ksu.niimm.cll.mocassin.util;
 import java.util.Collection;
 
 import edu.uci.ics.jung.algorithms.scoring.PageRank;
+import edu.uci.ics.jung.graph.DirectedSparseMultigraph;
 import org.apache.commons.collections.CollectionUtils;
 
 import edu.uci.ics.jung.graph.Graph;
+import org.apache.commons.collections15.Transformer;
 
 public class GraphMetricUtils {
     private GraphMetricUtils() {
@@ -47,8 +49,28 @@ public class GraphMetricUtils {
      */
     public static <V, E> float computePageRank(Graph<V, E> graph, V vertice,
 	    double jumpProbability) {
+        Transformer<E, ? extends Number> transformer;
+        if (graph instanceof DirectedSparseMultigraph) {
+            final DirectedSparseMultigraph multigraph = (DirectedSparseMultigraph) graph;
+            transformer = new Transformer<E, Number>() {
+                @Override
+                public Number transform(E e) {
+                    int edgeSetSize = multigraph
+                            .findEdgeSet(multigraph.getSource(e), multigraph.getDest(e)).size();
+                    int outDegree = multigraph.outDegree(multigraph.getSource(e));
+                    return (float) edgeSetSize / outDegree;
+                }
+            };
+        } else {
+            transformer = new Transformer<E, Number>() {
+                @Override
+                public Number transform(E e) {
+                    return 1;
+                }
+            };
+        }
         PageRank<V, E> pageRank =
-                new PageRank<V, E>(graph, jumpProbability);
+                new PageRank<V, E>(graph, transformer, jumpProbability);
         pageRank.evaluate();
         return pageRank.getVertexScore(vertice).floatValue();
     }
