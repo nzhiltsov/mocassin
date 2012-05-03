@@ -14,7 +14,7 @@
 	</property>
 	<property>
 		<name>plugin.includes</name>
-		<value>protocol-file|urlfilter-regex|parse-mocassin-(header|pdflatex)|index-(basic|anchor)|urlnormalizer-(pass|regex|basic)
+		<value>protocol-file|urlfilter-regex|parse-mocassin-(header|pdflatex|arxmliv)|index-(basic|anchor)|urlnormalizer-(pass|regex|basic)
 		</value>
 	</property>
 	<property>
@@ -39,7 +39,7 @@
 	</property>
 	<property>
 		<name>fetcher.threads.fetch</name>
-		<value>1</value>
+		<value>20</value>
 	</property>
 	<property>
 		<name>db.ignore.internal.links</name>

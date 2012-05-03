@@ -73,11 +73,6 @@ public class ArxmlivProducerImpl extends AbstractUnixCommandWrapper implements
 	cmdArray[3] = filename;
 	try {
 	    execute(cmdArray, null);
-	    File outputFile = new File(arxmlivDocFilePath);
-	    if (!outputFile.exists()) {
-		throw new RuntimeException(
-			"The output file does not exist. Perhaps, the arxmliv script failed.");
-	    }
 	    return arxmlivDocFilePath;
 	} catch (TimeoutException e) {
 	    logger.error(
