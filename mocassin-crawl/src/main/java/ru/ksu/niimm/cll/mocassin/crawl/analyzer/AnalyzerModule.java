@@ -24,8 +24,6 @@ import ru.ksu.niimm.cll.mocassin.crawl.analyzer.lsa.LSIPropertiesLoader;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.lsa.LatentSemanticIndexer;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.lsa.impl.LSIPropertiesLoaderImpl;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.lsa.impl.LatentSemanticIndexerImpl;
-import ru.ksu.niimm.cll.mocassin.crawl.analyzer.mapping.matchers.Matcher;
-import ru.ksu.niimm.cll.mocassin.crawl.analyzer.mapping.matchers.impl.NameMatcher;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.mapping.matchers.impl.NameMatcherPropertiesLoader;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.mapping.matchers.impl.NameMatcherPropertiesLoaderImpl;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.pos.VerbBasedFeatureAnalyzer;
@@ -63,7 +61,6 @@ public class AnalyzerModule extends AbstractModule {
 			throw new RuntimeException(
 					"failed to load the Analyzer module configuration");
 		}
-		bind(Matcher.class).to(NameMatcher.class);
 		bind(NameMatcherPropertiesLoader.class).to(
 				NameMatcherPropertiesLoaderImpl.class);
 
