@@ -11,7 +11,8 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 public class MocassinTestStructureParser extends MocassinStructureParser {
-    protected static Injector createInjector() {
+    @Override
+    protected Injector createInjector() {
 	Injector injector = Guice
 		.createInjector(new OntologyTestModule(), new AnalyzerModule(),
 			new GateModule(), new LatexParserModule(),
