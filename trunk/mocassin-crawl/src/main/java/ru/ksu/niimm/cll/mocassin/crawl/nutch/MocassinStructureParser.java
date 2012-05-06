@@ -118,9 +118,14 @@ public class MocassinStructureParser implements Parser {
 	try {
 	    Document document = gateProcessingFacade.process(mathnetKey,
 		    new File(arxmlivDocFilePath), GATE_DOCUMENT_ENCODING);
-	    Graph<StructuralElement, Reference> graph = referenceSearcher
-		    .retrieveStructuralGraph(document, metadata.getId());
-	    Factory.deleteResource(document);
+	    Graph<StructuralElement, Reference> graph;
+	    try {
+		graph = referenceSearcher.retrieveStructuralGraph(document,
+			metadata.getId());
+	    } finally {
+		Factory.deleteResource(document);
+	    }
+
 	    List<Statement> triples = referenceStatementGenerator
 		    .convert(graph);
 
