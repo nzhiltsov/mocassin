@@ -29,7 +29,7 @@
 
    <requires>
       <import plugin="nutch-extensionpoints"/>
-       <import plugin="parse-mocassin-gate"/>
+       <import plugin="parse-mocassin-arxmliv"/>
    </requires>
 
    <extension id="ru.ksu.niimm.cll.mocassin.crawl.nutch.MocassinStructureParser"

@@ -71,7 +71,7 @@ public class MocassinStructureParser implements Parser {
 	return conf;
     }
 
-    protected static Injector createInjector() {
+    protected Injector createInjector() {
 	Injector injector = Guice
 		.createInjector(new OntologyModule(), new AnalyzerModule(),
 			new GateModule(), new LatexParserModule(),
