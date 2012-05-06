@@ -18,8 +18,6 @@ import java.util.Properties;
 
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl.GateReferenceSearcher;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl.ReferenceStatementGeneratorImpl;
-import ru.ksu.niimm.cll.mocassin.crawl.analyzer.importance.ImportantElementService;
-import ru.ksu.niimm.cll.mocassin.crawl.analyzer.importance.impl.PageRankElementService;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.location.ReferenceElementLocationAnalyzer;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.location.impl.ReferenceElementLocationAnalyzerImpl;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.lsa.LSIPropertiesLoader;
@@ -69,7 +67,6 @@ public class AnalyzerModule extends AbstractModule {
 		bind(NameMatcherPropertiesLoader.class).to(
 				NameMatcherPropertiesLoaderImpl.class);
 
-		bind(ImportantElementService.class).to(PageRankElementService.class);
 
 		bind(LatentSemanticIndexer.class).to(LatentSemanticIndexerImpl.class);
 		bind(LSIPropertiesLoader.class).to(LSIPropertiesLoaderImpl.class);

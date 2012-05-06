@@ -8,12 +8,13 @@ import java.io.IOException;
 import java.util.Set;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.hp.hpl.jena.ontology.OntModel;
 import com.hp.hpl.jena.ontology.OntModelSpec;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
-
+@Ignore
 public class OntologyReportGeneratorTest {
 
 	private OntModel model;
