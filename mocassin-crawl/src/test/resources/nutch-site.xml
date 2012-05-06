@@ -6,7 +6,7 @@
 <configuration>
 	<property>
 		<name>plugin.folders</name>
-		<value>/home/nzhiltsov/apache-nutch-1.4-bin/src/plugin,nutch-plugins</value>
+		<value>/media/HP/projects/apache-nutch-1.4-bin/src/plugin,nutch-plugins,test-nutch-plugins</value>
 	</property>
 	<property>
 		<name>http.agent.name</name>
@@ -14,8 +14,7 @@
 	</property>
 	<property>
 		<name>plugin.includes</name>
-		<value>protocol-file|urlfilter-regex|parse-mocassin-(header|pdflatex|arxmliv|gate)|index-mocassin-(structure|rdf)|urlnormalizer-(pass|regex|basic)
-		</value>
+		<value>protocol-file|urlfilter-regex|parse-mocassin-(header|pdflatex|arxmliv|gate|teststructure)|urlnormalizer-(pass|regex|basic)</value>
 	</property>
 	<property>
 		<name>file.content.limit</name>
@@ -39,7 +38,7 @@
 	</property>
 	<property>
 		<name>fetcher.threads.fetch</name>
-		<value>1</value>
+		<value>5</value>
 	</property>
 	<property>
 		<name>db.ignore.internal.links</name>

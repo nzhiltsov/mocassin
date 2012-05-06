@@ -11,16 +11,44 @@
  ******************************************************************************/
 package ru.ksu.niimm.cll.mocassin.crawl.parser.gate;
 
+import gate.Document;
+
+import java.io.File;
+import java.io.InputStream;
+
 public interface GateProcessingFacade {
-	/**
-	 * processes a document (stored in the default document store) with a given
-	 * arxiv id by the configurable set of GATE plugins
-	 * 
-	 * @param document
-	 * @throws AccessGateStorageException
-	 * @throws AccessGateDocumentException
-	 * @throws ProcessException 
-	 */
-	void process(String arxivId) throws AccessGateDocumentException,
-			AccessGateStorageException, ProcessException;
+    /**
+     * processes a document (stored in the default document store) with a given
+     * id by the configurable set of GATE plugins
+     * 
+     * @param document
+     * @throws AccessGateStorageException
+     * @throws AccessGateDocumentException
+     * @throws ProcessException
+     */
+    void process(String paperId) throws AccessGateDocumentException,
+	    AccessGateStorageException, ProcessException;
+    /**
+     * processes a given file with a given
+     * id by the configurable set of GATE plugins
+     * 
+     * @param document
+     * @throws AccessGateStorageException
+     * @throws AccessGateDocumentException
+     * @throws ProcessException
+     * @returns document with new annotations
+     */
+    Document process(String documentId, File file, String encoding);
+    
+    /**
+     * processes a given input stream with a given
+     * id by the configurable set of GATE plugins
+     * 
+     * @param document
+     * @throws AccessGateStorageException
+     * @throws AccessGateDocumentException
+     * @throws ProcessException
+     * @returns document with new annotations
+     */
+    Document process(String documentId, InputStream inputStream, String encoding);
 }

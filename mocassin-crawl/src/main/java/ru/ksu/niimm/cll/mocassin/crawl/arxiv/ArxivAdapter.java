@@ -28,56 +28,59 @@ import ru.ksu.niimm.cll.mocassin.util.model.ArticleMetadata;
 import com.google.inject.Inject;
 
 import edu.uci.ics.jung.graph.Graph;
+import gate.Document;
 
 public class ArxivAdapter extends AbstractDomainAdapter implements
-		DomainAdapter {
-	@InjectLogger
-	private Logger logger;
-	@Inject
-	private ArxivDAOFacade arxivDAOFacade;
+	DomainAdapter {
+    @InjectLogger
+    private Logger logger;
+    @Inject
+    private ArxivDAOFacade arxivDAOFacade;
 
-	/**
-	 * {@inheritDoc}
-	 * 
+    /**
+     * {@inheritDoc}
+     * 
+     */
+    @Override
+    public String handle(String arxivId) throws Exception {
+	if (arxivId == null || arxivId.length() == 0)
+	    throw new RuntimeException("arXiv id cannot be null or empty");
+	/*
+	 * TODO: refactor this method to decouple this class from a bunch of
+	 * classes; see Issue 70 for numbering
 	 */
-	@Override
-	public String handle(String arxivId) throws Exception {
-		if (arxivId == null || arxivId.length() == 0)
-			throw new RuntimeException("arXiv id cannot be null or empty");
-		/*
-		 * TODO: refactor this method to decouple this class from a bunch of
-		 * classes; see Issue 70 for numbering
-		 */
-		// Step 1
-		ArticleMetadata metadata;
-		metadata = arxivDAOFacade.retrieve(arxivId);
-		metadata.setCollectionId(arxivId);
-		// Step 2
-		InputStream latexSourceStream = arxivDAOFacade.loadSource(metadata);
-		latexDocumentDAO.save(arxivId, latexSourceStream, "utf8");
-		// Step 3 & partial Step 7
-		latexDocumentHeaderPatcher.patch(arxivId);
-		pdflatexWrapper.compilePatched(arxivId);
-		latex2pdfMapper.generateSummary(arxivId);
-		// Step 4
-		String arxmlivFilePath = arxmlivProducer.produce(arxivId);
-		// Step 5
-		gateDocumentDAO.save(arxivId, new File(arxmlivFilePath), "utf8");
-		gateProcessingFacade.process(arxivId);
-		// Step 6
-		Graph<StructuralElement, Reference> graph = extractStructuralElements(metadata);
-		// Step 7
-		generateHighlightedPdfs(arxivId, graph.getVertices());
-		// Step 8
-		List<Statement> triples = referenceStatementGenerator.convert(graph);
-		ontologyResourceFacade.insert(triples); // TODO: Arxiv article
-												// metadata must be inserted
-												// into a store beforehand
-		return null;
-	}
+	// Step 1
+	ArticleMetadata metadata;
+	metadata = arxivDAOFacade.retrieve(arxivId);
+	metadata.setCollectionId(arxivId);
+	// Step 2
+	InputStream latexSourceStream = arxivDAOFacade.loadSource(metadata);
+	latexDocumentDAO.save(arxivId, latexSourceStream, "utf8");
+	// Step 3 & partial Step 7
+	latexDocumentHeaderPatcher.patch(arxivId);
+	pdflatexWrapper.compilePatched(arxivId);
+	latex2pdfMapper.generateSummary(arxivId);
+	// Step 4
+	String arxmlivFilePath = arxmlivProducer.produce(arxivId);
+	// Step 5
+	gateDocumentDAO.save(arxivId, new File(arxmlivFilePath), "utf8");
+	Document document = gateProcessingFacade.process(arxivId, new File(
+		arxmlivFilePath), "utf8");
+	// Step 6
+	Graph<StructuralElement, Reference> graph = referenceSearcher
+		.retrieveStructuralGraph(document, metadata.getId());
+	// Step 7
+	generateHighlightedPdfs(arxivId, graph.getVertices());
+	// Step 8
+	List<Statement> triples = referenceStatementGenerator.convert(graph);
+	ontologyResourceFacade.insert(triples); // TODO: Arxiv article
+						// metadata must be inserted
+						// into a store beforehand
+	return null;
+    }
 
-	@Override
-	protected Logger getLogger() {
-		return this.logger;
-	}
+    @Override
+    protected Logger getLogger() {
+	return this.logger;
+    }
 }

@@ -11,10 +11,10 @@
  ******************************************************************************/
 package ru.ksu.niimm.cll.mocassin.crawl.analyzer;
 
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.ParsedDocument;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Reference;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElement;
 import edu.uci.ics.jung.graph.Graph;
+import gate.Document;
 
 /**
  * Searcher for references in parsed documents
@@ -23,6 +23,7 @@ import edu.uci.ics.jung.graph.Graph;
  * 
  */
 public interface ReferenceSearcher {
+	
 	Graph<StructuralElement, Reference> retrieveStructuralGraph(
-			ParsedDocument document);
+		Document document, String paperUrl);
 }

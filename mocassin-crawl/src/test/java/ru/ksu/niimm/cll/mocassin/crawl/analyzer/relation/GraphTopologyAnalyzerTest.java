@@ -1,16 +1,13 @@
 package ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -19,13 +16,19 @@ import org.junit.runner.RunWith;
 
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.AnalyzerModule;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.ReferenceSearcher;
+import ru.ksu.niimm.cll.mocassin.crawl.parser.arxmliv.ArxmlivProducer;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.GateModule;
+import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.GateProcessingFacade;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.NlpModule;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.ParsedDocumentImpl;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Reference;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElement;
+import ru.ksu.niimm.cll.mocassin.crawl.parser.latex.LatexDocumentHeaderPatcher;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.latex.LatexParserModule;
+import ru.ksu.niimm.cll.mocassin.crawl.parser.pdf.GeneratePdfSummaryException;
+import ru.ksu.niimm.cll.mocassin.crawl.parser.pdf.Latex2PDFMapper;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.pdf.PdfParserModule;
+import ru.ksu.niimm.cll.mocassin.crawl.parser.pdf.PdflatexCompilationException;
+import ru.ksu.niimm.cll.mocassin.crawl.parser.pdf.PdflatexWrapper;
 import ru.ksu.niimm.cll.mocassin.fulltext.FullTextModule;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyTestModule;
 
@@ -34,6 +37,7 @@ import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
 import edu.uci.ics.jung.graph.Graph;
+import gate.Document;
 
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext({ AnalyzerModule.class, NlpModule.class, LatexParserModule.class,
@@ -45,14 +49,34 @@ public class GraphTopologyAnalyzerTest {
 
     @Inject
     private ReferenceSearcher referenceSearcher;
+    @Inject
+    private GateProcessingFacade gateProcessingFacade;
+    @Inject
+    private LatexDocumentHeaderPatcher latexDocumentHeaderPatcher;
+    @Inject
+    private PdflatexWrapper pdflatexWrapper;
+    @Inject
+    private Latex2PDFMapper latex2pdfMapper;
+    @Inject
+    private ArxmlivProducer arxmlivProducer;
 
     private Graph<StructuralElement, Reference> graph;
 
     @Before
-    public void init() {
-	graph = referenceSearcher
-		.retrieveStructuralGraph(new ParsedDocumentImpl("ivm18",
-			"http://mathnet.ru/ivm18", "http://mathnet.ru/ivm18"));
+    public void init() throws Exception {
+	Document document = prepareDoc("ivm18");
+	graph = referenceSearcher.retrieveStructuralGraph(document,
+		"http://mathnet.ru/ivm18");
+    }
+
+    private Document prepareDoc(String documentId)
+	    throws PdflatexCompilationException, GeneratePdfSummaryException {
+	latexDocumentHeaderPatcher.patch(documentId);
+	pdflatexWrapper.compilePatched(documentId);
+	latex2pdfMapper.generateSummary(documentId);
+	String arxmlivFilePath = arxmlivProducer.produce(documentId);
+	return gateProcessingFacade.process(documentId, new File(
+		arxmlivFilePath), "utf8");
     }
 
     @Test

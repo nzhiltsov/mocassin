@@ -11,7 +11,9 @@
  ******************************************************************************/
 package ru.ksu.niimm.cll.mocassin.crawl.parser.gate;
 
+import gate.Gate;
 import gate.creole.SerialAnalyserController;
+import gate.util.GateException;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -27,26 +29,38 @@ import com.google.inject.throwingproviders.ThrowingProviderBinder;
 
 public class GateModule extends AbstractModule {
 
-	@Override
-	protected void configure() {
-		try {
-			Properties properties = new Properties();
-			properties.load(this.getClass().getClassLoader()
-					.getResourceAsStream("nlp_module.properties"));
-			Names.bindProperties(binder(), properties);
-		} catch (IOException ex) {
-			throw new RuntimeException(
-					"failed to load the NLP module configuration");
-		}
-		bind(GateDocumentDAO.class).to(GateDocumentDAOImpl.class);
-		bind(GateProcessingFacade.class).to(GateProcessingFacadeImpl.class);
-		bind(AnnotationUtil.class).to(AnnotationUtilImpl.class);
-		bindListener(Matchers.any(), new Slf4jTypeListener());
-		ThrowingProviderBinder
-				.create(binder())
-				.bind(AnnieControllerProvider.class,
-						SerialAnalyserController.class)
-				.to(AnnieControllerProviderImpl.class);
+    private static final String GATE_BUILTIN_CREOLE_DIR_CONF_PROPERTY = "gate.builtin.creole.dir";
+    private static final String GATE_HOME_CONF_PROPERTY = "gate.home";
+
+    @Override
+    protected void configure() {
+	Properties properties = new Properties();
+	try {
+
+	    properties.load(this.getClass().getClassLoader()
+		    .getResourceAsStream("nlp_module.properties"));
+	    Names.bindProperties(binder(), properties);
+	} catch (IOException ex) {
+	    throw new RuntimeException(
+		    "Failed to load the GATE module configuration.");
 	}
+	System.setProperty(GATE_HOME_CONF_PROPERTY, properties.getProperty(GATE_HOME_CONF_PROPERTY));
+	System.setProperty(GATE_BUILTIN_CREOLE_DIR_CONF_PROPERTY,
+		properties.getProperty(GATE_BUILTIN_CREOLE_DIR_CONF_PROPERTY));
+	try {
+	    Gate.init();
+	} catch (GateException e) {
+	    throw new RuntimeException("Failed to initialize GATE.");
+	}
+	bind(GateDocumentDAO.class).to(GateDocumentDAOImpl.class);
+	bind(GateProcessingFacade.class).to(GateProcessingFacadeImpl.class);
+	bind(AnnotationUtil.class).to(AnnotationUtilImpl.class);
+	bindListener(Matchers.any(), new Slf4jTypeListener());
+	ThrowingProviderBinder
+		.create(binder())
+		.bind(AnnieControllerProvider.class,
+			SerialAnalyserController.class)
+		.to(AnnieControllerProviderImpl.class);
+    }
 
 }

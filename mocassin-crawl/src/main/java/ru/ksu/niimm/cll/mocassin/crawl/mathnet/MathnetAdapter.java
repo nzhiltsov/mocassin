@@ -12,6 +12,8 @@
 package ru.ksu.niimm.cll.mocassin.crawl.mathnet;
 
 import static java.lang.String.format;
+import edu.uci.ics.jung.graph.Graph;
+import gate.Document;
 
 import java.io.File;
 import java.io.StringWriter;
@@ -23,20 +25,14 @@ import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.ntriples.NTriplesWriterFactory;
 import org.slf4j.Logger;
 
-import com.google.common.collect.Iterables;
-
 import ru.ksu.niimm.cll.mocassin.crawl.AbstractDomainAdapter;
 import ru.ksu.niimm.cll.mocassin.crawl.DomainAdapter;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.ParsedDocument;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.ParsedDocumentImpl;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Reference;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
 import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
 import ru.ksu.niimm.cll.mocassin.util.model.ArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.util.model.Link;
-import ru.ksu.niimm.cll.mocassin.util.model.Link.PdfLinkPredicate;
-import edu.uci.ics.jung.graph.Graph;
 
 public class MathnetAdapter extends AbstractDomainAdapter implements
 	DomainAdapter {
@@ -76,16 +72,11 @@ public class MathnetAdapter extends AbstractDomainAdapter implements
 	// Step 4
 	String arxmlivFilePath = arxmlivProducer.produce(mathnetKey);
 	// Step 5
-	gateDocumentDAO.save(mathnetKey, new File(arxmlivFilePath),
-		GATE_DOCUMENT_ENCODING);
-	gateProcessingFacade.process(mathnetKey);
+	Document document = gateProcessingFacade.process(mathnetKey, new File(
+		arxmlivFilePath), GATE_DOCUMENT_ENCODING);
 	// Step 6
-	Link pdfLink = Iterables.find(metadata.getLinks(),
-		new PdfLinkPredicate());
-	ParsedDocument document = new ParsedDocumentImpl(
-		metadata.getCollectionId(), metadata.getId(), pdfLink.getHref());
 	Graph<StructuralElement, Reference> graph = referenceSearcher
-		.retrieveStructuralGraph(document);
+		.retrieveStructuralGraph(document, metadata.getId());
 	// Step 7
 	generateHighlightedPdfs(mathnetKey, graph.getVertices());
 	// Step 8

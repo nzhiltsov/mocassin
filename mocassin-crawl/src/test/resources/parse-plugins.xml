@@ -65,6 +65,7 @@
 		<plugin id="parse-mocassin-pdflatex" />
 		<plugin id="parse-mocassin-arxmliv" />
 		<plugin id="parse-mocassin-gate" />
+		<plugin id="parse-mocassin-teststructure" />
 	</mimeType>
 
 	<!-- Types for parse-ext plugin: required for unit tests to pass. -->
@@ -95,6 +96,8 @@
 			extension-id="ru.ksu.niimm.cll.mocassin.crawl.nutch.MocassinArxmlivParser" />
 			<alias name="parse-mocassin-gate"
 			extension-id="ru.ksu.niimm.cll.mocassin.crawl.nutch.MocassinGateParser" />
+						<alias name="parse-mocassin-teststructure"
+			extension-id="ru.ksu.niimm.cll.mocassin.crawl.nutch.MocassinTestStructureParser" />
 	</aliases>
 
 </parse-plugins>
