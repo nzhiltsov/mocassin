@@ -11,7 +11,6 @@
  ******************************************************************************/
 package ru.ksu.niimm.cll.mocassin.crawl.parser.gate;
 
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Token;
 
 public class TokenImpl implements Token {
 	private String value;

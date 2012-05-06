@@ -13,8 +13,8 @@ package ru.ksu.niimm.cll.mocassin.crawl.parser.gate;
 
 import java.util.List;
 
-import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.arxmliv.ArxmlivStructureElementTypes;
+import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyClasses;
 
 /**
  * Structural element is an element that belongs to the rhetorical structure

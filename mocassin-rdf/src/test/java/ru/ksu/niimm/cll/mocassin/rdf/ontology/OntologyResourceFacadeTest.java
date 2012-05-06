@@ -17,13 +17,6 @@ import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.rio.RDFFormat;
 
-import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyClasses;
-import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyRelations;
-import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyIndividual;
-import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyResource;
-import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyResourceFacade;
-import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyTestModule;
-import ru.ksu.niimm.cll.mocassin.rdf.ontology.SGEdge;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.provider.RepositoryProvider;
 import ru.ksu.niimm.cll.mocassin.util.model.ArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.util.model.Author;

@@ -11,11 +11,12 @@
  ******************************************************************************/
 package ru.ksu.niimm.cll.mocassin.crawl.parser.gate;
 
+import edu.uci.ics.jung.graph.Graph;
+import gate.Document;
+
 import java.util.List;
 
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyClasses;
-import edu.uci.ics.jung.graph.Graph;
-import gate.Document;
 
 /**
  * Represents a functionality of searching the structural elements in parsed

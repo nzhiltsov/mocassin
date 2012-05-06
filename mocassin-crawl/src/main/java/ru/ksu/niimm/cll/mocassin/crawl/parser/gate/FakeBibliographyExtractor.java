@@ -13,12 +13,10 @@ package ru.ksu.niimm.cll.mocassin.crawl.parser.gate;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import ru.ksu.niimm.cll.mocassin.util.Pair;
-import ru.ksu.niimm.cll.mocassin.util.Triple;
 
 import com.csvreader.CsvReader;
 import com.google.common.base.Predicate;

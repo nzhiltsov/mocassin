@@ -13,8 +13,6 @@ package ru.ksu.niimm.cll.mocassin.crawl.parser.gate;
 
 import java.util.SortedMap;
 
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Reference;
-
 /**
  * Prediction model for a pair of structural element types based on string
  * similarity techniques

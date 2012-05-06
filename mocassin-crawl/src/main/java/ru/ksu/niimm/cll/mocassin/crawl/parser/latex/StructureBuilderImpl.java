@@ -17,10 +17,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 
-import org.slf4j.Logger;
-
 import net.sourceforge.texlipse.model.DocumentReference;
 import net.sourceforge.texlipse.model.OutlineNode;
+
+import org.slf4j.Logger;
+
 import ru.ksu.niimm.cll.mocassin.crawl.parser.impl.EdgeContextImpl;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.impl.EdgeImpl;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.impl.NodeImpl;

@@ -11,6 +11,7 @@
  ******************************************************************************/
 package ru.ksu.niimm.cll.mocassin.util;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static java.lang.String.format;
 
 import java.rmi.server.UID;
@@ -23,7 +24,6 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringEscapeUtils;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import com.google.common.collect.Iterables;
 
 public class StringUtil {

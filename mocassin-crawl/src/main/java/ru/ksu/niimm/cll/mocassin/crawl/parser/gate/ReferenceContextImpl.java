@@ -14,9 +14,6 @@ package ru.ksu.niimm.cll.mocassin.crawl.parser.gate;
 import java.util.Iterator;
 import java.util.List;
 
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Feature;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.ReferenceContext;
-
 public class ReferenceContextImpl implements ReferenceContext {
 	private String from;
 	private String to;

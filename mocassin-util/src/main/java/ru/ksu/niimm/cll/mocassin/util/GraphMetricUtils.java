@@ -4,14 +4,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.uci.ics.jung.algorithms.scoring.PageRank;
-import edu.uci.ics.jung.graph.DirectedSparseMultigraph;
-import edu.uci.ics.jung.graph.Hypergraph;
-
 import org.apache.commons.collections.CollectionUtils;
 
+import edu.uci.ics.jung.algorithms.scoring.PageRank;
 import edu.uci.ics.jung.graph.Graph;
-import org.apache.commons.collections15.Transformer;
 
 public class GraphMetricUtils {
     private GraphMetricUtils() {

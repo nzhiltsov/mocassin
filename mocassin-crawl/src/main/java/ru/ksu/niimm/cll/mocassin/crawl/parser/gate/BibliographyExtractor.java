@@ -11,7 +11,6 @@
  ******************************************************************************/
 package ru.ksu.niimm.cll.mocassin.crawl.parser.gate;
 
-import java.util.Map;
 
 public interface BibliographyExtractor {
 	/**

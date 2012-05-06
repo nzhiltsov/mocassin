@@ -9,9 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ru.ksu.niimm.cll.mocassin.crawl.arxiv.ArxivDAOFacade;
-import ru.ksu.niimm.cll.mocassin.crawl.arxiv.ArxivModule;
-import ru.ksu.niimm.cll.mocassin.crawl.arxiv.LoadingPdfException;
 import ru.ksu.niimm.cll.mocassin.util.model.ArticleMetadata;
 
 import com.google.inject.Inject;

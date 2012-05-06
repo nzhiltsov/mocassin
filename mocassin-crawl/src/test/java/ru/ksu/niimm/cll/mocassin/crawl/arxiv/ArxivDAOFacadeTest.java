@@ -12,8 +12,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ru.ksu.niimm.cll.mocassin.crawl.arxiv.ArxivDAOFacade;
-import ru.ksu.niimm.cll.mocassin.crawl.arxiv.ArxivModule;
 import ru.ksu.niimm.cll.mocassin.util.model.ArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.util.model.Link;
 

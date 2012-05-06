@@ -13,10 +13,10 @@ package ru.ksu.niimm.cll.mocassin.crawl.analyzer.importance.impl;
 
 import java.util.Map;
 
-import edu.uci.ics.jung.graph.Graph;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.importance.ImportantElementService;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Reference;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElement;
+import edu.uci.ics.jung.graph.Graph;
 
 public class PageRankElementService implements ImportantElementService {
 	private static final double PROBABILITY_OF_RANDOM_JUMP = 0.2;

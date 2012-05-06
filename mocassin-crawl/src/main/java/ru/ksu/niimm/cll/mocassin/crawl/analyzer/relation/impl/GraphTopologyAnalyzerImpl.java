@@ -16,7 +16,6 @@ import static ru.ksu.niimm.cll.mocassin.util.GraphMetricUtils.computePageRank;
 import static ru.ksu.niimm.cll.mocassin.util.GraphMetricUtils.computePreferentialAttachmentScore;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

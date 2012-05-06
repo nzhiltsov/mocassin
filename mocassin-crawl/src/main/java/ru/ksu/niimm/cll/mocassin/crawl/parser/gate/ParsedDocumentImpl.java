@@ -11,7 +11,6 @@
  ******************************************************************************/
 package ru.ksu.niimm.cll.mocassin.crawl.parser.gate;
 
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.ParsedDocument;
 
 public class ParsedDocumentImpl implements ParsedDocument {
     private final String uri;
