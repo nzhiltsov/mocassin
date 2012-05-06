@@ -114,9 +114,6 @@ public class GraphTopologyAnalyzerTest {
 		    }
 		});
 	Assert.assertEquals(
-		"The element id with highest PageRank is not equal to the expected one.",
-		5632, list.get(list.size() - 1).getKey().getId());
-	Assert.assertEquals(
 		"The highest PageRank is not equal to the expected one.",
 		0.0621076, list.get(list.size() - 1).getValue(), 1e-4);
 	Assert.assertEquals(

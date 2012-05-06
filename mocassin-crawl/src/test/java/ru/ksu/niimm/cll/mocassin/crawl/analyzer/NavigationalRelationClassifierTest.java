@@ -77,7 +77,7 @@ public class NavigationalRelationClassifierTest {
 
 	while (it.hasNext() && !(foundFirst && foundSecond)) {
 	    Reference ref = it.next();
-	    if (ref.getId() == 5086) {
+	    if (ref.getId() == 5086 || ref.getId() == 5087) {
 		this.knownRefersToReference = ref;
 		foundFirst = true;
 	    } else if (ref.getId() == 4766) {
