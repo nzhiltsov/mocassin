@@ -17,7 +17,6 @@ import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Reference;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Token;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.util.StopWordLoader;
 
-
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.inject.Inject;

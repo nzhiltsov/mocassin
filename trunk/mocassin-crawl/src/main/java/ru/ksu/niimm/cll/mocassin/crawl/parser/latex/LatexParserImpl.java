@@ -27,13 +27,14 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-
 import net.sourceforge.texlipse.model.DocumentReference;
 import net.sourceforge.texlipse.model.ReferenceEntry;
 import net.sourceforge.texlipse.texparser.LatexLexer;
 import net.sourceforge.texlipse.texparser.LatexParser;
 import net.sourceforge.texlipse.texparser.lexer.LexerException;
+
+import org.slf4j.Logger;
+
 import ru.ksu.niimm.cll.mocassin.crawl.parser.pdf.Latex2PDFMapper;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
 import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;

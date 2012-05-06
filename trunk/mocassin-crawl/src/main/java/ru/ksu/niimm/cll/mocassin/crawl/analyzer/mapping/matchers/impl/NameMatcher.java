@@ -22,10 +22,10 @@ import ru.ksu.niimm.cll.mocassin.crawl.analyzer.mapping.MappingElement;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.mapping.matchers.Matcher;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.latex.Edge;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.latex.Node;
-import ru.ksu.niimm.cll.mocassin.util.StringSimilarityEvaluator;
-import ru.ksu.niimm.cll.mocassin.util.StringSimilarityEvaluator.SimilarityMetrics;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyConcept;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyFacade;
+import ru.ksu.niimm.cll.mocassin.util.StringSimilarityEvaluator;
+import ru.ksu.niimm.cll.mocassin.util.StringSimilarityEvaluator.SimilarityMetrics;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;

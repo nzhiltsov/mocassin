@@ -34,164 +34,133 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 class GateCitationSearcher implements CitationSearcher {
-	private final String ARXMLIV_MARKUP_NAME;
-	private final String ARXMLIV_CITE_ANNOTATION_NAME;
-	private final String TOKEN_ANNOTATION_NAME;
-	@InjectLogger
-	private Logger logger;
+    private final String ARXMLIV_MARKUP_NAME;
+    private final String ARXMLIV_CITE_ANNOTATION_NAME;
+    private final String TOKEN_ANNOTATION_NAME;
+    @InjectLogger
+    private Logger logger;
 
-	private final GateDocumentDAO gateDocumentDAO;
+    private final AnnotationUtil annotationUtil;
 
-	private final AnnotationUtil annotationUtil;
+    private final BibliographyExtractor bibliographyExtractor;
 
-	private final BibliographyExtractor bibliographyExtractor;
+    @Inject
+    GateCitationSearcher(
+	    AnnotationUtil annotationUtil,
+	    BibliographyExtractor bibliographyExtractor,
+	    @Named("arxmliv.markup.name") String arxmlivMarkupName,
+	    @Named("arxmliv.cite.annotation.name") String arxmlivCiteAnnotationName,
+	    @Named("token.annotation.name") String tokenAnnotationName) {
+	this.ARXMLIV_MARKUP_NAME = arxmlivMarkupName;
+	this.ARXMLIV_CITE_ANNOTATION_NAME = arxmlivCiteAnnotationName;
+	this.TOKEN_ANNOTATION_NAME = tokenAnnotationName;
+	this.annotationUtil = annotationUtil;
+	this.bibliographyExtractor = bibliographyExtractor;
+    }
 
-	@Inject
-	GateCitationSearcher(
-			GateDocumentDAO gateDocumentDAO,
-			AnnotationUtil annotationUtil,
-			BibliographyExtractor bibliographyExtractor,
-			@Named("arxmliv.markup.name") String arxmlivMarkupName,
-			@Named("arxmliv.cite.annotation.name") String arxmlivCiteAnnotationName,
-			@Named("token.annotation.name") String tokenAnnotationName) {
-		this.ARXMLIV_MARKUP_NAME = arxmlivMarkupName;
-		this.ARXMLIV_CITE_ANNOTATION_NAME = arxmlivCiteAnnotationName;
-		this.TOKEN_ANNOTATION_NAME = tokenAnnotationName;
-		this.gateDocumentDAO = gateDocumentDAO;
-		this.annotationUtil = annotationUtil;
-		this.bibliographyExtractor = bibliographyExtractor;
+    @Override
+    public List<String> getCitationSentences(Document gateDocument,
+	    String paperUrl) {
+	String documentId = StringUtil.extractMathnetKeyFromURI(paperUrl);
+	AnnotationSet citations = gateDocument.getAnnotations(
+		ARXMLIV_MARKUP_NAME).get(ARXMLIV_CITE_ANNOTATION_NAME);
+	return extractSentences(gateDocument, citations, documentId);
+
+    }
+
+    @Override
+    public LinkedList<Citation> getCitations(Document gateDocument,
+	    String paperUrl) {
+	LinkedList<Citation> citations = new LinkedList<Citation>();
+	String documentId = StringUtil.extractMathnetKeyFromURI(paperUrl);
+	AnnotationSet tokenSet = gateDocument.getAnnotations(
+		GateFormatConstants.DEFAULT_ANNOTATION_SET_NAME).get(
+		TOKEN_ANNOTATION_NAME);
+	ArrayList<Annotation> tokenList = new ArrayList<Annotation>(tokenSet);
+	Collections.sort(tokenList, new OffsetComparator());
+	StreamHandler<Annotation> streamHandler = new StreamHandler<Annotation>(
+		tokenList, new OpenCitationPredicate(),
+		new NumberCitationPredicate(), new ClosingCitationPredicate());
+	List<Annotation> citationNumberAnnotations = streamHandler.process();
+	for (Annotation a : citationNumberAnnotations) {
+	    String sentence = getSentence(gateDocument, a, documentId);
+	    String numberStr = (String) a.getFeatures().get(
+		    GateFormatConstants.TOKEN_FEATURE_NAME);
+	    Citation citation = new Citation.Builder(documentId)
+		    .anchorText(sentence).number(Integer.parseInt(numberStr))
+		    .build();
+	    citations.add(citation);
 	}
+	return citations;
+
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<String> extractSentences(Document gateDocument,
+	    AnnotationSet citations, String documentId) {
+	List<Annotation> sortedCitations = new ArrayList<Annotation>(citations);
+	Collections.sort(sortedCitations);
+	List<String> citationSentences = new LinkedList<String>();
+	for (Annotation citation : sortedCitations) {
+	    String sentence = getSentence(gateDocument, citation, documentId);
+	    citationSentences.add(sentence);
+	}
+	return citationSentences;
+    }
+
+    private String getSentence(Document gateDocument, Annotation citation,
+	    String documentId) {
+	Annotation enclosingSentence = annotationUtil.getEnclosingSentence(
+		gateDocument, citation);
+	String numberStr = (String) citation.getFeatures().get(
+		GateFormatConstants.TOKEN_FEATURE_NAME);
+	int number = Integer.parseInt(numberStr);
+	String toKey = bibliographyExtractor.getToKey(documentId, number);
+	String sentence = annotationUtil
+		.getTextContentsForAnnotationWithReplacements(gateDocument,
+			enclosingSentence, citation, toKey != null ? toKey
+				: numberStr);
+
+	return sentence;
+    }
+
+    private static class OpenCitationPredicate implements Predicate<Annotation> {
+
+	private static final String OPENING_CITATION_MARK = "[";
 
 	@Override
-	public List<String> getCitationSentences(String documentId) {
-		String gateDocumentId = StringUtil.arxivid2gateid(documentId);
-		Document gateDocument = null;
-		try {
-			gateDocument = gateDocumentDAO.load(gateDocumentId);
-			AnnotationSet citations = gateDocument.getAnnotations(
-					ARXMLIV_MARKUP_NAME).get(ARXMLIV_CITE_ANNOTATION_NAME);
-			return extractSentences(gateDocument, citations, documentId);
-		} catch (AccessGateDocumentException e) {
-			logger.error("Failed to load the document: {}", documentId, e);
-			throw new RuntimeException(e);
-		} catch (AccessGateStorageException e) {
-			logger.error(
-					"Failed to access the storage while loading the document: {}",
-					documentId, e);
-			throw new RuntimeException(e);
-		} finally {
-			gateDocumentDAO.release(gateDocument);
-		}
+	public boolean apply(Annotation input) {
+	    String tokenValue = (String) input.getFeatures().get(
+		    GateFormatConstants.TOKEN_FEATURE_NAME);
+	    return tokenValue.equals(OPENING_CITATION_MARK);
 	}
+
+    }
+
+    private static class NumberCitationPredicate implements
+	    Predicate<Annotation> {
+	private static final Pattern NUMBER_PATTERN = Pattern.compile("[0-9]+");
 
 	@Override
-	public LinkedList<Citation> getCitations(String documentId) {
-		LinkedList<Citation> citations = new LinkedList<Citation>();
-		String gateDocumentId = StringUtil.arxivid2gateid(documentId);
-		Document gateDocument = null;
-		try {
-			gateDocument = gateDocumentDAO.load(gateDocumentId);
-			AnnotationSet tokenSet = gateDocument.getAnnotations(
-					GateFormatConstants.DEFAULT_ANNOTATION_SET_NAME).get(
-					TOKEN_ANNOTATION_NAME);
-			ArrayList<Annotation> tokenList = new ArrayList<Annotation>(
-					tokenSet);
-			Collections.sort(tokenList, new OffsetComparator());
-			StreamHandler<Annotation> streamHandler = new StreamHandler<Annotation>(
-					tokenList, new OpenCitationPredicate(),
-					new NumberCitationPredicate(),
-					new ClosingCitationPredicate());
-			List<Annotation> citationNumberAnnotations = streamHandler
-					.process();
-			for (Annotation a : citationNumberAnnotations) {
-				String sentence = getSentence(gateDocument, a, documentId);
-				String numberStr = (String) a.getFeatures().get(
-						GateFormatConstants.TOKEN_FEATURE_NAME);
-				Citation citation = new Citation.Builder(documentId)
-						.anchorText(sentence)
-						.number(Integer.parseInt(numberStr)).build();
-				citations.add(citation);
-			}
-			return citations;
-
-		} catch (AccessGateDocumentException e) {
-			logger.error("Failed to load the document: {}", documentId, e);
-			throw new RuntimeException(e);
-		} catch (AccessGateStorageException e) {
-			logger.error(
-					"Failed to access the storage while loading the document: {}",
-					documentId, e);
-			throw new RuntimeException(e);
-		} finally {
-			gateDocumentDAO.release(gateDocument);
-		}
+	public boolean apply(Annotation input) {
+	    String tokenValue = (String) input.getFeatures().get(
+		    GateFormatConstants.TOKEN_FEATURE_NAME);
+	    return NUMBER_PATTERN.matcher(tokenValue).matches();
 	}
 
-	private List<String> extractSentences(Document gateDocument,
-			AnnotationSet citations, String documentId) {
-		List<Annotation> sortedCitations = new ArrayList<Annotation>(citations);
-		Collections.sort(sortedCitations);
-		List<String> citationSentences = new LinkedList<String>();
-		for (Annotation citation : sortedCitations) {
-			String sentence = getSentence(gateDocument, citation, documentId);
-			citationSentences.add(sentence);
-		}
-		return citationSentences;
+    }
+
+    private static class ClosingCitationPredicate implements
+	    Predicate<Annotation> {
+
+	private static final String CLOSING_CITATION_MARK = "]";
+
+	@Override
+	public boolean apply(Annotation input) {
+	    String tokenValue = (String) input.getFeatures().get(
+		    GateFormatConstants.TOKEN_FEATURE_NAME);
+	    return tokenValue.equals(CLOSING_CITATION_MARK);
 	}
 
-	private String getSentence(Document gateDocument, Annotation citation,
-			String documentId) {
-		Annotation enclosingSentence = annotationUtil.getEnclosingSentence(
-				gateDocument, citation);
-		String numberStr = (String) citation.getFeatures().get(
-				GateFormatConstants.TOKEN_FEATURE_NAME);
-		int number = Integer.parseInt(numberStr);
-		String toKey = bibliographyExtractor.getToKey(documentId, number);
-		String sentence = annotationUtil
-				.getTextContentsForAnnotationWithReplacements(gateDocument,
-						enclosingSentence, citation, toKey != null ? toKey
-								: numberStr);
-
-		return sentence;
-	}
-
-	private static class OpenCitationPredicate implements Predicate<Annotation> {
-
-		private static final String OPENING_CITATION_MARK = "[";
-
-		@Override
-		public boolean apply(Annotation input) {
-			String tokenValue = (String) input.getFeatures().get(
-					GateFormatConstants.TOKEN_FEATURE_NAME);
-			return tokenValue.equals(OPENING_CITATION_MARK);
-		}
-
-	}
-
-	private static class NumberCitationPredicate implements
-			Predicate<Annotation> {
-		private static final Pattern NUMBER_PATTERN = Pattern.compile("[0-9]+");
-
-		@Override
-		public boolean apply(Annotation input) {
-			String tokenValue = (String) input.getFeatures().get(
-					GateFormatConstants.TOKEN_FEATURE_NAME);
-			return NUMBER_PATTERN.matcher(tokenValue).matches();
-		}
-
-	}
-
-	private static class ClosingCitationPredicate implements
-			Predicate<Annotation> {
-
-		private static final String CLOSING_CITATION_MARK = "]";
-
-		@Override
-		public boolean apply(Annotation input) {
-			String tokenValue = (String) input.getFeatures().get(
-					GateFormatConstants.TOKEN_FEATURE_NAME);
-			return tokenValue.equals(CLOSING_CITATION_MARK);
-		}
-
-	}
+    }
 }

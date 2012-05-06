@@ -14,7 +14,6 @@ package ru.ksu.niimm.cll.mocassin.frontend.common.client;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;

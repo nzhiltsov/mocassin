@@ -14,7 +14,7 @@
 	</property>
 	<property>
 		<name>plugin.includes</name>
-		<value>protocol-file|urlfilter-regex|parse-mocassin-(header|pdflatex|arxmliv|gate|structure)|urlnormalizer-(pass|regex|basic)</value>
+		<value>protocol-file|urlfilter-regex|parse-mocassin-(header|pdflatex|arxmliv|structure)|urlnormalizer-(pass|regex|basic)</value>
 	</property>
 	<property>
 		<name>file.content.limit</name>

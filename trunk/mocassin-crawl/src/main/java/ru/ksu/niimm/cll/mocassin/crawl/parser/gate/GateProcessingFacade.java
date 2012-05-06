@@ -18,19 +18,11 @@ import java.io.InputStream;
 
 public interface GateProcessingFacade {
     /**
-     * processes a document (stored in the default document store) with a given
-     * id by the configurable set of GATE plugins
+     * processes a given file with a given id by the configurable set of GATE
+     * plugins
      * 
-     * @param document
-     * @throws AccessGateStorageException
-     * @throws AccessGateDocumentException
-     * @throws ProcessException
-     */
-    void process(String paperId) throws AccessGateDocumentException,
-	    AccessGateStorageException, ProcessException;
-    /**
-     * processes a given file with a given
-     * id by the configurable set of GATE plugins
+     * WARNING: client code should release resources related to the returned
+     * document by itself using {@code Factory.deleteResource()}
      * 
      * @param document
      * @throws AccessGateStorageException
@@ -39,10 +31,13 @@ public interface GateProcessingFacade {
      * @returns document with new annotations
      */
     Document process(String documentId, File file, String encoding);
-    
+
     /**
-     * processes a given input stream with a given
-     * id by the configurable set of GATE plugins
+     * processes a given input stream with a given id by the configurable set of
+     * GATE plugins
+     * 
+     * WARNING: client code should release resources related to the returned
+     * document by itself using {@code Factory.deleteResource()}
      * 
      * @param document
      * @throws AccessGateStorageException

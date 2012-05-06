@@ -64,7 +64,6 @@
 		<plugin id="parse-mocassin-header" />
 		<plugin id="parse-mocassin-pdflatex" />
 		<plugin id="parse-mocassin-arxmliv" />
-		<plugin id="parse-mocassin-gate" />
 		<plugin id="parse-mocassin-structure" />
 	</mimeType>
 
@@ -94,9 +93,7 @@
 			extension-id="ru.ksu.niimm.cll.mocassin.crawl.nutch.MocassinPdflatexParser" />
 		<alias name="parse-mocassin-arxmliv"
 			extension-id="ru.ksu.niimm.cll.mocassin.crawl.nutch.MocassinArxmlivParser" />
-			<alias name="parse-mocassin-gate"
-			extension-id="ru.ksu.niimm.cll.mocassin.crawl.nutch.MocassinGateParser" />
-						<alias name="parse-mocassin-structure"
+		<alias name="parse-mocassin-structure"
 			extension-id="ru.ksu.niimm.cll.mocassin.crawl.nutch.MocassinStructureParser" />
 	</aliases>
 

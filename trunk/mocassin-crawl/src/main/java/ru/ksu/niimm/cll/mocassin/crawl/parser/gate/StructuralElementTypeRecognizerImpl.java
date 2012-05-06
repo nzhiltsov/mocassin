@@ -18,8 +18,8 @@ import java.util.SortedMap;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 
-import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.arxmliv.ArxmlivStructureElementTypes;
+import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.util.StringSimilarityEvaluator;
 import ru.ksu.niimm.cll.mocassin.util.StringSimilarityEvaluator.SimilarityMetrics;
 

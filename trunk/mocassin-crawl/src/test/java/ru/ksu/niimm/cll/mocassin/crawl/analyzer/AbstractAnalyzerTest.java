@@ -1,5 +1,8 @@
 package ru.ksu.niimm.cll.mocassin.crawl.analyzer;
 
+import edu.uci.ics.jung.graph.Graph;
+import gate.Document;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -18,8 +21,6 @@ import ru.ksu.niimm.cll.mocassin.crawl.parser.arxmliv.ArxmlivProducer;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.GateModule;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.GateProcessingFacade;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.NlpModule;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.ParsedDocument;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.ParsedDocumentImpl;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Reference;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.latex.LatexDocumentHeaderPatcher;
@@ -36,9 +37,6 @@ import com.aliasi.matrix.Vector;
 import com.google.inject.Inject;
 import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
-
-import edu.uci.ics.jung.graph.Graph;
-import gate.Document;
 
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext({ AnalyzerModule.class, NlpModule.class, LatexParserModule.class,

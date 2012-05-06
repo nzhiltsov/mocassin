@@ -44,7 +44,8 @@ public class GateModule extends AbstractModule {
 	    throw new RuntimeException(
 		    "Failed to load the GATE module configuration.");
 	}
-	System.setProperty(GATE_HOME_CONF_PROPERTY, properties.getProperty(GATE_HOME_CONF_PROPERTY));
+	System.setProperty(GATE_HOME_CONF_PROPERTY,
+		properties.getProperty(GATE_HOME_CONF_PROPERTY));
 	System.setProperty(GATE_BUILTIN_CREOLE_DIR_CONF_PROPERTY,
 		properties.getProperty(GATE_BUILTIN_CREOLE_DIR_CONF_PROPERTY));
 	try {
@@ -52,7 +53,6 @@ public class GateModule extends AbstractModule {
 	} catch (GateException e) {
 	    throw new RuntimeException("Failed to initialize GATE.");
 	}
-	bind(GateDocumentDAO.class).to(GateDocumentDAOImpl.class);
 	bind(GateProcessingFacade.class).to(GateProcessingFacadeImpl.class);
 	bind(AnnotationUtil.class).to(AnnotationUtilImpl.class);
 	bindListener(Matchers.any(), new Slf4jTypeListener());

@@ -11,25 +11,21 @@
  ******************************************************************************/
 package ru.ksu.niimm.cll.mocassin.crawl.parser.gate;
 
-import java.io.File;
-import java.io.InputStream;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.net.MalformedURLException;
-
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-
 import gate.Corpus;
 import gate.Document;
 import gate.Factory;
 import gate.creole.ExecutionException;
 import gate.creole.ResourceInstantiationException;
 import gate.creole.SerialAnalyserController;
-import gate.persist.PersistenceException;
-import gate.security.SecurityException;
 
-import ru.ksu.niimm.cll.mocassin.util.StringUtil;
+import java.io.File;
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.io.Writer;
+
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+
 import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
 
 import com.google.inject.Inject;
@@ -40,14 +36,10 @@ class GateProcessingFacadeImpl implements GateProcessingFacade {
 
     private final AnnieControllerProvider<SerialAnalyserController> annieControllerProvider;
 
-    private final GateDocumentDAO gateDocumentDAO;
-
     @Inject
     GateProcessingFacadeImpl(
-	    AnnieControllerProvider<SerialAnalyserController> annieControllerProvider,
-	    GateDocumentDAO gateDocumentDAO) {
+	    AnnieControllerProvider<SerialAnalyserController> annieControllerProvider) {
 	this.annieControllerProvider = annieControllerProvider;
-	this.gateDocumentDAO = gateDocumentDAO;
     }
 
     @Override
@@ -74,28 +66,6 @@ class GateProcessingFacadeImpl implements GateProcessingFacade {
 	    logger.error("Failed to process a document with id = {}.", e);
 	    throw new RuntimeException(e);
 	}
-    }
-
-    @Override
-    public void process(String paperId) throws AccessGateDocumentException,
-	    AccessGateStorageException, ProcessException {
-	Document document = gateDocumentDAO.load(StringUtil
-		.arxivid2gateid(paperId));
-	try {
-	    executeProcessor(paperId, document);
-	    document.getDataStore().sync(document);
-	} catch (PersistenceException e) {
-	    logger.error("Failed to update the document with id='{}'", paperId,
-		    e);
-	    throw new ProcessException(e);
-	} catch (SecurityException e) {
-	    logger.error("Failed to update the document with id='{}'", paperId,
-		    e);
-	    throw new ProcessException(e);
-	} finally {
-	    gateDocumentDAO.release(document);
-	}
-
     }
 
     private Document executeProcessor(String arxivId, Document document)

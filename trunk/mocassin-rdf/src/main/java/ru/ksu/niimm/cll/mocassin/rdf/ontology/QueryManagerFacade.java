@@ -13,9 +13,6 @@ package ru.ksu.niimm.cll.mocassin.rdf.ontology;
 
 import java.util.List;
 
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
-
 public interface QueryManagerFacade {
 
 	/**

@@ -11,7 +11,6 @@
  ******************************************************************************/
 package ru.ksu.niimm.cll.mocassin.crawl.parser.gate;
 
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Feature;
 
 public class PosFeature extends AbstractPartionableFeature implements Feature {
 

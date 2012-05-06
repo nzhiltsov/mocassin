@@ -14,8 +14,6 @@ package ru.ksu.niimm.cll.mocassin.crawl.parser.gate;
 import java.io.Serializable;
 import java.util.Comparator;
 
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElement;
-
 @SuppressWarnings("serial")
 public class StructuralElementByLocationComparator implements
 		Serializable, Comparator<StructuralElement> {

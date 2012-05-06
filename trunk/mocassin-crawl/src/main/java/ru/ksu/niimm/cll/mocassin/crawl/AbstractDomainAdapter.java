@@ -20,7 +20,6 @@ import org.slf4j.Logger;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.ReferenceSearcher;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.ReferenceStatementGenerator;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.arxmliv.ArxmlivProducer;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.GateDocumentDAO;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.GateProcessingFacade;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.latex.LatexDocumentDAO;
@@ -46,8 +45,6 @@ public abstract class AbstractDomainAdapter implements DomainAdapter {
     protected LatexDocumentDAO latexDocumentDAO;
     @Inject
     protected ArxmlivProducer arxmlivProducer;
-    @Inject
-    protected GateDocumentDAO gateDocumentDAO;
     @Inject
     protected GateProcessingFacade gateProcessingFacade;
     @Inject

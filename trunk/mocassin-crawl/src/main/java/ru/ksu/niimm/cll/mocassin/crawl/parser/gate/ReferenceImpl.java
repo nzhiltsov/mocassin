@@ -14,9 +14,6 @@ package ru.ksu.niimm.cll.mocassin.crawl.parser.gate;
 import java.util.ArrayList;
 import java.util.List;
 
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.ParsedDocument;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Reference;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Token;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyRelations;
 
 public class ReferenceImpl implements Reference {

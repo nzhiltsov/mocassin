@@ -14,17 +14,6 @@ import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.rio.RDFFormat;
 
-import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyClasses;
-import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyRelations;
-import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyBlankNode;
-import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyConcept;
-import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyLiteral;
-import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyRelation;
-import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyResource;
-import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyTestModule;
-import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyTriple;
-import ru.ksu.niimm.cll.mocassin.rdf.ontology.QueryManagerFacade;
-import ru.ksu.niimm.cll.mocassin.rdf.ontology.QueryStatement;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.provider.RepositoryProvider;
 
 import com.google.inject.Inject;

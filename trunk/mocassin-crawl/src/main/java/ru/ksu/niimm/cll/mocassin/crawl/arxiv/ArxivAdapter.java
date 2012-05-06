@@ -11,6 +11,9 @@
  ******************************************************************************/
 package ru.ksu.niimm.cll.mocassin.crawl.arxiv;
 
+import edu.uci.ics.jung.graph.Graph;
+import gate.Document;
+
 import java.io.File;
 import java.io.InputStream;
 import java.util.List;
@@ -26,9 +29,6 @@ import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
 import ru.ksu.niimm.cll.mocassin.util.model.ArticleMetadata;
 
 import com.google.inject.Inject;
-
-import edu.uci.ics.jung.graph.Graph;
-import gate.Document;
 
 public class ArxivAdapter extends AbstractDomainAdapter implements
 	DomainAdapter {
@@ -62,8 +62,6 @@ public class ArxivAdapter extends AbstractDomainAdapter implements
 	latex2pdfMapper.generateSummary(arxivId);
 	// Step 4
 	String arxmlivFilePath = arxmlivProducer.produce(arxivId);
-	// Step 5
-	gateDocumentDAO.save(arxivId, new File(arxmlivFilePath), "utf8");
 	Document document = gateProcessingFacade.process(arxivId, new File(
 		arxmlivFilePath), "utf8");
 	// Step 6

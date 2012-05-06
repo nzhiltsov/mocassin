@@ -3,6 +3,7 @@ package ru.ksu.niimm.cll.mocassin.crawl.nutch;
 import static java.lang.String.format;
 import edu.uci.ics.jung.graph.Graph;
 import gate.Document;
+import gate.Factory;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -28,8 +29,6 @@ import ru.ksu.niimm.cll.mocassin.crawl.parser.arxmliv.ArxmlivProducer;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.GateModule;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.GateProcessingFacade;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.NlpModule;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.ParsedDocument;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.ParsedDocumentImpl;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Reference;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.latex.LatexParserModule;
@@ -105,6 +104,7 @@ public class MocassinStructureParser implements Parser {
 		    new File(arxmlivDocFilePath), GATE_DOCUMENT_ENCODING);
 	    Graph<StructuralElement, Reference> graph = referenceSearcher
 		    .retrieveStructuralGraph(document, metadata.getId());
+	    Factory.deleteResource(document);
 	    List<Statement> triples = referenceStatementGenerator
 		    .convert(graph);
 	    if (!ontologyResourceFacade.insert(triples)) {
@@ -118,11 +118,6 @@ public class MocassinStructureParser implements Parser {
 	    return new ParseStatus(ParseStatus.FAILED, "").getEmptyParseResult(
 		    content.getUrl(), getConf());
 	}
-    }
-
-    private static ParsedDocument createParsedDocument(ArticleMetadata metadata) {
-	ParsedDocument document = new ParsedDocumentImpl(metadata.getId());
-	return document;
     }
 
     private static ArticleMetadata createMetadata(String mathnetKey) {

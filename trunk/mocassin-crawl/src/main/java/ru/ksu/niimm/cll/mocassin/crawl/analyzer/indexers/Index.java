@@ -16,7 +16,6 @@ import java.util.Map;
 
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Reference;
 
-
 import com.aliasi.matrix.Vector;
 
 public interface Index {

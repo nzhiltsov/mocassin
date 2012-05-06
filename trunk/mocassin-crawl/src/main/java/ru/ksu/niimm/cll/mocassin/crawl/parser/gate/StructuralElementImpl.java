@@ -18,7 +18,6 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyClasses;
 
 import com.google.common.base.Predicate;

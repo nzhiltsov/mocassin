@@ -12,6 +12,10 @@
 package ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl;
 
 import static java.lang.String.format;
+import static ru.ksu.niimm.cll.mocassin.rdf.ontology.model.URIConstants.createIntegerTriple;
+import static ru.ksu.niimm.cll.mocassin.rdf.ontology.model.URIConstants.createLiteralTriple;
+import static ru.ksu.niimm.cll.mocassin.rdf.ontology.model.URIConstants.createRdfTypeTriple;
+import static ru.ksu.niimm.cll.mocassin.rdf.ontology.model.URIConstants.createTriple;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,9 +27,6 @@ import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Reference;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyRelations;
-
-import static ru.ksu.niimm.cll.mocassin.rdf.ontology.model.URIConstants.*;
-
 import edu.uci.ics.jung.graph.Graph;
 
 public class ReferenceStatementGeneratorImpl implements

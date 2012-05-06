@@ -11,8 +11,6 @@
  ******************************************************************************/
 package ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.impl;
 
-import static java.lang.String.format;
-
 import org.slf4j.Logger;
 
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.ExemplifiesRelationAnalyzer;
@@ -20,10 +18,8 @@ import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.ParsedDocument;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Reference;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.ReferenceImpl;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElement;
+import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElementImpl.TypePredicate;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElementSearcher;
-
-import static ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElementImpl.TypePredicate;
-
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyRelations;
 import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
