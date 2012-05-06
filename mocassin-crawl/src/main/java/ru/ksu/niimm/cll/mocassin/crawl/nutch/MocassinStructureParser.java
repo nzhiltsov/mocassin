@@ -18,6 +18,7 @@ import gate.Factory;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.hadoop.conf.Configuration;
@@ -43,6 +44,7 @@ import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.NlpModule;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Reference;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.latex.LatexParserModule;
+import ru.ksu.niimm.cll.mocassin.crawl.parser.pdf.PdfHighlighter;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.pdf.PdfParserModule;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyModule;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyResourceFacade;
@@ -78,6 +80,8 @@ public class MocassinStructureParser implements Parser {
 
     private ArxmlivProducer arxmlivProducer;
 
+    private PdfHighlighter pdfHighlighter;
+
     public Configuration getConf() {
 	return conf;
     }
@@ -100,6 +104,7 @@ public class MocassinStructureParser implements Parser {
 		.getInstance(ReferenceStatementGenerator.class);
 	ontologyResourceFacade = injector
 		.getInstance(OntologyResourceFacade.class);
+	pdfHighlighter = injector.getInstance(PdfHighlighter.class);
     }
 
     @Override
@@ -118,9 +123,11 @@ public class MocassinStructureParser implements Parser {
 	    Factory.deleteResource(document);
 	    List<Statement> triples = referenceStatementGenerator
 		    .convert(graph);
+
 	    if (!ontologyResourceFacade.insert(triples)) {
 		throw new RuntimeException("Failed to insert triples.");
 	    }
+	    generateHighlightedPdfs(mathnetKey, graph.getVertices());
 	    return ParseResult.createParseResult(content.getUrl(),
 		    new ParseImpl("", new ParseData(ParseStatus.STATUS_SUCCESS,
 			    "", NO_OUTLINKS, new Metadata())));
@@ -142,6 +149,28 @@ public class MocassinStructureParser implements Parser {
 		StringUtil.extractPaperNumberFromMathnetKey(mathnetKey))));
 	metadata.setLinks(links);
 	return metadata;
+    }
+
+    private void generateHighlightedPdfs(String mathnetKey,
+	    Collection<StructuralElement> structuralElements) {
+	for (StructuralElement element : structuralElements) {
+	    int latexStartLine = element.getLatexStartLine();
+	    int latexEndLine = element.getLatexEndLine();
+	    if (latexStartLine != 0 && latexEndLine != 0) {
+		try {
+		    pdfHighlighter.generateHighlightedPdf(mathnetKey,
+			    element.getId(), latexStartLine, latexEndLine);
+		} catch (Exception e) {
+		    LOG.error(
+			    "Failed to generate the highlighted PDF for a segment with id = {}",
+			    format("%s/%d", mathnetKey, element.getId()), e);
+		}
+	    } else {
+		LOG.warn(
+			"Skipped generating the highlighted PDF for a segment with id = {}. Perhaps, the segment location is incorrect.",
+			format("%s/%d", mathnetKey, element.getId()));
+	    }
+	}
     }
 
 }

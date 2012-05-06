@@ -86,10 +86,10 @@ class PdflatexWrapperImpl extends AbstractUnixCommandWrapper implements
     private void executeCommands(String arxivId, String[] cmdArray)
 	    throws PdflatexCompilationException {
 	try {
-	    if (!execute(cmdArray, SUCCESS_FLAG))
+	    if (!execute(cmdArray, null))
 		throw new RuntimeException(
 			"Not normal output while compiling PDF");
-	    execute(cmdArray, SUCCESS_FLAG); // double calling is necessary for
+	    execute(cmdArray, null); // double calling is necessary for
 					     // correct
 	    // cross-references
 	} catch (Exception e) {
