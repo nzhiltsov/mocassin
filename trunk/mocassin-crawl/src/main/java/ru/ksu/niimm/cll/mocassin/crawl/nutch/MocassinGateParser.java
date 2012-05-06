@@ -1,5 +1,8 @@
 package ru.ksu.niimm.cll.mocassin.crawl.nutch;
 
+import gate.Gate;
+import gate.util.GateException;
+
 import java.io.File;
 
 import org.apache.hadoop.conf.Configuration;
@@ -28,7 +31,6 @@ import com.google.inject.Injector;
 public class MocassinGateParser implements Parser {
     private static final Logger LOG = LoggerFactory
 	    .getLogger(MocassinGateParser.class);
-    private static final Outlink[] NO_OUTLINKS = new Outlink[0];
     private static final String GATE_DOCUMENT_ENCODING = "utf8";
 
     private Configuration conf;
@@ -68,14 +70,12 @@ public class MocassinGateParser implements Parser {
 	    gateDocumentDAO.save(mathnetKey, new File(arxmlivDocFilePath),
 		    GATE_DOCUMENT_ENCODING);
 	    gateProcessingFacade.process(mathnetKey);
-	    return ParseResult.createParseResult(content.getUrl(),
-		    new ParseImpl("", new ParseData(ParseStatus.STATUS_SUCCESS,
-			    "", NO_OUTLINKS, new Metadata())));
 	} catch (Throwable e) {
 	    LOG.error("Failed to parse a document={}.", mathnetKey, e);
 	    return new ParseStatus(ParseStatus.FAILED, "").getEmptyParseResult(
 		    content.getUrl(), getConf());
 	}
+	return null;
     }
 
 }

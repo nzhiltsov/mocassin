@@ -82,11 +82,7 @@ class GateDocumentDAOImpl implements GateDocumentDAO {
 		this.ARXMLIV_MARKUP_NAME_PROPERTY = arxmlivMarkupName;
 		this.TITLE_ANNOTATION_NAME_PROPERTY = titleAnnotationName;
 		this.ARXMLIV_CREATOR_PROPERTY = arxmlivCreatorAnnotationName;
-		System.setProperty("gate.home", GATE_HOME_PROPERTY);
-		System.setProperty("gate.builtin.creole.dir",
-				GATE_BUILTIN_CREOLE_DIR_PROPERTY);
 		try {
-			Gate.init();
 			this.dataStore = new SerialDataStore(GATE_STORAGE_DIR_PROPERTY);
 			getDataStore().open();
 		} catch (GateException e) {

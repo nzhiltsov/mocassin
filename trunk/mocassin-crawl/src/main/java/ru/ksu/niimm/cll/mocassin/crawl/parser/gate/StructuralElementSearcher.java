@@ -15,6 +15,7 @@ import java.util.List;
 
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyClasses;
 import edu.uci.ics.jung.graph.Graph;
+import gate.Document;
 
 /**
  * Represents a functionality of searching the structural elements in parsed
@@ -24,36 +25,31 @@ import edu.uci.ics.jung.graph.Graph;
  * 
  */
 public interface StructuralElementSearcher {
-	/**
-	 * retrieve all the structural element of a given document
-	 * 
-	 * @param document
-	 * @return
-	 */
-	List<StructuralElement> retrieveElements(ParsedDocument document);
+    /**
+     * This method retrieves all the structural elements of a given document
+     * 
+     * @param document
+     *            GATE document to be analyzed
+     * @param paperUrl
+     *            paper URL, e.g. 'http://mathnet.ru/ivm18'
+     * @returns list of structural elements
+     */
+    List<StructuralElement> retrieveElements(Document document, String paperUrl);
 
-	/**
-	 * returns element by id for a given document
-	 * 
-	 * @param document
-	 * @param id
-	 * @return null if the element is not found
-	 */
-	StructuralElement findById(ParsedDocument document, int id);
-
-	/**
-	 * returns the closest predecessor of element with given id, filtering by
-	 * its type name if necessary
-	 * 
-	 * @param document
-	 * @param id
-	 * @param filterTypes
-	 * @return
-	 */
-	StructuralElement findClosestPredecessor(ParsedDocument document, int id,
-			MocassinOntologyClasses... filterPredecessorTypes);
-
-	StructuralElement findClosestPredecessor(StructuralElement element,
-			MocassinOntologyClasses[] validDomains,
-			Graph<StructuralElement, Reference> graph);
+    /**
+     * 
+     * This method finds the closest element, which follows by the given
+     * element, checking its type using given domains.
+     * 
+     * @param element
+     *            given element
+     * @param validDomains
+     *            domains to filter
+     * @param graph
+     *            graph that contains both the elements
+     * @return
+     */
+    StructuralElement findClosestPredecessor(StructuralElement element,
+	    MocassinOntologyClasses[] validDomains,
+	    Graph<StructuralElement, Reference> graph);
 }

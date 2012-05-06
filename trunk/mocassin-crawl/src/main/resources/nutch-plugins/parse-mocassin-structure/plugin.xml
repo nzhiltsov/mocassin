@@ -16,8 +16,8 @@
  limitations under the License.
 -->
 <plugin
-   id="index-mocassin-rdf"
-   name="Mocassin RDF Index Plug-in"
+   id="parse-mocassin-structure"
+   name="Mocassin Structure Parse Plug-in"
    version="1.0.0"
    provider-name="nutch.org">
 
@@ -29,16 +29,18 @@
 
    <requires>
       <import plugin="nutch-extensionpoints"/>
-      <import plugin="index-mocassin-structure"/>
+       <import plugin="parse-mocassin-gate"/>
    </requires>
 
-   <extension id="ru.ksu.niimm.cll.mocassin.crawl.nutch.MocassinRdfIndexer"
-              name="MocassinRdfIndexer" 
-              point="org.apache.nutch.indexer.IndexingFilter">
+   <extension id="ru.ksu.niimm.cll.mocassin.crawl.nutch.MocassinStructureParser"
+              name="MocassinStructureParser" 
+              point="org.apache.nutch.parse.Parser">
 
-      <implementation id="ru.ksu.niimm.cll.mocassin.crawl.nutch.MocassinRdfIndexer" 
-                      class="ru.ksu.niimm.cll.mocassin.crawl.nutch.MocassinRdfIndexer"/>
+      <implementation id="ru.ksu.niimm.cll.mocassin.crawl.nutch.MocassinStructureParser" 
+                      class="ru.ksu.niimm.cll.mocassin.crawl.nutch.MocassinStructureParser">
+        <parameter name="contentType" value="application/x-tex"/>
+        <parameter name="pathSuffix"  value="tex"/>
+      </implementation>
       
    </extension>
-
 </plugin>
