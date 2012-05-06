@@ -23,6 +23,8 @@ import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.util.AnnotationUtilImpl;
 import ru.ksu.niimm.cll.mocassin.util.inject.log.Slf4jTypeListener;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Scope;
+import com.google.inject.Singleton;
 import com.google.inject.matcher.Matchers;
 import com.google.inject.name.Names;
 import com.google.inject.throwingproviders.ThrowingProviderBinder;
@@ -60,7 +62,7 @@ public class GateModule extends AbstractModule {
 		.create(binder())
 		.bind(AnnieControllerProvider.class,
 			SerialAnalyserController.class)
-		.to(AnnieControllerProviderImpl.class);
+		.to(AnnieControllerProviderImpl.class).in(Singleton.class);
     }
 
 }

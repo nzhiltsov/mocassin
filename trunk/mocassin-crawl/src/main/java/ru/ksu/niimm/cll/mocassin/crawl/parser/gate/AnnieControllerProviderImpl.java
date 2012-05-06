@@ -22,6 +22,8 @@ import gate.util.persistence.PersistenceManager;
 import java.io.File;
 import java.io.IOException;
 
+import javax.sql.rowset.spi.SyncResolver;
+
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
