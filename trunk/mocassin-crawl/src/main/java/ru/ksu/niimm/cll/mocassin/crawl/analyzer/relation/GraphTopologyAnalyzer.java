@@ -17,13 +17,23 @@ import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Reference;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElement;
 import edu.uci.ics.jung.graph.Graph;
 
+/**
+ * The analyzer extracts the relevant statistics information about the document
+ * graph using well-known graph metrics
+ * 
+ * @author Nikita Zhiltsov
+ * 
+ */
 public interface GraphTopologyAnalyzer {
-	/**
-	 * returns candidate relations with features extracted
-	 * 
-	 * @param graph given structural graph
-	 * @return
-	 */
-	List<RelationFeatureInfo> extractCandidateFeatures(
-			Graph<StructuralElement, Reference> graph);
+    /**
+     * Returns relation candidates (i.e. pairs of elements) with features
+     * extracted
+     * 
+     * @param graph
+     *            given structural graph
+     * @returns a list of objects, each of which characterizes a relation
+     *          candidate using relevant graph metrics
+     */
+    List<RelationFeatureInfo> extractCandidateFeatures(
+	    Graph<StructuralElement, Reference> graph);
 }

@@ -25,7 +25,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ru.ksu.niimm.cll.mocassin.crawl.analyzer.AnalyzerModule;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.DocumentAnalyzerModule;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.ReferenceSearcher;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.arxmliv.ArxmlivProducer;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.GateModule;
@@ -51,7 +51,7 @@ import edu.uci.ics.jung.graph.Graph;
 import gate.Document;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext({ AnalyzerModule.class, NlpModule.class, LatexParserModule.class,
+@GuiceContext({ DocumentAnalyzerModule.class, NlpModule.class, LatexParserModule.class,
 	OntologyTestModule.class, FullTextModule.class, GateModule.class,
 	PdfParserModule.class })
 public class GraphTopologyAnalyzerTest {

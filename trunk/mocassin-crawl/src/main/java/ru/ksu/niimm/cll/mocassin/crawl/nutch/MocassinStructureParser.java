@@ -34,9 +34,9 @@ import org.openrdf.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ru.ksu.niimm.cll.mocassin.crawl.analyzer.AnalyzerModule;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.DocumentAnalyzerModule;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.ReferenceSearcher;
-import ru.ksu.niimm.cll.mocassin.crawl.analyzer.ReferenceStatementGenerator;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.ReferenceStatementExporter;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.arxmliv.ArxmlivProducer;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.GateModule;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.GateProcessingFacade;
@@ -72,7 +72,7 @@ public class MocassinStructureParser implements Parser {
 
     private ReferenceSearcher referenceSearcher;
 
-    private ReferenceStatementGenerator referenceStatementGenerator;
+    private ReferenceStatementExporter referenceStatementGenerator;
 
     private OntologyResourceFacade ontologyResourceFacade;
 
@@ -88,7 +88,7 @@ public class MocassinStructureParser implements Parser {
 
     protected Injector createInjector() {
 	Injector injector = Guice
-		.createInjector(new OntologyModule(), new AnalyzerModule(),
+		.createInjector(new OntologyModule(), new DocumentAnalyzerModule(),
 			new GateModule(), new LatexParserModule(),
 			new NlpModule(), new PdfParserModule());
 	return injector;
@@ -101,7 +101,7 @@ public class MocassinStructureParser implements Parser {
 	gateProcessingFacade = injector.getInstance(GateProcessingFacade.class);
 	referenceSearcher = injector.getInstance(ReferenceSearcher.class);
 	referenceStatementGenerator = injector
-		.getInstance(ReferenceStatementGenerator.class);
+		.getInstance(ReferenceStatementExporter.class);
 	ontologyResourceFacade = injector
 		.getInstance(OntologyResourceFacade.class);
 	pdfHighlighter = injector.getInstance(PdfHighlighter.class);
@@ -127,7 +127,7 @@ public class MocassinStructureParser implements Parser {
 	    }
 
 	    List<Statement> triples = referenceStatementGenerator
-		    .convert(graph);
+		    .export(graph);
 
 	    if (!ontologyResourceFacade.insert(triples)) {
 		throw new RuntimeException("Failed to insert triples.");

@@ -11,7 +11,7 @@
  ******************************************************************************/
 package ru.ksu.niimm.cll.mocassin.crawl.nutch;
 
-import ru.ksu.niimm.cll.mocassin.crawl.analyzer.AnalyzerModule;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.DocumentAnalyzerModule;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.GateModule;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.NlpModule;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.latex.LatexParserModule;
@@ -25,7 +25,7 @@ public class MocassinTestStructureParser extends MocassinStructureParser {
     @Override
     protected Injector createInjector() {
 	Injector injector = Guice
-		.createInjector(new OntologyTestModule(), new AnalyzerModule(),
+		.createInjector(new OntologyTestModule(), new DocumentAnalyzerModule(),
 			new GateModule(), new LatexParserModule(),
 			new NlpModule(), new PdfParserModule());
 	return injector;

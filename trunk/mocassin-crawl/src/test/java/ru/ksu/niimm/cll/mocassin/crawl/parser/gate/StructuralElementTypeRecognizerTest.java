@@ -23,7 +23,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ru.ksu.niimm.cll.mocassin.crawl.analyzer.AnalyzerModule;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.DocumentAnalyzerModule;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.ReferenceSearcher;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.arxmliv.ArxmlivProducer;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElementImpl.IdPredicate;
@@ -44,7 +44,7 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext({ NlpModule.class, GateModule.class, LatexParserModule.class,
-	PdfParserModule.class, AnalyzerModule.class})
+	PdfParserModule.class, DocumentAnalyzerModule.class})
 public class StructuralElementTypeRecognizerTest {
 
     @Inject

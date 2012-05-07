@@ -19,6 +19,19 @@ import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Reference;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElement;
 import edu.uci.ics.jung.graph.Graph;
 
-public interface ReferenceStatementGenerator {
-	List<Statement> convert(Graph<StructuralElement, Reference> references);
+/**
+ * The class implements exporting Mocassin's internal representation into
+ * Sesame's RDF statements
+ * 
+ * @author Nikita Zhiltsov
+ * 
+ */
+public interface ReferenceStatementExporter {
+    /**
+     * Exports a given graph into a list of Sesame's RDF statements
+     * 
+     * @param graph
+     * @returns a list of Sesame's RDF statements
+     */
+    List<Statement> export(Graph<StructuralElement, Reference> graph);
 }

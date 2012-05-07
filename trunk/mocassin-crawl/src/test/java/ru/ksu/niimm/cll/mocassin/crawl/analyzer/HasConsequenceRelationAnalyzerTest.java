@@ -48,7 +48,7 @@ import edu.uci.ics.jung.graph.Graph;
 import gate.Document;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext({ AnalyzerModule.class, NlpModule.class, LatexParserModule.class,
+@GuiceContext({ DocumentAnalyzerModule.class, NlpModule.class, LatexParserModule.class,
 	OntologyTestModule.class, FullTextModule.class, GateModule.class,
 	PdfParserModule.class })
 public class HasConsequenceRelationAnalyzerTest {
@@ -91,7 +91,7 @@ public class HasConsequenceRelationAnalyzerTest {
     @Test
     public void testAnalyze() throws IOException {
 	getHasConsequenceRelationAnalyzer().addRelations(graph,
-		new ParsedDocumentImpl("http://mathnet.ru/ivm537"));
+		"http://mathnet.ru/ivm537");
 	Collection<Reference> edges = graph.getEdges();
 	boolean found = false;
 	for (Reference ref : edges) {

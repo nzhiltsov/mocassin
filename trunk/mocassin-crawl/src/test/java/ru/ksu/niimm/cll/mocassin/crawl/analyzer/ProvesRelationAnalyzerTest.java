@@ -48,7 +48,7 @@ import edu.uci.ics.jung.graph.Graph;
 import gate.Document;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext({ AnalyzerModule.class, NlpModule.class, LatexParserModule.class,
+@GuiceContext({ DocumentAnalyzerModule.class, NlpModule.class, LatexParserModule.class,
 	OntologyTestModule.class, FullTextModule.class, GateModule.class,
 	PdfParserModule.class })
 public class ProvesRelationAnalyzerTest {
@@ -90,8 +90,8 @@ public class ProvesRelationAnalyzerTest {
 
     @Test
     public void testAnalyze() throws IOException {
-	this.provesRelationAnalyzer.addRelations(graph, new ParsedDocumentImpl(
-		"http://mathnet.ru/ivm537"));
+	this.provesRelationAnalyzer.addRelations(graph,
+		"http://mathnet.ru/ivm537");
 	Collection<Reference> edges = graph.getEdges();
 	boolean found = false;
 	for (Reference ref : edges) {

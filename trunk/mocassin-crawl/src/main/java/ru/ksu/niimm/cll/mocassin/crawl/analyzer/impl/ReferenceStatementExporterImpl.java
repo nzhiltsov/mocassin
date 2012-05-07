@@ -22,24 +22,31 @@ import java.util.List;
 
 import org.openrdf.model.Statement;
 
-import ru.ksu.niimm.cll.mocassin.crawl.analyzer.ReferenceStatementGenerator;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.ReferenceStatementExporter;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Reference;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyRelations;
 import edu.uci.ics.jung.graph.Graph;
-
-public class ReferenceStatementGeneratorImpl implements
-		ReferenceStatementGenerator {
+/**
+ * The class implements exporting the structural graph into RDF statements 
+ * 
+ * @author Nikita Zhiltsov
+ *
+ */
+public class ReferenceStatementExporterImpl implements
+		ReferenceStatementExporter {
 	private static final String EMPTY_STRING = "";
 	private static final String END_LINE = "\n";
 	private static final String SPACE = " ";
 	private static final String SALT_SCHEMA = "http://salt.semanticauthoring.org/ontologies/sdo";
 	private static final String SDO_PUBLICATION_TYPE = format("%s#Publication",
 			SALT_SCHEMA);
-
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public List<Statement> convert(Graph<StructuralElement, Reference> graph) {
+	public List<Statement> export(Graph<StructuralElement, Reference> graph) {
 		List<Statement> triples = new ArrayList<Statement>();
 		boolean addedPublication = false;
 		for (Reference ref : graph.getEdges()) {

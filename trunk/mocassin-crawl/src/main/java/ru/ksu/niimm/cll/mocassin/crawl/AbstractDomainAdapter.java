@@ -18,7 +18,7 @@ import java.util.Collection;
 import org.slf4j.Logger;
 
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.ReferenceSearcher;
-import ru.ksu.niimm.cll.mocassin.crawl.analyzer.ReferenceStatementGenerator;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.ReferenceStatementExporter;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.arxmliv.ArxmlivProducer;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.GateProcessingFacade;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElement;
@@ -38,7 +38,7 @@ public abstract class AbstractDomainAdapter implements DomainAdapter {
     @Inject
     protected ReferenceSearcher referenceSearcher;
     @Inject
-    protected ReferenceStatementGenerator referenceStatementGenerator;
+    protected ReferenceStatementExporter referenceStatementGenerator;
     @Inject
     protected LatexDocumentHeaderPatcher latexDocumentHeaderPatcher;
     @Inject
