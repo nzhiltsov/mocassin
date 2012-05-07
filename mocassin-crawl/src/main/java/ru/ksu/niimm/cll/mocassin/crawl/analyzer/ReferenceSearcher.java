@@ -17,13 +17,23 @@ import edu.uci.ics.jung.graph.Graph;
 import gate.Document;
 
 /**
- * Searcher for references in parsed documents
+ * The reference searcher builds a structural graph for a given GATE document.
  * 
- * @author nzhiltsov
+ * @author Nikita Zhiltsov
  * 
  */
 public interface ReferenceSearcher {
-	
-	Graph<StructuralElement, Reference> retrieveStructuralGraph(
-		Document document, String paperUrl);
+    /**
+     * For a given document, this method retrieves its structural elements and
+     * references between them in the form of the graph
+     * 
+     * @param document
+     *            GATE document
+     * @param paperUrl
+     *            document URI, e.g. 'http://mathnet.ru/ivm18'
+     * @returns a graph that contains structural elements as nodes and
+     *          references as edges
+     */
+    Graph<StructuralElement, Reference> retrieveStructuralGraph(
+	    Document document, String paperUrl);
 }

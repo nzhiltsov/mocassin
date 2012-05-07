@@ -15,27 +15,35 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElement;
 
+/**
+ * The class captures candidate relation features in the context of the document
+ * graph
+ * 
+ * @author Nikita Zhiltsov
+ * @author Azat Khasanshin
+ * 
+ */
 public class RelationFeatureInfo {
     private final StructuralElement from;
     private final StructuralElement to;
     /**
-     * this is computed as Jaccard coefficient for neighbors of a given pair of
+     * This is computed as Jaccard coefficient for neighbors of a given pair of
      * structural elements
      */
     private final float neighborJaccardCoefficient;
     /**
-     * this is computed as a product of the both elements' neighborhood
+     * This is computed as a product of the both elements' neighborhood
      * cardinalities
      */
     private final int preferentialAttachmentScore;
     /**
-     * First element's PageRank, which is computed by considering edge weights and alpha
-     * (jump probability) is equal to .2
+     * First element's PageRank, which is computed by considering edge weights
+     * and alpha (jump probability) is equal to .2
      */
     private final float fromPR;
     /**
-     * Second element's PageRank, which is computed by considering edge weights and alpha
-     * (jump probability) is equal to .2
+     * Second element's PageRank, which is computed by considering edge weights
+     * and alpha (jump probability) is equal to .2
      */
     private final float toPR;
 

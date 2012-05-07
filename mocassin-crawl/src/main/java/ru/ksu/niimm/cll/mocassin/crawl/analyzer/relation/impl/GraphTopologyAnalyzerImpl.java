@@ -25,10 +25,25 @@ import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Reference;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElement;
 import edu.uci.ics.jung.graph.Graph;
 
+/**
+ * 
+ * The class implements extraction of relation candidate features using graph
+ * metrics
+ * 
+ * @author Nikita Zhiltsov
+ * @author Azat Khasanshin
+ * 
+ */
 public class GraphTopologyAnalyzerImpl implements GraphTopologyAnalyzer {
+    /**
+     * Fixed jump probability used while computing PageRank scores for elements
+     * in the document graph
+     */
+    protected static final double JUMP_PROBABILITY = .2;
 
-    private static final double JUMP_PROBABILITY = .2;
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<RelationFeatureInfo> extractCandidateFeatures(
 	    Graph<StructuralElement, Reference> graph) {

@@ -70,7 +70,7 @@ public class ArxivAdapter extends AbstractDomainAdapter implements
 	// Step 7
 	generateHighlightedPdfs(arxivId, graph.getVertices());
 	// Step 8
-	List<Statement> triples = referenceStatementGenerator.convert(graph);
+	List<Statement> triples = referenceStatementGenerator.export(graph);
 	ontologyResourceFacade.insert(triples); // TODO: Arxiv article
 						// metadata must be inserted
 						// into a store beforehand

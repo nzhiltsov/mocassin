@@ -54,12 +54,12 @@ import edu.uci.ics.jung.graph.Graph;
 import gate.Document;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext({ AnalyzerModule.class, NlpModule.class, LatexParserModule.class,
+@GuiceContext({ DocumentAnalyzerModule.class, NlpModule.class, LatexParserModule.class,
 	OntologyTestModule.class, FullTextModule.class, GateModule.class,
 	PdfParserModule.class })
 public class ReferenceStatementGeneratorTest {
     @Inject
-    protected ReferenceStatementGenerator referenceStatementGenerator;
+    protected ReferenceStatementExporter referenceStatementGenerator;
     @Inject
     private ReferenceSearcher referenceSearcher;
     @Inject
@@ -97,7 +97,7 @@ public class ReferenceStatementGeneratorTest {
 
     @Test
     public void testConvert() {
-	List<Statement> statements = referenceStatementGenerator.convert(graph);
+	List<Statement> statements = referenceStatementGenerator.export(graph);
 	final String sectionInstance = "http://mathnet.ru/ivm18/1017";
 	final String theoremInstance = "http://mathnet.ru/ivm18/2900";
 	Statement hasPartStatement = createTriple(sectionInstance,

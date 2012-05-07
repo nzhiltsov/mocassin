@@ -46,7 +46,15 @@ import gate.Annotation;
 import gate.AnnotationSet;
 import gate.Document;
 
-public class GateReferenceSearcher implements ReferenceSearcher {
+/**
+ * The class exploits GATE annotations and a set of associated analyzers to
+ * retrieve the structural graph for a given document
+ * 
+ * @author Nikita Zhiltsov
+ * @author Azat Khasanshin
+ * 
+ */
+public class GateBasedReferenceSearcher implements ReferenceSearcher {
     private final String ARXMLIV_MARKUP_NAME;
     private final String ARXMLIV_REF_ANNOTATION_NAME;
     private final String ARXMLIV_MATH_ANNOTATION_NAME;
@@ -59,16 +67,16 @@ public class GateReferenceSearcher implements ReferenceSearcher {
     @Inject
     private AnnotationUtil annotationUtil;
     @Inject
-    protected NavigationalRelationClassifier navigationalRelationClassifier;
+    private NavigationalRelationClassifier navigationalRelationClassifier;
     @Inject
-    protected ProvesRelationAnalyzer provesRelationAnalyzer;
+    private ProvesRelationAnalyzer provesRelationAnalyzer;
     @Inject
-    protected HasConsequenceRelationAnalyzer hasConsequenceRelationAnalyzer;
+    private HasConsequenceRelationAnalyzer hasConsequenceRelationAnalyzer;
     @Inject
-    protected ExemplifiesRelationAnalyzer exemplifiesRelationAnalyzer;
+    private ExemplifiesRelationAnalyzer exemplifiesRelationAnalyzer;
 
     @Inject
-    GateReferenceSearcher(
+    private GateBasedReferenceSearcher(
 	    @Named("arxmliv.markup.name") String arxmlivMarkupName,
 	    @Named("arxmliv.ref.annotation.name") String arxmlivRefAnnotationName,
 	    @Named("arxmliv.math.annotation.name") String arxmlivMathAnnotationName,
@@ -76,10 +84,12 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 	this.ARXMLIV_MARKUP_NAME = arxmlivMarkupName;
 	this.ARXMLIV_REF_ANNOTATION_NAME = arxmlivRefAnnotationName;
 	this.ARXMLIV_MATH_ANNOTATION_NAME = arxmlivMathAnnotationName;
-
 	this.USE_STEMMING = Boolean.parseBoolean(useStemming);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Graph<StructuralElement, Reference> retrieveStructuralGraph(
 	    Document document, String paperUrl) {
@@ -123,12 +133,9 @@ public class GateReferenceSearcher implements ReferenceSearcher {
 
     private void addRestrictedRelations(
 	    Graph<StructuralElement, Reference> graph, String paperUrl) {
-	exemplifiesRelationAnalyzer.addRelations(graph, new ParsedDocumentImpl(
-		paperUrl));
-	provesRelationAnalyzer.addRelations(graph, new ParsedDocumentImpl(
-		paperUrl));
-	hasConsequenceRelationAnalyzer.addRelations(graph,
-		new ParsedDocumentImpl(paperUrl));
+	exemplifiesRelationAnalyzer.addRelations(graph, paperUrl);
+	provesRelationAnalyzer.addRelations(graph, paperUrl);
+	hasConsequenceRelationAnalyzer.addRelations(graph, paperUrl);
     }
 
     /**

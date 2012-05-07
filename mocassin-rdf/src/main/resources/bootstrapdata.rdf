@@ -1,85 +1,23 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE rdf:RDF [
-<!ENTITY akt "http://www.aktors.org/ontology/portal#" >
-<!ENTITY support "http://www.aktors.org/ontology/support#" >
-]>
-<rdf:RDF
-xml:base="http://mathnet.ru/"
-xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-    xmlns:akt="http://www.aktors.org/ontology/portal#"
-    xmlns:support="http://www.aktors.org/ontology/support#">
-  <rdf:Description rdf:about="http://mathnet.ru/ivm17">
-    <rdf:type rdf:resource="&akt;Article-Reference"/>
-    <akt:has-title>Прямые суммы слабо регулярных модулей</akt:has-title>
-    <akt:has-author>
-      <akt:Affiliated-Person rdf:about="ANAbyzov">
-        <akt:full-name>А. Н. Абызов </akt:full-name>
-        <akt:has-affiliation>
-          <akt:Organization rdf:about="Kazanskijgosudarstvennyjuniversitet">
-            <akt:name>Казанский государственный университет </akt:name>
-          </akt:Organization>
-        </akt:has-affiliation>
-      </akt:Affiliated-Person>
-    </akt:has-author>
-    <akt:has-pages>74-74</akt:has-pages>
-    <akt:included-in-publication rdf:resource="ivm2005-2" />
-  </rdf:Description>
-  <rdf:Description rdf:about="http://mathnet.ru/ivm18">
-    <rdf:type rdf:resource="&akt;Article-Reference"/>
-    <akt:has-title xml:lang="ru">Конструирование явных методов типа Рунге--Кутта интегрирования систем специального вида</akt:has-title>
-    <akt:has-title xml:lang="en">Construction of explicit methods of Runge--Kutta type for the integration of systems of a special type</akt:has-title>
-    <akt:has-author rdf:resource="http://mathnet.ru/personid33387"/>
-    <akt:has-pages>75-80</akt:has-pages>
-    <akt:included-in-publication rdf:resource="ivm2005-2"/>
-  </rdf:Description>
-<rdf:Description rdf:about="http://mathnet.ru/ivm677">
-    <rdf:type rdf:resource="&akt;Article-Reference"/>
-    <akt:has-title>Дискретно-непрерывная система уравнений свертки</akt:has-title>
-    <akt:has-author>
-      <akt:Affiliated-Person rdf:about="JuICherskij">
-        <akt:full-name>Ю. И. Черский </akt:full-name>
-        <akt:has-affiliation>
-          <akt:Organization rdf:about="Odesskajagosudarstvennajaakademijastroitel'stvaiarxitektury">
-            <akt:name>Одесская государственная академия строительства и архитектуры </akt:name>
-          </akt:Organization>
-        </akt:has-affiliation>
-      </akt:Affiliated-Person>
-    </akt:has-author>
-    <akt:has-pages>81-82</akt:has-pages>
-    <akt:included-in-publication rdf:resource="ivm1999-10" />
-  </rdf:Description>
-<rdf:Description rdf:about="http://mathnet.ru/ivm68">
-    <rdf:type rdf:resource="&akt;Article-Reference"/>
-    <akt:has-title>Дополнение к признаку Жамэ</akt:has-title>
-    <akt:has-author>
-      <akt:Affiliated-Person rdf:about="AVAntonova">
-        <akt:full-name>А. В. Антонова </akt:full-name>
-        <akt:has-affiliation>
-          <akt:Organization rdf:about="Kazanskijgosudarstvennyjjenergeticheskijuniversitet">
-            <akt:name>Казанский государственный энергетический университет </akt:name>
-          </akt:Organization>
-        </akt:has-affiliation>
-      </akt:Affiliated-Person>
-    </akt:has-author>
-    <akt:has-pages>3-5</akt:has-pages>
-    <akt:included-in-publication rdf:resource="ivm2005-8" />
-  </rdf:Description>
-  <rdf:Description rdf:about="http://mathnet.ru/personid33387">
-    <rdf:type rdf:resource="&akt;Affiliated-Person"/>
-    <akt:full-name xml:lang="en">I. V. Olemskoi</akt:full-name>
-    <akt:full-name xml:lang="en">Olemskoi I V</akt:full-name>
-    <akt:full-name xml:lang="ru">И. В. Олемской</akt:full-name>
-    <akt:full-name xml:lang="ru">Олемской И В</akt:full-name>
-    <akt:has-affiliation rdf:resource="http://www.mathnet.ru/orgid196"/>
-    <akt:has-email-address>olemskoy@apmath.spbu.ru</akt:has-email-address>
-    <akt:has-email-address>olemskoy_iv@mail.ru</akt:has-email-address>
-    <akt:has-web-address>http://www.mathnet.ru/php/person.phtml?personid=33387</akt:has-web-address>
-  </rdf:Description>
-    <rdf:Description rdf:ID="ivm2005-2">
-    <rdf:type rdf:resource="&akt;Journal"/>
-    <akt:has-title xml:lang="ru">Известия высших учебных заведений. Математика </akt:has-title>
-    <akt:has-title xml:lang="en">Izvestiya Vysshikh Uchebnykh Zavedenii. Matematika </akt:has-title>
-    <akt:has-issue-number>2</akt:has-issue-number>
-  </rdf:Description>
-</rdf:RDF>
+@prefix ns0:	<http://www.aktors.org/ontology/portal#> .
+@prefix ns1:	<http://mathnet.ru/> .
+@prefix rdf:	<http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix ns3:	<http://salt.semanticauthoring.org/ontologies/sdo#> .
+@prefix moc:	<http://cll.niimm.ksu.ru/ontologies/mocassin#> .
+@prefix xsd:	<http://www.w3.org/2001/XMLSchema#> .
+ns1:ivm575	rdf:type	ns3:Publication ,
+		ns0:Article-Reference ;
+	ns0:has-author	ns1:TGSukacheva ,
+		ns1:LLDudko ,
+		ns1:GASviridjuk ;
+	ns0:has-pages	"68-73" ;
+	ns0:has-title	"\u041E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u0430\u044F $\\sigma$ - \u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u043D\u043E\u0441\u0442\u044C \u043B\u0438\u043D\u0435\u0439\u043D\u044B\u0445 \u043E\u043F\u0435\u0440\u0430\u0442\u043E\u0440\u043E\u0432" ;
+	ns0:included-in-publication	ns1:ivm1997-7 .
+ns1:ivm575	moc:hasSegment	<http://mathnet.ru/ivm575/381> ,
+		<http://mathnet.ru/ivm575/0> .
+<http://mathnet.ru/ivm575/0>	rdf:type	moc:DocumentSegment ;
+	moc:hasTitle	"" .
+<http://mathnet.ru/ivm575/0>	moc:hasStartPageNumber	"0"^^xsd:int ;
+	moc:hasText	"" ;
+	moc:hasPart	<http://mathnet.ru/ivm575/381> .
+<http://mathnet.ru/ivm575/381>	rdf:type	ns3:Section ;
+moc:hasStartPageNumber	"2"^^xsd:int .		

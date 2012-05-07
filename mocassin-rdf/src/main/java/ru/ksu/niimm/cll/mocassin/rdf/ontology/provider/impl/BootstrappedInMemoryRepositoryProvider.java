@@ -39,7 +39,7 @@ public class BootstrappedInMemoryRepositoryProvider implements
 			InputStream inputStream = BootstrappedInMemoryRepositoryProvider.class
 					.getClassLoader().getResourceAsStream("bootstrapdata.rdf");
 			try {
-				connection.add(inputStream, context, RDFFormat.RDFXML,
+				connection.add(inputStream, context, RDFFormat.N3,
 						repository.getValueFactory().createURI(context));
 			} finally {
 				inputStream.close();

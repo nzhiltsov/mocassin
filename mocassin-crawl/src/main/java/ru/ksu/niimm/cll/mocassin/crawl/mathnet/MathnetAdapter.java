@@ -80,7 +80,7 @@ public class MathnetAdapter extends AbstractDomainAdapter implements
 	// Step 7
 	generateHighlightedPdfs(mathnetKey, graph.getVertices());
 	// Step 8
-	List<Statement> triples = referenceStatementGenerator.convert(graph);
+	List<Statement> triples = referenceStatementGenerator.export(graph);
 
 	if (!ontologyResourceFacade.insert(triples)) {
 	    throw new RuntimeException("Failed to insert triples.");

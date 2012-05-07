@@ -11,21 +11,14 @@
  ******************************************************************************/
 package ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation;
 
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.ParsedDocument;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Reference;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElement;
-import edu.uci.ics.jung.graph.Graph;
-
 /**
- * @author nzhiltsov
+ * Analyzer of 'proves' relation instances
  * 
+ * @see GraphEditableAnalyzer#addRelations(edu.uci.ics.jung.graph.Graph, String)
+ * 
+ * @author Nikita Zhiltsov
+ *
  */
-public interface ProvesRelationAnalyzer {
-	/**
-	 * adds instances of 'proves' (Mocassin Ontology) to a given document graph
-	 * 
-	 * @param graph
-	 * @param document 
-	 */
-	void addRelations(Graph<StructuralElement, Reference> graph, ParsedDocument document);
+public interface ProvesRelationAnalyzer extends GraphEditableAnalyzer{
+	
 }

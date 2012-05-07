@@ -15,15 +15,24 @@ import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Reference;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElement;
 import edu.uci.ics.jung.graph.Graph;
 
+/**
+ * Navigational relation classifier implements predicting the relation type of
+ * reference in the document graph
+ * 
+ * @author Nikita Zhiltsov
+ * 
+ */
 public interface NavigationalRelationClassifier {
-	/**
-	 * predict the relation of a given reference
-	 * 
-	 * @param reference
-	 * @param graph
-	 *            a graph that contains a given reference
-	 * @return
-	 */
-	Prediction predict(Reference reference,
-			Graph<StructuralElement, Reference> graph);
+    /**
+     * Predicts the relation type of a given reference
+     * 
+     * @param reference
+     *            reference
+     * @param graph
+     *            a graph that contains a given reference
+     * @returns an object that contains the most probable relation type and the
+     *          prediction confidence score
+     */
+    Prediction predict(Reference reference,
+	    Graph<StructuralElement, Reference> graph);
 }
