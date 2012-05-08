@@ -20,20 +20,28 @@ import com.google.inject.AbstractModule;
 import com.google.inject.matcher.Matchers;
 import com.google.inject.name.Names;
 
+/**
+ * The module configures facilities to work with ArXiv.org API
+ * 
+ * @author Nikita Zhiltsov
+ * 
+ */
 public class ArxivModule extends AbstractModule {
-
-	@Override
-	protected void configure() {
-		try {
-			Properties properties = new Properties();
-			properties.load(this.getClass().getClassLoader()
-					.getResourceAsStream("arxiv-module.properties"));
-			Names.bindProperties(binder(), properties);
-		} catch (IOException ex) {
-			throw new RuntimeException(
-					"failed to load the Arxiv module configuration");
-		}
-		bind(ArxivDAOFacade.class).to(ArxivDAOFacadeImpl.class);
-		bindListener(Matchers.any(), new Slf4jTypeListener());
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void configure() {
+	try {
+	    Properties properties = new Properties();
+	    properties.load(this.getClass().getClassLoader()
+		    .getResourceAsStream("arxiv-module.properties"));
+	    Names.bindProperties(binder(), properties);
+	} catch (IOException ex) {
+	    throw new RuntimeException(
+		    "Failed to load the Arxiv module configuration");
 	}
+	bind(ArxivDAOFacade.class).to(ArxivDAOFacadeImpl.class);
+	bindListener(Matchers.any(), new Slf4jTypeListener());
+    }
 }
