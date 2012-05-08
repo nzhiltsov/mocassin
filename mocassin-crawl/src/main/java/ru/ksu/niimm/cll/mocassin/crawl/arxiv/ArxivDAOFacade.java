@@ -19,34 +19,41 @@ import ru.ksu.niimm.cll.mocassin.util.model.ArticleMetadata;
  * Facade that retrieves article metadata and loads the contents of an article
  * with a given arXiv identifier
  * 
- * @author nzhiltsov
+ * @author Nikita Zhiltsov
  * 
  */
 public interface ArxivDAOFacade {
-	/**
-	 * returns metadata or null if any error occurs
-	 * 
-	 * @param arxivId
-	 * @return
-	 */
-	ArticleMetadata retrieve(String arxivId);
+    /**
+     * Returns metadata for a given id or null, if any error occurs
+     * 
+     * @param arxivId
+     *            article id, e.g. 'math/0010215'
+     * @returns article metadata
+     */
+    ArticleMetadata retrieve(String arxivId);
 
-	/**
-	 * loads the source of an article with given metadata
-	 * 
-	 * !!! WARNING calling method should close the returned input stream on its
-	 * own
-	 * 
-	 * @param metadata
-	 * @return
-	 */
-	InputStream loadSource(ArticleMetadata metadata);
+    /**
+     * Roads the source of an article with given metadata
+     * 
+     * <p>
+     * WARNING: <strong>calling method must close the returned input stream on
+     * its own</strong>
+     * 
+     * @param metadata
+     *            article metadata
+     * @returns a stream thats contains the article contents in Latex
+     */
+    InputStream loadSource(ArticleMetadata metadata);
 
-	/**
-	 * loads PDF representation of an article with given metadata
-	 * 
-	 * @param metadata
-	 * @return
-	 */
-	InputStream loadPDF(ArticleMetadata metadata) throws LoadingPdfException;
+    /**
+     * Loads PDF representation of an article with a given metadata
+     * 
+     * <p>
+     * WARNING: <strong>calling method must close the returned input stream on
+     * its own</strong>
+     * 
+     * @param metadata metadata
+     * @returns a stream thats contains the article contents as PDF
+     */
+    InputStream loadPDF(ArticleMetadata metadata) throws LoadingPdfException;
 }

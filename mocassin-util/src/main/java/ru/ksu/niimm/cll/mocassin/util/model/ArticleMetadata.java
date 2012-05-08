@@ -17,32 +17,45 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * arXiv article metadata
+ * Article metadata
  * 
- * @author nzhiltsov
+ * @author Nikita Zhiltsov
  * 
  */
 public class ArticleMetadata {
 	/**
-	 * arXiv id, e.g. 'math/0205003' or 'ivm537'
+	 * Article id, e.g. 'math/0205003' or 'ivm537'
 	 */
 	private String collectionId;
 	/**
-	 * full id, e.g. 'http://arxiv.org/abs/math/0205003v1' where the 'v1' suffix
-	 * is a pointer of the version
+	 * Full id, e.g. 'http://arxiv.org/abs/math/0205003v1' where the 'v1' suffix
+	 * is a pointer of the version, or 'http://mathnet.ru/ivm537'
 	 */
 	private String id;
-
+	/**
+	 * A list of additional links (PDF source, Latex source etc.)
+	 * 
+	 */
 	private List<Link> links = new ArrayList<Link>();
-
+	/**
+	 * Title
+	 */
 	private String title;
-
+	/**
+	 * Authors
+	 */
 	private final Set<Author> authors = new HashSet<Author>();
-
+	/**
+	 * Additional field, which is used on UI
+	 */
 	private String currentSegmentUri;
-
+	/**
+	 * Additional field, which is used on UI
+	 */
 	private String currentSegmentTitle;
-
+	/**
+	 * Additional field, which is used on UI
+	 */
 	private int currentPageNumber;
 
 	public String getId() {
