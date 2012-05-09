@@ -63,14 +63,16 @@ public class GateModule extends AbstractModule {
 	}
 
 	try {
-	    URI pluginsHome = this
-		    .getClass()
-		    .getResource(
-			    "/"
-				    + properties
-					    .getProperty(GATE_PLUGINS_HOME_CONF_PROPERTY))
-		    .toURI();
-	    Gate.setPluginsHome(new File(pluginsHome));
+	    if (Gate.getPluginsHome() != null) {
+		URI pluginsHome = this
+			.getClass()
+			.getResource(
+				"/"
+					+ properties
+						.getProperty(GATE_PLUGINS_HOME_CONF_PROPERTY))
+			.toURI();
+		Gate.setPluginsHome(new File(pluginsHome));
+	    }
 	    URI siteConfig = this
 		    .getClass()
 		    .getResource(
@@ -79,14 +81,16 @@ public class GateModule extends AbstractModule {
 					    .getProperty(GATE_SITE_CONFIG_CONF_PROPERTY))
 		    .toURI();
 	    Gate.setSiteConfigFile(new File(siteConfig));
-	    URI builtinCreoleDir = this
-		    .getClass()
-		    .getResource(
-			    "/"
-				    + properties
-					    .getProperty(GATE_BUILTIN_CREOLE_DIR_CONF_PROPERTY))
-		    .toURI();
-	    Gate.setBuiltinCreoleDir(builtinCreoleDir.toURL());
+	    if (Gate.getBuiltinCreoleDir() != null) {
+		URI builtinCreoleDir = this
+			.getClass()
+			.getResource(
+				"/"
+					+ properties
+						.getProperty(GATE_BUILTIN_CREOLE_DIR_CONF_PROPERTY))
+			.toURI();
+		Gate.setBuiltinCreoleDir(builtinCreoleDir.toURL());
+	    }
 	    Gate.init();
 	} catch (GateException e) {
 	    throw new RuntimeException("Failed to initialize GATE.", e);
