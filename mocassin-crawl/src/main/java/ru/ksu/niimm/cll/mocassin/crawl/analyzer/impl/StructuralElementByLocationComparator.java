@@ -9,10 +9,12 @@
  *     Nikita Zhiltsov - initial API and implementation
  *     Azat Khasanshin - implementation
  ******************************************************************************/
-package ru.ksu.niimm.cll.mocassin.crawl.parser.gate;
+package ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl;
 
 import java.io.Serializable;
 import java.util.Comparator;
+
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.StructuralElement;
 
 @SuppressWarnings("serial")
 public class StructuralElementByLocationComparator implements

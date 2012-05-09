@@ -13,7 +13,7 @@ package ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElement;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.StructuralElement;
 
 /**
  * The class captures candidate relation features in the context of the document

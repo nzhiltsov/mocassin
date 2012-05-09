@@ -16,13 +16,20 @@ import gate.Document;
 import java.io.File;
 import java.io.InputStream;
 
+/**
+ * This facade processes a given file or stream as a GATE document.
+ * 
+ * @author Nikita Zhiltsov
+ * 
+ */
 public interface GateProcessingFacade {
     /**
-     * processes a given file with a given id by the configurable set of GATE
+     * Processes a given file with a given id by the configurable set of GATE
      * plugins
      * 
-     * WARNING: client code should release resources related to the returned
-     * document by itself using {@code Factory.deleteResource()}
+     * <p>
+     * <strong>WARNING</strong>: client code should release resources related to
+     * the returned document by itself using {@code Factory.deleteResource()}
      * 
      * @param document
      * @throws AccessGateStorageException
@@ -33,11 +40,12 @@ public interface GateProcessingFacade {
     Document process(String documentId, File file, String encoding);
 
     /**
-     * processes a given input stream with a given id by the configurable set of
+     * Processes a given input stream with a given id by the configurable set of
      * GATE plugins
      * 
-     * WARNING: client code should release resources related to the returned
-     * document by itself using {@code Factory.deleteResource()}
+     * <p>
+     * <strong>WARNING</strong>: client code should release resources related to
+     * the returned document by itself using {@code Factory.deleteResource()}
      * 
      * @param document
      * @throws AccessGateStorageException

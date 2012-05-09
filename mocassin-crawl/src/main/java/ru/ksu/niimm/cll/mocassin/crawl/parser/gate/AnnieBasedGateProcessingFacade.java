@@ -30,14 +30,22 @@ import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
 
 import com.google.inject.Inject;
 
-class GateProcessingFacadeImpl implements GateProcessingFacade {
+/**
+ * This facade implementation uses an ANNIE controller instance serialized in the .gapp file
+ * (its location is configured by the 'gate.loaded.plugin.config' parameter in
+ * <strong>nlp-module.properties</strong>).
+ * 
+ * @author Nikita Zhiltsov
+ * 
+ */
+class AnnieBasedGateProcessingFacade implements GateProcessingFacade {
     @InjectLogger
     private Logger logger;
 
     private final AnnieControllerProvider<SerialAnalyserController> annieControllerProvider;
 
     @Inject
-    GateProcessingFacadeImpl(
+    AnnieBasedGateProcessingFacade(
 	    AnnieControllerProvider<SerialAnalyserController> annieControllerProvider) {
 	this.annieControllerProvider = annieControllerProvider;
     }

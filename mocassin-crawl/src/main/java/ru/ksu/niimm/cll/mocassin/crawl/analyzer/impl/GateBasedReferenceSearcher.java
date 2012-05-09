@@ -18,7 +18,11 @@ import java.util.List;
 
 import org.slf4j.Logger;
 
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.Reference;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.ReferenceSearcher;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.StructuralElement;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.StructuralElementSearcher;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl.StructuralElementImpl.DescPositionComparator;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.ExemplifiesRelationAnalyzer;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.HasConsequenceRelationAnalyzer;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.NavigationalRelationClassifier;
@@ -27,11 +31,6 @@ import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.ProvesRelationAnalyzer;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.arxmliv.ArxmlivFormatConstants;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.ParsedDocument;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.ParsedDocumentImpl;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Reference;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.ReferenceImpl;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElement;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElementImpl.DescPositionComparator;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElementSearcher;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Token;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.util.AnnotationUtil;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyRelations;

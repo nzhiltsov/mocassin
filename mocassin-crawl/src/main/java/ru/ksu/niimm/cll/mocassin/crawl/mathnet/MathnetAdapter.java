@@ -27,8 +27,8 @@ import org.slf4j.Logger;
 
 import ru.ksu.niimm.cll.mocassin.crawl.AbstractDomainAdapter;
 import ru.ksu.niimm.cll.mocassin.crawl.DomainAdapter;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Reference;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElement;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.Reference;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
 import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
 import ru.ksu.niimm.cll.mocassin.util.model.ArticleMetadata;

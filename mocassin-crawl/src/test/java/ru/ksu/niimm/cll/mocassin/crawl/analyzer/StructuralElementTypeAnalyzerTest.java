@@ -18,8 +18,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.importance.info.PredictedPairInfo;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Reference;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElementTypeRecognizer;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyClasses;
 
 import com.google.inject.Inject;

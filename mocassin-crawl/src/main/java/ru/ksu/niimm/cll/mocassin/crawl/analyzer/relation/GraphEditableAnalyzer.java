@@ -1,7 +1,7 @@
 package ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation;
 
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Reference;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElement;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.Reference;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.StructuralElement;
 import edu.uci.ics.jung.graph.Graph;
 
 public interface GraphEditableAnalyzer {

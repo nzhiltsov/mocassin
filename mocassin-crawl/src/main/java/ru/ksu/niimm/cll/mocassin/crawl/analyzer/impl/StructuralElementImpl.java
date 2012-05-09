@@ -9,7 +9,7 @@
  *     Nikita Zhiltsov - initial API and implementation
  *     Azat Khasanshin - implementation
  ******************************************************************************/
-package ru.ksu.niimm.cll.mocassin.crawl.parser.gate;
+package ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -18,6 +18,7 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyClasses;
 
 import com.google.common.base.Predicate;

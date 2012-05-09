@@ -31,7 +31,6 @@ import ru.ksu.niimm.cll.mocassin.crawl.parser.pdf.PdflatexCompilationException;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.pdf.PdflatexWrapper;
 
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 

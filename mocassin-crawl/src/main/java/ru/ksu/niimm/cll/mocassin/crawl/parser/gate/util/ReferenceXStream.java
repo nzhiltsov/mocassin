@@ -11,8 +11,8 @@
  ******************************************************************************/
 package ru.ksu.niimm.cll.mocassin.crawl.parser.gate.util;
 
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl.ReferenceImpl;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.ParsedDocumentImpl;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.ReferenceImpl;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.TokenImpl;
 
 import com.thoughtworks.xstream.XStream;

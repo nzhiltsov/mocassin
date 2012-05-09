@@ -27,24 +27,33 @@ import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.util.AnnotationUtilImpl;
 import ru.ksu.niimm.cll.mocassin.util.inject.log.Slf4jTypeListener;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.Scope;
 import com.google.inject.Singleton;
 import com.google.inject.matcher.Matchers;
 import com.google.inject.name.Names;
 import com.google.inject.throwingproviders.ThrowingProviderBinder;
 
+/**
+ * This class configures facilities for NLP via GATE machinery.
+ * 
+ * <p>It uses the <strong>nlp-module.properties</strong> file from the classpath,
+ * which shouldn't be edited in general.
+ * 
+ * @author Nikita Zhiltsov
+ * 
+ */
 public class GateModule extends AbstractModule {
 
     private static final String GATE_SITE_CONFIG_CONF_PROPERTY = "gate.site.config";
     private static final String GATE_BUILTIN_CREOLE_DIR_CONF_PROPERTY = "gate.builtin.creole.dir";
-    private static final String GATE_HOME_CONF_PROPERTY = "gate.home";
     private static final String GATE_PLUGINS_HOME_CONF_PROPERTY = "gate.plugins.home";
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void configure() {
 	Properties properties = new Properties();
 	try {
-
 	    properties.load(this.getClass().getClassLoader()
 		    .getResourceAsStream("nlp-module.properties"));
 	    Names.bindProperties(binder(), properties);
@@ -86,7 +95,7 @@ public class GateModule extends AbstractModule {
 	} catch (MalformedURLException e) {
 	    throw new RuntimeException("Failed to initialize GATE.", e);
 	}
-	bind(GateProcessingFacade.class).to(GateProcessingFacadeImpl.class);
+	bind(GateProcessingFacade.class).to(AnnieBasedGateProcessingFacade.class);
 	bind(AnnotationUtil.class).to(AnnotationUtilImpl.class);
 	bindListener(Matchers.any(), new Slf4jTypeListener());
 	ThrowingProviderBinder

@@ -15,10 +15,10 @@ import static java.lang.String.format;
 
 import org.slf4j.Logger;
 
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.Reference;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.NavigationalRelationClassifier;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.Prediction;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Reference;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyRelations;
 import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;

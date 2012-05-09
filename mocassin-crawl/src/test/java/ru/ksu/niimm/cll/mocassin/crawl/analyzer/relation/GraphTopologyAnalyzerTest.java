@@ -26,13 +26,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.DocumentAnalyzerModule;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.Reference;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.ReferenceSearcher;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.arxmliv.ArxmlivProducer;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.GateModule;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.GateProcessingFacade;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.NlpModule;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Reference;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.latex.LatexDocumentHeaderPatcher;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.latex.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.pdf.GeneratePdfSummaryException;
@@ -51,7 +50,7 @@ import edu.uci.ics.jung.graph.Graph;
 import gate.Document;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext({ DocumentAnalyzerModule.class, NlpModule.class, LatexParserModule.class,
+@GuiceContext({ DocumentAnalyzerModule.class, LatexParserModule.class,
 	OntologyTestModule.class, FullTextModule.class, GateModule.class,
 	PdfParserModule.class })
 public class GraphTopologyAnalyzerTest {

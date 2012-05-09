@@ -36,7 +36,7 @@ import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext({ NlpModule.class, GateModule.class, LatexParserModule.class,
+@GuiceContext({  GateModule.class, LatexParserModule.class,
 	PdfParserModule.class })
 public class CitationSearcherTest {
     private static final String DOC_ID = "ivm18";

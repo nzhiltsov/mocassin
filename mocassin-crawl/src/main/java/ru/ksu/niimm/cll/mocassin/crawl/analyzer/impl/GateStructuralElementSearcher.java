@@ -9,7 +9,7 @@
  *     Nikita Zhiltsov - initial API and implementation
  *     Azat Khasanshin - implementation
  ******************************************************************************/
-package ru.ksu.niimm.cll.mocassin.crawl.parser.gate;
+package ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl;
 
 import edu.uci.ics.jung.graph.Graph;
 import gate.Annotation;
@@ -24,9 +24,13 @@ import java.util.List;
 
 import org.slf4j.Logger;
 
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.Reference;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.StructuralElement;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.StructuralElementSearcher;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.StructuralElementTypeRecognizer;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl.StructuralElementImpl.TypeFilterPredicate;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.arxmliv.ArxmlivFormatConstants;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.arxmliv.ArxmlivStructureElementTypes;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElementImpl.TypeFilterPredicate;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.util.AnnotationUtil;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.impl.NodeImpl.NodePositionComparator;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.latex.LatexDocumentDAO;
@@ -46,7 +50,7 @@ import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-class GateStructuralElementSearcher implements StructuralElementSearcher {
+public class GateStructuralElementSearcher implements StructuralElementSearcher {
     private final String ARXMLIV_MARKUP_NAME;
     private final String TITLE_ANNOTATION_NAME;
     @InjectLogger

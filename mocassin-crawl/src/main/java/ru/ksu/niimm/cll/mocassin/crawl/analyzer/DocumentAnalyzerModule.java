@@ -17,18 +17,23 @@ import java.io.InputStreamReader;
 import java.util.Properties;
 
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl.GateBasedReferenceSearcher;
-import ru.ksu.niimm.cll.mocassin.crawl.analyzer.ReferenceStatementExporter;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl.GateStructuralElementSearcher;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl.ReferenceStatementExporterImpl;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl.StructuralElementTypeRecognizerImpl;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.ExemplifiesRelationAnalyzer;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.GraphTopologyAnalyzer;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.HasConsequenceRelationAnalyzer;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.NavigationalRelationClassifier;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.ProvesRelationAnalyzer;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.impl.BasicExemplifiesRelationAnalyzer;
-import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.impl.GraphTopologyAnalyzerImpl;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.impl.BasicHasConsequenceRelationAnalyzer;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.impl.BasicProvesRelationAnalyzer;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.impl.GraphTopologyAnalyzerImpl;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.impl.WekaBasedNavigationalRelationClassifier;
+import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.BibliographyExtractor;
+import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.CitationSearcher;
+import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.FakeBibliographyExtractor;
+import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.GateCitationSearcher;
 import ru.ksu.niimm.cll.mocassin.util.inject.log.Slf4jTypeListener;
 import weka.classifiers.Classifier;
 import weka.core.Instances;
@@ -39,10 +44,11 @@ import com.google.inject.matcher.Matchers;
 import com.google.inject.name.Names;
 
 /**
- * The class configures facilities to analyze the document structure
+ * The class configures facilities to analyze the document structure.
  * 
- * It uses the <strong>analyzer-module.properties</strong> file from the classpath,
- * which shouldn't be edited in general.
+ * <p>
+ * It uses the <strong>analyzer-module.properties</strong> file from the
+ * classpath, which shouldn't be edited in general.
  * 
  * @author Nikita Zhiltsov
  * 
@@ -74,9 +80,15 @@ public class DocumentAnalyzerModule extends AbstractModule {
 
 	bind(NavigationalRelationClassifier.class).to(
 		WekaBasedNavigationalRelationClassifier.class);
+	bind(StructuralElementSearcher.class).to(
+		GateStructuralElementSearcher.class);
 	bind(ReferenceSearcher.class).to(GateBasedReferenceSearcher.class);
 	bind(ReferenceStatementExporter.class).to(
 		ReferenceStatementExporterImpl.class);
+	bind(StructuralElementTypeRecognizer.class).to(
+		StructuralElementTypeRecognizerImpl.class);
+	bind(CitationSearcher.class).to(GateCitationSearcher.class);
+	bind(BibliographyExtractor.class).to(FakeBibliographyExtractor.class);
 	bind(GraphTopologyAnalyzer.class).to(GraphTopologyAnalyzerImpl.class);
 	bindListener(Matchers.any(), new Slf4jTypeListener());
 	bindClassifier();
