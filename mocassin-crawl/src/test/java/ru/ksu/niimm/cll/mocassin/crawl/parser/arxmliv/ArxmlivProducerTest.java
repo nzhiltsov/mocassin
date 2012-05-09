@@ -18,6 +18,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ru.ksu.niimm.cll.mocassin.crawl.parser.latex.ArxmlivProducer;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.latex.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.pdf.PdfParserModule;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;

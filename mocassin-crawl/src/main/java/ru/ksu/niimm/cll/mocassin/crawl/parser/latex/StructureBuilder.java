@@ -13,8 +13,21 @@ package ru.ksu.niimm.cll.mocassin.crawl.parser.latex;
 
 import edu.uci.ics.jung.graph.Graph;
 
+/**
+ * The class build a graph from a given latex document model.
+ * 
+ * @author Nikita Zhiltsov
+ * 
+ */
 public interface StructureBuilder {
-
-	Graph<Node, Edge> buildStructureGraph(LatexDocumentModel model);
+    /**
+     * Builds a graph from a latex document model
+     * 
+     * @param model
+     *            latex document model
+     * @returns graph that consists of latex environment as nodes and relations
+     *          (see {@code EdgeType}) as edges
+     */
+    Graph<Node, Edge> buildStructureGraph(LatexDocumentModel model);
 
 }

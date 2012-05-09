@@ -12,12 +12,22 @@
 package ru.ksu.niimm.cll.mocassin.crawl.parser.latex;
 
 /**
- * This patcher adds necessary package declarations to the header of a given
- * document
+ * This patcher adds necessary package declarations to the Latex source file
+ * header with a given document identifier.
  * 
- * @author nzhiltsov
+ * <p>The location of source files is configured in
+ * <strong>'parser-module.properties'</strong> file.
+ * 
+ * 
+ * @author Nikita Zhiltsov
  * 
  */
 public interface LatexDocumentHeaderPatcher {
-	void patch(String arxivId);
+    /**
+     * Patches the Latex source file for a document with a given id.
+     * 
+     * @param documentId
+     *            document id, e.g. 'ivm18'
+     */
+    void patch(String documentId);
 }

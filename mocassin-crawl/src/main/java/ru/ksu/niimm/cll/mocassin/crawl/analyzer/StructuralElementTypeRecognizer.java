@@ -12,16 +12,21 @@
 package ru.ksu.niimm.cll.mocassin.crawl.analyzer;
 
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyClasses;
-
+/**
+ * This class recognizes the types of given structural elements.
+ * 
+ * @author Nikita Zhiltsov
+ *
+ */
 public interface StructuralElementTypeRecognizer {
 	
 
 	/**
-	 * predicts which type given element has
+	 * Recognizes the type  of a given structural element
 	 * 
-	 * @param structuralElement
-	 * @return
+	 * @param structuralElement structural element
+	 * @returns class from the Mocassin Ontology
 	 */
-	MocassinOntologyClasses predict(StructuralElement structuralElement);
+	MocassinOntologyClasses recognize(StructuralElement structuralElement);
 
 }

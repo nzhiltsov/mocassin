@@ -9,13 +9,12 @@
  *     Nikita Zhiltsov - initial API and implementation
  *     Azat Khasanshin - implementation
  ******************************************************************************/
-package ru.ksu.niimm.cll.mocassin.crawl.parser.arxmliv.impl;
+package ru.ksu.niimm.cll.mocassin.crawl.parser.latex;
 
 import java.io.File;
 
 import org.slf4j.Logger;
 
-import ru.ksu.niimm.cll.mocassin.crawl.parser.arxmliv.ArxmlivProducer;
 import ru.ksu.niimm.cll.mocassin.util.AbstractUnixCommandWrapper;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
 import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
@@ -25,7 +24,13 @@ import com.google.inject.name.Named;
 
 import expectj.TimeoutException;
 
-public class ArxmlivProducerImpl extends AbstractUnixCommandWrapper implements
+/**
+ * The class wraps around the Perl scripts from the arXMLiv installation package.
+ * 
+ * @author Nikita Zhiltsov
+ * 
+ */
+class ArxmlivProducerImpl extends AbstractUnixCommandWrapper implements
 	ArxmlivProducer {
 
     private static final String ARXMLIV_DESTINATION_PARAMETER = "--destination=%s";
@@ -44,7 +49,7 @@ public class ArxmlivProducerImpl extends AbstractUnixCommandWrapper implements
     private final String ARXMLIV_PATH;
 
     @Inject
-    public ArxmlivProducerImpl(
+    private ArxmlivProducerImpl(
 	    @Named("arxmliv.document.dir") String arxmlivDocumentsDir,
 	    @Named("arxmliv.path") String arxmlivPath,
 	    @Named("patched.tex.document.dir") String latexDir) {
@@ -53,11 +58,17 @@ public class ArxmlivProducerImpl extends AbstractUnixCommandWrapper implements
 	this.ARXMLIV_PATH = arxmlivPath;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getArxmlivDocumentDirectory() {
 	return ARXMLIV_DOCUMENT_DIR;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String produce(String arxivId) {
 	String arxmlivDocFilePath = String.format("%s/%s",

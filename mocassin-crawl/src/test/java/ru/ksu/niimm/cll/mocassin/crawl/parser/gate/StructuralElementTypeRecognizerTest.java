@@ -29,7 +29,7 @@ import ru.ksu.niimm.cll.mocassin.crawl.analyzer.ReferenceSearcher;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.StructuralElementTypeRecognizer;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl.StructuralElementImpl.IdPredicate;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.arxmliv.ArxmlivProducer;
+import ru.ksu.niimm.cll.mocassin.crawl.parser.latex.ArxmlivProducer;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.latex.LatexDocumentHeaderPatcher;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.latex.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.pdf.GeneratePdfSummaryException;
@@ -106,7 +106,7 @@ public class StructuralElementTypeRecognizerTest {
     @Test
     public void testRootElementType() {
 	MocassinOntologyClasses prediction = getStructuralElementTypeRecognizer()
-		.predict(rootElement);
+		.recognize(rootElement);
 	Assert.assertEquals(
 		"The type of root element does not equal to the expected one.",
 		MocassinOntologyClasses.UNRECOGNIZED_DOCUMENT_SEGMENT,
@@ -117,7 +117,7 @@ public class StructuralElementTypeRecognizerTest {
     public void testPredictProof() {
 
 	MocassinOntologyClasses prediction = getStructuralElementTypeRecognizer()
-		.predict(testProofElement);
+		.recognize(testProofElement);
 	Assert.assertEquals(MocassinOntologyClasses.PROOF, prediction);
     }
 
@@ -125,7 +125,7 @@ public class StructuralElementTypeRecognizerTest {
     public void testPredictTable() {
 
 	MocassinOntologyClasses prediction = getStructuralElementTypeRecognizer()
-		.predict(testTableElement);
+		.recognize(testTableElement);
 	Assert.assertEquals(MocassinOntologyClasses.TABLE, prediction);
     }
 

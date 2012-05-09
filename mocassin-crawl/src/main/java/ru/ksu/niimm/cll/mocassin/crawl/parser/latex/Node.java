@@ -15,8 +15,6 @@ import java.util.List;
 
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import ru.ksu.niimm.cll.mocassin.crawl.parser.impl.adapters.NodeAdapter;
-
 /**
  * 
  * Document part
@@ -24,46 +22,45 @@ import ru.ksu.niimm.cll.mocassin.crawl.parser.impl.adapters.NodeAdapter;
  * @author nzhiltsov
  * 
  */
-@XmlJavaTypeAdapter(NodeAdapter.class)
 public interface Node {
 
-	String getId();
+    String getId();
 
-	String getName();
+    String getName();
 
-	boolean equals(Object o);
+    boolean equals(Object o);
 
-	int hashCode();
+    int hashCode();
 
-	String getLabelText();
+    String getLabelText();
 
-	void setLabelText(String labelText);
+    void setLabelText(String labelText);
 
-	List<String> getContents();
+    List<String> getContents();
 
-	void addContents(String... text);
+    void addContents(String... text);
 
-	int getBeginLine();
+    int getBeginLine();
 
-	int getEndLine();
+    int getEndLine();
 
-	int getOffset();
+    int getOffset();
 
-	boolean isEnvironment();
+    boolean isEnvironment();
 
-	String getTitle();
+    String getTitle();
 
-	void setTitle(String title);
+    void setTitle(String title);
 
-	boolean isNumbered();
+    boolean isNumbered();
 
-	/**
-	 * returns the start page number in the generated PDF file, on which a node
-	 * is located
-	 * 
-	 * @return
-	 */
-	int getPdfPageNumber();
-	
-	void setPdfPageNumber(int pageNumber);
+    /**
+     * returns the start page number in the generated PDF file, on which a node
+     * is located
+     * 
+     * @return
+     */
+    int getPdfPageNumber();
+
+    void setPdfPageNumber(int pageNumber);
 }

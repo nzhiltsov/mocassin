@@ -22,6 +22,19 @@ import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
+/**
+ * This class implements patching Latex source files via custom bash script. Its
+ * location is configured in the <strong>'parser-module.properties'</strong>
+ * file: see <i>'header.patcher.script.path'</i> property.
+ * 
+ * <p>
+ * If the class method fails, please make sure if the bash script file exists,
+ * otherwise, it should be copied there from the 'mocassin-crawl/etc' folder in
+ * Mocassin sources.
+ * 
+ * @author Nikita Zhiltsov
+ * 
+ */
 class SedBasedHeaderPatcher extends AbstractUnixCommandWrapper implements
 	LatexDocumentHeaderPatcher {
     @InjectLogger
@@ -36,7 +49,7 @@ class SedBasedHeaderPatcher extends AbstractUnixCommandWrapper implements
     private final String OUTPUT_DIR;
 
     @Inject
-    SedBasedHeaderPatcher(
+    private SedBasedHeaderPatcher(
 	    @Named("header.patcher.script.path") String patcherScriptPath,
 	    @Named("bash.path") String bashPath,
 	    @Named("patched.tex.document.dir") String outputDir,
@@ -47,6 +60,9 @@ class SedBasedHeaderPatcher extends AbstractUnixCommandWrapper implements
 	this.OUTPUT_DIR = outputDir;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void patch(String arxivId) {
 

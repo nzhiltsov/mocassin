@@ -11,28 +11,27 @@
  ******************************************************************************/
 package ru.ksu.niimm.cll.mocassin.crawl.parser.latex;
 
-import java.io.InputStream;
-
 /**
- * Parser that analyzes a document and builds the its graph model
+ * Wrapper for <a href="https://trac.kwarc.info/arXMLiv">arXMLiv</a> tools.
  * 
  * @author Nikita Zhiltsov
  * 
  */
-public interface Parser {
+public interface ArxmlivProducer {
     /**
-     * Parses a given input stream using a given encoding
+     * Produces the XML representation of a document latex source with a given
+     * identifier
      * 
-     * @param docId
-     *            document id, e.g. 'ivm18'
-     * @param inputStream
-     *            input stream
-     * @param encoding
-     *            encoding to parse the stream
-     * @param closeStream
-     *            boolean, if the stream should be closed
-     * @returns an object that represents the structure of a Latex document
+     * @param documentId
+     *            document id
+     * @return XML file local path
      */
-    LatexDocumentModel parse(String docId, InputStream inputStream,
-	    String encoding, boolean closeStream);
+    String produce(String documentId);
+
+    /**
+     * 
+     * @returns local path, where XML files are located. Its value is configured
+     *          in the <strong>'parser-module.properties'</strong> file
+     */
+    String getArxmlivDocumentDirectory();
 }
