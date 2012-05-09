@@ -27,7 +27,7 @@ public class PdfParserModule extends AbstractModule {
 		try {
 			Properties properties = new Properties();
 			properties.load(this.getClass().getClassLoader()
-					.getResourceAsStream("parser_module.properties"));
+					.getResourceAsStream("parser-module.properties"));
 			Names.bindProperties(binder(), properties);
 		} catch (IOException ex) {
 			throw new RuntimeException(

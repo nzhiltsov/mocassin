@@ -13,22 +13,36 @@ package ru.ksu.niimm.cll.mocassin.crawl.parser.latex;
 
 import java.io.InputStream;
 
-
+/**
+ * This facade handles read/write operations with temporary Latex source files.
+ * 
+ * <p>The location of saved files is configured in the
+ * <strong>'parser-module.properties'</strong> file.
+ * 
+ * @author Nikita Zhiltsov
+ * 
+ */
 public interface LatexDocumentDAO {
-	/**
-	 * load the document model for a given id (e.g. <i>math/0410002</i>)
-	 * 
-	 * @param documentId
-	 * @return
-	 */
-	LatexDocumentModel load(String documentId);
+    /**
+     * Loads the document model for a given id
+     * 
+     * @param documentId
+     *            document id, e.g. <i>'math/0410002'</i>
+     * @returns latex document model
+     */
+    LatexDocumentModel load(String documentId);
 
-	/**
-	 * persists the Latex source which corresponds to a arXiv paper with a given
-	 * identifier
-	 * 
-	 * @param arxivId
-	 * @param inputStream
-	 */
-	void save(String arxivId, InputStream inputStream, String encoding);
+    /**
+     * Persists the Latex source in a given stream, which corresponds to a
+     * document with a given identifier
+     * 
+     * @param documentId
+     *            document id, e.g. <i>'math/0410002'</i>
+     * @param inputStream
+     *            input stream
+     * @param encoding
+     *            encoding to parse the stream
+     * 
+     */
+    void save(String documentId, InputStream inputStream, String encoding);
 }

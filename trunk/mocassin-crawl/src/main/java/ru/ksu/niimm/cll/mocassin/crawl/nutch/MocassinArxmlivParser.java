@@ -20,7 +20,7 @@ import org.apache.nutch.protocol.Content;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ru.ksu.niimm.cll.mocassin.crawl.parser.arxmliv.ArxmlivProducer;
+import ru.ksu.niimm.cll.mocassin.crawl.parser.latex.ArxmlivProducer;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.latex.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.pdf.PdfParserModule;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;

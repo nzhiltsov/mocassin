@@ -9,7 +9,7 @@
  *     Nikita Zhiltsov - initial API and implementation
  *     Azat Khasanshin - implementation
  ******************************************************************************/
-package ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl;
+package ru.ksu.niimm.cll.mocassin.crawl.analyzer;
 
 import edu.uci.ics.jung.graph.Graph;
 import gate.Annotation;
@@ -24,10 +24,9 @@ import java.util.List;
 
 import org.slf4j.Logger;
 
-import ru.ksu.niimm.cll.mocassin.crawl.analyzer.Reference;
-import ru.ksu.niimm.cll.mocassin.crawl.analyzer.StructuralElement;
-import ru.ksu.niimm.cll.mocassin.crawl.analyzer.StructuralElementSearcher;
-import ru.ksu.niimm.cll.mocassin.crawl.analyzer.StructuralElementTypeRecognizer;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl.StructuralElementByLocationComparator;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl.StructuralElementImpl;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl.StructuralElementImpl.Builder;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl.StructuralElementImpl.TypeFilterPredicate;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.arxmliv.ArxmlivFormatConstants;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.arxmliv.ArxmlivStructureElementTypes;
@@ -50,7 +49,13 @@ import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-public class GateStructuralElementSearcher implements StructuralElementSearcher {
+/**
+ * Basic implementation of the structural element searcher
+ * 
+ * @author Nikita Zhiltsov
+ * 
+ */
+class StructuralElementSearcherImpl implements StructuralElementSearcher {
     private final String ARXMLIV_MARKUP_NAME;
     private final String TITLE_ANNOTATION_NAME;
     @InjectLogger
@@ -65,13 +70,16 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
     private StructureBuilder structureBuilder;
 
     @Inject
-    GateStructuralElementSearcher(
+    private StructuralElementSearcherImpl(
 	    @Named("arxmliv.markup.name") String arxmlivMarkupName,
 	    @Named("title.annotation.name") String titleAnnotationName) {
 	this.ARXMLIV_MARKUP_NAME = arxmlivMarkupName;
 	this.TITLE_ANNOTATION_NAME = titleAnnotationName;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<StructuralElement> retrieveElements(Document document,
 	    String paperUrl) {
@@ -93,6 +101,22 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 
 	fillPageNumbers(elements, latexNodes);
 	return elements;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public StructuralElement findClosestPredecessor(StructuralElement element,
+	    MocassinOntologyClasses[] validDomains,
+	    Graph<StructuralElement, Reference> graph) {
+	Collection<StructuralElement> elements = graph.getVertices();
+	List<StructuralElement> filteredElements = CollectionUtil
+		.asList(Iterables.filter(elements, new TypeFilterPredicate(
+			validDomains)));
+	if (!filteredElements.contains(element))
+	    filteredElements.add(element);
+	return getClosestPredecessor(filteredElements, element);
     }
 
     private void fillPageNumbers(List<StructuralElement> elements,
@@ -125,19 +149,6 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 			element.getUri());
 	    }
 	}
-    }
-
-    @Override
-    public StructuralElement findClosestPredecessor(StructuralElement element,
-	    MocassinOntologyClasses[] validDomains,
-	    Graph<StructuralElement, Reference> graph) {
-	Collection<StructuralElement> elements = graph.getVertices();
-	List<StructuralElement> filteredElements = CollectionUtil
-		.asList(Iterables.filter(elements, new TypeFilterPredicate(
-			validDomains)));
-	if (!filteredElements.contains(element))
-	    filteredElements.add(element);
-	return getClosestPredecessor(filteredElements, element);
     }
 
     private StructuralElement getClosestPredecessor(
@@ -214,7 +225,7 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 	    element.setContents(getPureTokensForAnnotation(document, annotation));
 	}
 	MocassinOntologyClasses predictedClass = structuralElementTypeRecognizer
-		.predict(element);
+		.recognize(element);
 	element.setPredictedClass(predictedClass);
 
 	return element;

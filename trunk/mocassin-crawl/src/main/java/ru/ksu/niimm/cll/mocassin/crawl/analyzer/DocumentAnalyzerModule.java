@@ -16,10 +16,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Properties;
 
-import ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl.GateBasedReferenceSearcher;
-import ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl.GateStructuralElementSearcher;
-import ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl.ReferenceStatementExporterImpl;
-import ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl.StructuralElementTypeRecognizerImpl;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.ExemplifiesRelationAnalyzer;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.GraphTopologyAnalyzer;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.HasConsequenceRelationAnalyzer;
@@ -81,8 +77,8 @@ public class DocumentAnalyzerModule extends AbstractModule {
 	bind(NavigationalRelationClassifier.class).to(
 		WekaBasedNavigationalRelationClassifier.class);
 	bind(StructuralElementSearcher.class).to(
-		GateStructuralElementSearcher.class);
-	bind(ReferenceSearcher.class).to(GateBasedReferenceSearcher.class);
+		StructuralElementSearcherImpl.class);
+	bind(ReferenceSearcher.class).to(ReferenceSearcherImpl.class);
 	bind(ReferenceStatementExporter.class).to(
 		ReferenceStatementExporterImpl.class);
 	bind(StructuralElementTypeRecognizer.class).to(

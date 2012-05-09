@@ -9,7 +9,7 @@
  *     Nikita Zhiltsov - initial API and implementation
  *     Azat Khasanshin - implementation
  ******************************************************************************/
-package ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl;
+package ru.ksu.niimm.cll.mocassin.crawl.analyzer;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,10 +18,9 @@ import java.util.List;
 
 import org.slf4j.Logger;
 
-import ru.ksu.niimm.cll.mocassin.crawl.analyzer.Reference;
-import ru.ksu.niimm.cll.mocassin.crawl.analyzer.ReferenceSearcher;
-import ru.ksu.niimm.cll.mocassin.crawl.analyzer.StructuralElement;
-import ru.ksu.niimm.cll.mocassin.crawl.analyzer.StructuralElementSearcher;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl.ReferenceImpl;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl.StructuralElementImpl;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl.ReferenceImpl.Builder;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl.StructuralElementImpl.DescPositionComparator;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.ExemplifiesRelationAnalyzer;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.HasConsequenceRelationAnalyzer;
@@ -53,7 +52,7 @@ import gate.Document;
  * @author Azat Khasanshin
  * 
  */
-public class GateBasedReferenceSearcher implements ReferenceSearcher {
+class ReferenceSearcherImpl implements ReferenceSearcher {
     private final String ARXMLIV_MARKUP_NAME;
     private final String ARXMLIV_REF_ANNOTATION_NAME;
     private final String ARXMLIV_MATH_ANNOTATION_NAME;
@@ -75,7 +74,7 @@ public class GateBasedReferenceSearcher implements ReferenceSearcher {
     private ExemplifiesRelationAnalyzer exemplifiesRelationAnalyzer;
 
     @Inject
-    private GateBasedReferenceSearcher(
+    private ReferenceSearcherImpl(
 	    @Named("arxmliv.markup.name") String arxmlivMarkupName,
 	    @Named("arxmliv.ref.annotation.name") String arxmlivRefAnnotationName,
 	    @Named("arxmliv.math.annotation.name") String arxmlivMathAnnotationName,

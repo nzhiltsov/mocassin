@@ -30,7 +30,7 @@ import org.junit.runner.RunWith;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.StructuralElementSearcher;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl.StructuralElementImpl.IdComparator;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.arxmliv.ArxmlivProducer;
+import ru.ksu.niimm.cll.mocassin.crawl.parser.latex.ArxmlivProducer;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.latex.LatexDocumentHeaderPatcher;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.latex.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.pdf.GeneratePdfSummaryException;

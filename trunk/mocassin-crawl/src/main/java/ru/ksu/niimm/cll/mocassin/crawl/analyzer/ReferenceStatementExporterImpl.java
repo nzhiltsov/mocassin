@@ -9,7 +9,7 @@
  *     Nikita Zhiltsov - initial API and implementation
  *     Azat Khasanshin - implementation
  ******************************************************************************/
-package ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl;
+package ru.ksu.niimm.cll.mocassin.crawl.analyzer;
 
 import static java.lang.String.format;
 import static ru.ksu.niimm.cll.mocassin.rdf.ontology.model.URIConstants.createIntegerTriple;
@@ -22,9 +22,6 @@ import java.util.List;
 
 import org.openrdf.model.Statement;
 
-import ru.ksu.niimm.cll.mocassin.crawl.analyzer.Reference;
-import ru.ksu.niimm.cll.mocassin.crawl.analyzer.ReferenceStatementExporter;
-import ru.ksu.niimm.cll.mocassin.crawl.analyzer.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyRelations;
 import edu.uci.ics.jung.graph.Graph;
@@ -34,7 +31,7 @@ import edu.uci.ics.jung.graph.Graph;
  * @author Nikita Zhiltsov
  *
  */
-public class ReferenceStatementExporterImpl implements
+class ReferenceStatementExporterImpl implements
 		ReferenceStatementExporter {
 	private static final String EMPTY_STRING = "";
 	private static final String END_LINE = "\n";
