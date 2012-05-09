@@ -14,7 +14,13 @@ package ru.ksu.niimm.cll.mocassin.search.providers;
 import java.io.IOException;
 
 import com.google.inject.throwingproviders.CheckedProvider;
-
+/**
+ * Configures the index searcher
+ * 
+ * @author Nikita Zhiltsov
+ *
+ * @param <T>
+ */
 public interface IndexSearcherProvider<T> extends CheckedProvider<T> {
 	T get() throws IOException;
 }
