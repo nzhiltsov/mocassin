@@ -63,7 +63,7 @@ public class GateModule extends AbstractModule {
 	}
 
 	try {
-	    if (Gate.getPluginsHome() != null) {
+	    if (Gate.getPluginsHome() == null) {
 		URI pluginsHome = this
 			.getClass()
 			.getResource(
@@ -81,7 +81,7 @@ public class GateModule extends AbstractModule {
 					    .getProperty(GATE_SITE_CONFIG_CONF_PROPERTY))
 		    .toURI();
 	    Gate.setSiteConfigFile(new File(siteConfig));
-	    if (Gate.getBuiltinCreoleDir() != null) {
+	    if (Gate.getBuiltinCreoleDir() == null) {
 		URI builtinCreoleDir = this
 			.getClass()
 			.getResource(
