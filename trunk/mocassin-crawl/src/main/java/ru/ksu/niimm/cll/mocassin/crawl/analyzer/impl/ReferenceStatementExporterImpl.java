@@ -22,9 +22,9 @@ import java.util.List;
 
 import org.openrdf.model.Statement;
 
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.Reference;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.ReferenceStatementExporter;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Reference;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElement;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyRelations;
 import edu.uci.ics.jung.graph.Graph;

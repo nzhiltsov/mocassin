@@ -13,9 +13,9 @@ package ru.ksu.niimm.cll.mocassin.crawl.parser.latex;
 
 import java.io.InputStream;
 
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.Reference;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.ParsedDocument;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Reference;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElement;
 import edu.uci.ics.jung.graph.Graph;
 
 /**

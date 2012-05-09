@@ -9,10 +9,12 @@
  *     Nikita Zhiltsov - initial API and implementation
  *     Azat Khasanshin - implementation
  ******************************************************************************/
-package ru.ksu.niimm.cll.mocassin.crawl.parser.gate;
+package ru.ksu.niimm.cll.mocassin.crawl.analyzer;
 
 import java.util.List;
 
+import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.ParsedDocument;
+import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Token;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyRelations;
 
 /**

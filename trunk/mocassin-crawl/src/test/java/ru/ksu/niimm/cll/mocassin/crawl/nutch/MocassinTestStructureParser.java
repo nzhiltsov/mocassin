@@ -13,7 +13,6 @@ package ru.ksu.niimm.cll.mocassin.crawl.nutch;
 
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.DocumentAnalyzerModule;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.GateModule;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.NlpModule;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.latex.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.pdf.PdfParserModule;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyTestModule;
@@ -27,7 +26,7 @@ public class MocassinTestStructureParser extends MocassinStructureParser {
 	Injector injector = Guice
 		.createInjector(new OntologyTestModule(), new DocumentAnalyzerModule(),
 			new GateModule(), new LatexParserModule(),
-			new NlpModule(), new PdfParserModule());
+			 new PdfParserModule());
 	return injector;
     }
 }

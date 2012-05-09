@@ -11,7 +11,7 @@
  ******************************************************************************/
 package ru.ksu.niimm.cll.mocassin.crawl.analyzer.importance.info;
 
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Reference;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.Reference;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyClasses;
 
 

@@ -33,7 +33,7 @@ import com.google.common.base.Predicate;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-class GateCitationSearcher implements CitationSearcher {
+public class GateCitationSearcher implements CitationSearcher {
     private final String ARXMLIV_MARKUP_NAME;
     private final String ARXMLIV_CITE_ANNOTATION_NAME;
     private final String TOKEN_ANNOTATION_NAME;

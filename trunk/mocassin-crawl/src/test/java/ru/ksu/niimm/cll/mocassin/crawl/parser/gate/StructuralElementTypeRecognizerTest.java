@@ -24,9 +24,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.DocumentAnalyzerModule;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.Reference;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.ReferenceSearcher;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.StructuralElement;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.StructuralElementTypeRecognizer;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl.StructuralElementImpl.IdPredicate;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.arxmliv.ArxmlivProducer;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElementImpl.IdPredicate;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.latex.LatexDocumentHeaderPatcher;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.latex.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.pdf.GeneratePdfSummaryException;
@@ -35,7 +38,6 @@ import ru.ksu.niimm.cll.mocassin.crawl.parser.pdf.PdfParserModule;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.pdf.PdflatexCompilationException;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.pdf.PdflatexWrapper;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyClasses;
-import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyTestModule;
 
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
@@ -43,7 +45,7 @@ import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext({ NlpModule.class, GateModule.class, LatexParserModule.class,
+@GuiceContext({ GateModule.class, LatexParserModule.class,
 	PdfParserModule.class, DocumentAnalyzerModule.class})
 public class StructuralElementTypeRecognizerTest {
 

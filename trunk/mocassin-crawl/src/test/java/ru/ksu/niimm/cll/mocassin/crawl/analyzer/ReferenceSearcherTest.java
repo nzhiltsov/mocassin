@@ -28,10 +28,7 @@ import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.AccessGateDocumentException;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.AccessGateStorageException;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.GateModule;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.GateProcessingFacade;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.NlpModule;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.ProcessException;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Reference;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.latex.LatexDocumentHeaderPatcher;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.latex.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.pdf.GeneratePdfSummaryException;
@@ -49,7 +46,7 @@ import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext({ DocumentAnalyzerModule.class, NlpModule.class, LatexParserModule.class,
+@GuiceContext({ DocumentAnalyzerModule.class, LatexParserModule.class,
 	OntologyTestModule.class, FullTextModule.class, GateModule.class,
 	PdfParserModule.class })
 public class ReferenceSearcherTest {

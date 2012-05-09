@@ -13,9 +13,9 @@ package ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.impl;
 
 import java.util.Collection;
 
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Reference;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElement;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElementSearcher;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.Reference;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.StructuralElement;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.StructuralElementSearcher;
 
 import com.google.inject.Inject;
 

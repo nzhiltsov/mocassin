@@ -9,7 +9,7 @@
  *     Nikita Zhiltsov - initial API and implementation
  *     Azat Khasanshin - implementation
  ******************************************************************************/
-package ru.ksu.niimm.cll.mocassin.crawl.parser.gate;
+package ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -18,12 +18,14 @@ import java.util.SortedMap;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.StructuralElement;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.StructuralElementTypeRecognizer;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.arxmliv.ArxmlivStructureElementTypes;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.util.StringSimilarityEvaluator;
 import ru.ksu.niimm.cll.mocassin.util.StringSimilarityEvaluator.SimilarityMetrics;
 
-class StructuralElementTypeRecognizerImpl implements
+public class StructuralElementTypeRecognizerImpl implements
 		StructuralElementTypeRecognizer {
 	/**
 	 * threshold for checking prediction

@@ -35,14 +35,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.DocumentAnalyzerModule;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.Reference;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.ReferenceSearcher;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.ReferenceStatementExporter;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.arxmliv.ArxmlivProducer;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.GateModule;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.GateProcessingFacade;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.NlpModule;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Reference;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.latex.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.pdf.PdfHighlighter;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.pdf.PdfParserModule;
@@ -90,7 +89,7 @@ public class MocassinStructureParser implements Parser {
 	Injector injector = Guice
 		.createInjector(new OntologyModule(), new DocumentAnalyzerModule(),
 			new GateModule(), new LatexParserModule(),
-			new NlpModule(), new PdfParserModule());
+			new PdfParserModule());
 	return injector;
     }
 
