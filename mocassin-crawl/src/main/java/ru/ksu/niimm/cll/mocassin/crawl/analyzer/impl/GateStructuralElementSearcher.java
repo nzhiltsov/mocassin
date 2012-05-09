@@ -64,9 +64,6 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
     @Inject
     private StructureBuilder structureBuilder;
 
-    private LatexDocumentModel latexDocumentModel;
-    private List<Node> latexNodes;
-
     @Inject
     GateStructuralElementSearcher(
 	    @Named("arxmliv.markup.name") String arxmlivMarkupName,
@@ -79,9 +76,9 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
     public List<StructuralElement> retrieveElements(Document document,
 	    String paperUrl) {
 	String paperId = StringUtil.extractMathnetKeyFromURI(paperUrl);
-	latexDocumentModel = latexDocumentDAO.load(paperId);
-	latexNodes = new ArrayList<Node>(structureBuilder.buildStructureGraph(
-		latexDocumentModel).getVertices());
+	LatexDocumentModel latexDocumentModel = latexDocumentDAO.load(paperId);
+	List<Node> latexNodes = new ArrayList<Node>(structureBuilder
+		.buildStructureGraph(latexDocumentModel).getVertices());
 	Collections.sort(latexNodes, new NodePositionComparator());
 
 	AnnotationSet structuralAnnotations = annotationUtil
@@ -94,11 +91,12 @@ public class GateStructuralElementSearcher implements StructuralElementSearcher 
 	    elements.add(element);
 	}
 
-	fillPageNumbers(elements);
+	fillPageNumbers(elements, latexNodes);
 	return elements;
     }
 
-    private void fillPageNumbers(List<StructuralElement> elements) {
+    private void fillPageNumbers(List<StructuralElement> elements,
+	    List<Node> latexNodes) {
 	Collections.sort(elements, new StructuralElementByLocationComparator());
 	int j = 0;
 	for (StructuralElement element : elements) {

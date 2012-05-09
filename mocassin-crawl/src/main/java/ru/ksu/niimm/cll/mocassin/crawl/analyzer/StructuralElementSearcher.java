@@ -19,10 +19,10 @@ import java.util.List;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyClasses;
 
 /**
- * Represents a functionality of searching the structural elements in parsed
+ * Represents functionality of searching the structural elements in GATE
  * documents
  * 
- * @author nzhiltsov
+ * @author Nikita Zhiltsov
  * 
  */
 public interface StructuralElementSearcher {
@@ -39,7 +39,7 @@ public interface StructuralElementSearcher {
 
     /**
      * 
-     * This method finds the closest element, which follows by the given
+     * This method finds the closest element, which is followed by the given
      * element, checking its type using given domains.
      * 
      * @param element
@@ -48,7 +48,8 @@ public interface StructuralElementSearcher {
      *            domains to filter
      * @param graph
      *            graph that contains both the elements
-     * @return
+     * @returns closest preceding structural element, which is suffices given
+     *          restrictions
      */
     StructuralElement findClosestPredecessor(StructuralElement element,
 	    MocassinOntologyClasses[] validDomains,
