@@ -31,7 +31,7 @@ public class NlpModule extends AbstractModule {
 		try {
 			Properties properties = new Properties();
 			properties.load(this.getClass().getClassLoader()
-					.getResourceAsStream("nlp_module.properties"));
+					.getResourceAsStream("nlp-module.properties"));
 			Names.bindProperties(binder(), properties);
 		} catch (IOException ex) {
 			throw new RuntimeException(

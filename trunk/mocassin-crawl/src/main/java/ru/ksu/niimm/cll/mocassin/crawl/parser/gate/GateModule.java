@@ -15,7 +15,11 @@ import gate.Gate;
 import gate.creole.SerialAnalyserController;
 import gate.util.GateException;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Properties;
 
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.util.AnnotationUtil;
@@ -31,8 +35,10 @@ import com.google.inject.throwingproviders.ThrowingProviderBinder;
 
 public class GateModule extends AbstractModule {
 
+    private static final String GATE_SITE_CONFIG_CONF_PROPERTY = "gate.site.config";
     private static final String GATE_BUILTIN_CREOLE_DIR_CONF_PROPERTY = "gate.builtin.creole.dir";
     private static final String GATE_HOME_CONF_PROPERTY = "gate.home";
+    private static final String GATE_PLUGINS_HOME_CONF_PROPERTY = "gate.plugins.home";
 
     @Override
     protected void configure() {
@@ -40,20 +46,45 @@ public class GateModule extends AbstractModule {
 	try {
 
 	    properties.load(this.getClass().getClassLoader()
-		    .getResourceAsStream("nlp_module.properties"));
+		    .getResourceAsStream("nlp-module.properties"));
 	    Names.bindProperties(binder(), properties);
 	} catch (IOException ex) {
 	    throw new RuntimeException(
 		    "Failed to load the GATE module configuration.");
 	}
-	System.setProperty(GATE_HOME_CONF_PROPERTY,
-		properties.getProperty(GATE_HOME_CONF_PROPERTY));
-	System.setProperty(GATE_BUILTIN_CREOLE_DIR_CONF_PROPERTY,
-		properties.getProperty(GATE_BUILTIN_CREOLE_DIR_CONF_PROPERTY));
+
 	try {
+	    URI pluginsHome = this
+		    .getClass()
+		    .getResource(
+			    "/"
+				    + properties
+					    .getProperty(GATE_PLUGINS_HOME_CONF_PROPERTY))
+		    .toURI();
+	    Gate.setPluginsHome(new File(pluginsHome));
+	    URI siteConfig = this
+		    .getClass()
+		    .getResource(
+			    "/"
+				    + properties
+					    .getProperty(GATE_SITE_CONFIG_CONF_PROPERTY))
+		    .toURI();
+	    Gate.setSiteConfigFile(new File(siteConfig));
+	    URI builtinCreoleDir = this
+		    .getClass()
+		    .getResource(
+			    "/"
+				    + properties
+					    .getProperty(GATE_BUILTIN_CREOLE_DIR_CONF_PROPERTY))
+		    .toURI();
+	    Gate.setBuiltinCreoleDir(builtinCreoleDir.toURL());
 	    Gate.init();
 	} catch (GateException e) {
-	    throw new RuntimeException("Failed to initialize GATE.");
+	    throw new RuntimeException("Failed to initialize GATE.", e);
+	} catch (URISyntaxException e) {
+	    throw new RuntimeException("Failed to initialize GATE.", e);
+	} catch (MalformedURLException e) {
+	    throw new RuntimeException("Failed to initialize GATE.", e);
 	}
 	bind(GateProcessingFacade.class).to(GateProcessingFacadeImpl.class);
 	bind(AnnotationUtil.class).to(AnnotationUtilImpl.class);
