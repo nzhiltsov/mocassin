@@ -253,18 +253,7 @@
 			<artifactId>jung-graph-impl</artifactId>
 			<version>2.0.1</version>
 		</dependency>
-		<dependency>
-			<groupId>gate</groupId>
-			<artifactId>gate</artifactId>
-			<version>5.2.1</version>
-			<type>pom</type>
-			<exclusions>
-				<exclusion>
-					<groupId>org.apache.lucene</groupId>
-					<artifactId>lucene-core</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
+
 
 		<dependency>
 			<groupId>nl.mpi</groupId>
@@ -356,9 +345,15 @@
 			<artifactId>jgrapht-jdk1.5</artifactId>
 			<version>0.7.3</version>
 		</dependency>
+		<!-- for Unit testing -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
 	</dependencies>
 	<properties>
 		<sesame.version>2.6.3</sesame.version>
 		<pellet.version>2.3.0</pellet.version>
 	</properties>
+
 </project>

@@ -11,7 +11,11 @@
  ******************************************************************************/
 package ru.ksu.niimm.cll.mocassin.crawl.parser.gate;
 
+import gate.Document;
+
 import java.io.File;
+
+import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -27,6 +31,7 @@ import ru.ksu.niimm.cll.mocassin.crawl.parser.pdf.PdflatexCompilationException;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.pdf.PdflatexWrapper;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
@@ -49,6 +54,9 @@ public class GateProcessingFacadeTest {
     private String firstPath;
     private String secondPath;
 
+    private final String SENTENCE_ANNOTATION_NAME = "Sentence";
+
+
     @Before
     public void init() throws Exception {
 	firstPath = prepareDoc(FIRST_DOC_ID);
@@ -58,9 +66,20 @@ public class GateProcessingFacadeTest {
     @Test
     public void testProcess() throws AccessGateDocumentException,
 	    AccessGateStorageException, ProcessException {
-	gateProcessingFacade.process(FIRST_DOC_ID, new File(firstPath), "utf8");
-	gateProcessingFacade.process(SECOND_DOC_ID, new File(secondPath),
+	Document firstDoc = gateProcessingFacade.process(FIRST_DOC_ID,
+		new File(firstPath), "utf8");
+	Assert.assertTrue(
+		"Sentence set is empty.",
+		firstDoc.getAnnotations(
+			GateFormatConstants.DEFAULT_ANNOTATION_SET_NAME)
+			.get(SENTENCE_ANNOTATION_NAME).size() > 0);
+	Document secondDoc = gateProcessingFacade.process(SECOND_DOC_ID, new File(secondPath),
 		"utf8");
+	Assert.assertTrue(
+		"Sentence set is empty.",
+		secondDoc.getAnnotations(
+			GateFormatConstants.DEFAULT_ANNOTATION_SET_NAME)
+			.get(SENTENCE_ANNOTATION_NAME).size() > 0);
     }
 
     private String prepareDoc(String documentId)
