@@ -29,7 +29,7 @@ import com.google.inject.name.Names;
  * 
  * <p>
  * It uses <strong>fulltext-module.properties</strong> file from the classpath,
- * in particular, mandadory <i>'lucene.directory'</i> property, which must be defined there.
+ * in particular, mandatory <i>'lucene.directory'</i> property, which must be defined there.
  * 
  * @author Nikita Zhiltsov
  * 
