@@ -16,12 +16,21 @@ import org.apache.lucene.store.RAMDirectory;
 
 import com.google.inject.name.Names;
 
+/**
+ * Configures facilities for full text indexing in the test settings (e.g. using
+ * an in-memory directory etc.)
+ * 
+ * @author Nikita Zhiltsov
+ * 
+ */
 public class FullTextTestModule extends FullTextModule {
-
-	@Override
-	protected void bindDirectory() {
-		bind(Directory.class).annotatedWith(Names.named("lucene.directory"))
-				.toInstance(new RAMDirectory());
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void bindDirectory() {
+	bind(Directory.class).annotatedWith(Names.named("lucene.directory"))
+		.toInstance(new RAMDirectory());
+    }
 
 }

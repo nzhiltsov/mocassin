@@ -12,7 +12,13 @@
 package ru.ksu.niimm.cll.mocassin.search.providers;
 
 import com.google.inject.throwingproviders.CheckedProvider;
-
+/**
+ * Configures the index writer
+ * 
+ * @author Nikita Zhiltsov
+ *
+ * @param <T>
+ */
 public interface IndexWriterProvider<T> extends CheckedProvider<T> {
 
 }

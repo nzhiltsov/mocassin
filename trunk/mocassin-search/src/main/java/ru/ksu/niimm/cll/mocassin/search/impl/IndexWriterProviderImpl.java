@@ -17,28 +17,42 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.util.Version;
 
+import ru.ksu.niimm.cll.mocassin.search.FullTextModule;
 import ru.ksu.niimm.cll.mocassin.search.providers.IndexWriterProvider;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
+/**
+ * Configures the index writer through using a wired index directory
+ * 
+ * @see FullTextModule#configure(com.google.inject.Binder)
+ * 
+ * @author Nikita Zhiltsov
+ * 
+ */
 public class IndexWriterProviderImpl implements
-		IndexWriterProvider<IndexWriter> {
+	IndexWriterProvider<IndexWriter> {
 
-	private Directory directory;
+    private Directory directory;
 
-	@Inject
-	public IndexWriterProviderImpl(
-			@Named("lucene.directory") Directory directory) {
-		this.directory = directory;
-	}
+    @Inject
+    private IndexWriterProviderImpl(
+	    @Named("lucene.directory") Directory directory) {
+	this.directory = directory;
+    }
 
-	@Override
-	public IndexWriter get() throws Exception {
+    /**
+     * @returns an index writer instance, configured through using a wired index
+     *          directory
+     *          
+     */
+    @Override
+    public IndexWriter get() throws Exception {
 
-		IndexWriter indexWriter = new IndexWriter(this.directory,
-				new IndexWriterConfig(Version.LUCENE_31, new StandardAnalyzer(
-						Version.LUCENE_31)));
-		return indexWriter;
-	}
+	IndexWriter indexWriter = new IndexWriter(this.directory,
+		new IndexWriterConfig(Version.LUCENE_31, new StandardAnalyzer(
+			Version.LUCENE_31)));
+	return indexWriter;
+    }
 }

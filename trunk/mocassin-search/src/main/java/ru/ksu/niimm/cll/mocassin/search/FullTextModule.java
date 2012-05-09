@@ -20,45 +20,53 @@ import java.util.logging.Logger;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
-import ru.ksu.niimm.cll.mocassin.search.impl.PDFLuceneIndexer;
-
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.name.Names;
 
+/**
+ * The class configures facilities for full text indexing
+ * 
+ * <p>
+ * It uses <strong>fulltext-module.properties</strong> file from the classpath,
+ * in particular, mandadory <i>'lucene.directory'</i> property, which must be defined there.
+ * 
+ * @author Nikita Zhiltsov
+ * 
+ */
 public class FullTextModule extends AbstractModule {
-	private static final String LUCENE_DIRECTORY_PARAMETER_NAME = "lucene.directory";
-	@Inject
-	private Logger logger;
+    private static final String LUCENE_DIRECTORY_PARAMETER_NAME = "lucene.directory";
+    @Inject
+    private Logger logger;
 
-	@Override
-	protected void configure() {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void configure() {
+	bindDirectory();
+    }
 
-		bindDirectory();
-		bindInjections();
+    /**
+     * Configures directory to persist the index
+     */
+    protected void bindDirectory() {
+	try {
+	    Properties properties = new Properties();
+	    properties.load(this.getClass().getClassLoader()
+		    .getResourceAsStream("fulltext-module.properties"));
+	    Names.bindProperties(binder(), properties);
+	    bind(Directory.class).annotatedWith(
+		    Names.named(LUCENE_DIRECTORY_PARAMETER_NAME)).toInstance(
+		    FSDirectory.open(new File(properties
+			    .getProperty(LUCENE_DIRECTORY_PARAMETER_NAME))));
+	} catch (IOException e) {
+	    logger.log(
+		    Level.SEVERE,
+		    "failed to initialize the index directory due to: "
+			    + e.getMessage());
+	    throw new RuntimeException();
 	}
-
-	protected void bindInjections() {
-		bind(PDFIndexer.class).to(PDFLuceneIndexer.class);
-	}
-
-	protected void bindDirectory() {
-		try {
-			Properties properties = new Properties();
-			properties.load(this.getClass().getClassLoader()
-					.getResourceAsStream("fulltext-module.properties"));
-			Names.bindProperties(binder(), properties);
-			bind(Directory.class).annotatedWith(
-					Names.named(LUCENE_DIRECTORY_PARAMETER_NAME)).toInstance(
-					FSDirectory.open(new File(properties
-							.getProperty(LUCENE_DIRECTORY_PARAMETER_NAME))));
-		} catch (IOException e) {
-			logger.log(
-					Level.SEVERE,
-					"failed to initialize the index directory due to: "
-							+ e.getMessage());
-			throw new RuntimeException();
-		}
-	}
+    }
 
 }

@@ -16,27 +16,39 @@ import java.io.IOException;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.store.Directory;
 
+import ru.ksu.niimm.cll.mocassin.search.FullTextModule;
 import ru.ksu.niimm.cll.mocassin.search.providers.IndexSearcherProvider;
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
-@Singleton
+/**
+ * Configures the index searcher, which searches in a wired index directory
+ * 
+ * @see FullTextModule#configure(com.google.inject.Binder)
+ * 
+ * @author Nikita Zhiltsov
+ * 
+ */
 public class IndexSearcherProviderImpl implements
-		IndexSearcherProvider<IndexSearcher> {
-	private Directory directory;
+	IndexSearcherProvider<IndexSearcher> {
+    private Directory directory;
 
-	@Inject
-	public IndexSearcherProviderImpl(
-			@Named("lucene.directory") Directory directory) {
-		this.directory = directory;
-	}
+    @Inject
+    private IndexSearcherProviderImpl(
+	    @Named("lucene.directory") Directory directory) {
+	this.directory = directory;
+    }
 
-	@Override
-	public IndexSearcher get() throws IOException {
-		IndexSearcher indexSearcher = new IndexSearcher(this.directory);
-		return indexSearcher;
-	}
+    /**
+     * @returns an index searcher instance that searches in a wired index
+     *          directory
+     * 
+     */
+    @Override
+    public IndexSearcher get() throws IOException {
+	IndexSearcher indexSearcher = new IndexSearcher(this.directory);
+	return indexSearcher;
+    }
 
 }
