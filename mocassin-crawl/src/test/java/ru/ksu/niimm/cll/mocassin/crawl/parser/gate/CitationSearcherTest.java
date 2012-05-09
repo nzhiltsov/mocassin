@@ -22,6 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.DocumentAnalyzerModule;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.latex.ArxmlivProducer;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.latex.LatexDocumentHeaderPatcher;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.latex.LatexParserModule;
@@ -36,8 +37,8 @@ import com.mycila.testing.junit.MycilaJunitRunner;
 import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
-@GuiceContext({  GateModule.class, LatexParserModule.class,
-	PdfParserModule.class })
+@GuiceContext({ GateModule.class, LatexParserModule.class,
+	PdfParserModule.class, DocumentAnalyzerModule.class })
 public class CitationSearcherTest {
     private static final String DOC_ID = "ivm18";
     @Inject

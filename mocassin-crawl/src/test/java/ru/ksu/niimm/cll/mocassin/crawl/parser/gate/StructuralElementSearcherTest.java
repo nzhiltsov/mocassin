@@ -27,6 +27,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.DocumentAnalyzerModule;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.StructuralElementSearcher;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl.StructuralElementImpl.IdComparator;
@@ -46,7 +47,7 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext({ GateModule.class, LatexParserModule.class,
-	PdfParserModule.class })
+	PdfParserModule.class, DocumentAnalyzerModule.class })
 public class StructuralElementSearcherTest {
 
     private static final String DOC_ID = "ivm18";
