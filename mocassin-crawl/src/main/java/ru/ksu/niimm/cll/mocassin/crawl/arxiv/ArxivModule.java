@@ -23,6 +23,10 @@ import com.google.inject.name.Names;
 /**
  * The module configures facilities to work with ArXiv.org API
  * 
+ * It uses <strong>arxiv-module.properties</strong> file from the classpath, in
+ * particular, to set up a connection properties.
+ * 
+ * 
  * @author Nikita Zhiltsov
  * 
  */

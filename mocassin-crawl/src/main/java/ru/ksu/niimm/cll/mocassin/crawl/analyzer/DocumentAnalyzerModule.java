@@ -41,11 +41,15 @@ import com.google.inject.name.Names;
 /**
  * The class configures facilities to analyze the document structure
  * 
+ * It uses the <strong>analyzer-module.properties</strong> file from the classpath,
+ * which shouldn't be edited in general.
+ * 
  * @author Nikita Zhiltsov
  * 
  */
 public class DocumentAnalyzerModule extends AbstractModule {
     private Properties properties;
+
     /**
      * {@inheritDoc}
      */
