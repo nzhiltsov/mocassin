@@ -47,6 +47,8 @@ public class RelationFeatureInfo {
      */
     private final float toPR;
 
+    private final float katzCoefficient;
+
     public static class Builder {
 	private final StructuralElement from;
 	private final StructuralElement to;
@@ -54,6 +56,7 @@ public class RelationFeatureInfo {
 	private int preferentialAttachmentScore;
 	private float fromPR;
 	private float toPR;
+    private float katzCoefficient;
 
 	public Builder(StructuralElement from, StructuralElement to) {
 	    checkNotNull(from);
@@ -88,6 +91,12 @@ public class RelationFeatureInfo {
 	    return this;
 	}
 
+    public Builder katzCoefficient(float katzCoefficient) {
+        checkState(katzCoefficient >= 0);
+        this.katzCoefficient = katzCoefficient;
+        return this;
+    }
+
 	public RelationFeatureInfo build() {
 	    return new RelationFeatureInfo(this);
 	}
@@ -100,6 +109,7 @@ public class RelationFeatureInfo {
 	this.preferentialAttachmentScore = builder.preferentialAttachmentScore;
 	this.fromPR = builder.fromPR;
 	this.toPR = builder.toPR;
+    this.katzCoefficient = builder.katzCoefficient;
     }
 
     public StructuralElement getFrom() {
@@ -124,6 +134,10 @@ public class RelationFeatureInfo {
 
     public float getToPR() {
 	return toPR;
+    }
+
+    public float getKatzCoefficient() {
+        return katzCoefficient;
     }
 
     @Override

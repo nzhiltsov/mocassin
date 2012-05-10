@@ -15,10 +15,17 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import cern.colt.matrix.DoubleMatrix2D;
+import cern.colt.matrix.impl.SparseDoubleMatrix2D;
+import cern.colt.matrix.linalg.Algebra;
+import cern.jet.math.Functions;
+import edu.uci.ics.jung.algorithms.matrix.GraphMatrixOperations;
+import edu.uci.ics.jung.algorithms.util.Indexer;
 import org.apache.commons.collections.CollectionUtils;
 
 import edu.uci.ics.jung.algorithms.scoring.PageRank;
 import edu.uci.ics.jung.graph.Graph;
+import org.apache.commons.collections15.BidiMap;
 
 public class GraphMetricUtils {
     private GraphMetricUtils() {
@@ -53,8 +60,6 @@ public class GraphMetricUtils {
      * 
      * @param graph
      *            graph
-     * @param vertice
-     *            given vertice
      * @param jumpProbability
      *            jump probability
      */
@@ -68,5 +73,24 @@ public class GraphMetricUtils {
 	    element2PR.put(vertice, pr);
 	}
 	return element2PR;
+    }
+
+    public static <V, E> double computeKatzCoefficient(Graph<V, E> graph, V from, V to) {
+        DoubleMatrix2D matrix = GraphMatrixOperations.graphToSparseMatrix(graph);
+
+        Algebra algebra = new Algebra();
+        DoubleMatrix2D identity = algebra.pow(matrix, 0);
+        DoubleMatrix2D identity2 = (DoubleMatrix2D) identity.clone();
+
+        matrix = matrix.zMult(identity, null, 0.005, 0, false, false);
+
+        matrix = algebra.inverse(identity.assign(matrix, Functions.minus)).assign(identity2, Functions.minus);
+
+        BidiMap<V, Integer> indexer = Indexer.<V>create(graph.getVertices());
+
+        int i = indexer.get(from);
+        int j = indexer.get(to);
+
+        return matrix.get(i,j);
     }
 }

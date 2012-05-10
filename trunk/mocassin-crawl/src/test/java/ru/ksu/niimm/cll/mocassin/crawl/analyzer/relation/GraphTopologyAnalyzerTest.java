@@ -102,6 +102,8 @@ public class GraphTopologyAnalyzerTest {
 	checkPreferentialAttachment(candidates, 2900, 3460, 9);
 	checkPreferentialAttachment(candidates, 19, 1017, 119);
 	checkPageRanks(candidates);
+        checkKatz(candidates, 1538, 2981, 6.25e-10f);
+        checkKatz(candidates, 1017, 1196, 0.005025f);
     }
 
     private void checkPageRanks(List<RelationFeatureInfo> candidates) {
@@ -187,5 +189,14 @@ public class GraphTopologyAnalyzerTest {
 	Assert.assertTrue(
 		"Failed to find a relation between two elements with given ids.",
 		foundRelation);
+    }
+
+    private void checkKatz(List<RelationFeatureInfo> candidates, int firstId, int secondId, float expectedKatzValue) {
+        for (RelationFeatureInfo info : candidates) {
+            if (info.getFrom().getId() == firstId && info.getTo().getId() == secondId) {
+                Assert.assertEquals("The Katz coefficient for the given two elements is not equal to the expected one.",
+                        expectedKatzValue, info.getKatzCoefficient(), 1e-8);
+            }
+        }
     }
 }
