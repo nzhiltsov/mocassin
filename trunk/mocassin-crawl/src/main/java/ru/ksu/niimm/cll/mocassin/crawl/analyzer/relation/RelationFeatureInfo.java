@@ -156,4 +156,11 @@ public class RelationFeatureInfo {
 	    return false;
 	return true;
     }
+
+    @Override
+    public String toString() {
+	return String.format("%f %d %f %f", neighborJaccardCoefficient,
+		preferentialAttachmentScore, fromPR, toPR);
+    }
+
 }
