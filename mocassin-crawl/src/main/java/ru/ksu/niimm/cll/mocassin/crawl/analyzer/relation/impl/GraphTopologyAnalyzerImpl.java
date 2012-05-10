@@ -11,10 +11,6 @@
  ******************************************************************************/
 package ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.impl;
 
-import static ru.ksu.niimm.cll.mocassin.util.GraphMetricUtils.computeNeighborJaccard;
-import static ru.ksu.niimm.cll.mocassin.util.GraphMetricUtils.computePageRank;
-import static ru.ksu.niimm.cll.mocassin.util.GraphMetricUtils.computePreferentialAttachmentScore;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,15 +21,8 @@ import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.GraphTopologyAnalyzer;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.RelationFeatureInfo;
 import edu.uci.ics.jung.graph.Graph;
 
-/**
- * 
- * The class implements extraction of relation candidate features using graph
- * metrics
- * 
- * @author Nikita Zhiltsov
- * @author Azat Khasanshin
- * 
- */
+import static ru.ksu.niimm.cll.mocassin.util.GraphMetricUtils.*;
+
 public class GraphTopologyAnalyzerImpl implements GraphTopologyAnalyzer {
     /**
      * Fixed jump probability used while computing PageRank scores for elements
@@ -76,12 +65,14 @@ public class GraphTopologyAnalyzerImpl implements GraphTopologyAnalyzer {
 
 		Float toPR = element2PR.get(to);
 
+        float katzCoefficient = (float) computeKatzCoefficient(graph, from, to);
+
 		RelationFeatureInfo info = new RelationFeatureInfo.Builder(
 			from, to)
 			.neigborJaccard(jaccard)
 			.preferentialAttachmentScore(
 				preferentialAttachmentScore).fromPR(fromPR)
-			.toPR(toPR).build();
+			.toPR(toPR).katzCoefficient(katzCoefficient).build();
 		result.add(info);
 	    }
 	}
