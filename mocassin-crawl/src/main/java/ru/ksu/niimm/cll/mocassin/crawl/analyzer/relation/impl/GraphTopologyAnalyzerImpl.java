@@ -25,6 +25,11 @@ import static ru.ksu.niimm.cll.mocassin.util.GraphMetricUtils.*;
 
 public class GraphTopologyAnalyzerImpl implements GraphTopologyAnalyzer {
     /**
+     * Exponential proportion parameter using for computing Katz coefficient
+     * values
+     */
+    private static final double KATZ_EXP_PROPORTION = 0.005;
+    /**
      * Fixed jump probability used while computing PageRank scores for elements
      * in the document graph
      */
@@ -65,7 +70,8 @@ public class GraphTopologyAnalyzerImpl implements GraphTopologyAnalyzer {
 
 		Float toPR = element2PR.get(to);
 
-        float katzCoefficient = (float) computeKatzCoefficient(graph, from, to);
+		float katzCoefficient = (float) computeKatzCoefficient(graph,
+			from, to, KATZ_EXP_PROPORTION);
 
 		RelationFeatureInfo info = new RelationFeatureInfo.Builder(
 			from, to)
