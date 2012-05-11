@@ -75,14 +75,14 @@ public class GraphMetricUtils {
 	return element2PR;
     }
 
-    public static <V, E> double computeKatzCoefficient(Graph<V, E> graph, V from, V to) {
+    public static <V, E> double computeKatzCoefficient(Graph<V, E> graph, V from, V to, double exponentialProportion) {
         DoubleMatrix2D matrix = GraphMatrixOperations.graphToSparseMatrix(graph);
 
         Algebra algebra = new Algebra();
         DoubleMatrix2D identity = algebra.pow(matrix, 0);
         DoubleMatrix2D identity2 = (DoubleMatrix2D) identity.clone();
 
-        matrix = matrix.zMult(identity, null, 0.005, 0, false, false);
+        matrix = matrix.zMult(identity, null, exponentialProportion, 0, false, false);
 
         matrix = algebra.inverse(identity.assign(matrix, Functions.minus)).assign(identity2, Functions.minus);
 
