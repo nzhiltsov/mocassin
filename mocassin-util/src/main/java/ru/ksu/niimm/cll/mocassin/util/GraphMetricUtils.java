@@ -75,7 +75,7 @@ public class GraphMetricUtils {
 	return element2PR;
     }
 
-    public static <V, E> double computeKatzCoefficient(Graph<V, E> graph, V from, V to, double exponentialProportion) {
+    public static <V, E> DoubleMatrix2D computeKatzCoefficient(Graph<V, E> graph, double exponentialProportion) {
         DoubleMatrix2D matrix = GraphMatrixOperations.graphToSparseMatrix(graph);
 
         Algebra algebra = new Algebra();
@@ -86,11 +86,6 @@ public class GraphMetricUtils {
 
         matrix = algebra.inverse(identity.assign(matrix, Functions.minus)).assign(identity2, Functions.minus);
 
-        BidiMap<V, Integer> indexer = Indexer.<V>create(graph.getVertices());
-
-        int i = indexer.get(from);
-        int j = indexer.get(to);
-
-        return matrix.get(i,j);
+        return matrix;
     }
 }

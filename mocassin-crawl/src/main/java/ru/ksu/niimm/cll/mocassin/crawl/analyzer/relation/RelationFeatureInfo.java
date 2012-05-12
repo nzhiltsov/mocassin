@@ -48,6 +48,7 @@ public class RelationFeatureInfo {
     private final float toPR;
 
     private final float katzCoefficient;
+    private final float inverseKatzCoefficient;
 
     public static class Builder {
 	private final StructuralElement from;
@@ -57,6 +58,7 @@ public class RelationFeatureInfo {
 	private float fromPR;
 	private float toPR;
     private float katzCoefficient;
+    private float inverseKatzCoefficient;
 
 	public Builder(StructuralElement from, StructuralElement to) {
 	    checkNotNull(from);
@@ -97,6 +99,12 @@ public class RelationFeatureInfo {
         return this;
     }
 
+    public Builder inverseKatzCoefficient(float inverseKatzCoefficient) {
+        checkState(inverseKatzCoefficient >= 0);
+        this.inverseKatzCoefficient = inverseKatzCoefficient;
+        return this;
+    }
+
 	public RelationFeatureInfo build() {
 	    return new RelationFeatureInfo(this);
 	}
@@ -110,6 +118,7 @@ public class RelationFeatureInfo {
 	this.fromPR = builder.fromPR;
 	this.toPR = builder.toPR;
     this.katzCoefficient = builder.katzCoefficient;
+    this.inverseKatzCoefficient = builder.inverseKatzCoefficient;
     }
 
     public StructuralElement getFrom() {
@@ -138,6 +147,10 @@ public class RelationFeatureInfo {
 
     public float getKatzCoefficient() {
         return katzCoefficient;
+    }
+
+    public float getInverseKatzCoefficient() {
+        return inverseKatzCoefficient;
     }
 
     @Override
@@ -173,8 +186,8 @@ public class RelationFeatureInfo {
 
     @Override
     public String toString() {
-	return String.format("%f %d %f %f", neighborJaccardCoefficient,
-		preferentialAttachmentScore, fromPR, toPR);
+	return String.format("%f %d %f %f %f %f", neighborJaccardCoefficient,
+		preferentialAttachmentScore, fromPR, toPR, katzCoefficient, inverseKatzCoefficient);
     }
 
 }

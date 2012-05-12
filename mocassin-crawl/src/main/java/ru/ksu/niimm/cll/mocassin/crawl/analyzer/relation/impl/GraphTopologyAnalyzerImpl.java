@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import cern.colt.matrix.DoubleMatrix2D;
+import edu.uci.ics.jung.algorithms.util.Indexer;
+import org.apache.commons.collections15.BidiMap;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.Reference;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.GraphTopologyAnalyzer;
@@ -48,6 +51,8 @@ public class GraphTopologyAnalyzerImpl implements GraphTopologyAnalyzer {
 
 	Map<StructuralElement, Float> element2PR = computePageRank(graph,
 		elements, JUMP_PROBABILITY);
+        DoubleMatrix2D katzMatrix = computeKatzCoefficient(graph, KATZ_EXP_PROPORTION);
+        BidiMap<StructuralElement, Integer> indexer = Indexer.<StructuralElement>create(graph.getVertices());
 
 	int size = elements.size();
 
@@ -70,15 +75,15 @@ public class GraphTopologyAnalyzerImpl implements GraphTopologyAnalyzer {
 
 		Float toPR = element2PR.get(to);
 
-		float katzCoefficient = (float) computeKatzCoefficient(graph,
-			from, to, KATZ_EXP_PROPORTION);
+		float katzCoefficient = (float) katzMatrix.get(indexer.get(from), indexer.get(to));
+        float inverseKatzCoefficient = (float) katzMatrix.get(indexer.get(to), indexer.get(from));
 
 		RelationFeatureInfo info = new RelationFeatureInfo.Builder(
 			from, to)
 			.neigborJaccard(jaccard)
 			.preferentialAttachmentScore(
 				preferentialAttachmentScore).fromPR(fromPR)
-			.toPR(toPR).katzCoefficient(katzCoefficient).build();
+			.toPR(toPR).katzCoefficient(katzCoefficient).inverseKatzCoefficient(inverseKatzCoefficient).build();
 		result.add(info);
 	    }
 	}
