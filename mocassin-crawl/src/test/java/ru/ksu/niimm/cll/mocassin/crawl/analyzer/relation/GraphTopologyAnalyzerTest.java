@@ -128,19 +128,6 @@ public class GraphTopologyAnalyzerTest {
 	Assert.assertEquals(
 		"The highest PageRank is not equal to the expected one.",
 		0.0621076, list.get(list.size() - 1).getValue(), 1e-4);
-	Assert.assertEquals(
-		"The element id with 2nd PageRank is not equal to the expected one.",
-		5498, list.get(list.size() - 2).getKey().getId());
-	Assert.assertEquals(
-		"The element id with 3rd PageRank is not equal to the expected one.",
-		5088, list.get(list.size() - 3).getKey().getId());
-	Assert.assertEquals(
-		"The element id with 4th PageRank is not equal to the expected one.",
-		4860, list.get(list.size() - 4).getKey().getId());
-	Assert.assertEquals(
-		"The element id with highest PageRank is not equal to the expected one.",
-		4808, list.get(list.size() - 5).getKey().getId());
-
     }
 
     private void checkPreferentialAttachment(
