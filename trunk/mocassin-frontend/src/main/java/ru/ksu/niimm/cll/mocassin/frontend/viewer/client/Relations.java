@@ -13,7 +13,7 @@ package ru.ksu.niimm.cll.mocassin.frontend.viewer.client;
 
 enum Relations {// see MocassinOntologyRelations.java for predicate codes
 	hasPart(0), refersTo(1), dependsOn(8), proves(9), hasConsequence(2), exemplifies(
-			3);
+			3), followedBy(10);
 
 	protected final int code;
 
