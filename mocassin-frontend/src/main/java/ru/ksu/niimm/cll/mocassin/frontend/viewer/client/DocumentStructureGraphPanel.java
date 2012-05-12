@@ -49,6 +49,8 @@ public class DocumentStructureGraphPanel extends Composite implements
 	@UiField
 	CheckBox exemplifiesCheckbox;
 	@UiField
+	CheckBox followedByCheckbox;
+	@UiField
 	DocumentStructureGraph documentStructureGraph;
 	@UiField
 	Button refreshButton;
@@ -73,6 +75,7 @@ public class DocumentStructureGraphPanel extends Composite implements
 		filters.put(Relations.proves, provesCheckbox.getValue());
 		filters.put(Relations.hasConsequence, hasConsequenceCheckbox.getValue());
 		filters.put(Relations.exemplifies, exemplifiesCheckbox.getValue());
+		filters.put(Relations.followedBy, followedByCheckbox.getValue());
 		return filters;
 	}
 
