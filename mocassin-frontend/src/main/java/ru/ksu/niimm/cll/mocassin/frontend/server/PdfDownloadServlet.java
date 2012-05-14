@@ -59,8 +59,8 @@ public class PdfDownloadServlet extends HttpServlet {
 			logger.error("The request with an empty arxiv id parameter");
 			return;
 		}
-		String filePath = segmentId == null ? format("/opt/mocassin/aux-pdf/%s"
-				+ StringUtil.arxivid2filename(arxivId, "pdf"))
+		String filePath = segmentId == null ? format("/opt/mocassin/aux-pdf/%s", 
+			StringUtil.arxivid2filename(arxivId, "pdf"))
 				: "/opt/mocassin/pdf/"
 						+ StringUtil.segmentid2filename(arxivId,
 								Integer.parseInt(segmentId), "pdf");
