@@ -14,6 +14,8 @@ import ru.ksu.niimm.cll.mocassin.crawl.parser.latex.LatexDocumentHeaderPatcher;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.latex.LatexParserModule;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.pdf.*;
 import ru.ksu.niimm.cll.mocassin.fulltext.FullTextModule;
+import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyClasses;
+import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyRelations;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyTestModule;
 
 import java.io.BufferedWriter;
@@ -58,6 +60,8 @@ public class CSVFileGenerationTest {
         FileWriter fstream = new FileWriter("/tmp/relations.csv");
         BufferedWriter out = new BufferedWriter(fstream);
 
+        out.write("doc_id\tfrom_elem_id\tto_elem_id\trelation\tinverse\n");
+
         for (String doc : documents) {
             processDocument(doc, out);
         }
@@ -73,12 +77,58 @@ public class CSVFileGenerationTest {
         ArrayList<StructuralElement> elements = new ArrayList<StructuralElement>(
                 graph.getVertices());
         int size = elements.size();
-            out.write("doc_id\tfrom_elem_id\tto_elem_id\n");
+
+        StructuralElement from,to;
 
         for (int i = 0; i < size - 1; i++) {
+            from = elements.get(i);
             for (int j = i + 1; j < size; j++) {
-                out.write(documentId + "\t" + elements.get(i).getId() + "\t" + elements.get(j).getId() + "\n");
+                to = elements.get(j);
+
+                if (isZeroElement(from, to) || isPartOf(from, to, graph)
+                        || areBothEquations(from, to) || isUnknownEquation(from, to)) {
+                    continue;
+                }
+
+                out.write(documentId + "\t" + from.getId() + "\t" + to.getId() + "\n");
             }
         }
+    }
+
+    private boolean isZeroElement(StructuralElement from, StructuralElement to) {
+        return (from.getId() == 0 || to.getId() == 0);
+    }
+
+    private boolean isPartOf(StructuralElement from, StructuralElement to, Graph<StructuralElement, Reference> graph) {
+        for (Reference ref : graph.findEdgeSet(from, to)) {
+            if (ref.getPredictedRelation() == MocassinOntologyRelations.HAS_PART) {
+                return true;
+            }
+        }
+
+        for (Reference ref : graph.findEdgeSet(to, from)) {
+            if (ref.getPredictedRelation() == MocassinOntologyRelations.HAS_PART) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean areBothEquations(StructuralElement from, StructuralElement to) {
+        return (from.getPredictedClass() == MocassinOntologyClasses.EQUATION
+                && to.getPredictedClass() == MocassinOntologyClasses.EQUATION);
+    }
+
+    private boolean isUnknownEquation(StructuralElement from, StructuralElement to) {
+        if (to.getPredictedClass() == MocassinOntologyClasses.EQUATION) {
+            return from.getGateEndOffset() < to.getGateStartOffset();
+        }
+
+        if (from.getPredictedClass() == MocassinOntologyClasses.EQUATION) {
+            return to.getGateEndOffset() < from.getGateStartOffset();
+        }
+
+        return false;
     }
 }
