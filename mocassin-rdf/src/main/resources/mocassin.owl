@@ -89,6 +89,7 @@
                     <rdf:Description rdf:about="#Conjecture"/>
                     <rdf:Description rdf:about="#Corollary"/>
                     <rdf:Description rdf:about="#Definition"/>
+                    <rdf:Description rdf:about="#Equation"/>
                     <rdf:Description rdf:about="#Example"/>
                     <rdf:Description rdf:about="#Lemma"/>
                     <rdf:Description rdf:about="#Proof"/>

@@ -16,13 +16,18 @@ import ru.ksu.niimm.cll.mocassin.crawl.parser.pdf.*;
 import ru.ksu.niimm.cll.mocassin.fulltext.FullTextModule;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyRelations;
+import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyFacade;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyTestModule;
+import ru.ksu.niimm.cll.mocassin.util.Pair;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext({ DocumentAnalyzerModule.class, LatexParserModule.class,
@@ -41,6 +46,10 @@ public class CSVFileGenerationTest {
     private Latex2PDFMapper latex2pdfMapper;
     @Inject
     private ArxmlivProducer arxmlivProducer;
+    @Inject
+    private OntologyFacade ontologyFacade;
+    @Inject
+    private HashMap<Pair<MocassinOntologyClasses, MocassinOntologyClasses>, Boolean> cacheMap;
 
     private Document prepareDoc(String documentId)
             throws PdflatexCompilationException, GeneratePdfSummaryException {
@@ -86,7 +95,7 @@ public class CSVFileGenerationTest {
                 to = elements.get(j);
 
                 if (isZeroElement(from, to) || isPartOf(from, to, graph)
-                        || areBothEquations(from, to) || isUnknownEquation(from, to)) {
+                        || isUnknownEquation(from, to) || isThereNoValidRelation(from, to)) {
                     continue;
                 }
 
@@ -115,20 +124,42 @@ public class CSVFileGenerationTest {
         return false;
     }
 
-    private boolean areBothEquations(StructuralElement from, StructuralElement to) {
-        return (from.getPredictedClass() == MocassinOntologyClasses.EQUATION
-                && to.getPredictedClass() == MocassinOntologyClasses.EQUATION);
-    }
-
     private boolean isUnknownEquation(StructuralElement from, StructuralElement to) {
-        if (to.getPredictedClass() == MocassinOntologyClasses.EQUATION) {
+        if (to.getPredictedClass() == MocassinOntologyClasses.EQUATION
+                && from.getPredictedClass() != MocassinOntologyClasses.EQUATION) {
             return from.getGateEndOffset() < to.getGateStartOffset();
         }
 
-        if (from.getPredictedClass() == MocassinOntologyClasses.EQUATION) {
+        if (from.getPredictedClass() == MocassinOntologyClasses.EQUATION
+                && to.getPredictedClass() != MocassinOntologyClasses.EQUATION) {
             return to.getGateEndOffset() < from.getGateStartOffset();
         }
 
         return false;
+    }
+
+    private boolean isThereNoValidRelation(StructuralElement from, StructuralElement to) {
+        Pair<MocassinOntologyClasses, MocassinOntologyClasses> pair =
+                new Pair<MocassinOntologyClasses, MocassinOntologyClasses>
+                        (from.getPredictedClass(), to.getPredictedClass());
+
+        if (cacheMap.containsKey(pair)) return cacheMap.get(pair);
+
+        boolean result = !isThereRelationsThatNeeded(ontologyFacade.getRelations(from.getPredictedClass(),
+                to.getPredictedClass()))
+                && !isThereRelationsThatNeeded(ontologyFacade.getRelations(from.getPredictedClass(),
+                to.getPredictedClass()));
+
+        cacheMap.put(pair, result);
+
+        return result;
+    }
+
+    private boolean isThereRelationsThatNeeded(List<MocassinOntologyRelations> list) {
+        return list.contains(MocassinOntologyRelations.DEPENDS_ON)
+                || list.contains(MocassinOntologyRelations.EXEMPLIFIES)
+                || list.contains(MocassinOntologyRelations.HAS_CONSEQUENCE)
+                || list.contains(MocassinOntologyRelations.PROVES)
+                || list.contains(MocassinOntologyRelations.REFERS_TO);
     }
 }

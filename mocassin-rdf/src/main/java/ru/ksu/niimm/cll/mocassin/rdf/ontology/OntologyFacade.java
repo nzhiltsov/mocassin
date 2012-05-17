@@ -52,4 +52,14 @@ public interface OntologyFacade {
 	
 	MocassinOntologyClasses getMoreSpecific(MocassinOntologyClasses first, MocassinOntologyClasses second);
 
+
+    /**
+     * Return list of relations that are valid on a given two classes
+     *
+     * @param first
+     * @param second
+     * @return
+     */
+    List<MocassinOntologyRelations> getRelations(MocassinOntologyClasses first, MocassinOntologyClasses second);
+
 }
