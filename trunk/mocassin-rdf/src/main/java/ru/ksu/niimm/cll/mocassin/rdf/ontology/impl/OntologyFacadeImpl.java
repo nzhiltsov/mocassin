@@ -19,10 +19,7 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 
-import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyClasses;
-import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyConcept;
-import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyFacade;
-import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyRelation;
+import ru.ksu.niimm.cll.mocassin.rdf.ontology.*;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.provider.OntologyProvider;
 import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
 
@@ -90,7 +87,64 @@ public class OntologyFacadeImpl implements OntologyFacade {
 				.listSubClasses().toSet().size() ? first : second;
 	}
 
-	@Override
+    @Override
+    public List<MocassinOntologyRelations> getRelations(MocassinOntologyClasses first, MocassinOntologyClasses second) {
+        OntClass firstClass = getOntology().getOntClass(MocassinOntologyClasses.getUri(first));
+        OntClass secondClass = getOntology().getOntClass(MocassinOntologyClasses.getUri(second));
+
+        ArrayList<MocassinOntologyRelations> result = new ArrayList<MocassinOntologyRelations>();
+
+        ExtendedIterator<ObjectProperty> propertyIterator = getOntology().listObjectProperties();
+        while(propertyIterator.hasNext()) {
+            ObjectProperty property = propertyIterator.next();
+            if (property.getNameSpace() == null) continue;
+            if (isInDomain(firstClass, property) && isInRange(secondClass, property)) {
+                try {
+                    result.add(MocassinOntologyRelations.fromUri(property.getURI()));
+                } catch (RuntimeException e) {
+                    //not relation we are interested in
+                }
+            }
+        }
+
+        return result;
+    }
+
+    private boolean isInRange(OntClass ontClass, OntProperty ontProperty) {
+        ExtendedIterator<? extends OntResource> rangeIterator = ontProperty.listRange();
+
+        List<OntClass> rangeList = new ArrayList<OntClass>();
+        while (rangeIterator.hasNext()) {
+            OntResource resource = rangeIterator.next();
+            if (resource.canAs(OntClass.class)) {
+                OntClass ontClass2 = resource.as(OntClass.class);
+                rangeList.add(ontClass2);
+                List<OntClass> subClasses = ontClass2.listSubClasses().toList();
+                rangeList.addAll(subClasses);
+            }
+        }
+
+        return rangeList.contains(ontClass);
+    }
+
+    private boolean isInDomain(OntClass ontClass, OntProperty ontProperty) {
+        ExtendedIterator<? extends OntResource> domainIterator = ontProperty.listDomain();
+
+        List<OntClass> domainList = new ArrayList<OntClass>();
+        while (domainIterator.hasNext()) {
+            OntResource resource = domainIterator.next();
+            if (resource.canAs(OntClass.class)) {
+                OntClass ontClass2 = resource.as(OntClass.class);
+                domainList.add(ontClass2);
+                List<OntClass> subClasses = ontClass2.listSubClasses().toList();
+                domainList.addAll(subClasses);
+            }
+        }
+
+        return domainList.contains(ontClass);
+    }
+
+    @Override
 	public MocassinOntologyClasses getMostSpecific(
 			List<MocassinOntologyClasses> hierarchy) {
 		if (hierarchy.isEmpty())

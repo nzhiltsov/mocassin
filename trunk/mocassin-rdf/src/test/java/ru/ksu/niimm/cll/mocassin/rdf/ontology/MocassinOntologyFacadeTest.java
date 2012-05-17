@@ -109,4 +109,24 @@ public class MocassinOntologyFacadeTest {
 				.getMostSpecific(hierarchy);
 		Assert.assertEquals(MocassinOntologyClasses.SECTION, specificClass);
 	}
+
+    @Test
+    public void testValidRelations() {
+        List<MocassinOntologyRelations> relations = new ArrayList<MocassinOntologyRelations>();
+        relations.add(MocassinOntologyRelations.DEPENDS_ON);
+        relations.add(MocassinOntologyRelations.HAS_PART);
+        relations.add(MocassinOntologyRelations.FOLLOWED_BY);
+        relations.add(MocassinOntologyRelations.REFERS_TO);
+
+        List<MocassinOntologyRelations> testRelations =
+                this.ontologyFacade.getRelations(MocassinOntologyClasses.THEOREM,
+                        MocassinOntologyClasses.PROPOSITION);
+
+        Collections.sort(testRelations);
+        Collections.sort(relations);
+
+        Assert.assertEquals("The list of valid relations between two " +
+                "classes is not equal to the expected one", relations, testRelations);
+
+    }
 }
