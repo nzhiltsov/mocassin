@@ -18,6 +18,8 @@ import java.util.SortedMap;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 
+import static com.google.common.base.Preconditions.*;
+
 import ru.ksu.niimm.cll.mocassin.crawl.parser.arxmliv.ArxmlivStructureElementTypes;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.util.StringSimilarityEvaluator;
@@ -78,9 +80,11 @@ class StructuralElementTypeRecognizerImpl implements
     }
 
     private SortedMap<String, Float> computeSimilarityVector(String name) {
+	checkNotNull(name);
+	String checkedName = name.trim();
 	SortedMap<String, Float> map = new TreeMap<String, Float>();
 	for (String structuralElementType : getStructuralElementTypes()) {
-	    float similarity = StringSimilarityEvaluator.getSimilarity(name,
+	    float similarity = StringSimilarityEvaluator.getSimilarity(checkedName,
 		    structuralElementType, SimilarityMetrics.N_GRAM);
 	    map.put(structuralElementType, similarity);
 	}
