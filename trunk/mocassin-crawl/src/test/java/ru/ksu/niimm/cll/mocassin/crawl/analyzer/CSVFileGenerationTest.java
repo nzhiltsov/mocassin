@@ -63,8 +63,7 @@ public class CSVFileGenerationTest {
 
     @Test
     public void generateFile() throws Exception {
-        String[] documents = {"ivm101", "ivm170", "ivm260", "ivm3",  "ivm521",
-                              "ivm829", "ivm167", "ivm180", "ivm26", "ivm940"};
+        String[] documents = {"ivm991"};
 
         FileWriter fstream = new FileWriter("/tmp/relations.csv");
         BufferedWriter out = new BufferedWriter(fstream);
