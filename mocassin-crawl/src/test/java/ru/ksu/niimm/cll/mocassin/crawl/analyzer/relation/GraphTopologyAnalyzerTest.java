@@ -11,10 +11,7 @@
  ******************************************************************************/
 package ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -23,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.io.filefilter.FalseFileFilter;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -207,5 +205,33 @@ public class GraphTopologyAnalyzerTest {
             out.write("\n\n\n");
         }
         out.close();
+
+        FileReader reader = new FileReader("/tmp/data.mln");
+        BufferedReader in = new BufferedReader(reader);
+
+        boolean lemma = false;
+        boolean theorem = false;
+
+        String line = in.readLine();
+        int num = 0;
+        while (!line.equals("")) {
+            num++;
+
+            if (line.equals("Lemma(ivm101_832)")) {
+                lemma = true;
+            }
+
+            if (line.equals("Theorem(ivm101_2313)")) {
+                theorem = true;
+            }
+
+            line = in.readLine();
+        }
+        in.close();
+
+        Assert.assertEquals("The number of class predicates in ivm101 is not equal to the expected one",
+                32, num);
+        Assert.assertTrue("Lemma(ivm101_832) predicate not found", lemma);
+        Assert.assertTrue("Theorem(ivm101_2313) predicate not found", theorem);
     }
 }
