@@ -49,6 +49,7 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 
 import edu.uci.ics.jung.graph.Graph;
 import gate.Document;
+import gate.Factory;
 
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext({ DocumentAnalyzerModule.class, LatexParserModule.class,
@@ -76,18 +77,24 @@ public class GraphTopologyAnalyzerTest {
     @Before
     public void init() throws Exception {
 	Document document = prepareDoc("ivm18");
-	graph = referenceSearcher.retrieveStructuralGraph(document,
-		"http://mathnet.ru/ivm18");
+	try {
+	    graph = referenceSearcher.retrieveStructuralGraph(document,
+		    "http://mathnet.ru/ivm18");
+	} finally {
+	    if (document != null) {
+		Factory.deleteResource(document);
+	    }
+	}
     }
 
     private Document prepareDoc(String documentId)
 	    throws PdflatexCompilationException, GeneratePdfSummaryException {
-    	latexDocumentHeaderPatcher.patch(documentId);
-	    pdflatexWrapper.compilePatched(documentId);
-	    latex2pdfMapper.generateSummary(documentId);
-	    String arxmlivFilePath = arxmlivProducer.produce(documentId);
-	    return gateProcessingFacade.process(documentId, new File(
-		    arxmlivFilePath), "utf8");
+	latexDocumentHeaderPatcher.patch(documentId);
+	pdflatexWrapper.compilePatched(documentId);
+	latex2pdfMapper.generateSummary(documentId);
+	String arxmlivFilePath = arxmlivProducer.produce(documentId);
+	return gateProcessingFacade.process(documentId, new File(
+		arxmlivFilePath), "utf8");
     }
 
     @Test
@@ -103,8 +110,8 @@ public class GraphTopologyAnalyzerTest {
 	checkPreferentialAttachment(candidates, 2900, 3460, 9);
 	checkPreferentialAttachment(candidates, 19, 1017, 119);
 	checkPageRanks(candidates);
-        checkKatz(candidates, 1538, 2981, 6.25e-10f);
-        checkKatz(candidates, 1017, 1196, 0.005025f);
+	checkKatz(candidates, 1538, 2981, 6.25e-10f);
+	checkKatz(candidates, 1017, 1196, 0.005025f);
     }
 
     private void checkPageRanks(List<RelationFeatureInfo> candidates) {
@@ -179,59 +186,67 @@ public class GraphTopologyAnalyzerTest {
 		foundRelation);
     }
 
-    private void checkKatz(List<RelationFeatureInfo> candidates, int firstId, int secondId, float expectedKatzValue) {
-        for (RelationFeatureInfo info : candidates) {
-            if (info.getFrom().getId() == firstId && info.getTo().getId() == secondId) {
-                Assert.assertEquals("The Katz coefficient for the given two elements is not equal to the expected one.",
-                        expectedKatzValue, info.getKatzCoefficient(), 1e-8);
-            }
-        }
+    private void checkKatz(List<RelationFeatureInfo> candidates, int firstId,
+	    int secondId, float expectedKatzValue) {
+	for (RelationFeatureInfo info : candidates) {
+	    if (info.getFrom().getId() == firstId
+		    && info.getTo().getId() == secondId) {
+		Assert.assertEquals(
+			"The Katz coefficient for the given two elements is not equal to the expected one.",
+			expectedKatzValue, info.getKatzCoefficient(), 1e-8);
+	    }
+	}
     }
 
     @Test
-    public void generateMLNFile() throws IOException, GeneratePdfSummaryException, PdflatexCompilationException {
-        String[] docs = {"ivm101", "ivm170", "ivm260", "ivm3", "ivm829",
-                         "ivm167", "ivm991", "ivm26", "ivm521", "ivm940"};
+    public void generateMLNFile() throws IOException,
+	    GeneratePdfSummaryException, PdflatexCompilationException {
+	String[] docs = { "ivm101", "ivm170", "ivm260", "ivm3", "ivm829",
+		"ivm167", "ivm991", "ivm26", "ivm521", "ivm940" };
 
-        MLNUtil mlnUtil = new MLNUtil();
-        FileWriter fstream = new FileWriter("/tmp/data.mln");
-        BufferedWriter out = new BufferedWriter(fstream);
+	MLNUtil mlnUtil = new MLNUtil();
+	FileWriter fstream = new FileWriter("/tmp/data.mln");
+	BufferedWriter out = new BufferedWriter(fstream);
 
-        for (String doc: docs) {
-            Document document = prepareDoc(doc);
-            Graph<StructuralElement, Reference> docGraph = referenceSearcher
-                    .retrieveStructuralGraph(document, "http://mathnet.ru/" + doc);
-            mlnUtil.generateMLNFile(out, docGraph, graphTopologyAnalyzer.extractCandidateFeatures(docGraph), doc);
-            out.write("\n\n\n");
-        }
-        out.close();
+	for (String doc : docs) {
+	    Document document = prepareDoc(doc);
+	    Graph<StructuralElement, Reference> docGraph = referenceSearcher
+		    .retrieveStructuralGraph(document, "http://mathnet.ru/"
+			    + doc);
+	    mlnUtil.generateMLNFile(out, docGraph,
+		    graphTopologyAnalyzer.extractCandidateFeatures(docGraph),
+		    doc);
+	    out.write("\n\n\n");
+	}
+	out.close();
 
-        FileReader reader = new FileReader("/tmp/data.mln");
-        BufferedReader in = new BufferedReader(reader);
+	FileReader reader = new FileReader("/tmp/data.mln");
+	BufferedReader in = new BufferedReader(reader);
 
-        boolean lemma = false;
-        boolean theorem = false;
+	boolean lemma = false;
+	boolean theorem = false;
 
-        String line = in.readLine();
-        int num = 0;
-        while (!line.equals("")) {
-            num++;
+	String line = in.readLine();
+	int num = 0;
+	while (!line.equals("")) {
+	    num++;
 
-            if (line.equals("Lemma(ivm101_832)")) {
-                lemma = true;
-            }
+	    if (line.equals("Lemma(ivm101_832)")) {
+		lemma = true;
+	    }
 
-            if (line.equals("Theorem(ivm101_2313)")) {
-                theorem = true;
-            }
+	    if (line.equals("Theorem(ivm101_2313)")) {
+		theorem = true;
+	    }
 
-            line = in.readLine();
-        }
-        in.close();
+	    line = in.readLine();
+	}
+	in.close();
 
-        Assert.assertEquals("The number of class predicates in ivm101 is not equal to the expected one",
-                32, num);
-        Assert.assertTrue("Lemma(ivm101_832) predicate not found", lemma);
-        Assert.assertTrue("Theorem(ivm101_2313) predicate not found", theorem);
+	Assert.assertEquals(
+		"The number of class predicates in ivm101 is not equal to the expected one",
+		32, num);
+	Assert.assertTrue("Lemma(ivm101_832) predicate not found", lemma);
+	Assert.assertTrue("Theorem(ivm101_2313) predicate not found", theorem);
     }
 }

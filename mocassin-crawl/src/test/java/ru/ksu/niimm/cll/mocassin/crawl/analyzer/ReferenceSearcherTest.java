@@ -13,11 +13,13 @@ package ru.ksu.niimm.cll.mocassin.crawl.analyzer;
 
 import edu.uci.ics.jung.graph.Graph;
 import gate.Document;
+import gate.Factory;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -79,6 +81,16 @@ public class ReferenceSearcherTest {
 	secondDocument = prepareDoc("ivm537");
     }
 
+    @After
+    public void shutdown() {
+	if (firstDocument != null) {
+	    Factory.deleteResource(firstDocument);
+	}
+	if (secondDocument != null) {
+	    Factory.deleteResource(secondDocument);
+	}
+    }
+
     private Document prepareDoc(String documentId)
 	    throws PdflatexCompilationException, GeneratePdfSummaryException {
 	latexDocumentHeaderPatcher.patch(documentId);
@@ -136,8 +148,7 @@ public class ReferenceSearcherTest {
 	}
 	Assert.assertTrue("The 'followedBy' instance hasn't been found.",
 		foundFollowedByInstance);
-	
-	
+
     }
 
     private void checkSecondDocument() {

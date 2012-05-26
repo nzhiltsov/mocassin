@@ -14,6 +14,7 @@ package ru.ksu.niimm.cll.mocassin.crawl.mathnet;
 import static java.lang.String.format;
 import edu.uci.ics.jung.graph.Graph;
 import gate.Document;
+import gate.Factory;
 
 import java.io.File;
 import java.io.StringWriter;
@@ -75,8 +76,15 @@ public class MathnetAdapter extends AbstractDomainAdapter implements
 	Document document = gateProcessingFacade.process(mathnetKey, new File(
 		arxmlivFilePath), GATE_DOCUMENT_ENCODING);
 	// Step 6
-	Graph<StructuralElement, Reference> graph = referenceSearcher
-		.retrieveStructuralGraph(document, metadata.getId());
+	Graph<StructuralElement, Reference> graph;
+	try {
+	    graph = referenceSearcher.retrieveStructuralGraph(document,
+		    metadata.getId());
+	} finally {
+	    if (document != null) {
+		Factory.deleteResource(document);
+	    }
+	}
 	// Step 7
 	generateHighlightedPdfs(mathnetKey, graph.getVertices());
 	// Step 8

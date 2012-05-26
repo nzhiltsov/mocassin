@@ -13,6 +13,7 @@ package ru.ksu.niimm.cll.mocassin.crawl.arxiv;
 
 import edu.uci.ics.jung.graph.Graph;
 import gate.Document;
+import gate.Factory;
 
 import java.io.File;
 import java.io.InputStream;
@@ -65,8 +66,15 @@ public class ArxivAdapter extends AbstractDomainAdapter implements
 	Document document = gateProcessingFacade.process(arxivId, new File(
 		arxmlivFilePath), "utf8");
 	// Step 6
-	Graph<StructuralElement, Reference> graph = referenceSearcher
-		.retrieveStructuralGraph(document, metadata.getId());
+	Graph<StructuralElement, Reference> graph;
+	try {
+	    graph = referenceSearcher.retrieveStructuralGraph(document,
+		    metadata.getId());
+	} finally {
+	    if (document != null) {
+		Factory.deleteResource(document);
+	    }
+	}
 	// Step 7
 	generateHighlightedPdfs(arxivId, graph.getVertices());
 	// Step 8

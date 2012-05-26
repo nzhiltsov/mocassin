@@ -80,6 +80,13 @@ public class StructuralElementSearcherTest {
 	document = prepareDoc(DOC_ID);
     }
 
+    @After
+    public void shutdown() {
+	if (document != null) {
+	    Factory.deleteResource(document);
+	}
+    }
+
     private Document prepareDoc(String documentId)
 	    throws PdflatexCompilationException, GeneratePdfSummaryException {
 	latexDocumentHeaderPatcher.patch(documentId);

@@ -13,12 +13,14 @@ package ru.ksu.niimm.cll.mocassin.crawl.parser.gate;
 
 import edu.uci.ics.jung.graph.Graph;
 import gate.Document;
+import gate.Factory;
 
 import java.io.File;
 import java.util.Collection;
 
 import junit.framework.Assert;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,7 +48,7 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext({ GateModule.class, LatexParserModule.class,
-	PdfParserModule.class, DocumentAnalyzerModule.class})
+	PdfParserModule.class, DocumentAnalyzerModule.class })
 public class StructuralElementTypeRecognizerTest {
 
     @Inject
@@ -78,8 +80,15 @@ public class StructuralElementTypeRecognizerTest {
 	String paperUrl = String.format("http://mathnet.ru/ivm537/%s",
 		documentId);
 	Document document = prepareDoc(documentId);
-	Graph<StructuralElement, Reference> graph = referenceSearcher
-		.retrieveStructuralGraph(document, paperUrl);
+	Graph<StructuralElement, Reference> graph;
+	try {
+	    graph = referenceSearcher.retrieveStructuralGraph(document,
+		    paperUrl);
+	} finally {
+	    if (document != null) {
+		Factory.deleteResource(document);
+	    }
+	}
 
 	Collection<StructuralElement> elements = graph.getVertices();
 	testProofElement = Iterables.find(elements, new IdPredicate(1082));
@@ -88,7 +97,14 @@ public class StructuralElementTypeRecognizerTest {
 	documentId = "ivm18";
 	paperUrl = String.format("http://mathnet.ru/ivm537/%s", documentId);
 	document = prepareDoc(documentId);
-	graph = referenceSearcher.retrieveStructuralGraph(document, paperUrl);
+	try {
+	    graph = referenceSearcher.retrieveStructuralGraph(document,
+		    paperUrl);
+	} finally {
+	    if (document != null) {
+		Factory.deleteResource(document);
+	    }
+	}
 	elements = graph.getVertices();
 	testTableElement = Iterables.find(elements, new IdPredicate(5499));
     }

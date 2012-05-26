@@ -42,6 +42,7 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 
 import edu.uci.ics.jung.graph.Graph;
 import gate.Document;
+import gate.Factory;
 
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext({ DocumentAnalyzerModule.class, LatexParserModule.class,
@@ -72,25 +73,27 @@ public class NavigationalRelationClassifierTest {
     @Before
     public void init() throws Exception {
 	Document document = prepareDoc("ivm18");
-	graph = this.referenceSearcher.retrieveStructuralGraph(document,
-		"http://mathnet.ru/ivm18");
-	Collection<Reference> references = graph.getEdges();
-	Assert.assertTrue(references.size() > 0);
-
-	boolean foundFirst = false;
-
-	boolean foundSecond = false;
-
-	Iterator<Reference> it = references.iterator();
-
-	while (it.hasNext() && !(foundFirst && foundSecond)) {
-	    Reference ref = it.next();
-	    if (ref.getId() == 5086 || ref.getId() == 5087) {
-		this.knownRefersToReference = ref;
-		foundFirst = true;
-	    } else if (ref.getId() == 4766) {
-		this.knownDependsOnReference = ref;
-		foundSecond = true;
+	try {
+	    graph = this.referenceSearcher.retrieveStructuralGraph(document,
+		    "http://mathnet.ru/ivm18");
+	    Collection<Reference> references = graph.getEdges();
+	    Assert.assertTrue(references.size() > 0);
+	    boolean foundFirst = false;
+	    boolean foundSecond = false;
+	    Iterator<Reference> it = references.iterator();
+	    while (it.hasNext() && !(foundFirst && foundSecond)) {
+		Reference ref = it.next();
+		if (ref.getId() == 5086 || ref.getId() == 5087) {
+		    this.knownRefersToReference = ref;
+		    foundFirst = true;
+		} else if (ref.getId() == 4766) {
+		    this.knownDependsOnReference = ref;
+		    foundSecond = true;
+		}
+	    }
+	} finally {
+	    if (document != null) {
+		Factory.deleteResource(document);
 	    }
 	}
 	Assert.assertNotNull("The known 'refersTo' reference is null",

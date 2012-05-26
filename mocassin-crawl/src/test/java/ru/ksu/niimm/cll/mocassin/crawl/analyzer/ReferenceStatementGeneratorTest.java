@@ -49,6 +49,7 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 
 import edu.uci.ics.jung.graph.Graph;
 import gate.Document;
+import gate.Factory;
 
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext({ DocumentAnalyzerModule.class, LatexParserModule.class,
@@ -76,8 +77,14 @@ public class ReferenceStatementGeneratorTest {
     public void init() throws Exception, AccessGateStorageException,
 	    ProcessException {
 	Document document = prepareDoc("ivm18");
-	graph = this.referenceSearcher.retrieveStructuralGraph(document,
-		"http://mathnet.ru/ivm18");
+	try {
+	    graph = this.referenceSearcher.retrieveStructuralGraph(document,
+		    "http://mathnet.ru/ivm18");
+	} finally {
+	    if (document != null) {
+		Factory.deleteResource(document);
+	    }
+	}
 	Collection<Reference> edges = graph.getEdges();
 	Assert.assertTrue("The reference list is empty", edges.size() > 0);
     }

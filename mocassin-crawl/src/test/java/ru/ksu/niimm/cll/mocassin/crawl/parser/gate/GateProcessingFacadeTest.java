@@ -12,6 +12,7 @@
 package ru.ksu.niimm.cll.mocassin.crawl.parser.gate;
 
 import gate.Document;
+import gate.Factory;
 
 import java.io.File;
 
@@ -55,7 +56,6 @@ public class GateProcessingFacadeTest {
 
     private final String SENTENCE_ANNOTATION_NAME = "Sentence";
 
-
     @Before
     public void init() throws Exception {
 	firstPath = prepareDoc(FIRST_DOC_ID);
@@ -67,18 +67,31 @@ public class GateProcessingFacadeTest {
 	    AccessGateStorageException, ProcessException {
 	Document firstDoc = gateProcessingFacade.process(FIRST_DOC_ID,
 		new File(firstPath), "utf8");
-	Assert.assertTrue(
-		"Sentence set is empty.",
-		firstDoc.getAnnotations(
-			GateFormatConstants.DEFAULT_ANNOTATION_SET_NAME)
-			.get(SENTENCE_ANNOTATION_NAME).size() > 0);
-	Document secondDoc = gateProcessingFacade.process(SECOND_DOC_ID, new File(secondPath),
-		"utf8");
-	Assert.assertTrue(
-		"Sentence set is empty.",
-		secondDoc.getAnnotations(
-			GateFormatConstants.DEFAULT_ANNOTATION_SET_NAME)
-			.get(SENTENCE_ANNOTATION_NAME).size() > 0);
+	try {
+	    Assert.assertTrue(
+		    "Sentence set is empty.",
+		    firstDoc.getAnnotations(
+			    GateFormatConstants.DEFAULT_ANNOTATION_SET_NAME)
+			    .get(SENTENCE_ANNOTATION_NAME).size() > 0);
+	} finally {
+	    if (firstDoc != null) {
+		Factory.deleteResource(firstDoc);
+	    }
+	}
+	Document secondDoc = gateProcessingFacade.process(SECOND_DOC_ID,
+		new File(secondPath), "utf8");
+	try {
+	    Assert.assertTrue(
+		    "Sentence set is empty.",
+		    secondDoc
+			    .getAnnotations(
+				    GateFormatConstants.DEFAULT_ANNOTATION_SET_NAME)
+			    .get(SENTENCE_ANNOTATION_NAME).size() > 0);
+	} finally {
+	    if (secondDoc != null) {
+		Factory.deleteResource(secondDoc);
+	    }
+	}
     }
 
     private String prepareDoc(String documentId)
