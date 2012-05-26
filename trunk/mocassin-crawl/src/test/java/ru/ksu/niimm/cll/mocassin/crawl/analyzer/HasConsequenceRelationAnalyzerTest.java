@@ -17,6 +17,7 @@ import java.util.Collection;
 
 import junit.framework.Assert;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,6 +43,7 @@ import com.mycila.testing.plugin.guice.GuiceContext;
 
 import edu.uci.ics.jung.graph.Graph;
 import gate.Document;
+import gate.Factory;
 
 @RunWith(MycilaJunitRunner.class)
 @GuiceContext({ DocumentAnalyzerModule.class, LatexParserModule.class,
@@ -72,6 +74,13 @@ public class HasConsequenceRelationAnalyzerTest {
 	document = prepareDoc("ivm537");
 	graph = this.referenceSearcher.retrieveStructuralGraph(document,
 		"http://mathnet.ru/ivm537");
+    }
+
+    @After
+    public void shutdown() {
+	if (document != null) {
+	    Factory.deleteResource(document);
+	}
     }
 
     private Document prepareDoc(String documentId)

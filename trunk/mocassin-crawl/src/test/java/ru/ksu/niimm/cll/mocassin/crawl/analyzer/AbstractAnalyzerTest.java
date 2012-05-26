@@ -13,6 +13,7 @@ package ru.ksu.niimm.cll.mocassin.crawl.analyzer;
 
 import edu.uci.ics.jung.graph.Graph;
 import gate.Document;
+import gate.Factory;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -69,20 +70,25 @@ public abstract class AbstractAnalyzerTest {
     @Before
     public void init() throws Exception {
 	Document document = prepareDoc("ivm18");
-	Graph<StructuralElement, Reference> graph = this.referenceSearcher
-		.retrieveStructuralGraph(document, "http://mathnet.ru/ivm18");
-	Collection<Reference> edges = graph.getEdges();
-	Assert.assertTrue("Extracted edge list is empty.", edges.size() > 0);
-
-	for (Reference ref : edges) {
-	    if (!ref.getSentenceTokens().isEmpty()) {
-		this.references.add(ref);
-		if (this.references.size() == 2) {
-		    break;
+	try {
+	    Graph<StructuralElement, Reference> graph = this.referenceSearcher
+		    .retrieveStructuralGraph(document,
+			    "http://mathnet.ru/ivm18");
+	    Collection<Reference> edges = graph.getEdges();
+	    Assert.assertTrue("Extracted edge list is empty.", edges.size() > 0);
+	    for (Reference ref : edges) {
+		if (!ref.getSentenceTokens().isEmpty()) {
+		    this.references.add(ref);
+		    if (this.references.size() == 2) {
+			break;
+		    }
 		}
 	    }
+	} finally {
+	    if (document != null) {
+		Factory.deleteResource(document);
+	    }
 	}
-
 	Assert.assertEquals("Both the references haven't been found.", 2,
 		this.references.size());
     }

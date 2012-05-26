@@ -12,11 +12,13 @@
 package ru.ksu.niimm.cll.mocassin.crawl.parser.gate;
 
 import gate.Document;
+import gate.Factory;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -59,6 +61,13 @@ public class CitationSearcherTest {
     @Before
     public void init() throws Exception {
 	document = prepareDoc(DOC_ID);
+    }
+
+    @After
+    public void shutdown() {
+	if (document != null) {
+	    Factory.deleteResource(document);
+	}
     }
 
     private Document prepareDoc(String documentId)
