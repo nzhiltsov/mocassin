@@ -11,7 +11,10 @@
  ******************************************************************************/
 package ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -81,12 +84,12 @@ public class GraphTopologyAnalyzerTest {
 
     private Document prepareDoc(String documentId)
 	    throws PdflatexCompilationException, GeneratePdfSummaryException {
-	latexDocumentHeaderPatcher.patch(documentId);
-	pdflatexWrapper.compilePatched(documentId);
-	latex2pdfMapper.generateSummary(documentId);
-	String arxmlivFilePath = arxmlivProducer.produce(documentId);
-	return gateProcessingFacade.process(documentId, new File(
-		arxmlivFilePath), "utf8");
+    	latexDocumentHeaderPatcher.patch(documentId);
+	    pdflatexWrapper.compilePatched(documentId);
+	    latex2pdfMapper.generateSummary(documentId);
+	    String arxmlivFilePath = arxmlivProducer.produce(documentId);
+	    return gateProcessingFacade.process(documentId, new File(
+		    arxmlivFilePath), "utf8");
     }
 
     @Test
@@ -185,5 +188,24 @@ public class GraphTopologyAnalyzerTest {
                         expectedKatzValue, info.getKatzCoefficient(), 1e-8);
             }
         }
+    }
+
+    @Test
+    public void generateMLNFile() throws IOException, GeneratePdfSummaryException, PdflatexCompilationException {
+        String[] docs = {"ivm101", "ivm170", "ivm260", "ivm3", "ivm829",
+                         "ivm167", "ivm991", "ivm26", "ivm521", "ivm940"};
+
+        MLNUtil mlnUtil = new MLNUtil();
+        FileWriter fstream = new FileWriter("/tmp/data.mln");
+        BufferedWriter out = new BufferedWriter(fstream);
+
+        for (String doc: docs) {
+            Document document = prepareDoc(doc);
+            Graph<StructuralElement, Reference> docGraph = referenceSearcher
+                    .retrieveStructuralGraph(document, "http://mathnet.ru/" + doc);
+            mlnUtil.generateMLNFile(out, docGraph, graphTopologyAnalyzer.extractCandidateFeatures(docGraph), doc);
+            out.write("\n\n\n");
+        }
+        out.close();
     }
 }
