@@ -13,6 +13,9 @@ package ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
+
+import java.util.Locale;
+
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.StructuralElement;
 
 /**
@@ -57,8 +60,8 @@ public class RelationFeatureInfo {
 	private int preferentialAttachmentScore;
 	private float fromPR;
 	private float toPR;
-    private float katzCoefficient;
-    private float inverseKatzCoefficient;
+	private float katzCoefficient;
+	private float inverseKatzCoefficient;
 
 	public Builder(StructuralElement from, StructuralElement to) {
 	    checkNotNull(from);
@@ -93,17 +96,17 @@ public class RelationFeatureInfo {
 	    return this;
 	}
 
-    public Builder katzCoefficient(float katzCoefficient) {
-        checkState(katzCoefficient >= 0);
-        this.katzCoefficient = katzCoefficient;
-        return this;
-    }
+	public Builder katzCoefficient(float katzCoefficient) {
+	    checkState(katzCoefficient >= 0);
+	    this.katzCoefficient = katzCoefficient;
+	    return this;
+	}
 
-    public Builder inverseKatzCoefficient(float inverseKatzCoefficient) {
-        checkState(inverseKatzCoefficient >= 0);
-        this.inverseKatzCoefficient = inverseKatzCoefficient;
-        return this;
-    }
+	public Builder inverseKatzCoefficient(float inverseKatzCoefficient) {
+	    checkState(inverseKatzCoefficient >= 0);
+	    this.inverseKatzCoefficient = inverseKatzCoefficient;
+	    return this;
+	}
 
 	public RelationFeatureInfo build() {
 	    return new RelationFeatureInfo(this);
@@ -117,8 +120,8 @@ public class RelationFeatureInfo {
 	this.preferentialAttachmentScore = builder.preferentialAttachmentScore;
 	this.fromPR = builder.fromPR;
 	this.toPR = builder.toPR;
-    this.katzCoefficient = builder.katzCoefficient;
-    this.inverseKatzCoefficient = builder.inverseKatzCoefficient;
+	this.katzCoefficient = builder.katzCoefficient;
+	this.inverseKatzCoefficient = builder.inverseKatzCoefficient;
     }
 
     public StructuralElement getFrom() {
@@ -146,11 +149,11 @@ public class RelationFeatureInfo {
     }
 
     public float getKatzCoefficient() {
-        return katzCoefficient;
+	return katzCoefficient;
     }
 
     public float getInverseKatzCoefficient() {
-        return inverseKatzCoefficient;
+	return inverseKatzCoefficient;
     }
 
     @Override
@@ -186,8 +189,10 @@ public class RelationFeatureInfo {
 
     @Override
     public String toString() {
-	return String.format("%f %d %f %f %f %f", neighborJaccardCoefficient,
-		preferentialAttachmentScore, fromPR, toPR, katzCoefficient, inverseKatzCoefficient);
+	return String.format(Locale.US, "%d %d %f %d %f %f %f %f", from.getId(),
+		to.getId(), neighborJaccardCoefficient,
+		preferentialAttachmentScore, fromPR, toPR, katzCoefficient,
+		inverseKatzCoefficient);
     }
 
 }
