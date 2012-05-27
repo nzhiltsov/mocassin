@@ -204,7 +204,6 @@ public class GraphTopologyAnalyzerTest {
 	String[] docs = { "ivm101", "ivm170", "ivm260", "ivm3", "ivm829",
 		"ivm167", "ivm991", "ivm26", "ivm521", "ivm940" };
 
-	MLNUtil mlnUtil = new MLNUtil();
 	FileWriter fstream = new FileWriter("/tmp/data.mln");
 	BufferedWriter out = new BufferedWriter(fstream);
 
@@ -213,7 +212,7 @@ public class GraphTopologyAnalyzerTest {
 	    Graph<StructuralElement, Reference> docGraph = referenceSearcher
 		    .retrieveStructuralGraph(document, "http://mathnet.ru/"
 			    + doc);
-	    mlnUtil.generateMLNFile(out, docGraph,
+	    MLNUtil.generateMLNFile(out, docGraph,
 		    graphTopologyAnalyzer.extractCandidateFeatures(docGraph),
 		    doc);
 	    out.write("\n\n\n");

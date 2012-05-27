@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.hp.hpl.jena.ontology.*;
 import org.slf4j.Logger;
 
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.*;
@@ -25,12 +26,6 @@ import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import com.hp.hpl.jena.ontology.DatatypeProperty;
-import com.hp.hpl.jena.ontology.ObjectProperty;
-import com.hp.hpl.jena.ontology.OntClass;
-import com.hp.hpl.jena.ontology.OntModel;
-import com.hp.hpl.jena.ontology.OntProperty;
-import com.hp.hpl.jena.ontology.OntResource;
 import com.hp.hpl.jena.util.iterator.ExtendedIterator;
 
 public class OntologyFacadeImpl implements OntologyFacade {
@@ -253,4 +248,56 @@ public class OntologyFacadeImpl implements OntologyFacade {
 			throw new RuntimeException(e);
 		}
 	}
+
+    @Override
+    public List<MocassinOntologyClasses> getDomainClasses(MocassinOntologyRelations relation) {
+        List<MocassinOntologyClasses> result = new ArrayList<MocassinOntologyClasses>();
+        OntProperty ontProperty = getOntology().getOntProperty(relation.getUri());
+
+        ExtendedIterator<? extends OntResource> domainIterator = ontProperty.listDomain();
+
+        while (domainIterator.hasNext()) {
+            OntResource resource = domainIterator.next();
+            if (resource.canAs(OntClass.class)) {
+                OntClass ontClass = resource.as(OntClass.class);
+                if (MocassinOntologyClasses.fromUri(ontClass.getURI()) != null) {
+                    result.add(MocassinOntologyClasses.fromUri(ontClass.getURI()));
+                }
+                List<OntClass> subClasses = ontClass.listSubClasses().toList();
+                for (OntClass subClass: subClasses) {
+                    if (MocassinOntologyClasses.fromUri(subClass.getURI()) != null) {
+                        result.add(MocassinOntologyClasses.fromUri(subClass.getURI()));
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
+    @Override
+    public List<MocassinOntologyClasses> getRangeClasses(MocassinOntologyRelations relation) {
+        List<MocassinOntologyClasses> result = new ArrayList<MocassinOntologyClasses>();
+        OntProperty ontProperty = getOntology().getOntProperty(relation.getUri());
+
+        ExtendedIterator<? extends OntResource> domainIterator = ontProperty.listRange();
+
+        while (domainIterator.hasNext()) {
+            OntResource resource = domainIterator.next();
+            if (resource.canAs(OntClass.class)) {
+                OntClass ontClass = resource.as(OntClass.class);
+                if (MocassinOntologyClasses.fromUri(ontClass.getURI()) != null) {
+                    result.add(MocassinOntologyClasses.fromUri(ontClass.getURI()));
+                }
+                List<OntClass> subClasses = ontClass.listSubClasses().toList();
+                for (OntClass subClass: subClasses) {
+                    if (MocassinOntologyClasses.fromUri(subClass.getURI()) != null) {
+                        result.add(MocassinOntologyClasses.fromUri(subClass.getURI()));
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
 }
