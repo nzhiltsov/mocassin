@@ -3,8 +3,6 @@ package ru.ksu.niimm.cll.mocassin.crawl.nutch;
 import static java.lang.String.format;
 import edu.uci.ics.jung.graph.AbstractGraph;
 import edu.uci.ics.jung.graph.Graph;
-import edu.uci.ics.jung.graph.Hypergraph;
-import edu.uci.ics.jung.graph.MultiGraph;
 import gate.Document;
 import gate.Factory;
 
@@ -24,14 +22,12 @@ import org.apache.nutch.parse.ParseResult;
 import org.apache.nutch.parse.ParseStatus;
 import org.apache.nutch.parse.Parser;
 import org.apache.nutch.protocol.Content;
-import org.openrdf.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.DocumentAnalyzerModule;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.Reference;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.ReferenceSearcher;
-import ru.ksu.niimm.cll.mocassin.crawl.analyzer.ReferenceStatementExporter;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.GraphTopologyAnalyzer;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.RelationFeatureInfo;
@@ -39,19 +35,14 @@ import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.GateModule;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.GateProcessingFacade;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.latex.ArxmlivProducer;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.latex.LatexParserModule;
-import ru.ksu.niimm.cll.mocassin.crawl.parser.pdf.PdfHighlighter;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.pdf.PdfParserModule;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyRelations;
-import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyModule;
-import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyResourceFacade;
 import ru.ksu.niimm.cll.mocassin.util.StringUtil;
 import ru.ksu.niimm.cll.mocassin.util.model.ArticleMetadata;
 import ru.ksu.niimm.cll.mocassin.util.model.Link;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-
-import static java.lang.String.format;
 
 public class MocassinAnalyzerParser implements Parser {
     private static final Logger LOG = LoggerFactory
@@ -69,8 +60,6 @@ public class MocassinAnalyzerParser implements Parser {
     private Configuration conf;
 
     private ReferenceSearcher referenceSearcher;
-
-    private ReferenceStatementExporter referenceStatementGenerator;
 
     private GateProcessingFacade gateProcessingFacade;
 
@@ -95,8 +84,6 @@ public class MocassinAnalyzerParser implements Parser {
 	arxmlivProducer = injector.getInstance(ArxmlivProducer.class);
 	gateProcessingFacade = injector.getInstance(GateProcessingFacade.class);
 	referenceSearcher = injector.getInstance(ReferenceSearcher.class);
-	referenceStatementGenerator = injector
-		.getInstance(ReferenceStatementExporter.class);
 	graphTopologyAnalyzer = injector
 		.getInstance(GraphTopologyAnalyzer.class);
     }
@@ -139,22 +126,8 @@ public class MocassinAnalyzerParser implements Parser {
 	FileWriter fw = new FileWriter("/opt/mocassin/stats/" + mathnetKey
 		+ ".csv");
 	try {
-	    AbstractGraph<StructuralElement, Reference> multigraph = (AbstractGraph<StructuralElement, Reference>) graph;
 	    for (RelationFeatureInfo candidate : candidates) {
-		Collection<Reference> edgeSet = multigraph.findEdgeSet(
-			candidate.getFrom(), candidate.getTo());
-		if (edgeSet.isEmpty()) {
-		    edgeSet = multigraph.findEdgeSet(candidate.getTo(),
-			    candidate.getFrom());
-		}
-		boolean found = false;
-		for (Reference edge : edgeSet) {
-		    found = edge.getPredictedRelation() == MocassinOntologyRelations.REFERS_TO
-			    || edge.getPredictedRelation() == MocassinOntologyRelations.DEPENDS_ON;
-		    if (found)
-			break;
-		}
-		fw.write(format("%s %d", candidate.toString(), found ? 1 : 0));
+		fw.write(format("%s %s", mathnetKey, candidate.toString()));
 		fw.write('\n');
 	    }
 	    fw.flush();
