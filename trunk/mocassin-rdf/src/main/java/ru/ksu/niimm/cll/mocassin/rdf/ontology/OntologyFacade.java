@@ -11,6 +11,8 @@
  ******************************************************************************/
 package ru.ksu.niimm.cll.mocassin.rdf.ontology;
 
+import com.hp.hpl.jena.ontology.AllDifferent;
+
 import java.util.List;
 
 
@@ -62,4 +64,19 @@ public interface OntologyFacade {
      */
     List<MocassinOntologyRelations> getRelations(MocassinOntologyClasses first, MocassinOntologyClasses second);
 
+    /**
+     * Return list of domain classes of given relation
+     *
+     * @param relation
+     * @return
+     */
+    List<MocassinOntologyClasses> getDomainClasses(MocassinOntologyRelations relation);
+
+    /**
+     * Return list of range classes of given relation
+     *
+     * @param relation
+     * @return
+     */
+    List<MocassinOntologyClasses> getRangeClasses(MocassinOntologyRelations relation);
 }

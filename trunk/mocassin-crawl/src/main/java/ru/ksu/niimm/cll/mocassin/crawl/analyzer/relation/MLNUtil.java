@@ -1,11 +1,15 @@
 package ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation;
 
 import com.google.common.collect.ImmutableMap;
+import com.hp.hpl.jena.ontology.AllDifferent;
+import com.hp.hpl.jena.ontology.OntClass;
+import com.hp.hpl.jena.ontology.OntResource;
 import edu.uci.ics.jung.graph.Graph;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.Reference;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyClasses;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyRelations;
+import ru.ksu.niimm.cll.mocassin.rdf.ontology.OntologyFacade;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -13,10 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MLNUtil {
-    private ImmutableMap<MocassinOntologyClasses, String> classMap;
-    private ImmutableMap<MocassinOntologyRelations, String> relationMap;
+    private static ImmutableMap<MocassinOntologyClasses, String> classMap;
+    private static ImmutableMap<MocassinOntologyRelations, String> relationMap;
+    private static ImmutableMap<MocassinOntologyRelations, String> ruleRelationMap;
 
-    public MLNUtil() {
+    static {
         classMap = ImmutableMap
                 .<MocassinOntologyClasses, String>builder()
                 .put(MocassinOntologyClasses.AXIOM, "Axiom")
@@ -42,9 +47,17 @@ public class MLNUtil {
                 .put(MocassinOntologyRelations.HAS_PART, "has_part")
                 .put(MocassinOntologyRelations.FOLLOWED_BY, "followed_by")
                 .build();
+        ruleRelationMap = ImmutableMap
+                .<MocassinOntologyRelations, String>builder()
+                .put(MocassinOntologyRelations.REFERS_TO, "refers_to")
+                .put(MocassinOntologyRelations.DEPENDS_ON, "depends_on")
+                .put(MocassinOntologyRelations.EXEMPLIFIES, "exemplifies")
+                .put(MocassinOntologyRelations.PROVES, "proves")
+                .put(MocassinOntologyRelations.HAS_CONSEQUENCE, "has_consequence")
+                .build();
     }
 
-    public void generateMLNFile(BufferedWriter out, Graph<StructuralElement, Reference> graph,
+    public static void generateMLNFile(BufferedWriter out, Graph<StructuralElement, Reference> graph,
                                 List<RelationFeatureInfo> features, String docId) throws IOException {
         writeClasses(out, new ArrayList<StructuralElement>(graph.getVertices()), docId);
         out.write("\n");
@@ -54,7 +67,7 @@ public class MLNUtil {
 
     }
 
-    private void writeClasses(BufferedWriter out, List<StructuralElement> elements,
+    private static void writeClasses(BufferedWriter out, List<StructuralElement> elements,
                               String docId) throws IOException {
         for (StructuralElement element: elements) {
             if (classMap.containsKey(element.getPredictedClass())) {
@@ -64,7 +77,7 @@ public class MLNUtil {
         }
     }
 
-    private void writeRelations(BufferedWriter out, Graph<StructuralElement, Reference> graph,
+    private static void writeRelations(BufferedWriter out, Graph<StructuralElement, Reference> graph,
                                 List<Reference> relations, String docId) throws IOException {
         for (Reference reference: relations) {
             if (relationMap.containsKey(reference.getPredictedRelation())) {
@@ -75,7 +88,7 @@ public class MLNUtil {
         }
     }
 
-    private void writeFeautres(BufferedWriter out, List<RelationFeatureInfo> feautures,
+    private static void writeFeautres(BufferedWriter out, List<RelationFeatureInfo> feautures,
                                String docId) throws IOException {
         for (RelationFeatureInfo feature: feautures) {
             out.write(featureLine("PAS", feature.getPreferentialAttachmentScore(),
@@ -93,9 +106,40 @@ public class MLNUtil {
         }
     }
 
-    private String featureLine(String feature, float value, String docId, int id1, int id2) {
+    private static String featureLine(String feature, float value, String docId, int id1, int id2) {
         return feature + "(" + docId + "_" + id1
                 + "," + docId + "_" + id2 + ") "
                 + value + "\n";
+    }
+
+    public static String generateDomainRangeRules(OntologyFacade facade,
+                                         MocassinOntologyRelations relation) {
+        List<MocassinOntologyClasses> domain = facade.getDomainClasses(relation);
+        List<MocassinOntologyClasses> range = facade.getRangeClasses(relation);
+
+        StringBuilder builder = new StringBuilder();
+        builder.append(ruleRelationMap.get(relation))
+               .append("(x,y) => (");
+
+        for (MocassinOntologyClasses ontClass: domain) {
+            if (classMap.containsKey(ontClass)) {
+                builder.append(classMap.get(ontClass))
+                       .append("(x)")
+                       .append(" v ");
+            }
+        }
+        builder.delete(builder.length() - 3, builder.length());
+        builder.append(") ^ (");
+
+        for (MocassinOntologyClasses ontClass: range) {
+            if (classMap.containsKey(ontClass)) {
+                builder.append(classMap.get(ontClass))
+                       .append("(y)")
+                       .append(" v ");
+            }
+        }
+        builder.delete(builder.length() - 3, builder.length());
+        builder.append(").\n");
+        return builder.toString();
     }
 }
