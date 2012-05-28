@@ -26,8 +26,8 @@ import com.csvreader.CsvReader;
 import com.google.common.collect.Maps;
 
 public class IzvestiyaUtil {
-	private static final String INPUT_DIR = "<path>";
-	private static final String OUTPUT_DIR = "/opt/mocassin/tex";
+	private static final String INPUT_DIR = "<filepath>";
+	private static final String OUTPUT_DIR = "/opt/mocassin/all-IVM";
 
 	private static final Map<String, String> id2filename = Maps.newHashMap();
 
@@ -44,7 +44,7 @@ public class IzvestiyaUtil {
 				String id = reader.get(0);
 				String filename = reader.get(1);
 				StringTokenizer st = new StringTokenizer(filename, "-.");
-				String name = st.nextToken();
+				String name = st.nextToken().replace('a', 'A');
 				String volume = st.nextToken();
 				String year = st.nextToken();
 				String extension = st.nextToken();
