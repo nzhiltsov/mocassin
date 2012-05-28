@@ -239,13 +239,6 @@
 			<scope>compile</scope>
 		</dependency>
 
-        <dependency>
-            <groupId>ru.ksu.niimm.cll.mocassin</groupId>
-            <artifactId>mocassin-crawl</artifactId>
-            <version>1.0.0.7-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-
 		<dependency>
 			<groupId>net.sf.jung</groupId>
 			<artifactId>jung-api</artifactId>

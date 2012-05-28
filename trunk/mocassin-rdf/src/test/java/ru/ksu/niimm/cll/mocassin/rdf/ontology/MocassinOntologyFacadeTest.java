@@ -11,9 +11,6 @@
  ******************************************************************************/
 package ru.ksu.niimm.cll.mocassin.rdf.ontology;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -22,7 +19,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.MLNUtil;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.util.OntologyConceptComparator;
 
 import com.google.inject.Inject;
@@ -158,20 +154,4 @@ public class MocassinOntologyFacadeTest {
         Assert.assertEquals("The domain of #proves is not equal to the expected one", domain, testDomain);
     }
 
-    @Test
-    public void testGenerateRules() throws IOException {
-        MocassinOntologyRelations[] relations = {MocassinOntologyRelations.PROVES,
-                                                 MocassinOntologyRelations.DEPENDS_ON,
-                                                 MocassinOntologyRelations.EXEMPLIFIES,
-                                                 MocassinOntologyRelations.HAS_CONSEQUENCE,
-                                                 MocassinOntologyRelations.REFERS_TO};
-        FileWriter fstream = new FileWriter("/tmp/rules.mln");
-        BufferedWriter out = new BufferedWriter(fstream);
-
-        for (MocassinOntologyRelations relation: relations) {
-            out.write(MLNUtil.generateDomainRangeRules(ontologyFacade, relation));
-        }
-
-        out.close();
-    }
 }
