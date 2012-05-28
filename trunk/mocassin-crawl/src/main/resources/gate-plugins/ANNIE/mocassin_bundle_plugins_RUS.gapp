@@ -7,6 +7,9 @@
 	<gate.util.persistence.PersistenceManager-URLHolder>
         <urlString>$relpath$../Stemmer_Snowball</urlString>
       </gate.util.persistence.PersistenceManager-URLHolder>
+      <gate.util.persistence.PersistenceManager-URLHolder>
+        <urlString>$relpath$../Math</urlString>
+      </gate.util.persistence.PersistenceManager-URLHolder>
     </localList>
     <collectionType>java.util.ArrayList</collectionType>
   </urlList>
@@ -101,13 +104,14 @@
           </features>
         </gate.util.persistence.PRPersistence>
 
+        
         <gate.util.persistence.LanguageAnalyserPersistence>
           <runtimeParams class="gate.util.persistence.MapPersistence">
             <mapType>gate.util.SimpleFeatureMapImpl</mapType>
             <localMap/>
           </runtimeParams>
-          <resourceType>gate.creole.POSTagger</resourceType>
-          <resourceName>ANNIE POS Tagger</resourceName>
+          <resourceType>ru.ksu.niimm.cll.gate.morph.formula.FormulaAnalyzer</resourceType>
+          <resourceName>Math Analyser</resourceName>
           <initParams class="gate.util.persistence.MapPersistence">
             <mapType>gate.util.SimpleFeatureMapImpl</mapType>
             <localMap/>
@@ -117,6 +121,8 @@
             <localMap/>
           </features>
         </gate.util.persistence.LanguageAnalyserPersistence>
+        
+        
       </localList>
       <collectionType>java.util.ArrayList</collectionType>
     </prList>
