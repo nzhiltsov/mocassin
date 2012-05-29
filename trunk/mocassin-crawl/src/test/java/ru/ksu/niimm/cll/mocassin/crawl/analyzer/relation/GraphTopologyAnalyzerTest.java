@@ -89,10 +89,11 @@ public class GraphTopologyAnalyzerTest {
 
     private Document prepareDoc(String documentId)
 	    throws PdflatexCompilationException, GeneratePdfSummaryException {
-	latexDocumentHeaderPatcher.patch(documentId);
-	pdflatexWrapper.compilePatched(documentId);
-	latex2pdfMapper.generateSummary(documentId);
-	String arxmlivFilePath = arxmlivProducer.produce(documentId);
+	//latexDocumentHeaderPatcher.patch(documentId);
+	//pdflatexWrapper.compilePatched(documentId);
+	//latex2pdfMapper.generateSummary(documentId);
+	//String arxmlivFilePath = arxmlivProducer.produce(documentId);
+        String arxmlivFilePath = "/opt/mocassin/arxmliv/" + documentId + ".tex.xml";
 	return gateProcessingFacade.process(documentId, new File(
 		arxmlivFilePath), "utf8");
     }
@@ -204,7 +205,7 @@ public class GraphTopologyAnalyzerTest {
 	String[] docs = { "ivm101", "ivm170", "ivm260", "ivm3", "ivm829",
 		"ivm167", "ivm991", "ivm26", "ivm521", "ivm940" };
 
-	FileWriter fstream = new FileWriter("/tmp/data.mln");
+	FileWriter fstream = new FileWriter("/tmp/data.db");
 	BufferedWriter out = new BufferedWriter(fstream);
 
 	for (String doc : docs) {
@@ -219,7 +220,7 @@ public class GraphTopologyAnalyzerTest {
 	}
 	out.close();
 
-	FileReader reader = new FileReader("/tmp/data.mln");
+	FileReader reader = new FileReader("/tmp/data.db");
 	BufferedReader in = new BufferedReader(reader);
 
 	boolean lemma = false;
@@ -230,11 +231,11 @@ public class GraphTopologyAnalyzerTest {
 	while (!line.equals("")) {
 	    num++;
 
-	    if (line.equals("Lemma(ivm101_832)")) {
+	    if (line.equals("Lemma(Ivm101_832)")) {
 		lemma = true;
 	    }
 
-	    if (line.equals("Theorem(ivm101_2313)")) {
+	    if (line.equals("Theorem(Ivm101_2313)")) {
 		theorem = true;
 	    }
 
@@ -245,7 +246,7 @@ public class GraphTopologyAnalyzerTest {
 	Assert.assertEquals(
 		"The number of class predicates in ivm101 is not equal to the expected one",
 		32, num);
-	Assert.assertTrue("Lemma(ivm101_832) predicate not found", lemma);
-	Assert.assertTrue("Theorem(ivm101_2313) predicate not found", theorem);
+	Assert.assertTrue("Lemma(Ivm101_832) predicate not found", lemma);
+	Assert.assertTrue("Theorem(Ivm101_2313) predicate not found", theorem);
     }
 }

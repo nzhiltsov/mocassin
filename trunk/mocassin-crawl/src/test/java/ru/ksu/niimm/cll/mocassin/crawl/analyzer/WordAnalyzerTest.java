@@ -109,7 +109,8 @@ public class WordAnalyzerTest {
                 for (WordFeatureInfo info: features) {
                     List<String> words = info.getWords();
                     for (String word: words) {
-                        out.write("HasWord(\"" + word + "\"," + doc + "_" + info.getElement().getId() + ")\n");
+                        out.write("HasWord(\"" + word + "\"," + doc.substring(0,1).toUpperCase()
+                                + doc.substring(1) + "_" + info.getElement().getId() + ")\n");
                     }
                 }
             } finally {
