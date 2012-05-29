@@ -72,7 +72,7 @@ public class WordFeatureInfo {
                 return false;
         } else if (!element.equals(other.element))
             return false;
-        return true;
+        return this.words == other.getWords();
     }
 
     @Override
