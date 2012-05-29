@@ -14,6 +14,7 @@ package ru.ksu.niimm.cll.mocassin.crawl.analyzer;
 import java.util.List;
 
 import ru.ksu.niimm.cll.mocassin.crawl.parser.arxmliv.ArxmlivStructureElementTypes;
+import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Token;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyClasses;
 
 /**
@@ -83,8 +84,9 @@ public interface StructuralElement {
 	String getName();
 
 	List<String> getContents();
+    List<String> getStemContents();
 
-	void setContents(String... contents);
+	void setContents(Token... contents);
 
 	/**
 	 * 

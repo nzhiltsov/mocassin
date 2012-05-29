@@ -12,13 +12,10 @@
 package ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.StructuralElement;
+import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Token;
 import ru.ksu.niimm.cll.mocassin.rdf.ontology.MocassinOntologyClasses;
 
 import com.google.common.base.Predicate;
@@ -35,7 +32,7 @@ public class StructuralElementImpl implements StructuralElement {
 	private final String name;
 	private List<String> labels;
 	private final String title;
-	private List<String> contents = new LinkedList<String>();
+	private List<Token> contents = new LinkedList<Token>();
 
 	private int startPageNumber;
 	private MocassinOntologyClasses predictedClass;
@@ -131,10 +128,22 @@ public class StructuralElementImpl implements StructuralElement {
 	}
 
 	public List<String> getContents() {
-		return contents;
+        List<String> result = new ArrayList<String>();
+        for (Token token: contents) {
+            result.add(token.getValue());
+        }
+		return result;
 	}
 
-	public void setContents(String... contents) {
+    public List<String> getStemContents() {
+        List<String> result = new ArrayList<String>();
+        for (Token token: contents) {
+            result.add(token.getStem());
+        }
+        return result;
+    }
+
+	public void setContents(Token... contents) {
 		Collections.addAll(this.contents, contents);
 	}
 
