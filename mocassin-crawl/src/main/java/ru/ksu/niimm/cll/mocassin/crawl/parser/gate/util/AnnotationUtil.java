@@ -17,6 +17,7 @@ import gate.Document;
 
 import java.util.List;
 
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl.Term;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Token;
 
 public interface AnnotationUtil {
