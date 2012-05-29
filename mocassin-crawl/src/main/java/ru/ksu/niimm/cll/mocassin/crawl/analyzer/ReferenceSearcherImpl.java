@@ -142,7 +142,6 @@ class ReferenceSearcherImpl implements ReferenceSearcher {
      * @param graph
      * 
      * @param structuralElements
-     * @param parsedDocument
      * @param document
      */
     private void addPartholeRelations(
@@ -254,8 +253,7 @@ class ReferenceSearcherImpl implements ReferenceSearcher {
 
     public List<Token> getTokensForAnnotation(Document document,
 	    Annotation annotation) {
-	return getAnnotationUtil().getTokensForAnnotation(document, annotation,
-		USE_STEMMING);
+	return getAnnotationUtil().getTokensForAnnotation(document, annotation);
     }
 
     private void addEdge(Graph<StructuralElement, Reference> graph,

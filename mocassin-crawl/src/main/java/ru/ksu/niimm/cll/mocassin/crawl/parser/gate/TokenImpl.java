@@ -15,15 +15,21 @@ package ru.ksu.niimm.cll.mocassin.crawl.parser.gate;
 public class TokenImpl implements Token {
 	private String value;
 	private String pos;
+    private String stem;
 
-	public TokenImpl(String value, String pos) {
+	public TokenImpl(String value, String pos, String stem) {
 		this.value = value;
 		this.pos = pos;
+        this.stem = stem;
 	}
 
 	public String getValue() {
 		return value;
 	}
+
+    public String getStem() {
+        return stem;
+    }
 
 	public String getPos() {
 		return pos;

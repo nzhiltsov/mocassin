@@ -131,7 +131,7 @@ public class AnnotationUtilImpl implements AnnotationUtil {
 	 * (gate.Document, gate.Annotation)
 	 */
 	public List<Token> getTokensForAnnotation(Document document,
-			Annotation annotation, boolean useStemming) {
+			Annotation annotation) {
 		List<Token> returningTokens;
 		returningTokens = new LinkedList<Token>();
 
@@ -143,12 +143,11 @@ public class AnnotationUtilImpl implements AnnotationUtil {
 			String kind = (String) a.getFeatures().get("kind");
 			if (!kind.equals("word"))
 				continue;
-			String tokenFeatureName = useStemming ? GateFormatConstants.STEM_FEATURE_NAME
-					: GateFormatConstants.TOKEN_FEATURE_NAME;
-			String tokenValue = (String) a.getFeatures().get(tokenFeatureName);
+			String tokenValue = (String) a.getFeatures().get(GateFormatConstants.TOKEN_FEATURE_NAME);
+            String stemValue = (String) a.getFeatures().get(GateFormatConstants.STEM_FEATURE_NAME);
 			String pos = (String) a.getFeatures().get(
 					GateFormatConstants.POS_FEATURE_NAME);
-			Token token = new TokenImpl(tokenValue, pos);
+			Token token = new TokenImpl(tokenValue, pos, stemValue);
 			returningTokens.add(token);
 		}
 		return returningTokens;

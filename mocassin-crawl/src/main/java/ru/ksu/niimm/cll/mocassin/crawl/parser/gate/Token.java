@@ -19,15 +19,21 @@ package ru.ksu.niimm.cll.mocassin.crawl.parser.gate;
  */
 public interface Token {
 	/**
-	 * returns string value of a token (or its stem - see configuration)
+	 * returns string value of a token
 	 * 
 	 * @return
 	 */
 	String getValue();
 
+    /**
+     * returns steam value of a token
+     * @return
+     */
+    String getStem();
+
 	/**
-	 * returns POS tag according to GATE tag set: {@link http
-	 * ://gate.ac.uk/sale/tao/splitap7.html}
+	 * returns POS tag according to GATE tag set: {
+	 * @link http://gate.ac.uk/sale/tao/splitap7.html}
 	 * 
 	 * @return
 	 */
