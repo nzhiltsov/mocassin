@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Properties;
 
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl.WordAnalyzerImpl;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.ExemplifiesRelationAnalyzer;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.GraphTopologyAnalyzer;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.relation.HasConsequenceRelationAnalyzer;
@@ -86,6 +87,7 @@ public class DocumentAnalyzerModule extends AbstractModule {
 	bind(CitationSearcher.class).to(GateCitationSearcher.class);
 	bind(BibliographyExtractor.class).to(FakeBibliographyExtractor.class);
 	bind(GraphTopologyAnalyzer.class).to(GraphTopologyAnalyzerImpl.class);
+    bind(WordAnalyzer.class).to(WordAnalyzerImpl.class);
 	bindListener(Matchers.any(), new Slf4jTypeListener());
 	bindClassifier();
 

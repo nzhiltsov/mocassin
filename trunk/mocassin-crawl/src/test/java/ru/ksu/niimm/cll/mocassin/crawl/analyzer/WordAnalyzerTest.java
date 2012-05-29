@@ -34,7 +34,8 @@ import java.util.List;
         OntologyTestModule.class, FullTextModule.class, GateModule.class,
         PdfParserModule.class })
 public class WordAnalyzerTest {
-    private WordAnalyzer wordAnalyzer = new WordAnalyzerImpl();
+    @Inject
+    private WordAnalyzer wordAnalyzer;
     @Inject
     private ReferenceSearcher referenceSearcher;
     @Inject
@@ -52,11 +53,10 @@ public class WordAnalyzerTest {
 
     private Document prepareDoc(String documentId)
             throws PdflatexCompilationException, GeneratePdfSummaryException {
-        //latexDocumentHeaderPatcher.patch(documentId);
-        //pdflatexWrapper.compilePatched(documentId);
-        //latex2pdfMapper.generateSummary(documentId);
-        //String arxmlivFilePath = arxmlivProducer.produce(documentId);
-        String arxmlivFilePath = "/opt/mocassin/arxmliv/" + documentId + ".tex.xml";
+        latexDocumentHeaderPatcher.patch(documentId);
+        pdflatexWrapper.compilePatched(documentId);
+        latex2pdfMapper.generateSummary(documentId);
+        String arxmlivFilePath = arxmlivProducer.produce(documentId);
         return gateProcessingFacade.process(documentId, new File(
                 arxmlivFilePath), "utf8");
     }
