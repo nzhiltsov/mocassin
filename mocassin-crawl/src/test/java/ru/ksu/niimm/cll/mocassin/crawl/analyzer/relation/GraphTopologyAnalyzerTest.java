@@ -89,11 +89,10 @@ public class GraphTopologyAnalyzerTest {
 
     private Document prepareDoc(String documentId)
 	    throws PdflatexCompilationException, GeneratePdfSummaryException {
-	//latexDocumentHeaderPatcher.patch(documentId);
-	//pdflatexWrapper.compilePatched(documentId);
-	//latex2pdfMapper.generateSummary(documentId);
-	//String arxmlivFilePath = arxmlivProducer.produce(documentId);
-        String arxmlivFilePath = "/opt/mocassin/arxmliv/" + documentId + ".tex.xml";
+	latexDocumentHeaderPatcher.patch(documentId);
+	pdflatexWrapper.compilePatched(documentId);
+	latex2pdfMapper.generateSummary(documentId);
+	String arxmlivFilePath = arxmlivProducer.produce(documentId);
 	return gateProcessingFacade.process(documentId, new File(
 		arxmlivFilePath), "utf8");
     }
