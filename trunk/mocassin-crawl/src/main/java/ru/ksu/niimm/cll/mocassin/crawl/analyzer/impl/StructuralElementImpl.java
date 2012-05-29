@@ -32,7 +32,7 @@ public class StructuralElementImpl implements StructuralElement {
     private final String name;
     private List<String> labels;
     private final String title;
-    private List<String> contents = new LinkedList<String>();
+    private List<Token> contents = new LinkedList<Token>();
     private final List<Term> terms = new ArrayList<Term>();
 
     private int startPageNumber;
@@ -63,28 +63,13 @@ public class StructuralElementImpl implements StructuralElement {
 	    return this;
 	}
 
-	public List<String> getContents() {
-        List<String> result = new ArrayList<String>();
-        for (Token token: contents) {
-            result.add(token.getValue());
-        }
-		return result;
-	}
-
-    public List<String> getStemContents() {
-        List<String> result = new ArrayList<String>();
-        for (Token token: contents) {
-            result.add(token.getStem());
-        }
-        return result;
-    }
-
-	public void setContents(Token... contents) {
-		Collections.addAll(this.contents, contents);
-	}
-
 	public Builder title(String title) {
 	    this.title = title;
+	    return this;
+	}
+
+	public Builder name(String name) {
+	    this.name = name;
 	    return this;
 	}
 
@@ -144,10 +129,22 @@ public class StructuralElementImpl implements StructuralElement {
     }
 
     public List<String> getContents() {
-	return contents;
+	List<String> result = new ArrayList<String>();
+	for (Token token : contents) {
+	    result.add(token.getValue());
+	}
+	return result;
     }
 
-    public void setContents(String... contents) {
+    public List<String> getStemContents() {
+	List<String> result = new ArrayList<String>();
+	for (Token token : contents) {
+	    result.add(token.getStem());
+	}
+	return result;
+    }
+
+    public void setContents(Token... contents) {
 	Collections.addAll(this.contents, contents);
     }
 
