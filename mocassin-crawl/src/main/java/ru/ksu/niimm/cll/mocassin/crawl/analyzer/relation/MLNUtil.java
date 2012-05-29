@@ -67,12 +67,16 @@ public class MLNUtil {
 
     }
 
+    private static String upperFirstLetter(String word) {
+        return word.substring(0,1).toUpperCase() + word.substring(1);
+    }
+
     private static void writeClasses(BufferedWriter out,
 	    List<StructuralElement> elements, String docId) throws IOException {
 	for (StructuralElement element : elements) {
 	    if (classMap.containsKey(element.getPredictedClass())) {
 		out.write(classMap.get(element.getPredictedClass()) + "("
-			+ docId + "_" + element.getId() + ")\n");
+			+ upperFirstLetter(docId) + "_" + element.getId() + ")\n");
 	    }
 	}
     }
@@ -83,8 +87,8 @@ public class MLNUtil {
 	for (Reference reference : relations) {
 	    if (relationMap.containsKey(reference.getPredictedRelation())) {
 		out.write(relationMap.get(reference.getPredictedRelation())
-			+ "(" + docId + "_"
-			+ graph.getSource(reference).getId() + "," + docId
+			+ "(" + upperFirstLetter(docId) + "_"
+			+ graph.getSource(reference).getId() + "," + upperFirstLetter(docId)
 			+ "_" + graph.getDest(reference).getId() + ")\n");
 	    }
 	}
@@ -105,17 +109,17 @@ public class MLNUtil {
 	    out.write(featureLine("Jaccard", feature
 		    .getNeighborJaccardCoefficient(), docId, feature.getFrom()
 		    .getId(), feature.getTo().getId()));
-	    out.write("PageRank(" + docId + "_" + feature.getFrom().getId()
-		    + ") " + feature.getFromPR() + "\n");
-	    out.write("PageRank(" + docId + "_" + feature.getTo().getId()
-		    + ") " + feature.getToPR() + "\n");
+	    out.write("PageRank(" + upperFirstLetter(docId) + "_" + feature.getFrom().getId()
+		    + ") " + String.format("%.10f", feature.getFromPR()) + "\n");
+	    out.write("PageRank(" + upperFirstLetter(docId) + "_" + feature.getTo().getId()
+		    + ") " + String.format("%.10f", feature.getToPR()) + "\n");
 	}
     }
 
     private static String featureLine(String feature, float value,
 	    String docId, int id1, int id2) {
-	return feature + "(" + docId + "_" + id1 + "," + docId + "_" + id2
-		+ ") " + value + "\n";
+	return feature + "(" + upperFirstLetter(docId) + "_" + id1 + "," + upperFirstLetter(docId) + "_" + id2
+		+ ") " + String.format("%.10f", value) + "\n";
     }
 
     public static String generateDomainRangeRules(
