@@ -63,7 +63,7 @@ public class MLNUtil {
 	writeRelations(out, graph, new ArrayList<Reference>(graph.getEdges()),
 		docId);
 	out.write("\n");
-	writeFeautres(out, features, docId);
+//	writeFeautres(out, features, docId);
 
     }
 
