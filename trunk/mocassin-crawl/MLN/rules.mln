@@ -1,0 +1,85 @@
+words = {"введ", "векторн", "возьм", "действ", "найд", "наконец", "напр", "означа", "основн", "подцеп", "показыва", "представля", "провер", "рассматрива", "рассужден", "связ", "базис", "достаточн", "неотрицательн", "оболочк", "однородн", "отмет", "очевидн", "пар", "перемен", "переход", "предположен", "приведен", "сильн", "индекс", "найдет", "обозначен", "объединен", "проективн", "слаб", "согласн", "соответствен", "частност", "единиц", "мерн", "монотон", "оценк", "помощ", "противореч", "различн", "связа", "собствен", "указа", "этот", "итак", "меньш", "последн", "правил", "предполож", "пример", "учет", "цел", "веществен", "докаж", "известн", "интегра", "предложен", "состо", "структур", "теор", "утвержден", "допуст", "единствен", "найдут", "относительн", "полож", "порожден", "следств", "транспозиц", "будет", "был", "двух", "координат", "крайн", "обознач", "особ", "перв", "прост", "свойств", "сторон", "всяк", "выполня", "действительн", "полаг", "преобразован", "принадлежат", "сопряжен", "ест", "независим", "нечетн", "положительн", "размерн", "разн", "строг", "част", "все", "подвид", "потенциа", "прич", "раз", "умножен", "друг", "замет", "класс", "связност", "такж", "индексн", "использу", "компонент", "набор", "соответств", "тепер", "формул", "групп", "имеют", "их", "когд", "подстановок", "дан", "доказа", "интегральн", "мер", "нул", "огранич", "равн", "систем", "через", "матриц", "назначен", "работ", "справедлив", "ассоциирова", "комплексн", "област", "показа", "совпада", "тривиальн", "вкладыва", "выпукл", "одн", "дал", "представлен", "результат", "аналогичн", "интегрирова", "определ", "рассмотр", "многообраз", "отсюд", "тольк", "выполн", "замкнут", "произвольн", "соотношен", "замечан", "откуд", "покаж", "получ", "можн", "непрерывн", "поверхн", "име", "неравенств", "поскольк", "значен", "конечн", "разрешим", "рост", "линейн", "определя", "полупрям", "числ", "некотор", "называ", "пространств", "существ", "удовлетворя", "форм", "ограничен", "семейств", "люб", "порожда", "поэт", "точк", "получа", "уравнен", "случа", "вектор", "вид", "элемент", "отображен", "следовательн", "равенств", "имеет", "кажд", "определен", "котор", "произведен", "цикл", "сил", "если", "доказательств", "образ", "услов", "множеств", "решен", "теорем", "функц", "след", "есл", "лемм", "подстановк", "всех", "явля", "где", "пуст", "задач", "тогд"}
+
+Proof(element)
+Claim(element)
+Proposition(element)
+Lemma(element)
+Theorem(element)
+Corollary(element)
+Equation(element)
+Conjecture(element)
+Example(element)
+Definition(element)
+Remark(element)
+Section(element)
+Axiom(element)
+
+proves(element,element)
+depends_on(element,element)
+exemplifies(element,element)
+has_consequence(element,element)
+refers_to(element,element)
+has_part(element,element)
+followed_by(element,element)
+
+//PAS(element,element)
+//Katz(element,element)
+//InverseKatz(element,element)
+//Jaccard(element,element)
+//PageRank(element)
+HasWord(words,element)
+
+proves(x,y) => (Proof(x)) ^ (Claim(y) v Proposition(y) v Lemma(y) v Theorem(y) v Corollary(y)).
+depends_on(x,y) => (Proposition(x) v Claim(x) v Equation(x) v Conjecture(x) v Lemma(x) v Theorem(x) v Proof(x) v Example(x) v Definition(x) v Corollary(x)) ^ (Proposition(y) v Equation(y) v Claim(y) v Axiom(y) v Conjecture(y) v Lemma(y) v Theorem(y) v Definition(y) v Corollary(y)).
+exemplifies(x,y) => (Example(x)) ^ (Claim(y) v Proposition(y) v Axiom(y) v Lemma(y) v Conjecture(y) v Theorem(y) v Definition(y) v Corollary(y)).
+has_consequence(x,y) => (Proposition(x) v Claim(x) v Axiom(x) v Lemma(x) v Conjecture(x) v Theorem(x) v Corollary(x)) ^ (Corollary(y)).
+refers_to(x,y) => (Axiom(x) v Conjecture(x) v Proof(x) v Example(x) v Section(x) v Proposition(x) v Claim(x) v Lemma(x) v Theorem(x) v Remark(x) v Definition(x) v Corollary(x)) ^ (Axiom(y) v Conjecture(y) v Proof(y) v Example(y) v Section(y) v Proposition(y) v Equation(y) v Claim(y) v Lemma(y) v Theorem(y) v Remark(y) v Definition(y) v Corollary(y)).
+
+//Disjoint classes
+
+!Axiom(x) v !(Claim(x) v Conjecture(x) v Corollary(x) v Definition(x) v Equation(x) v Example(x) v Lemma(x) v Proof(x) v Proposition(x) v Remark(x) v Theorem(x)).
+!Claim(x) v !(Axiom(x) v Conjecture(x) v Corollary(x) v Definition(x) v Equation(x) v Example(x) v Lemma(x) v Proof(x) v Proposition(x) v Remark(x) v Theorem(x)).
+!Conjecture(x) v !(Axiom(x) v Claim(x) v Corollary(x) v Definition(x) v Equation(x) v Example(x) v Lemma(x) v Proof(x) v Proposition(x) v Remark(x) v Theorem(x)).
+!Corollary(x) v !(Axiom(x) v Claim(x) v Conjecture(x) v Definition(x) v Equation(x) v Example(x) v Lemma(x) v Proof(x) v Proposition(x) v Remark(x) v Theorem(x)).
+!Definition(x) v !(Axiom(x) v Claim(x) v Conjecture(x) v Corollary(x) v Equation(x) v Example(x) v Lemma(x) v Proof(x) v Proposition(x) v Remark(x) v Theorem(x)).
+!Equation(x) v !(Axiom(x) v Claim(x) v Conjecture(x) v Corollary(x) v Definition(x) v Example(x) v Lemma(x) v Proof(x) v Proposition(x) v Remark(x) v Theorem(x)).
+!Example(x) v !(Axiom(x) v Claim(x) v Conjecture(x) v Corollary(x) v Definition(x) v Equation(x) v Lemma(x) v Proof(x) v Proposition(x) v Remark(x) v Theorem(x)).
+!Lemma(x) v !(Axiom(x) v Claim(x) v Conjecture(x) v Corollary(x) v Definition(x) v Equation(x) v Example(x) v Proof(x) v Proposition(x) v Remark(x) v Theorem(x)).
+!Proof(x) v !(Axiom(x) v Claim(x) v Conjecture(x) v Corollary(x) v Definition(x) v Equation(x) v Example(x) v Lemma(x) v Proposition(x) v Remark(x) v Theorem(x)).
+!Proposition(x) v !(Axiom(x) v Claim(x) v Conjecture(x) v Corollary(x) v Definition(x) v Equation(x) v Example(x) v Lemma(x) v Proof(x) v Remark(x) v Theorem(x)).
+!Remark(x) v !(Axiom(x) v Claim(x) v Conjecture(x) v Corollary(x) v Definition(x) v Equation(x) v Example(x) v Lemma(x) v Proof(x) v Proposition(x) v Theorem(x)).
+!Theorem(x) v !(Axiom(x) v Claim(x) v Conjecture(x) v Corollary(x) v Definition(x) v Equation(x) v Example(x) v Lemma(x) v Proof(x) v Proposition(x) v Remark(x)).
+
+//Transitive property
+
+depends_on(x,y) ^ depends_on(y,z) => depends_on(x,z)
+
+//Asymmetric property
+
+exemplifies(x,y) => !exemplifies(y,x).
+proves(x,y) => !proves(y,x).
+has_consequence(x,y) => !has_consequence(y,x).
+
+//Cardinality restrictions
+
+proves(x,y) => !proves(x,z).
+exemplifies(x,y) => !exemplifies(x,z).
+has_consequence(x,y) => !has_consequence(z,y).
+
+//depends_on property chain
+
+depends_on(x,y) ^ has_part(z,y) => depends_on(x,z)
+
+//((Katz(x,y) > 0) ^ (PageRank(x) > 0.016) ^ (Jaccard(x,y) <= 0.111) ^ (PageRank(y) > 0.034)) => depends_on(x,y) v refers_to(x,y) v proves(x,y) v exemplifies(x,y) v has_consequence(x,y)
+
+//Katz(x,y) > 0 ^ Jaccard(x,y) = 0 ^ PAS(x,y) > 8 => depends_on(x,y) v refers_to(x,y)
+
+HasWord(+w,x) ^ refers_to(x,y) => depends_on(x,y)
+HasWord(+w,x) ^ refers_to(x,y) => exemplifies(x,y)
+HasWord(+w,x) ^ refers_to(x,y) => has_consequence(y,x)
+HasWord(+w,x) ^ refers_to(x,y) => proves(y,x)
+
+HasWord(+w,y) ^ HasWord(+w,x) ^ refers_to(x,y) => depends_on(x,y)
+HasWord(+w,y) ^ HasWord(+w,x) ^ refers_to(x,y) => exemplifies(x,y)
+HasWord(+w,y) ^ HasWord(+w,x) ^ refers_to(x,y) => has_consequence(y,x)
+HasWord(+w,y) ^ HasWord(+w,x) ^ refers_to(x,y) => proves(y,x)
