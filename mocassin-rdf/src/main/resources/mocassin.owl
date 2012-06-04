@@ -3,15 +3,14 @@
 
 <!DOCTYPE rdf:RDF [
     <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
-    <!ENTITY owl2 "http://www.w3.org/2006/12/owl2#" >
     <!ENTITY swrl "http://www.w3.org/2003/11/swrl#" >
+    <!ENTITY owl2 "http://www.w3.org/2006/12/owl2#" >
     <!ENTITY dc "http://purl.org/dc/elements/1.1/" >
     <!ENTITY swrlb "http://www.w3.org/2003/11/swrlb#" >
     <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
     <!ENTITY owl2xml "http://www.w3.org/2006/12/owl2-xml#" >
     <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
     <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
-    <!ENTITY mocassin "http://cll.niimm.ksu.ru/ontologies/mocassin#" >
     <!ENTITY ontologies "http://salt.semanticauthoring.org/ontologies/" >
     <!ENTITY protege "http://protege.stanford.edu/plugins/owl/protege#" >
     <!ENTITY sao "http://salt.semanticauthoring.org/ontologies/sao#" >
@@ -26,25 +25,22 @@
      xmlns:protege="http://protege.stanford.edu/plugins/owl/protege#"
      xmlns:ontologies="http://salt.semanticauthoring.org/ontologies/"
      xmlns:xsp="http://www.owl-ontologies.com/2005/08/07/xsp.owl#"
-     xmlns:mocassin="http://cll.niimm.ksu.ru/ontologies/mocassin#"
+     xmlns:owl2="http://www.w3.org/2006/12/owl2#"
      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
      xmlns:swrl="http://www.w3.org/2003/11/swrl#"
      xmlns:sao="&ontologies;sao#"
      xmlns:owl2xml="http://www.w3.org/2006/12/owl2-xml#"
      xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
      xmlns:owl="http://www.w3.org/2002/07/owl#"
-     xmlns:owl2="http://www.w3.org/2006/12/owl2#"
      xmlns:swrlb="http://www.w3.org/2003/11/swrlb#"
      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
      xmlns:sdo="&ontologies;sdo#">
-    <owl:Ontology rdf:about="">
-        <owl:versionInfo rdf:datatype="&xsd;string">2.0</owl:versionInfo>
-        <dc:creator rdf:datatype="&xsd;string"
-            >Nikita Zhiltsov &lt;nikita.zhiltsov@gmail.com&gt;</dc:creator>
-        <dc:title rdf:datatype="&xsd;string"
-            >Ontology of MocaSSIN (Mathematical Semantic Search engINe) project</dc:title>
-        <dc:creator rdf:datatype="&xsd;string"
-            >Valery Solovyev &lt;maki.solovyev@mail.ru&gt;</dc:creator>
+    <owl:Ontology rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin">
+        <owl:versionInfo rdf:datatype="&xsd;string">2.1</owl:versionInfo>
+        <dc:creator rdf:datatype="&xsd;string">Azat Khasanshin &lt;azatkhasanshin@gmail.com&gt;</dc:creator>
+        <dc:creator rdf:datatype="&xsd;string">Nikita Zhiltsov &lt;nikita.zhiltsov@gmail.com&gt;</dc:creator>
+        <dc:title rdf:datatype="&xsd;string">Ontology of MocaSSIN (Mathematical Semantic Search engINe) project</dc:title>
+        <dc:creator rdf:datatype="&xsd;string">Valery Solovyev &lt;maki.solovyev@mail.ru&gt;</dc:creator>
         <owl:imports rdf:resource="file://opt/mocassin/sdo.owl"/>
     </owl:Ontology>
     
@@ -58,9 +54,21 @@
     ///////////////////////////////////////////////////////////////////////////////////////
      -->
 
-    <owl:AnnotationProperty rdf:about="&dc;title"/>
-    <owl:AnnotationProperty rdf:about="&dc;description"/>
     <owl:AnnotationProperty rdf:about="&dc;creator"/>
+    <owl:AnnotationProperty rdf:about="&owl2;PropertyChainAxiom"/>
+    <owl:AnnotationProperty rdf:about="&dc;description"/>
+    <owl:AnnotationProperty rdf:about="&dc;title"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Datatypes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
     
 
 
@@ -77,47 +85,44 @@
 
     <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#dependsOn -->
 
-    <owl:ObjectProperty rdf:about="#dependsOn">
+    <owl:ObjectProperty rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#dependsOn">
+        <rdf:type rdf:resource="&owl;TransitiveProperty"/>
         <rdfs:label xml:lang="en">depends on</rdfs:label>
-        <rdfs:label xml:lang="ru">&#1079;&#1072;&#1074;&#1080;&#1089;&#1080;&#1090; &#1086;&#1090;</rdfs:label>
-        <dc:description rdf:datatype="&xsd;string"
-            >This relation means that one statement A uses another one B as an essential part, e.g. for defining or justifying something. If B statement is untrue, it leads to uncertainty of statement A.</dc:description>
+        <rdfs:label xml:lang="ru">зависит от</rdfs:label>
+        <dc:description rdf:datatype="&xsd;string">This relation means that one statement A uses another one B as an essential part, e.g. for defining or justifying something. If B statement is untrue, it leads to uncertainty of statement A.</dc:description>
         <rdfs:domain>
             <owl:Class>
                 <owl:unionOf rdf:parseType="Collection">
-                    <rdf:Description rdf:about="#Claim"/>
-                    <rdf:Description rdf:about="#Conjecture"/>
-                    <rdf:Description rdf:about="#Corollary"/>
-                    <rdf:Description rdf:about="#Definition"/>
-                    <rdf:Description rdf:about="#Equation"/>
-                    <rdf:Description rdf:about="#Example"/>
-                    <rdf:Description rdf:about="#Lemma"/>
-                    <rdf:Description rdf:about="#Proof"/>
-                    <rdf:Description rdf:about="#Proposition"/>
-                    <rdf:Description rdf:about="#Theorem"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Claim"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Conjecture"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Corollary"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Definition"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Equation"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Example"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Lemma"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Proof"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Proposition"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Theorem"/>
                 </owl:unionOf>
             </owl:Class>
         </rdfs:domain>
         <rdfs:range>
             <owl:Class>
                 <owl:unionOf rdf:parseType="Collection">
-                    <rdf:Description rdf:about="#Axiom"/>
-                    <rdf:Description rdf:about="#Claim"/>
-                    <rdf:Description rdf:about="#Conjecture"/>
-                    <rdf:Description rdf:about="#Corollary"/>
-                    <rdf:Description rdf:about="#Definition"/>
-                    <rdf:Description rdf:about="#Equation"/>
-                    <rdf:Description rdf:about="#Lemma"/>
-                    <rdf:Description rdf:about="#Proposition"/>
-                    <rdf:Description rdf:about="#Theorem"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Axiom"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Claim"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Conjecture"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Corollary"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Definition"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Equation"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Lemma"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Proposition"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Theorem"/>
                 </owl:unionOf>
             </owl:Class>
         </rdfs:range>
-        <owl2:PropertyChainAxiom rdf:parseType="Collection">
-            <owl:ObjectProperty rdf:about="#dependsOn"/>
-            <owl:ObjectProperty>
-                <owl:inverseOf rdf:resource="#hasPart"/>
-            </owl:ObjectProperty>
+        <owl2:PropertyChainAxiom>
+            <rdf:Description/>
         </owl2:PropertyChainAxiom>
     </owl:ObjectProperty>
     
@@ -125,101 +130,115 @@
 
     <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#exemplifies -->
 
-    <owl:ObjectProperty rdf:about="#exemplifies">
+    <owl:ObjectProperty rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#exemplifies">
+        <rdf:type rdf:resource="&owl;AsymmetricProperty"/>
         <rdfs:label xml:lang="en">exemplifies</rdfs:label>
-        <rdfs:label xml:lang="ru"
-            >&#1103;&#1074;&#1083;&#1103;&#1077;&#1090;&#1089;&#1103; &#1087;&#1088;&#1080;&#1084;&#1077;&#1088;&#1086;&#1084; &#1076;&#1083;&#1103;</rdfs:label>
-        <dc:description rdf:datatype="&xsd;string"
-            >The relation between an example and a statement.</dc:description>
-        <rdfs:domain rdf:resource="#Example"/>
+        <rdfs:label xml:lang="ru">является примером для</rdfs:label>
+        <dc:description rdf:datatype="&xsd;string">The relation between an example and a statement.</dc:description>
+        <rdfs:domain rdf:resource="http://cll.niimm.ksu.ru/ontologies/mocassin#Example"/>
         <rdfs:range>
             <owl:Class>
                 <owl:unionOf rdf:parseType="Collection">
-                    <rdf:Description rdf:about="#Axiom"/>
-                    <rdf:Description rdf:about="#Claim"/>
-                    <rdf:Description rdf:about="#Conjecture"/>
-                    <rdf:Description rdf:about="#Corollary"/>
-                    <rdf:Description rdf:about="#Definition"/>
-                    <rdf:Description rdf:about="#Lemma"/>
-                    <rdf:Description rdf:about="#Proposition"/>
-                    <rdf:Description rdf:about="#Theorem"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Axiom"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Claim"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Conjecture"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Corollary"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Definition"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Lemma"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Proposition"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Theorem"/>
                 </owl:unionOf>
             </owl:Class>
         </rdfs:range>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#followedBy -->
+
+    <owl:ObjectProperty rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#followedBy">
+        <rdfs:label xml:lang="en">followed by</rdfs:label>
+        <rdfs:label xml:lang="ru">предшествует</rdfs:label>
+        <rdfs:range rdf:resource="http://cll.niimm.ksu.ru/ontologies/mocassin#DocumentSegment"/>
+        <rdfs:domain rdf:resource="http://cll.niimm.ksu.ru/ontologies/mocassin#DocumentSegment"/>
     </owl:ObjectProperty>
     
 
 
     <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#hasConsequence -->
 
-    <owl:ObjectProperty rdf:about="#hasConsequence">
-        <rdfs:label rdf:datatype="&xsd;string"
-            >The relation between a segment and its corollary.</rdfs:label>
+    <owl:ObjectProperty rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#hasConsequence">
+        <rdf:type rdf:resource="&owl;AsymmetricProperty"/>
+        <rdfs:label rdf:datatype="&xsd;string">The relation between a segment and its corollary.</rdfs:label>
         <rdfs:label xml:lang="en">has consequence</rdfs:label>
-        <rdfs:label xml:lang="ru">&#1080;&#1084;&#1077;&#1077;&#1090; &#1089;&#1083;&#1077;&#1076;&#1089;&#1090;&#1074;&#1080;&#1077;</rdfs:label>
-        <rdfs:range rdf:resource="#Corollary"/>
+        <rdfs:label xml:lang="ru">имеет следствие</rdfs:label>
+        <rdfs:range rdf:resource="http://cll.niimm.ksu.ru/ontologies/mocassin#Corollary"/>
         <rdfs:domain>
             <owl:Class>
                 <owl:unionOf rdf:parseType="Collection">
-                    <rdf:Description rdf:about="#Axiom"/>
-                    <rdf:Description rdf:about="#Claim"/>
-                    <rdf:Description rdf:about="#Conjecture"/>
-                    <rdf:Description rdf:about="#Corollary"/>
-                    <rdf:Description rdf:about="#Lemma"/>
-                    <rdf:Description rdf:about="#Proposition"/>
-                    <rdf:Description rdf:about="#Theorem"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Axiom"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Claim"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Conjecture"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Corollary"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Lemma"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Proposition"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Theorem"/>
                 </owl:unionOf>
             </owl:Class>
         </rdfs:domain>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#hasNotation -->
+
+    <owl:ObjectProperty rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#hasNotation">
+        <rdfs:label xml:lang="en">has notation</rdfs:label>
+        <rdfs:label xml:lang="ru">имеет обозначение</rdfs:label>
+        <rdfs:range rdf:resource="http://cll.niimm.ksu.ru/ontologies/mocassin#Expression"/>
+        <rdfs:domain rdf:resource="&owl;Thing"/>
     </owl:ObjectProperty>
     
 
 
     <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#hasPart -->
 
-    <owl:ObjectProperty rdf:about="#hasPart">
-     <rdfs:label xml:lang="en">has part</rdfs:label>
+    <owl:ObjectProperty rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#hasPart">
         <rdf:type rdf:resource="&owl;TransitiveProperty"/>
-        <rdfs:domain>
-            <owl:Class>
-                <owl:unionOf rdf:parseType="Collection">
-                    <rdf:Description rdf:about="#DocumentSegment"/>
-                    <rdf:Description rdf:about="&ontologies;sdo#Section"/>
-                </owl:unionOf>
-            </owl:Class>
-        </rdfs:domain>
+        <rdfs:label xml:lang="en">has part</rdfs:label>
+        <rdfs:label xml:lang="ru">содержит как часть</rdfs:label>
         <rdfs:range>
             <owl:Class>
                 <owl:unionOf rdf:parseType="Collection">
-                    <rdf:Description rdf:about="#DocumentSegment"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#DocumentSegment"/>
                     <rdf:Description rdf:about="&ontologies;Figure"/>
                     <rdf:Description rdf:about="&ontologies;Table"/>
                     <rdf:Description rdf:about="&ontologies;sdo#Section"/>
                 </owl:unionOf>
             </owl:Class>
         </rdfs:range>
+        <rdfs:domain>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#DocumentSegment"/>
+                    <rdf:Description rdf:about="&ontologies;sdo#Section"/>
+                </owl:unionOf>
+            </owl:Class>
+        </rdfs:domain>
     </owl:ObjectProperty>
-
-
-    <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#followedBy -->
-
-    <owl:ObjectProperty rdf:about="#followedBy">
-     <rdfs:label xml:lang="en">followed by</rdfs:label>
-        <rdfs:domain rdf:resource="#DocumentSegment"/>
-        <rdfs:range rdf:resource="#DocumentSegment"/>
-    </owl:ObjectProperty>
+    <rdf:Description>
+        <owl:inverseOf rdf:resource="http://cll.niimm.ksu.ru/ontologies/mocassin#hasPart"/>
+    </rdf:Description>
     
 
 
     <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#hasSegment -->
 
-    <owl:ObjectProperty rdf:about="#hasSegment">
+    <owl:ObjectProperty rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#hasSegment">
         <rdfs:label xml:lang="en">has segment</rdfs:label>
-        <rdfs:label xml:lang="ru"
-            >&#1089;&#1086;&#1076;&#1077;&#1088;&#1078;&#1080;&#1090; &#1082;&#1072;&#1082; &#1089;&#1077;&#1075;&#1084;&#1077;&#1085;&#1090;</rdfs:label>
-        <dc:description rdf:datatype="&xsd;string"
-            >The relation denotes that a publication contains a segment.</dc:description>
-        <rdfs:range rdf:resource="#DocumentSegment"/>
+        <rdfs:label xml:lang="ru">содержит как сегмент</rdfs:label>
+        <dc:description rdf:datatype="&xsd;string">The relation denotes that a publication contains a segment.</dc:description>
+        <rdfs:range rdf:resource="http://cll.niimm.ksu.ru/ontologies/mocassin#DocumentSegment"/>
         <rdfs:domain rdf:resource="&ontologies;sdo#Publication"/>
     </owl:ObjectProperty>
     
@@ -227,20 +246,20 @@
 
     <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#proves -->
 
-    <owl:ObjectProperty rdf:about="#proves">
+    <owl:ObjectProperty rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#proves">
+        <rdf:type rdf:resource="&owl;AsymmetricProperty"/>
         <rdfs:label xml:lang="en">proves</rdfs:label>
-        <rdfs:label xml:lang="ru">&#1076;&#1086;&#1082;&#1072;&#1079;&#1099;&#1074;&#1072;&#1077;&#1090;</rdfs:label>
-        <dc:description rdf:datatype="&xsd;string"
-            >The relation between a proof and a statement that this proof justifies.</dc:description>
-        <rdfs:domain rdf:resource="#Proof"/>
+        <rdfs:label xml:lang="ru">доказывает</rdfs:label>
+        <dc:description rdf:datatype="&xsd;string">The relation between a proof and a statement that this proof justifies.</dc:description>
+        <rdfs:domain rdf:resource="http://cll.niimm.ksu.ru/ontologies/mocassin#Proof"/>
         <rdfs:range>
             <owl:Class>
                 <owl:unionOf rdf:parseType="Collection">
-                    <rdf:Description rdf:about="#Claim"/>
-                    <rdf:Description rdf:about="#Corollary"/>
-                    <rdf:Description rdf:about="#Lemma"/>
-                    <rdf:Description rdf:about="#Proposition"/>
-                    <rdf:Description rdf:about="#Theorem"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Claim"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Corollary"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Lemma"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Proposition"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Theorem"/>
                 </owl:unionOf>
             </owl:Class>
         </rdfs:range>
@@ -250,24 +269,24 @@
 
     <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#refersTo -->
 
-    <owl:ObjectProperty rdf:about="#refersTo">
+    <owl:ObjectProperty rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#refersTo">
         <rdfs:label xml:lang="en">refers to</rdfs:label>
-        <rdfs:label xml:lang="ru">&#1089;&#1089;&#1099;&#1083;&#1072;&#1077;&#1090;&#1089;&#1103; &#1085;&#1072;</rdfs:label>
+        <rdfs:label xml:lang="ru">ссылается на</rdfs:label>
         <dc:description rdf:datatype="&xsd;string">This relation expresses a reference between segments. An author usually uses this device to point at significant segments of a publication.</dc:description>
-            <rdfs:domain>
+        <rdfs:domain>
             <owl:Class>
                 <owl:unionOf rdf:parseType="Collection">
-                    <rdf:Description rdf:about="#Axiom"/>
-                    <rdf:Description rdf:about="#Claim"/>
-                    <rdf:Description rdf:about="#Conjecture"/>
-                    <rdf:Description rdf:about="#Corollary"/>
-                    <rdf:Description rdf:about="#Definition"/>
-                    <rdf:Description rdf:about="#Example"/>
-                    <rdf:Description rdf:about="#Lemma"/>
-                    <rdf:Description rdf:about="#Proof"/>
-                    <rdf:Description rdf:about="#Proposition"/>
-                    <rdf:Description rdf:about="#Remark"/>
-                    <rdf:Description rdf:about="#Theorem"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Axiom"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Claim"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Conjecture"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Corollary"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Definition"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Example"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Lemma"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Proof"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Proposition"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Remark"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Theorem"/>
                     <rdf:Description rdf:about="&ontologies;sdo#Section"/>
                 </owl:unionOf>
             </owl:Class>
@@ -275,25 +294,24 @@
         <rdfs:range>
             <owl:Class>
                 <owl:unionOf rdf:parseType="Collection">
-                    <rdf:Description rdf:about="#Axiom"/>
-                    <rdf:Description rdf:about="#Claim"/>
-                    <rdf:Description rdf:about="#Conjecture"/>
-                    <rdf:Description rdf:about="#Corollary"/>
-                    <rdf:Description rdf:about="#Definition"/>
-                    <rdf:Description rdf:about="#Equation"/>
-                    <rdf:Description rdf:about="#Example"/>
-                    <rdf:Description rdf:about="#Lemma"/>
-                    <rdf:Description rdf:about="#Proof"/>
-                    <rdf:Description rdf:about="#Proposition"/>
-                    <rdf:Description rdf:about="#Remark"/>
-                    <rdf:Description rdf:about="#Theorem"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Axiom"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Claim"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Conjecture"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Corollary"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Definition"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Equation"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Example"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Lemma"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Proof"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Proposition"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Remark"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Theorem"/>
                     <rdf:Description rdf:about="&ontologies;Figure"/>
                     <rdf:Description rdf:about="&ontologies;Table"/>
                     <rdf:Description rdf:about="&ontologies;sdo#Section"/>
                 </owl:unionOf>
             </owl:Class>
         </rdfs:range>
-        
     </owl:ObjectProperty>
     
 
@@ -309,18 +327,34 @@
     
 
 
+    <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#hasLatexSource -->
+
+    <owl:DatatypeProperty rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#hasLatexSource">
+        <rdfs:label xml:lang="en">has LaTeX source</rdfs:label>
+        <rdfs:label xml:lang="ru">имеет представление на языке LaTeX</rdfs:label>
+        <rdfs:range rdf:resource="&rdfs;Literal"/>
+        <rdfs:domain>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Equation"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Expression"/>
+                </owl:unionOf>
+            </owl:Class>
+        </rdfs:domain>
+    </owl:DatatypeProperty>
+    
+
+
     <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#hasStartPageNumber -->
 
-    <owl:DatatypeProperty rdf:about="#hasStartPageNumber">
-        <rdfs:label xml:lang="en"
-            >has start page number</rdfs:label>
-        <rdfs:label xml:lang="ru"
-            >&#1085;&#1072;&#1093;&#1086;&#1076;&#1080;&#1090;&#1089;&#1103; &#1085;&#1072; &#1089;&#1090;&#1088;&#1072;&#1085;&#1080;&#1094;&#1077;</rdfs:label>
+    <owl:DatatypeProperty rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#hasStartPageNumber">
+        <rdfs:label xml:lang="en">has start page number</rdfs:label>
+        <rdfs:label xml:lang="ru">находится на странице</rdfs:label>
         <rdfs:range rdf:resource="&xsd;integer"/>
         <rdfs:domain>
             <owl:Class>
                 <owl:unionOf rdf:parseType="Collection">
-                    <rdf:Description rdf:about="#DocumentSegment"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#DocumentSegment"/>
                     <rdf:Description rdf:about="&ontologies;Figure"/>
                     <rdf:Description rdf:about="&ontologies;Table"/>
                     <rdf:Description rdf:about="&ontologies;sdo#Section"/>
@@ -333,17 +367,17 @@
 
     <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#hasText -->
 
-    <owl:DatatypeProperty rdf:about="#hasText">
+    <owl:DatatypeProperty rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#hasText">
         <rdfs:label xml:lang="en">has text</rdfs:label>
-        <rdfs:label xml:lang="ru">&#1089;&#1086;&#1076;&#1077;&#1088;&#1078;&#1080;&#1090; &#1090;&#1077;&#1082;&#1089;&#1090;</rdfs:label>
+        <rdfs:label xml:lang="ru">содержит текст</rdfs:label>
         <rdfs:range rdf:resource="&rdfs;Literal"/>
         <rdfs:domain>
             <owl:Class>
                 <owl:unionOf rdf:parseType="Collection">
-                    <rdf:Description rdf:about="#DocumentSegment"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#DocumentSegment"/>
                     <rdf:Description rdf:about="&ontologies;sdo#Figure"/>
-                    <rdf:Description rdf:about="&ontologies;sdo#Table"/>
                     <rdf:Description rdf:about="&ontologies;sdo#Section"/>
+                    <rdf:Description rdf:about="&ontologies;sdo#Table"/>
                 </owl:unionOf>
             </owl:Class>
         </rdfs:domain>
@@ -353,14 +387,14 @@
 
     <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#hasTitle -->
 
-    <owl:DatatypeProperty rdf:about="#hasTitle">
+    <owl:DatatypeProperty rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#hasTitle">
         <rdfs:label xml:lang="en">has title</rdfs:label>
-        <rdfs:label xml:lang="ru">&#1080;&#1084;&#1077;&#1077;&#1090; &#1085;&#1072;&#1079;&#1074;&#1072;&#1085;&#1080;&#1077;</rdfs:label>
+        <rdfs:label xml:lang="ru">имеет название</rdfs:label>
         <rdfs:range rdf:resource="&rdfs;Literal"/>
         <rdfs:domain>
             <owl:Class>
                 <owl:unionOf rdf:parseType="Collection">
-                    <rdf:Description rdf:about="#DocumentSegment"/>
+                    <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#DocumentSegment"/>
                     <rdf:Description rdf:about="&ontologies;Figure"/>
                     <rdf:Description rdf:about="&ontologies;Table"/>
                     <rdf:Description rdf:about="&ontologies;sdo#Section"/>
@@ -384,175 +418,182 @@
 
     <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#Axiom -->
 
-    <owl:Class rdf:about="#Axiom">
+    <owl:Class rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Axiom">
         <rdfs:label xml:lang="en">Axiom</rdfs:label>
-        <rdfs:label xml:lang="ru">&#1040;&#1082;&#1089;&#1080;&#1086;&#1084;&#1072;</rdfs:label>
-        <rdfs:subClassOf rdf:resource="#DocumentSegment"/>
-        <dc:description rdf:datatype="&xsd;string"
-            >A statement that is not proved but considered as being generally true. Axioms are essential parts of mathematical theories.</dc:description>
+        <rdfs:label xml:lang="ru">Аксиома</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://cll.niimm.ksu.ru/ontologies/mocassin#DocumentSegment"/>
+        <dc:description rdf:datatype="&xsd;string">A statement that is not proved but considered as being generally true. Axioms are essential parts of mathematical theories.</dc:description>
     </owl:Class>
     
 
 
     <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#Claim -->
 
-    <owl:Class rdf:about="#Claim">
+    <owl:Class rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Claim">
         <rdfs:label xml:lang="en">Claim</rdfs:label>
-        <rdfs:label xml:lang="ru">&#1059;&#1090;&#1074;&#1077;&#1088;&#1078;&#1076;&#1077;&#1085;&#1080;&#1077;</rdfs:label>
-        <rdfs:subClassOf rdf:resource="#DocumentSegment"/>
-        <dc:description rdf:datatype="&xsd;string"
-            >An interesting additional assertion. Usually claims are used for justification of more general statement.</dc:description>
+        <rdfs:label xml:lang="ru">Утверждение</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://cll.niimm.ksu.ru/ontologies/mocassin#DocumentSegment"/>
+        <dc:description rdf:datatype="&xsd;string">An interesting additional assertion. Usually claims are used for justification of more general statement.</dc:description>
     </owl:Class>
     
 
 
     <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#Conjecture -->
 
-    <owl:Class rdf:about="#Conjecture">
-        <rdfs:label rdf:datatype="&xsd;string"
-            >A statement that is unproven but appears correct.</rdfs:label>
+    <owl:Class rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Conjecture">
+        <rdfs:label rdf:datatype="&xsd;string">A statement that is unproven but appears correct.</rdfs:label>
         <rdfs:label xml:lang="en">Conjecture</rdfs:label>
-        <rdfs:label xml:lang="ru">&#1043;&#1080;&#1087;&#1086;&#1090;&#1077;&#1079;&#1072;</rdfs:label>
-        <rdfs:subClassOf rdf:resource="#DocumentSegment"/>
+        <rdfs:label xml:lang="ru">Гипотеза</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://cll.niimm.ksu.ru/ontologies/mocassin#DocumentSegment"/>
     </owl:Class>
     
 
 
     <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#Corollary -->
 
-    <owl:Class rdf:about="#Corollary">
+    <owl:Class rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Corollary">
         <rdfs:label xml:lang="en">Corollary</rdfs:label>
-        <rdfs:label xml:lang="ru">&#1057;&#1083;&#1077;&#1076;&#1089;&#1090;&#1074;&#1080;&#1077;</rdfs:label>
-        <rdfs:subClassOf rdf:resource="#DocumentSegment"/>
-        <dc:description rdf:datatype="&xsd;string"
-            >A statement that follows with a little or no proof from one other statement.</dc:description>
+        <rdfs:label xml:lang="ru">Следствие</rdfs:label>
         <owl:equivalentClass>
             <owl:Restriction>
+                <owl:onProperty rdf:resource="http://cll.niimm.ksu.ru/ontologies/mocassin#hasConsequence"/>
                 <owl:cardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:cardinality>
-                <owl:onProperty rdf:resource="#hasConsequence"/>
             </owl:Restriction>
         </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="http://cll.niimm.ksu.ru/ontologies/mocassin#DocumentSegment"/>
+        <dc:description rdf:datatype="&xsd;string">A statement that follows with a little or no proof from one other statement.</dc:description>
     </owl:Class>
     
 
 
     <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#Definition -->
 
-    <owl:Class rdf:about="#Definition">
+    <owl:Class rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Definition">
         <rdfs:label xml:lang="en">Definition</rdfs:label>
-        <rdfs:label xml:lang="ru">&#1054;&#1087;&#1088;&#1077;&#1076;&#1077;&#1083;&#1077;&#1085;&#1080;&#1077;</rdfs:label>
-        <rdfs:subClassOf rdf:resource="#DocumentSegment"/>
-        <dc:description rdf:datatype="&xsd;string"
-            >A statement of the exact meaning of a notation element, a mathematical knowledge object, an equation etc.</dc:description>
+        <rdfs:label xml:lang="ru">Определение</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://cll.niimm.ksu.ru/ontologies/mocassin#DocumentSegment"/>
+        <dc:description rdf:datatype="&xsd;string">A statement of the exact meaning of a notation element, a mathematical knowledge object, an equation etc.</dc:description>
     </owl:Class>
     
 
 
     <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#DocumentSegment -->
 
-    <owl:Class rdf:about="#DocumentSegment">
-        <rdfs:label xml:lang="en"
-            >Document Segment</rdfs:label>
-        <rdfs:label xml:lang="ru"
-            >&#1057;&#1077;&#1075;&#1084;&#1077;&#1085;&#1090; &#1076;&#1086;&#1082;&#1091;&#1084;&#1077;&#1085;&#1090;&#1072;</rdfs:label>
-        <dc:description rdf:datatype="&xsd;string"
-            >A segment of a scholarly publication.</dc:description>
+    <owl:Class rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#DocumentSegment">
+        <rdfs:label xml:lang="en">Document Segment</rdfs:label>
+        <rdfs:label xml:lang="ru">Сегмент документа</rdfs:label>
+        <dc:description rdf:datatype="&xsd;string">A segment of a scholarly publication.</dc:description>
     </owl:Class>
     
 
 
     <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#Equation -->
 
-    <owl:Class rdf:about="#Equation">
+    <owl:Class rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Equation">
         <rdfs:label xml:lang="en">Equation</rdfs:label>
-        <rdfs:label xml:lang="ru">&#1060;&#1086;&#1088;&#1084;&#1091;&#1083;&#1072;</rdfs:label>
-        <rdfs:subClassOf rdf:resource="#DocumentSegment"/>
-        <dc:description rdf:datatype="&xsd;string"
-            >A mathematical expression or a formula that is separated from the text. Equations can be grouped together.</dc:description>
+        <rdfs:label xml:lang="ru">Формула</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://cll.niimm.ksu.ru/ontologies/mocassin#DocumentSegment"/>
+        <dc:description rdf:datatype="&xsd;string">A formula segment that is structurally separated from the text. Equations can be grouped together and also contain variables.</dc:description>
     </owl:Class>
     
 
 
     <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#Example -->
 
-    <owl:Class rdf:about="#Example">
+    <owl:Class rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Example">
         <rdfs:label xml:lang="en">Example</rdfs:label>
-        <rdfs:label xml:lang="ru">&#1055;&#1088;&#1080;&#1084;&#1077;&#1088;</rdfs:label>
-        <rdfs:subClassOf rdf:resource="#DocumentSegment"/>
-        <dc:description rdf:datatype="&xsd;string"
-            >A description of a particular case or a task that gives valuable information about related statement.</dc:description>
+        <rdfs:label xml:lang="ru">Пример</rdfs:label>
         <owl:equivalentClass>
             <owl:Restriction>
+                <owl:onProperty rdf:resource="http://cll.niimm.ksu.ru/ontologies/mocassin#exemplifies"/>
                 <owl:cardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:cardinality>
-                <owl:onProperty rdf:resource="#exemplifies"/>
             </owl:Restriction>
         </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="http://cll.niimm.ksu.ru/ontologies/mocassin#DocumentSegment"/>
+        <dc:description rdf:datatype="&xsd;string">A description of a particular case or a task that gives valuable information about related statement.</dc:description>
+    </owl:Class>
+    
+
+
+    <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#Expression -->
+
+    <owl:Class rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Expression">
+        <rdfs:label xml:lang="en">Mathematical expression</rdfs:label>
+        <rdfs:label xml:lang="ru">Математическое выражение</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://cll.niimm.ksu.ru/ontologies/mocassin#DocumentSegment"/>
+        <dc:description xml:lang="en">Mathematical expressions are often mixed with text fragments, e.g., in LaTeX, they correspond to standard mathematical environments framed by the &#39;$&#39; mark. Usually, they also contain variables.</dc:description>
     </owl:Class>
     
 
 
     <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#Lemma -->
 
-    <owl:Class rdf:about="#Lemma">
+    <owl:Class rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Lemma">
         <rdfs:label xml:lang="en">Lemma</rdfs:label>
-        <rdfs:label xml:lang="ru">&#1051;&#1077;&#1084;&#1084;&#1072;</rdfs:label>
-        <rdfs:subClassOf rdf:resource="#DocumentSegment"/>
-        <dc:description rdf:datatype="&xsd;string"
-            >A statement that usually expresses a preliminary result to prove more important result.</dc:description>
+        <rdfs:label xml:lang="ru">Лемма</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://cll.niimm.ksu.ru/ontologies/mocassin#DocumentSegment"/>
+        <dc:description rdf:datatype="&xsd;string">A statement that usually expresses a preliminary result to prove more important result.</dc:description>
     </owl:Class>
     
 
 
     <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#Proof -->
 
-    <owl:Class rdf:about="#Proof">
+    <owl:Class rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Proof">
         <rdfs:label xml:lang="en">Proof</rdfs:label>
-        <rdfs:label xml:lang="ru">&#1044;&#1086;&#1082;&#1072;&#1079;&#1072;&#1090;&#1077;&#1083;&#1100;&#1089;&#1090;&#1074;&#1086;</rdfs:label>
-        <rdfs:subClassOf rdf:resource="#DocumentSegment"/>
-        <dc:description rdf:datatype="&xsd;string"
-            >A publication fragment that usually contains a derivation of some statement.</dc:description>
+        <rdfs:label xml:lang="ru">Доказательство</rdfs:label>
         <owl:equivalentClass>
             <owl:Restriction>
+                <owl:onProperty rdf:resource="http://cll.niimm.ksu.ru/ontologies/mocassin#proves"/>
                 <owl:cardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:cardinality>
-                <owl:onProperty rdf:resource="#proves"/>
             </owl:Restriction>
         </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="http://cll.niimm.ksu.ru/ontologies/mocassin#DocumentSegment"/>
+        <dc:description rdf:datatype="&xsd;string">A publication fragment that usually contains a derivation of some statement.</dc:description>
     </owl:Class>
     
 
 
     <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#Proposition -->
 
-    <owl:Class rdf:about="#Proposition">
+    <owl:Class rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Proposition">
         <rdfs:label xml:lang="en">Proposition</rdfs:label>
-        <rdfs:label xml:lang="ru">&#1055;&#1088;&#1077;&#1076;&#1083;&#1086;&#1078;&#1077;&#1085;&#1080;&#1077;</rdfs:label>
-        <rdfs:subClassOf rdf:resource="#DocumentSegment"/>
-        <dc:description rdf:datatype="&xsd;string"
-            >A statement with a simple proof. Sometimes propositions are used for the statement part of a theorem.</dc:description>
+        <rdfs:label xml:lang="ru">Предложение</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://cll.niimm.ksu.ru/ontologies/mocassin#DocumentSegment"/>
+        <dc:description rdf:datatype="&xsd;string">A statement with a simple proof. Sometimes propositions are used for the statement part of a theorem.</dc:description>
     </owl:Class>
     
 
 
     <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#Remark -->
 
-    <owl:Class rdf:about="#Remark">
+    <owl:Class rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Remark">
         <rdfs:label xml:lang="en">Remark</rdfs:label>
-        <rdfs:label xml:lang="ru">&#1047;&#1072;&#1084;&#1077;&#1095;&#1072;&#1085;&#1080;&#1077;</rdfs:label>
-        <rdfs:subClassOf rdf:resource="#DocumentSegment"/>
-        <dc:description rdf:datatype="&xsd;string"
-            >A note or comment that aims to pay reader&#39;s attention to interesting property of a mathematical knowledge object.</dc:description>
+        <rdfs:label xml:lang="ru">Замечание</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://cll.niimm.ksu.ru/ontologies/mocassin#DocumentSegment"/>
+        <dc:description rdf:datatype="&xsd;string">A note or comment that aims to pay reader&#39;s attention to interesting property of a mathematical knowledge object.</dc:description>
     </owl:Class>
     
 
 
     <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#Theorem -->
 
-    <owl:Class rdf:about="#Theorem">
+    <owl:Class rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Theorem">
         <rdfs:label xml:lang="en">Theorem</rdfs:label>
-        <rdfs:label xml:lang="ru">&#1058;&#1077;&#1086;&#1088;&#1077;&#1084;&#1072;</rdfs:label>
-        <rdfs:subClassOf rdf:resource="#DocumentSegment"/>
-        <dc:description rdf:datatype="&xsd;string"
-            >Not self-evident statement that usually represents an important theoretical result.</dc:description>
+        <rdfs:label xml:lang="ru">Теорема</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://cll.niimm.ksu.ru/ontologies/mocassin#DocumentSegment"/>
+        <dc:description rdf:datatype="&xsd;string">Not self-evident statement that usually represents an important theoretical result.</dc:description>
+    </owl:Class>
+    
+
+
+    <!-- http://cll.niimm.ksu.ru/ontologies/mocassin#Variable -->
+
+    <owl:Class rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Variable">
+        <rdfs:label xml:lang="en">Variable</rdfs:label>
+        <rdfs:label xml:lang="ru">Переменная</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://cll.niimm.ksu.ru/ontologies/mocassin#Expression"/>
+        <dc:description xml:lang="en">A mathematical symbol that represents some particular mathematical entity.</dc:description>
     </owl:Class>
     
 
@@ -589,31 +630,26 @@
     ///////////////////////////////////////////////////////////////////////////////////////
      -->
 
-    <owl:TransitiveProperty rdf:about="#dependsOn"/>
-    <owl:AsymmetricProperty rdf:about="#exemplifies"/>
-    <owl:AsymmetricProperty rdf:about="#hasConsequence"/>
-    <owl:AsymmetricProperty rdf:about="#proves"/>
-
     <rdf:Description>
         <rdf:type rdf:resource="&owl;AllDisjointClasses"/>
         <owl:members rdf:parseType="Collection">
-            <rdf:Description rdf:about="#Axiom"/>
-            <rdf:Description rdf:about="#Claim"/>
-            <rdf:Description rdf:about="#Conjecture"/>
-            <rdf:Description rdf:about="#Corollary"/>
-            <rdf:Description rdf:about="#Definition"/>
-            <rdf:Description rdf:about="#Equation"/>
-            <rdf:Description rdf:about="#Example"/>
-            <rdf:Description rdf:about="#Lemma"/>
-            <rdf:Description rdf:about="#Proof"/>
-            <rdf:Description rdf:about="#Proposition"/>
-            <rdf:Description rdf:about="#Remark"/>
-            <rdf:Description rdf:about="#Theorem"/>
+            <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Axiom"/>
+            <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Claim"/>
+            <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Conjecture"/>
+            <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Corollary"/>
+            <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Definition"/>
+            <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Equation"/>
+            <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Example"/>
+            <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Lemma"/>
+            <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Proof"/>
+            <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Proposition"/>
+            <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Remark"/>
+            <rdf:Description rdf:about="http://cll.niimm.ksu.ru/ontologies/mocassin#Theorem"/>
         </owl:members>
     </rdf:Description>
 </rdf:RDF>
 
 
 
-<!-- Generated by the OWL API (version 2.2.1.1138) http://owlapi.sourceforge.net -->
+<!-- Generated by the OWL API (version 3.2.3.1824) http://owlapi.sourceforge.net -->
 
