@@ -12,7 +12,13 @@
 package ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
 
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.StructuralElement;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.gate.Token;
@@ -148,8 +154,14 @@ public class StructuralElementImpl implements StructuralElement {
 	Collections.addAll(this.contents, contents);
     }
 
+    @Override
     public void setTerms(Term... terms) {
 	Collections.addAll(this.terms, terms);
+    }
+
+    @Override
+    public void setTerms(Collection<Term> terms) {
+	this.terms.addAll(terms);
     }
 
     public int getStartPageNumber() {

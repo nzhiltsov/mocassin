@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl.StructuralElementByLocationComparator;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl.StructuralElementImpl;
+import ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl.Term;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl.StructuralElementImpl.Builder;
 import ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl.StructuralElementImpl.TypeFilterPredicate;
 import ru.ksu.niimm.cll.mocassin.crawl.parser.arxmliv.ArxmlivFormatConstants;
@@ -171,7 +172,7 @@ class StructuralElementSearcherImpl implements StructuralElementSearcher {
 
     private List<Token> getTokensForAnnotation(Document document,
 	    Annotation annotation) {
-	    return annotationUtil.getTokensForAnnotation(document, annotation);
+	return annotationUtil.getTokensForAnnotation(document, annotation);
     }
 
     private void fillElementLocation(StructuralElement element, Node node) {
@@ -217,12 +218,16 @@ class StructuralElementSearcherImpl implements StructuralElementSearcher {
 	    }
 	}
 
+	List<Term> terms = annotationUtil.getTerms(paperUrl, document, annotation);
+
 	StructuralElement element = new StructuralElementImpl.Builder(id,
 		paperUrl + "/" + id).start(start).end(end).name(name)
 		.title(title).build();
 	element.setLabels(labels);
+	element.setTerms(terms);
 	if (id != 0) {
-	    element.setContents((Token[]) getTokensForAnnotation(document, annotation).toArray(new Token[0]));
+	    element.setContents((Token[]) getTokensForAnnotation(document,
+		    annotation).toArray(new Token[0]));
 	}
 	MocassinOntologyClasses predictedClass = structuralElementTypeRecognizer
 		.recognize(element);

@@ -118,4 +118,5 @@ class ReferenceStatementExporterImpl implements
 		return createLiteralTriple(element.getUri(),
 				MocassinOntologyRelations.HAS_TEXT.getUri(), textContents);
 	}
+	
 }
