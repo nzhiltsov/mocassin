@@ -58,8 +58,8 @@ public class AnnotationUtilImpl implements AnnotationUtil {
 
     private final String SENTENCE_ANNOTATION_NAME;
 
-	private static final Set<String> NAME_SET = ArxmlivStructureElementTypes
-			.toNameSet();
+    private static final Set<String> NAME_SET = ArxmlivStructureElementTypes
+	    .toNameSet();
 
     private final String DOMAIN_ONTOLOGY_URI;
 
@@ -149,34 +149,36 @@ public class AnnotationUtilImpl implements AnnotationUtil {
     }
 
     /*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * ru.ksu.niimm.cll.mocassin.nlp.util.impl.AnnotationUtil#getTokensForAnnotation
-	 * (gate.Document, gate.Annotation)
-	 */
-	public List<Token> getTokensForAnnotation(Document document,
-			Annotation annotation) {
-		List<Token> returningTokens;
-		returningTokens = new LinkedList<Token>();
+     * (non-Javadoc)
+     * 
+     * @see
+     * ru.ksu.niimm.cll.mocassin.nlp.util.impl.AnnotationUtil#getTokensForAnnotation
+     * (gate.Document, gate.Annotation)
+     */
+    public List<Token> getTokensForAnnotation(Document document,
+	    Annotation annotation) {
+	List<Token> returningTokens;
+	returningTokens = new LinkedList<Token>();
 
-		List<Annotation> tokenList = getSortedTokenList(document, annotation,
-				false);
+	List<Annotation> tokenList = getSortedTokenList(document, annotation,
+		false);
 
-		for (int i = 0; i < tokenList.size(); i++) {
-			Annotation a = tokenList.get(i);
-			String kind = (String) a.getFeatures().get("kind");
-			if (!kind.equals("word"))
-				continue;
-			String tokenValue = (String) a.getFeatures().get(GateFormatConstants.TOKEN_FEATURE_NAME);
-        String stemValue = (String) a.getFeatures().get(GateFormatConstants.STEM_FEATURE_NAME);
-			String pos = (String) a.getFeatures().get(
-					GateFormatConstants.POS_FEATURE_NAME);
-			Token token = new TokenImpl(tokenValue, pos, stemValue);
-			returningTokens.add(token);
-		}
-		return returningTokens;
+	for (int i = 0; i < tokenList.size(); i++) {
+	    Annotation a = tokenList.get(i);
+	    String kind = (String) a.getFeatures().get("kind");
+	    if (!kind.equals("word"))
+		continue;
+	    String tokenValue = (String) a.getFeatures().get(
+		    GateFormatConstants.TOKEN_FEATURE_NAME);
+	    String stemValue = (String) a.getFeatures().get(
+		    GateFormatConstants.STEM_FEATURE_NAME);
+	    String pos = (String) a.getFeatures().get(
+		    GateFormatConstants.POS_FEATURE_NAME);
+	    Token token = new TokenImpl(tokenValue, pos, stemValue);
+	    returningTokens.add(token);
 	}
+	return returningTokens;
+    }
 
     @Override
     public String[] getPureTokensForAnnotation(Document document,
@@ -268,7 +270,8 @@ public class AnnotationUtilImpl implements AnnotationUtil {
     }
 
     @Override
-    public List<Term> getTerms(Document document, Annotation annotation) {
+    public List<Term> getTerms(String paperUrl, Document document,
+	    Annotation annotation) {
 	List<Term> terms = new ArrayList<Term>();
 	AnnotationSet termSet = document
 		.getAnnotations(ARXMLIV_MARKUP_NAME)
@@ -284,7 +287,9 @@ public class AnnotationUtilImpl implements AnnotationUtil {
 		if (confidenceScoreStr != null) {
 		    float confidenceScore = Float
 			    .parseFloat(confidenceScoreStr);
-		    String uri = format("%s#%s", DOMAIN_ONTOLOGY_URI,
+		    String uri = format("%s/%d", paperUrl,
+			    termAnnotation.getId());
+		    String classUri = format("%s#%s", DOMAIN_ONTOLOGY_URI,
 			    ontologyTermId);
 		    String initialView = getTextContentsForAnnotation(document,
 			    termAnnotation);
@@ -293,7 +298,7 @@ public class AnnotationUtilImpl implements AnnotationUtil {
 
 		    List<MathExpression> mathExpressions = extractContainingMathExpressions(
 			    document, termAnnotation);
-		    Term term = new Term(termAnnotation.getId(), uri,
+		    Term term = new Term(termAnnotation.getId(), uri, classUri,
 			    normalizedView, initialView, confidenceScore,
 			    mathExpressions);
 		    terms.add(term);

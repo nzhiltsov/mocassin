@@ -58,7 +58,7 @@ public class AnnotationUtilTest {
 	Assert.assertTrue("Not found section annotations.",
 		annotations.size() > 0);
 	Annotation foundAnnotation = annotations.iterator().next();
-	List<Term> terms = annotationUtil.getTerms(document, foundAnnotation);
+	List<Term> terms = annotationUtil.getTerms("http://mathnet.ru/ivm18", document, foundAnnotation);
 	for (Term term : terms) {
 	    if(term.getMathExpressions().size() > 0) {
 		break;

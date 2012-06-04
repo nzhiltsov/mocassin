@@ -12,10 +12,12 @@ import java.util.List;
  */
 public class Term {
     private final int id;
-    /**
-     * URI according to a domain ontology
-     */
+
     private final String uri;
+    /**
+     * URI of its class according to a domain ontology
+     */
+    private final String classUri;
     /**
      * normalized version of the term
      */
@@ -33,10 +35,12 @@ public class Term {
      */
     private final List<MathExpression> mathExpression;
 
-    public Term(int id, String uri, String normalizedView, String initialView,
-	    float confidenceScore, List<MathExpression> mathExpressions) {
+    public Term(int id, String uri, String classUri, String normalizedView,
+	    String initialView, float confidenceScore,
+	    List<MathExpression> mathExpressions) {
 	this.id = id;
 	this.uri = uri;
+	this.classUri = classUri;
 	this.normalizedView = normalizedView;
 	this.initialView = initialView;
 	this.confidenceScore = confidenceScore;
@@ -49,6 +53,11 @@ public class Term {
 
     public String getUri() {
 	return uri;
+    }
+    
+
+    public String getClassUri() {
+        return classUri;
     }
 
     public String getNormalizedView() {

@@ -82,11 +82,16 @@ public interface AnnotationUtil {
     AnnotationSet getStructuralAnnotations(Document document);
 
     /**
-     * returns recognized terms
+     * returns recognized terms contained by a given annotation
      * 
+     * @param paperUrl
+     *            article id
      * @param document
+     *            GATE document
      * @param annotation
+     *            containing annotation
      * @return
      */
-    List<Term> getTerms(Document document, Annotation annotation);
+    List<Term> getTerms(String paperUrl, Document document,
+	    Annotation annotation);
 }
