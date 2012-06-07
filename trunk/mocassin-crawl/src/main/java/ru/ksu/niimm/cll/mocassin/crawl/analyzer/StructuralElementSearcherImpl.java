@@ -84,7 +84,7 @@ class StructuralElementSearcherImpl implements StructuralElementSearcher {
      * {@inheritDoc}
      */
     @Override
-    public List<StructuralElement> retrieveElements(Document document,
+    public synchronized List<StructuralElement> retrieveElements(Document document,
 	    String paperUrl) {
 	String paperId = StringUtil.extractMathnetKeyFromURI(paperUrl);
 	LatexDocumentModel latexDocumentModel = latexDocumentDAO.load(paperId);
