@@ -58,6 +58,7 @@ import com.google.inject.name.Named;
  * 
  */
 class StructuralElementSearcherImpl implements StructuralElementSearcher {
+    private final float TERM_CONFIDENCE_THRESHOLD = 1;
     private final String ARXMLIV_MARKUP_NAME;
     private final String TITLE_ANNOTATION_NAME;
     @InjectLogger
@@ -218,7 +219,8 @@ class StructuralElementSearcherImpl implements StructuralElementSearcher {
 	    }
 	}
 
-	List<Term> terms = annotationUtil.getTerms(paperUrl, document, annotation);
+	List<Term> terms = annotationUtil.getTerms(paperUrl, document,
+		annotation, TERM_CONFIDENCE_THRESHOLD);
 
 	StructuralElement element = new StructuralElementImpl.Builder(id,
 		paperUrl + "/" + id).start(start).end(end).name(name)

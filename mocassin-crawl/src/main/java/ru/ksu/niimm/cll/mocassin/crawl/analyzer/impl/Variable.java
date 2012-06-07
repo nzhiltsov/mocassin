@@ -8,8 +8,8 @@ package ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl;
  */
 public class Variable extends MathExpression {
 
-    public Variable(int id, String tex) {
-	super(id, tex);
+    public Variable(int id, String uri, String tex) {
+	super(id, uri, tex);
     }
 
 }
