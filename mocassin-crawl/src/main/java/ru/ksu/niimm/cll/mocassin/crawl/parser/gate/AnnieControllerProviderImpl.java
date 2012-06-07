@@ -29,7 +29,7 @@ public class AnnieControllerProviderImpl implements
 	AnnieControllerProvider<SerialAnalyserController> {
     private final String CONFIG_FILE_NAME;
 
-    private final SerialAnalyserController annie;
+    private static final Object lock = new Object();
 
     @Inject
     public AnnieControllerProviderImpl(
@@ -37,18 +37,21 @@ public class AnnieControllerProviderImpl implements
 	    throws PersistenceException, ResourceInstantiationException,
 	    IOException {
 	CONFIG_FILE_NAME = configName;
-	annie = (SerialAnalyserController) PersistenceManager
-		.loadObjectFromFile(new File(new File(Gate.getPluginsHome(),
-			ANNIEConstants.PLUGIN_DIR), CONFIG_FILE_NAME));
     }
 
     @Override
     public SerialAnalyserController get()
 	    throws AnnieControllerCreationException {
-	try {
-	    return (SerialAnalyserController) Factory.duplicate(annie);
-	} catch (ResourceInstantiationException e) {
-	    throw new AnnieControllerCreationException(e);
+	synchronized (lock) {
+	    try {
+		SerialAnalyserController annie = (SerialAnalyserController) PersistenceManager
+			.loadObjectFromFile(new File(new File(Gate
+				.getPluginsHome(), ANNIEConstants.PLUGIN_DIR),
+				CONFIG_FILE_NAME));
+		return (SerialAnalyserController) Factory.duplicate(annie);
+	    } catch (Exception e) {
+		throw new AnnieControllerCreationException(e);
+	    }
 	}
     }
 }

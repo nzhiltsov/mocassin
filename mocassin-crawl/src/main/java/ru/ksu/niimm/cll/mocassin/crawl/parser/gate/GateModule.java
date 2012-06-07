@@ -106,7 +106,7 @@ public class GateModule extends AbstractModule {
 		.create(binder())
 		.bind(AnnieControllerProvider.class,
 			SerialAnalyserController.class)
-		.to(AnnieControllerProviderImpl.class).in(Singleton.class);
+		.to(AnnieControllerProviderImpl.class);
     }
 
 }
