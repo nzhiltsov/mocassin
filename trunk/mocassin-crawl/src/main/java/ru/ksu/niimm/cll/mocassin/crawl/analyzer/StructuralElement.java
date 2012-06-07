@@ -116,4 +116,6 @@ public interface StructuralElement {
     void setTerms(Collection<Term> terms);
 
     void setTerms(Term... terms);
+
+    List<Term> getTerms();
 }

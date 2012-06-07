@@ -14,8 +14,8 @@ public class Formula extends MathExpression {
      */
     private final List<Variable> variables;
 
-    public Formula(int id, String tex, List<Variable> variables) {
-	super(id, tex);
+    public Formula(int id, String uri, String tex, List<Variable> variables) {
+	super(id, uri, tex);
 	this.variables = variables;
     }
 

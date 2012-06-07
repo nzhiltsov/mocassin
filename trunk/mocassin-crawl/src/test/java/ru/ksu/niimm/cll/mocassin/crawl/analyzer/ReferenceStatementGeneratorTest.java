@@ -76,7 +76,8 @@ public class ReferenceStatementGeneratorTest {
     @Before
     public void init() throws Exception, AccessGateStorageException,
 	    ProcessException {
-	Document document = prepareDoc("ivm18");
+	Document document = gateProcessingFacade.process("ivm18", new File(
+		"/opt/mocassin/arxmliv/ivm18.aligned.xml"), "utf8");
 	try {
 	    graph = this.referenceSearcher.retrieveStructuralGraph(document,
 		    "http://mathnet.ru/ivm18");
@@ -102,8 +103,8 @@ public class ReferenceStatementGeneratorTest {
     @Test
     public void testConvert() {
 	List<Statement> statements = referenceStatementGenerator.export(graph);
-	final String sectionInstance = "http://mathnet.ru/ivm18/1017";
-	final String theoremInstance = "http://mathnet.ru/ivm18/2900";
+	final String sectionInstance = "http://mathnet.ru/ivm18/1145";
+	final String theoremInstance = "http://mathnet.ru/ivm18/3080";
 	Statement hasPartStatement = createTriple(sectionInstance,
 		HAS_PART.getUri(), theoremInstance);
 	Assert.assertTrue(
@@ -119,5 +120,8 @@ public class ReferenceStatementGeneratorTest {
 	Assert.assertTrue(
 		"Generated statement list does contain any statement about the theorem instance type.",
 		statements.contains(hasTheoremInstanceType));
+	for (Statement st : statements) {
+	    System.out.println(st);
+	}
     }
 }

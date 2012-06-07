@@ -12,6 +12,7 @@
 package ru.ksu.niimm.cll.mocassin.crawl.parser.gate.util;
 
 import static java.lang.String.format;
+import static com.google.common.base.Preconditions.*;
 import gate.Annotation;
 import gate.AnnotationSet;
 import gate.Document;
@@ -271,7 +272,8 @@ public class AnnotationUtilImpl implements AnnotationUtil {
 
     @Override
     public List<Term> getTerms(String paperUrl, Document document,
-	    Annotation annotation) {
+	    Annotation annotation, float confidenceThreshold) {
+	checkArgument(confidenceThreshold >= 0 && confidenceThreshold <= 1);
 	List<Term> terms = new ArrayList<Term>();
 	AnnotationSet termSet = document
 		.getAnnotations(ARXMLIV_MARKUP_NAME)
@@ -287,6 +289,8 @@ public class AnnotationUtilImpl implements AnnotationUtil {
 		if (confidenceScoreStr != null) {
 		    float confidenceScore = Float
 			    .parseFloat(confidenceScoreStr);
+		    if (confidenceScore < confidenceThreshold)
+			continue;
 		    String uri = format("%s/%d", paperUrl,
 			    termAnnotation.getId());
 		    String classUri = format("%s#%s", DOMAIN_ONTOLOGY_URI,
@@ -297,7 +301,7 @@ public class AnnotationUtilImpl implements AnnotationUtil {
 			    .getFeatures().get(NORMALIZED_FORM_ANNOTATION_NAME);
 
 		    List<MathExpression> mathExpressions = extractContainingMathExpressions(
-			    document, termAnnotation);
+			    paperUrl, document, termAnnotation);
 		    Term term = new Term(termAnnotation.getId(), uri, classUri,
 			    normalizedView, initialView, confidenceScore,
 			    mathExpressions);
@@ -313,7 +317,7 @@ public class AnnotationUtilImpl implements AnnotationUtil {
     }
 
     private List<MathExpression> extractContainingMathExpressions(
-	    Document document, Annotation termAnnotation) {
+	    String paperUrl, Document document, Annotation termAnnotation) {
 	List<MathExpression> mathExpressions = new ArrayList<MathExpression>();
 	FeatureMap featureMap = Factory.newFeatureMap();
 	featureMap.put("termid", termAnnotation.getId());
@@ -325,20 +329,24 @@ public class AnnotationUtilImpl implements AnnotationUtil {
 		    ARXMLIV_MATH_TEX_ANNOTATION_NAME);
 	    Integer varId = (Integer) mathAnnotation.getFeatures().get("varid");
 	    if (varId != null) {
+		String varUri = format("%s/%d", paperUrl,
+			mathAnnotation.getId());
 		mathExpressions.add(new Variable(mathAnnotation.getId(),
-			latexExpression));
+			varUri, latexExpression));
 	    } else {
-		List<Variable> variables = extractContainingVariables(document,
-			mathAnnotation);
+		List<Variable> variables = extractContainingVariables(paperUrl,
+			document, mathAnnotation);
+		String formulaUri = format("%s/%d", paperUrl,
+			mathAnnotation.getId());
 		mathExpressions.add(new Formula(mathAnnotation.getId(),
-			latexExpression, variables));
+			formulaUri, latexExpression, variables));
 	    }
 	}
 	return mathExpressions;
     }
 
-    private List<Variable> extractContainingVariables(Document document,
-	    Annotation mathAnnotation) {
+    private List<Variable> extractContainingVariables(String paperUrl,
+	    Document document, Annotation mathAnnotation) {
 	String varsAttribute = (String) mathAnnotation.getFeatures()
 		.get("vars");
 	List<Variable> variables = new ArrayList<Variable>();
@@ -352,9 +360,12 @@ public class AnnotationUtilImpl implements AnnotationUtil {
 		    .getAnnotations(ARXMLIV_MARKUP_NAME).get(
 			    ARXMLIV_MATH_ANNOTATION_NAME, varFeatureMap);
 	    for (Annotation contVarAnnotation : containingVariableAnnotations) {
-		String tex = (String) mathAnnotation.getFeatures().get(
+		String tex = (String) contVarAnnotation.getFeatures().get(
 			ARXMLIV_MATH_TEX_ANNOTATION_NAME);
-		variables.add(new Variable(contVarAnnotation.getId(), tex));
+		String varUri = format("%s/%d", paperUrl,
+			contVarAnnotation.getId());
+		variables.add(new Variable(contVarAnnotation.getId(), varUri,
+			tex));
 	    }
 	}
 	return variables;

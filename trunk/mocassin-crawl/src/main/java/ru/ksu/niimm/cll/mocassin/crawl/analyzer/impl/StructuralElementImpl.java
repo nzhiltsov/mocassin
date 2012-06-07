@@ -164,6 +164,11 @@ public class StructuralElementImpl implements StructuralElement {
 	this.terms.addAll(terms);
     }
 
+    @Override
+    public List<Term> getTerms() {
+	return terms;
+    }
+
     public int getStartPageNumber() {
 	return startPageNumber;
     }

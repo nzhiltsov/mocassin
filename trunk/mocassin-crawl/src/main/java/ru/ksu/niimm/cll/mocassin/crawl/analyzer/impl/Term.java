@@ -27,7 +27,7 @@ public class Term {
      */
     private final String initialView;
     /**
-     * The value must range from 0 to 1, and represents the guessing confidence
+     * The value must range from 0 to 1, and represents the guessing confidence about the related ontology class
      */
     private final float confidenceScore;
     /**

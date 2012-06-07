@@ -19,32 +19,43 @@ import org.openrdf.model.impl.StatementImpl;
 import org.openrdf.model.impl.URIImpl;
 
 public final class URIConstants {
-	public static final URI RDF_TYPE = new URIImpl(
-			"http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
+    public static final URI RDF_TYPE = new URIImpl(
+	    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
 
-	private URIConstants() {
-	}
+    public static final URI RDFS_URI = new URIImpl(
+	    "http://www.w3.org/2000/01/rdf-schema#");
 
-	public static Statement createTriple(String subject, String predicate,
-			String object) {
-		return new StatementImpl(new URIImpl(subject), new URIImpl(predicate),
-				new URIImpl(object));
-	}
+    public static final URI RDFS_LABEL = new URIImpl(RDFS_URI.stringValue()
+	    + "label");
 
-	public static Statement createRdfTypeTriple(String subject, String object) {
-		return new StatementImpl(new URIImpl(subject), RDF_TYPE, new URIImpl(
-				object));
-	}
+    private URIConstants() {
+    }
 
-	public static Statement createLiteralTriple(String subject,
-			String predicate, String literal) {
-		return new StatementImpl(new URIImpl(subject), new URIImpl(predicate),
-				new LiteralImpl(literal));
-	}
+    public static Statement createTriple(String subject, String predicate,
+	    String object) {
+	return new StatementImpl(new URIImpl(subject), new URIImpl(predicate),
+		new URIImpl(object));
+    }
 
-	public static Statement createIntegerTriple(String subject,
-			String predicate, int value) {
-		return new StatementImpl(new URIImpl(subject), new URIImpl(predicate),
-				new NumericLiteralImpl(value));
-	}
+    public static Statement createRdfTypeTriple(String subject, String object) {
+	return new StatementImpl(new URIImpl(subject), RDF_TYPE, new URIImpl(
+		object));
+    }
+
+    public static Statement createLiteralTriple(String subject,
+	    String predicate, String literal) {
+	return new StatementImpl(new URIImpl(subject), new URIImpl(predicate),
+		new LiteralImpl(literal));
+    }
+
+    public static Statement createIntegerTriple(String subject,
+	    String predicate, int value) {
+	return new StatementImpl(new URIImpl(subject), new URIImpl(predicate),
+		new NumericLiteralImpl(value));
+    }
+
+    public static Statement createRdfsLabelTriple(String subject, String label) {
+	return new StatementImpl(new URIImpl(subject), RDFS_LABEL,
+		new LiteralImpl(label));
+    }
 }

@@ -10,13 +10,16 @@ package ru.ksu.niimm.cll.mocassin.crawl.analyzer.impl;
 public abstract class MathExpression {
 
     protected final int id;
+
+    protected final String uri;
     /**
      * LaTeX representation
      */
     protected final String tex;
 
-    protected MathExpression(int id, String tex) {
+    protected MathExpression(int id, String uri, String tex) {
 	this.id = id;
+	this.uri = uri;
 	this.tex = tex;
     }
 
@@ -26,6 +29,10 @@ public abstract class MathExpression {
 
     public String getTex() {
 	return tex;
+    }
+
+    public String getUri() {
+	return uri;
     }
 
     @Override

@@ -90,8 +90,10 @@ public interface AnnotationUtil {
      *            GATE document
      * @param annotation
      *            containing annotation
+     * @param confidenceThreshold confidence threshold            
+     *            
      * @return
      */
     List<Term> getTerms(String paperUrl, Document document,
-	    Annotation annotation);
+	    Annotation annotation, float confidenceThreshold);
 }
