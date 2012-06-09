@@ -31,9 +31,9 @@ import ru.ksu.niimm.cll.mocassin.util.inject.log.InjectLogger;
 import com.google.inject.Inject;
 
 /**
- * This facade implementation uses an ANNIE controller instance serialized in the .gapp file
- * (its location is configured by the 'gate.loaded.plugin.config' parameter in
- * <strong>nlp-module.properties</strong>).
+ * This facade implementation uses an ANNIE controller instance serialized in
+ * the .gapp file (its location is configured by the 'gate.loaded.plugin.config'
+ * parameter in <strong>nlp-module.properties</strong>).
  * 
  * @author Nikita Zhiltsov
  * 
@@ -79,12 +79,18 @@ class AnnieBasedGateProcessingFacade implements GateProcessingFacade {
     private Document executeProcessor(String arxivId, Document document)
 	    throws ProcessException {
 	try {
+
 	    SerialAnalyserController annieController = annieControllerProvider
 		    .get();
 	    Corpus corpus = Factory.newCorpus("temp");
 	    corpus.add(document);
 	    annieController.setCorpus(corpus);
-	    annieController.execute();
+	    try {
+		annieController.execute();
+	    } finally {
+		Factory.deleteResource(annieController);
+		Factory.deleteResource(corpus);
+	    }
 	    return document;
 	} catch (ExecutionException e) {
 	    logger.error(
