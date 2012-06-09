@@ -48,7 +48,7 @@ public class AnnieControllerProviderImpl implements
 			.loadObjectFromFile(new File(new File(Gate
 				.getPluginsHome(), ANNIEConstants.PLUGIN_DIR),
 				CONFIG_FILE_NAME));
-		return (SerialAnalyserController) Factory.duplicate(annie);
+		return annie;
 	    } catch (Exception e) {
 		throw new AnnieControllerCreationException(e);
 	    }
